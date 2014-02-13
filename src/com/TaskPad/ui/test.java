@@ -1,4 +1,4 @@
-package com.nus.TaskPad.ui;
+package com.TaskPad.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

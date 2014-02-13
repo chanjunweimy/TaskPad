@@ -1,4 +1,4 @@
-package com.nus.TaskPad.data;
+package com.TaskPad.data;
 
 public class DataStorage {
 
