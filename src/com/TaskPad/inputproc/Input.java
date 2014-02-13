@@ -1,18 +1,13 @@
-package com.nus.TaskPad.inputproc;
+package com.TaskPad.inputproc;
 
 public class Input {
 
 	private static final String MESSAGE_INVALID_FORMAT = "Invalid Command: %s ";
+	Command Command;
 	
-	private static final String[] ADD_COMMANDS = {"ADD", "CREATE", "NEW"};
-	private static final String[] LIST_COMMANDS = {"LIST", "SHOW", "DISPLAY"};
-	private static final String[] CLEAR_COMMANDS = {"CLEAR", "CLR"};
-	private static final String[] UNDO_COMMANDS = {"UNDO"};
-	private static final String[] EDIT_COMMANDS = {"EDIT", "MODIFY", "CHANGE"};
-	private static final String[] SEARCH_COMMANDS = {"SEARCH", "FIND"};
-	private static final String[] HELP_COMMANDS = {"HELP", "MANUAL"};
-	private static final String[] EXIT_COMMANDS = {"EXIT", "QUIT"};
-	private static final String[] TEST={"ONE MORE TEST"};
+	public Input(){
+		Command = new Command();
+	}
 	
 	enum CommandType{
 		ADD, LIST, DELETE, CLEAR, UNDO, EDIT, SEARCH, INVALID, HELP, EXIT

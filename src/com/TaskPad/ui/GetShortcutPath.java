@@ -1,4 +1,4 @@
-package com.nus.TaskPad.ui;
+package com.TaskPad.ui;
 public class GetShortcutPath  
 {  
   public GetShortcutPath(String[] args)  

@@ -1,4 +1,4 @@
-package com.nus.TaskPad.tests;
+package com.TaskPad.tests;
 
 import static org.junit.Assert.*;
 
