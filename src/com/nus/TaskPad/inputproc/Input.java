@@ -12,7 +12,7 @@ public class Input {
 	private static final String[] SEARCH_COMMANDS = {"SEARCH", "FIND"};
 	private static final String[] HELP_COMMANDS = {"HELP", "MANUAL"};
 	private static final String[] EXIT_COMMANDS = {"EXIT", "QUIT"};
-	private static final String[] TEST={"TEST"};
+	private static final String[] TEST={"ONE MORE TEST"};
 	
 	enum CommandType{
 		ADD, LIST, DELETE, CLEAR, UNDO, EDIT, SEARCH, INVALID, HELP, EXIT
