@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="D:/eclipse-kepler/eclipse/plugins/org.eclipse.osgi_3.9.1.v20130814-1242.jar" sourcepath="D:/eclipse-kepler/eclipse/plugins/org.eclipse.osgi.source_3.9.1.v20130814-1242.jar"/>
 	<classpathentry kind="lib" path="D:/eclipse-kepler/eclipse/plugins/org.eclipse.text_3.5.300.v20130515-1451.jar" sourcepath="D:/eclipse-kepler/eclipse/plugins/org.eclipse.text.source_3.5.300.v20130515-1451.jar"/>
 	<classpathentry kind="lib" path="D:/eclipse-kepler/eclipse/plugins/org.eclipse.swt.win32.win32.x86_64_3.102.1.v20130827-2048.jar" sourcepath="D:/eclipse-kepler/eclipse/plugins/org.eclipse.swt.win32.win32.x86_64.source_3.102.1.v20130827-2048.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
