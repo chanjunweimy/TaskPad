@@ -53,14 +53,23 @@ public class Input {
 	}
 
 	private static String parseInput(String input) {
-//		if (isInvalidCommand(input)){
-//			return invalidInput(input);
-//		}
+		if (isInvalidCommand(input)){
+			return invalidInput(input);
+		}
 		
 		String commandTypeString = getFirstWord(input);
 		return commandTypeString;			
 	}
 
+	
+	/* Helper methods for parsing commands */ 
+	private static boolean isInvalidCommand(String userCommand) {
+		if (userCommand.trim().equals("")){
+			return true;
+		}
+		return false;
+	}
+	
 	private static String invalidInput(String input) {
 		//Call the GUI and send this message 
 		return String.format(MESSAGE_INVALID_FORMAT, input);
