@@ -1,3 +1,4 @@
+package com.TaskPad.ui;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,7 +26,7 @@ class inputFrame extends JFrame
 	protected static JTextField input = new JTextField(15);
 	final double COMPUTER_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	final double COMPUTER_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-	final static int INPUTFRAME_WIDTH = 500;
+	final static int INPUTFRAME_WIDTH = 350;
 	final static int INPUTFRAME_HEIGHT = 30;
 	
 	public inputFrame(){
@@ -67,7 +68,7 @@ class outputFrame extends JFrame{
 	final double COMPUTER_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	final double COMPUTER_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	final static int OUTPUTFRAME_WIDTH = 300;
-	final static int OUTPUTFRAME_HEIGHT = 200;
+	final static int OUTPUTFRAME_HEIGHT = 150;
 	
 	public outputFrame(){
 		initialOutputFrame();
