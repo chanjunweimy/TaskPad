@@ -3,19 +3,15 @@ package com.TaskPad.inputproc;
 public class Input {
 
 	private static final String MESSAGE_INVALID_FORMAT = "Invalid Command: %s ";
-	Command Command;
+	private static Command Command;
 	
 	public Input(){
 		Command = new Command();
 	}
 	
-	enum CommandType{
-		ADD, LIST, DELETE, CLEAR, UNDO, EDIT, SEARCH, INVALID, HELP, EXIT
-	};
-	
 	public static void receiveInput(String input){
 		String commandTypeString = parseInput(input);
-//		CommandType commandType = determineCommandType(commandTypeString);
+		Command.CommandType commandType = determineCommandType(commandTypeString);
 		
 		input = removeFirstWord(commandTypeString);
 		
@@ -46,6 +42,13 @@ public class Input {
 //			default:
 //				invalidCommand(input);
 //		}
+	}
+
+	private static Command.CommandType determineCommandType(String commandTypeString) {
+		String commandToFind = getFirstWord(commandTypeString);
+		Command.CommandType commandType = Command.find(commandToFind);
+		
+		return commandType;
 	}
 
 	private static String parseInput(String input) {
