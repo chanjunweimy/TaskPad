@@ -2,17 +2,13 @@ package com.TaskPad.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -79,7 +75,8 @@ public class test2 {
 	// The listener for the textfield.
 		private class TextFieldListener implements ActionListener
 		{  public void actionPerformed(ActionEvent evt)
-		{  String inputString = txtbox.getText();
+		{  //String inputString = 
+			txtbox.getText();
 		//output.append(inputString + "\n");
 		txtbox.setText("");
 		}
