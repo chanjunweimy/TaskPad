@@ -14,6 +14,7 @@ public class Input {
 	public Input(){
 		Command = new Command();
 		commandStack = new Stack();
+		System.out.println("test");
 	}
 	
 	public static void receiveInput(String input){
