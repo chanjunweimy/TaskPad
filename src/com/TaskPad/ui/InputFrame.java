@@ -13,6 +13,7 @@ public class InputFrame extends JFrame
 	 * default
 	 */
 	private static final long serialVersionUID = 1L;  
+	private int test = 16;
 	
 	private final Color INPUTBOX_BACKGROUND_COLOR = 
 			new Color(219, 219, 219);
