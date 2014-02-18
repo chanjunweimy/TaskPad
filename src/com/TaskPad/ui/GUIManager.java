@@ -1,9 +1,10 @@
 package com.TaskPad.ui;
 
 import com.TaskPad.inputproc.Input;
+import com.TaskPad.ui.OutputFrame;
 
-public class GUIManager {
-	public GUIManager(){
+public class GuiManager {
+	public GuiManager(){
 	}
 	
 	public static void callExit(){
