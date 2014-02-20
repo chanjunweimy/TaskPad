@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Command {
 	
 	public enum CommandType{
-		ADD, LIST, DELETE, CLEAR_ALL, UNDO, EDIT, SEARCH, INVALID, HELP, EXIT
+		ADD, ADD_INFO, CLEAR_ALL, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
@@ -43,13 +43,16 @@ public class Command {
 
 	private static void createHashMap(){
 		putAddVariations();
-		putDeleteVariations();
+		putAddInfoVariations();
 		putClearVariations();
-		putUndoVariations();
-		putSearchVariations();
-		putListVariations();
-		putHelpVariations();
+		putDeleteVariations();
+		putDoneVariations();
+		putEditVariations();
 		putExitVariations();
+		putHelpVariations();
+		putListVariations();
+		putSearchVariations();
+		putUndoVariations();
 	}
 	
 	/* Helper methods for creating the hashmap */
@@ -59,14 +62,29 @@ public class Command {
 		commandVariations.put(CommandType.ADD, addVariations);
 	}
 	
+	private static void putAddInfoVariations(){
+		String[] addInfoVariations = {"ADDINFO", "ADDDESC", "CREATEDESC"};
+		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
+	}
+	
 	private static void putDeleteVariations(){
 		String[] deleteVariations = {"DELETE", "DEL", "REMOVE"};
 		commandVariations.put(CommandType.DELETE, deleteVariations);
 	}
 	
+	private static void putDoneVariations(){
+		String[] doneVariations = {"DONE", "FINISHED", "COMPLETED"};
+		commandVariations.put(CommandType.DONE, doneVariations);
+	}
+	
 	private static void putClearVariations(){
 		String[] clearVariations = {"CLEAR", "CLR", "CLEAN"};
 		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
+	}
+	
+	private static void putEditVariations(){
+		String[] editVariations = {"EDIT", "CHANGE"};
+		commandVariations.put(CommandType.EDIT, editVariations);
 	}
 	
 	private static void putUndoVariations(){
