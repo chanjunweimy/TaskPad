@@ -8,7 +8,7 @@ package com.TaskPad.ui;
 
 import com.TaskPad.inputproc.InputMain;
 
-public class TaskPadObject{
+public class TaskPadMain{
 	public static void main(String[] args){
 		new InputMain();
 		new InputFrame();

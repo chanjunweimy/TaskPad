@@ -8,8 +8,8 @@ public class Input {
 	private static Map<String,String> parameters;
 	private static String command;
 	
-	public Input(String command){
-		parameters = new HashMap<String, String>();
+	public Input(String command, Map<String,String> parameters){
+		this.parameters = parameters;
 		this.command = command;
 	}
 	

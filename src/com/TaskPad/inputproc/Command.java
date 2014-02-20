@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Command {
 	
 	public enum CommandType{
-		ADD, LIST, DELETE, CLEAR, UNDO, EDIT, SEARCH, INVALID, HELP, EXIT
+		ADD, LIST, DELETE, CLEAR_ALL, UNDO, EDIT, SEARCH, INVALID, HELP, EXIT
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
@@ -66,7 +66,7 @@ public class Command {
 	
 	private static void putClearVariations(){
 		String[] clearVariations = {"CLEAR", "CLR", "CLEAN"};
-		commandVariations.put(CommandType.CLEAR, clearVariations);
+		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
 	}
 	
 	private static void putUndoVariations(){
