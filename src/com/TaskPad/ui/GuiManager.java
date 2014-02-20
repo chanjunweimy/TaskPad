@@ -1,6 +1,6 @@
 package com.TaskPad.ui;
 
-import com.TaskPad.inputproc.Input;
+import com.TaskPad.inputproc.InputManager;
 import com.TaskPad.ui.OutputFrame;
 
 public class GuiManager {
@@ -16,6 +16,6 @@ public class GuiManager {
 	}
 	
 	public static void passInput(String in){
-		Input.receiveInput(in);
+		InputManager.receiveFromGui(in);
 	}
 }

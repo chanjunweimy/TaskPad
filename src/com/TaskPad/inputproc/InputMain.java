@@ -3,26 +3,19 @@ package com.TaskPad.inputproc;
 import java.util.Stack;
 
 import com.TaskPad.inputproc.Command.CommandType;
+import com.TaskPad.ui.GuiManager;
 
-public class Input {
+public class InputMain {
 
 	private static final String MESSAGE_INVALID_FORMAT = "Invalid Command: %s ";
 	
-	private static Command Command;
-	private static Stack commandStack;
-	
-	public Input(){
-		Command = new Command();
-		commandStack = new Stack();
-		System.out.println("test");
-	}
+	private static Command Command = new Command();
 	
 	public static void receiveInput(String input){
 		String commandTypeString = parseInput(input);
 		Command.CommandType commandType = determineCommandType(commandTypeString);
 		
 		if (isValidCommandType(commandType)){
-			pushCommandToStack(commandType);
 			input = removeFirstWord(commandTypeString);
 			performCommand (commandType, input);
 		} else {
@@ -31,7 +24,6 @@ public class Input {
 				
 		
 	}
-
 	
 	private static boolean isValidCommandType(CommandType commandType) {
 		if (commandType.equals(commandType.INVALID)){
@@ -40,10 +32,6 @@ public class Input {
 		return true;
 	}
 
-	private static void pushCommandToStack(CommandType commandType) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	private static void performCommand(CommandType commandType, String input) {
 		switch(commandType){
@@ -113,7 +101,7 @@ public class Input {
 	}
 
 	private static void exitProgram() {
-		//Call executor function to exit
+		InputManager.callGuiExit();
 	}
 
 	private static void invalidCommand(String input) {
@@ -147,7 +135,6 @@ public class Input {
 	}
 	
 	private static String invalidInput(String input) {
-		//Call the GUI and send this message 
 		return String.format(MESSAGE_INVALID_FORMAT, input);
 	}
 	

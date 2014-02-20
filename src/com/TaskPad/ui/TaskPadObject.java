@@ -6,11 +6,11 @@
 
 package com.TaskPad.ui;
 
-import com.TaskPad.inputproc.Input;
+import com.TaskPad.inputproc.InputMain;
 
 public class TaskPadObject{
 	public static void main(String[] args){
-		new Input();
+		new InputMain();
 		new InputFrame();
 		new OutputFrame();
 	}
