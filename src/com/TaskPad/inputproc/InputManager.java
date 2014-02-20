@@ -1,5 +1,6 @@
 package com.TaskPad.inputproc;
 
+import com.TaskPad.execute.ExcecutorManager;
 import com.TaskPad.ui.GuiManager;
 
 /** This class is used for calling APIs from other packages
@@ -10,16 +11,23 @@ import com.TaskPad.ui.GuiManager;
 
 public class InputManager {
 	
-	public static void receiveFromGui(String inputString){
+	private static GuiManager guiManager;
+	private static ExcecutorManager executorManager;
+	
+	public InputManager(){
+		guiManager = new GuiManager();
+	}
+	
+	public void receiveFromGui(String inputString){
 		InputMain.receiveInput(inputString);
 	}
 
-	public static void outputToGui(String outputString){
-		GuiManager.callOutput(outputString);
+	public void outputToGui(String outputString){
+		guiManager.callOutput(outputString);
 	}
 	
-	public static void callGuiExit(){
-		GuiManager.callExit();
+	public void callGuiExit(){
+		guiManager.callExit();
 	}
 	
 	public static void passToExecutor(Input input){

@@ -1,30 +1,59 @@
 package com.TaskPad.inputproc;
 
-import java.util.Stack;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.TaskPad.inputproc.Command.CommandType;
-import com.TaskPad.ui.GuiManager;
 
 public class InputMain {
 
 	private static final String MESSAGE_INVALID_FORMAT = "Invalid Command: %s ";
+	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
 	
-	private static Command Command = new Command();
+	private static final String COMMAND_ADD = "ADD";
+	private static final String COMMAND_CLEAR = "CLEAR";
+	private static final String COMMAND_DELETE = "DELETE";
 	
-	public static void receiveInput(String input){
-		String commandTypeString = parseInput(input);
-		Command.CommandType commandType = determineCommandType(commandTypeString);
-		
-		if (isValidCommandType(commandType)){
-			input = removeFirstWord(commandTypeString);
-			performCommand (commandType, input);
-		} else {
-			invalidCommand(input);
-		}
-				
-		
+	private static final String PARAMETER_TASK_ID = "TASKID";
+	private static final String PARAMETER_NULL = "NULL";
+	
+	private static Command command;
+	private static InputManager inputManager;
+	private static Input inputObject;
+	
+	private static Map<String, String> inputParameters;
+	
+	public InputMain(){
+		command = new Command();
+		inputManager = new InputManager();
+		inputParameters = new HashMap<String, String>();
 	}
 	
+	public static void receiveInput(String input){
+		if (errorIfNoInput(input)){
+			return;
+		}
+//		String commandTypeString = parseInput(input);
+//		Command.CommandType commandType = determineCommandType(commandTypeString);
+//		
+//		if (isValidCommandType(commandType)){
+//			input = removeFirstWord(commandTypeString);
+//			inputObject = performCommand (commandType, input);
+//			inputManager.passToExecutor(inputObject);
+//		} else {
+//			invalidCommand(input);
+//		}
+//				
+	}
+	
+	private static boolean errorIfNoInput(String input) {
+		if (input.equals("")){
+			inputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+			return true;
+		}
+		return false;
+	}
+
 	private static boolean isValidCommandType(CommandType commandType) {
 		if (commandType.equals(commandType.INVALID)){
 			return false;
@@ -40,7 +69,7 @@ public class InputMain {
 				break;
 			case LIST:
 				deleteTask(input);
-			case CLEAR:
+			case CLEAR_ALL:
 				clearAllTasks();
 				break;
 			case UNDO:
@@ -70,16 +99,33 @@ public class InputMain {
 		
 	}
 
-	private static void deleteTask(String input) {
-		// TODO Auto-generated method stub
-		
+	private static Input deleteTask(String input) {
+		inputObject = createDeleteObject(input);
+		return inputObject;
 	}
 
-	private static void clearAllTasks() {
-		//Call executor function to clear
-		
+	private static Input createDeleteObject(String input) {
+		clearInputParameters();
+		putInputParameters(PARAMETER_TASK_ID, input);
+		inputObject = new Input(COMMAND_DELETE, inputParameters);
+		return inputObject;
+	}
+	
+	private static void clearInputParameters(){
+		inputParameters.clear();
+	}
+	
+	private static void putInputParameters(String parameter, String input){
+		inputParameters.put(parameter, input);
 	}
 
+	private static Input clearAllTasks() {
+		clearInputParameters();
+		putInputParameters(PARAMETER_NULL, "");
+		inputObject = new Input(COMMAND_CLEAR, inputParameters);
+		return inputObject;
+	}
+	
 	private static void undoLast() {
 		//Command.CommandType commandType = commandStack.pop();
 		
@@ -96,12 +142,12 @@ public class InputMain {
 	}
 	
 	private static void help() {
-		// TODO Auto-generated method stub
-		
+		Help help = new Help();
+		help.outputHelp();
 	}
 
 	private static void exitProgram() {
-		InputManager.callGuiExit();
+		inputManager.callGuiExit();
 	}
 
 	private static void invalidCommand(String input) {
