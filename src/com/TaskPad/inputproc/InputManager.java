@@ -18,15 +18,15 @@ public class InputManager {
 		guiManager = new GuiManager();
 	}
 	
-	public void receiveFromGui(String inputString){
+	public static void receiveFromGui(String inputString){
 		InputMain.receiveInput(inputString);
 	}
 
-	public void outputToGui(String outputString){
+	public static void outputToGui(String outputString){
 		guiManager.callOutput(outputString);
 	}
 	
-	public void callGuiExit(){
+	public static void callGuiExit(){
 		guiManager.callExit();
 	}
 	
