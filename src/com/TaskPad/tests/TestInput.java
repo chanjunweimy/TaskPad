@@ -1,11 +1,11 @@
-package com.TaskPad.tests;
+package com.taskpad.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.TaskPad.inputproc.Command;
-import com.TaskPad.inputproc.Command.CommandType;
+import com.taskpad.inputproc.Command;
+import com.taskpad.inputproc.Command.CommandType;
 
 
 public class TestInput {

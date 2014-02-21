@@ -1,7 +1,6 @@
-package com.TaskPad.ui;
+package com.taskpad.ui;
 
-import com.TaskPad.inputproc.InputManager;
-import com.TaskPad.ui.OutputFrame;
+import com.taskpad.inputproc.InputManager;
 
 public class GuiManager {
 	public GuiManager(){

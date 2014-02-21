@@ -1,4 +1,4 @@
-package com.TaskPad.ui;
+package com.taskpad.ui;
 
 import java.awt.Color;
 import java.awt.Toolkit;
