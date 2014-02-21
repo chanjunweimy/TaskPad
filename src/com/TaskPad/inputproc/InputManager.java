@@ -1,7 +1,7 @@
-package com.TaskPad.inputproc;
+package com.taskpad.inputproc;
 
-import com.TaskPad.execute.ExcecutorManager;
-import com.TaskPad.ui.GuiManager;
+import com.taskpad.execute.ExcecutorManager;
+import com.taskpad.ui.GuiManager;
 
 /** This class is used for calling APIs from other packages
  * 

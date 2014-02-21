@@ -1,12 +1,12 @@
-package com.TaskPad.tests;
+package com.taskpad.tests;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.TaskPad.inputproc.InputMain;
-import com.TaskPad.ui.GuiManager;
-import com.TaskPad.ui.InputFrame;
-import com.TaskPad.ui.OutputFrame;
+import com.taskpad.inputproc.InputMain;
+import com.taskpad.ui.GuiManager;
+import com.taskpad.ui.InputFrame;
+import com.taskpad.ui.OutputFrame;
 
 public class TestGuiManager {
 	Timer timer;

@@ -4,9 +4,9 @@
  * Team: W13-3j
  */
 
-package com.TaskPad.ui;
+package com.taskpad.ui;
 
-import com.TaskPad.inputproc.InputMain;
+import com.taskpad.inputproc.InputMain;
 
 public class TaskPadMain{
 	public static void main(String[] args){

@@ -1,9 +1,9 @@
-package com.TaskPad.inputproc;
+package com.taskpad.inputproc;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.TaskPad.inputproc.Command.CommandType;
+import com.taskpad.inputproc.Command.CommandType;
 
 public class InputMain {
 

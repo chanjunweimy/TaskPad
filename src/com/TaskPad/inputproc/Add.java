@@ -1,4 +1,4 @@
-package com.TaskPad.inputproc;
+package com.taskpad.inputproc;
 
 import java.util.HashMap;
 import java.util.Map;

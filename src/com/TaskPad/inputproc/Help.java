@@ -1,8 +1,9 @@
-package com.TaskPad.inputproc;
+package com.taskpad.inputproc;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+
 
 public class Help {
 
