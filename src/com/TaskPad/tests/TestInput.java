@@ -9,7 +9,7 @@ import com.taskpad.inputproc.Command.CommandType;
 
 
 public class TestInput {
-	Command Command = new Command();
+	Command command = new Command();
 	
 	@Test
 	public void testFind() {
