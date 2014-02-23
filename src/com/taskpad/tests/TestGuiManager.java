@@ -9,7 +9,6 @@ import com.taskpad.ui.InputFrame;
 import com.taskpad.ui.OutputFrame;
 
 public class TestGuiManager {
-	Timer timer;
 	public static void main(String[] args){
 		new InputMain();
 		new InputFrame();
