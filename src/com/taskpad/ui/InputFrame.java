@@ -30,13 +30,14 @@ public class InputFrame extends JFrame
 	protected final static int INPUTFRAME_HEIGHT = 30;
 	
 	public InputFrame(){
+		initialInputBox();
 		initialInputFrame();
 	}
 
 	private void initialInputFrame() {
-		initialInputBox();
-		
+		//make JFrame Disappear
 		setUndecorated(true);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setSize(INPUTFRAME_WIDTH,INPUTFRAME_HEIGHT);

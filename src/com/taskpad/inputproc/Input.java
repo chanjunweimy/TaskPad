@@ -1,6 +1,6 @@
 package com.taskpad.inputproc;
 
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Map;
 
 public class Input {
@@ -9,20 +9,20 @@ public class Input {
 	private static String command;
 	
 	public Input(String command, Map<String,String> parameters){
-		this.parameters = parameters;
-		this.command = command;
+		Input.parameters = parameters;
+		Input.command = command;
 	}
 	
 	public String getCommand(){
-		return this.command;
+		return Input.command;
 	}
 	
 	public Map<String,String> getParameters(){
-		return this.parameters;
+		return Input.parameters;
 	}
 	
 	public void addParameter(String parameter, String value){
-		this.parameters.put(parameter, value);
+		Input.parameters.put(parameter, value);
 	}
 	
 }
