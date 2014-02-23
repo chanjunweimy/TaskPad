@@ -11,9 +11,15 @@ import com.taskpad.inputproc.Command.CommandType;
 public class TestInput {
 	//Command command = new Command();
 	
+	//testing Add.java
+	@Test
+	public void testAdd() {
+		
+	}
+	
 	//testing Command.java
 	@Test
-	public void testFind() {
+	public void testCommand() {
 		new Command();
 		
 		//invalid
