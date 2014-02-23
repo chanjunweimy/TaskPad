@@ -23,27 +23,27 @@ public class Add {
 	private static String PARAMETER_DESCRIPTION = "DESC";
 
 	public Add(String input){
-		this.input = input;
-		this.inputParameters = new HashMap<String,String>();
+		Add.input = input;
+		Add.inputParameters = new HashMap<String,String>();
 	}
 	
 	public Map<String,String> run(){
 		if (isEmptyString()){
-			this.inputParameters.clear();
-			return this.inputParameters;
+			Add.inputParameters.clear();
+			return Add.inputParameters;
 		} 
 		
 		splitInputParameters();
 		
 		if (invalidParameters){
-			this.inputParameters.clear();
+			Add.inputParameters.clear();
 		}
 		
-		return this.inputParameters;
+		return Add.inputParameters;
 	}
 	
 	private boolean isEmptyString(){
-		if (this.input.isEmpty()){
+		if (Add.input.isEmpty()){
 			return true;
 		}
 		return false;
@@ -51,7 +51,7 @@ public class Add {
 	
 	private void splitInputParameters(){
 		int count = 0;
-		sc = new Scanner(this.input).useDelimiter("\\s-");
+		sc = new Scanner(Add.input).useDelimiter("\\s-");
 		while(sc.hasNext()){
 			String nextParam = sc.next();
 			if (count == 0){
@@ -86,7 +86,7 @@ public class Add {
 	}
 
 	private void getDeadline(String param) {
-		sc = new Scanner(this.input).useDelimiter("\\s/");
+		sc = new Scanner(Add.input).useDelimiter("\\s/");
 		String day = sc.next();
 		String month = sc.next();
 		String year = sc.next();
@@ -94,22 +94,22 @@ public class Add {
 	}
 	
 	private void inputDeadlines(String day, String month, String year){
-		this.inputParameters.put(PARAMETER_DEADLINE_DAY, day);
-		this.inputParameters.put(PARAMETER_DEADLINE_MONTH, month);
-		this.inputParameters.put(PARAMETER_DEADLINE_YEAR, year);
+		Add.inputParameters.put(PARAMETER_DEADLINE_DAY, day);
+		Add.inputParameters.put(PARAMETER_DEADLINE_MONTH, month);
+		Add.inputParameters.put(PARAMETER_DEADLINE_YEAR, year);
 	}
 
 	private void inputVenue(String param) {
-		this.inputParameters.put(PARAMETER_VENUE, param);		
+		Add.inputParameters.put(PARAMETER_VENUE, param);		
 	}
 
 	private void inputStartTime(String param) {
-		this.inputParameters.put(PARAMETER_START, param);	
+		Add.inputParameters.put(PARAMETER_START, param);	
 		
 	}
 
 	private void inputEndTime(String param) {
-		this.inputParameters.put(PARAMETER_END, param);	
+		Add.inputParameters.put(PARAMETER_END, param);	
 	}
 
 	private void invalidParam() {
