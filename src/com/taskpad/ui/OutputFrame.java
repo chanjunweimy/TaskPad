@@ -35,6 +35,7 @@ public class OutputFrame extends JFrame{
 	private void initialOutputFrame() {
 		//make JFrame Disappear
 		setUndecorated(true);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
 		setSize(OUTPUTFRAME_WIDTH,OUTPUTFRAME_HEIGHT);
