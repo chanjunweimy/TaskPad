@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 
 
-public class InputFrame extends JFrame
+public class InputFrame extends GuiFrame
 {
 
 	/**
