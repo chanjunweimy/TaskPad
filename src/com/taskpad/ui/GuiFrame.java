@@ -4,17 +4,15 @@ import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-public class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
+public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
 
 	/**
 	 * default
@@ -22,19 +20,11 @@ public class GuiFrame extends JFrame implements NativeKeyListener, WindowListene
 	private static final long serialVersionUID = 1L;
 	
 	public GuiFrame(){
+		addWindowListener(this);
 	}
 	
 	protected void close(){
 		dispose();
-	}
-	
-	protected void minimizeFrame(){
-		setState(Frame.ICONIFIED);
-	}
-
-	protected void setKeyAction(KeyStroke anyKeyStroke, Action anyAction, String anyDescription) {
-		this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(anyKeyStroke, anyDescription);
-	    this.getRootPane().getActionMap().put(anyDescription, anyAction);
 	}
 
 	@Override
@@ -52,6 +42,7 @@ public class GuiFrame extends JFrame implements NativeKeyListener, WindowListene
         }
 
         GlobalScreen.getInstance().addNativeKeyListener(this);
+        requestFocusInWindow();
 	}
 	
 	@Override
@@ -60,6 +51,38 @@ public class GuiFrame extends JFrame implements NativeKeyListener, WindowListene
         GlobalScreen.unregisterNativeHook();
         System.runFinalization();
         System.exit(0);
+	}
+	
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		if (arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
+			Runnable changeState = getStateChanges();
+            SwingUtilities.invokeLater(changeState);
+            requestFocusInWindow();
+		}
+	}
+
+	private Runnable getStateChanges() {
+		Runnable changeState = new Runnable(){
+			public void run(){
+				boolean isMinimized = getExtendedState() == Frame.ICONIFIED;
+				boolean isRestored = getExtendedState() == Frame.NORMAL;
+				if (isMinimized){
+					restore();
+				} else if (isRestored){
+					minimize();
+				}
+			}
+
+			private void minimize() {
+				setState(Frame.ICONIFIED);
+			}
+
+			private void restore() {
+				setState(Frame.NORMAL);
+			}
+		};
+		return changeState;
 	}
 	
 	@Override
@@ -88,12 +111,6 @@ public class GuiFrame extends JFrame implements NativeKeyListener, WindowListene
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void nativeKeyPressed(NativeKeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -2,6 +2,7 @@ package com.taskpad.ui;
 
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -30,6 +31,7 @@ public class InputFrame extends GuiFrame
 	protected final static int INPUTFRAME_HEIGHT = 30;
 	
 	public InputFrame(){
+		super();
 		initialInputBox();
 		initialInputFrame();
 	}
@@ -63,6 +65,10 @@ public class InputFrame extends GuiFrame
 	private void inputboxReadyForEvent() {
 		TextFieldListener tfListener = new TextFieldListener();
 		input.addActionListener(tfListener);
+	}
+	
+	public void windowDeiconified(WindowEvent arg0) {
+		input.requestFocus();
 	}
 
 }
