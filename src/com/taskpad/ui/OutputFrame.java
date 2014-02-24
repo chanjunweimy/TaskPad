@@ -7,7 +7,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-public class OutputFrame extends JFrame{
+public class OutputFrame extends GuiFrame{
 
 	/**
 	 * default
@@ -53,5 +53,6 @@ public class OutputFrame extends JFrame{
 		output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 		output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
 	}
+	
 
 }

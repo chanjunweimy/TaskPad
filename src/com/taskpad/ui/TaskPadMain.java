@@ -11,7 +11,8 @@ import com.taskpad.inputproc.InputMain;
 public class TaskPadMain{
 	public static void main(String[] args){
 		new InputMain();
-		new InputFrame();
-		new OutputFrame();
+		InputFrame inputFrame = new InputFrame();
+		OutputFrame outputFrame = new OutputFrame();
+		new MinimizeKey(inputFrame, outputFrame);
 	}
 }
