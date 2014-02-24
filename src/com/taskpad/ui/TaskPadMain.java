@@ -12,13 +12,14 @@ import com.taskpad.inputproc.InputMain;
 
 public class TaskPadMain{
 	public static void main(String[] args){
-		SwingUtilities.invokeLater(new Runnable() {
+		Runnable runTaskPad = new Runnable() {
 			public void run() {
 				new InputMain();
 				InputFrame inputFrame = new InputFrame();
 				OutputFrame outputFrame = new OutputFrame();
 				new MinimizeKey(inputFrame, outputFrame);
 			}
-		});
+		};
+		SwingUtilities.invokeLater(runTaskPad);
 	}
 }
