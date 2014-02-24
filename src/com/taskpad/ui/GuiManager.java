@@ -8,18 +8,18 @@ public class GuiManager {
 	
 	public GuiManager(){
 	}
-	
-	public GuiManager(InputFrame inputFrame, OutputFrame outputFrame){
-		initialGuiManager(inputFrame, outputFrame);
-	}
 
-	private void initialGuiManager(InputFrame inputFrame,
+	public static void initialGuiManager(InputFrame inputFrame,
 			OutputFrame outputFrame) {
 		setInputFrame(inputFrame);
 		setOutputFrame(outputFrame);
 	}
 	
 	public static void callExit(){
+		closeAllWindows();
+	}
+
+	private static void closeAllWindows() {
 		_inputFrame.close();
 		_outputFrame.close();
 	}
@@ -32,11 +32,11 @@ public class GuiManager {
 		InputManager.receiveFromGui(in);
 	}
 
-	private void setInputFrame(InputFrame _inputFrame) {
+	private static void setInputFrame(InputFrame _inputFrame) {
 		GuiManager._inputFrame = _inputFrame;
 	}
 
-	public void setOutputFrame(OutputFrame _outputFrame) {
+	public static void setOutputFrame(OutputFrame _outputFrame) {
 		GuiManager._outputFrame = _outputFrame;
 	}
 }

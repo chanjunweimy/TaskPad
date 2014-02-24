@@ -17,7 +17,7 @@ public class TaskPadMain{
 				new InputMain();
 				InputFrame inputFrame = new InputFrame();
 				OutputFrame outputFrame = new OutputFrame();
-				new MinimizeKey(inputFrame, outputFrame);
+				GuiManager.initialGuiManager(inputFrame, outputFrame);
 			}
 		};
 		SwingUtilities.invokeLater(runTaskPad);

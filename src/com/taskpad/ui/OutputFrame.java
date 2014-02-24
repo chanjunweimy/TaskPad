@@ -28,6 +28,7 @@ public class OutputFrame extends GuiFrame{
 	protected static JTextArea output = new JTextArea(5, 15);
 	
 	public OutputFrame(){
+		super();
 		initialOutputBox();
 		initialOutputFrame();
 	}
