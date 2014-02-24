@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="temp/org.eclipse.text_3.5.300.v20130515-1451.jar"/>
 	<classpathentry kind="lib" path="temp/org.eclipse.ui.forms_3.6.1.v20130822-1117.jar"/>
 	<classpathentry kind="lib" path="temp/org.eclipse.ui.workbench_3.105.1.v20130821-1411.jar"/>
+	<classpathentry kind="lib" path="JNativeHook.jar"/>
 	<classpathentry kind="output" path="temo"/>
 </classpath>
