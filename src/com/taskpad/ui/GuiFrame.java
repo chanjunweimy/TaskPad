@@ -6,7 +6,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
-public abstract class GuiFrame extends JFrame{
+public class GuiFrame extends JFrame{
 
 	/**
 	 * default
