@@ -11,6 +11,7 @@ public class InputMain {
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
 	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
+	private static final String MESSAGE_ERROR_LIST = "Error: Invalid list parameters.\n Type help if you need! :)";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final String COMMAND_ADD_INFO = "ADDINFO";
@@ -24,6 +25,7 @@ public class InputMain {
 	
 	private static final int LENGTH_EDIT = 3;
 	private static final int LENGTH_DELETE = 1;
+	private static final int LENGTH_DONE = 1;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";
@@ -31,6 +33,8 @@ public class InputMain {
 	private static final String PARAMETER_INFO = "INFO";
 	private static final String PARAMETER_LIST_KEY = "KEY";
 	private static final String PARAMETER_SEARCH_KEYWORD = "KEYWORD";
+	
+	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
 	
 	private static Command command;
 	private static InputManager inputManager;
@@ -157,10 +161,22 @@ public class InputMain {
 		if (isEmptyInput(input)){
 			inputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
 			return;
+		} else if (isInvalidListInput(input)){
+			inputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
+			return; 
 		} else {
 			inputObject = createListObject(input);
 			passObjectToExecutor();
 		}
+	}
+	
+	private static boolean isInvalidListInput(String input){
+		for (int i=0; i<PARAMETER_LIST.length; i++){
+			if (input.equalsIgnoreCase(PARAMETER_LIST[i])){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private static Input createListObject(String input){
@@ -171,7 +187,7 @@ public class InputMain {
 	}
 	
 	private static void deleteTask(String input) {
-		if (isValidTaskIDInput(input)){
+		if (isValidTaskIDInput(input, COMMAND_DELETE)){
 			inputObject = createDeleteObject(input);
 			passObjectToExecutor();
 		} else {
@@ -180,7 +196,7 @@ public class InputMain {
 	}
 
 	private static void doneTask(String input) {
-		if (isValidTaskIDInput(input)){
+		if (isValidTaskIDInput(input, "DONE")){
 			inputObject = createDoneObject(input);
 			passObjectToExecutor();
 		} else {
@@ -206,7 +222,7 @@ public class InputMain {
 		inputManager.passToExecutor(inputObject);
 	}
 	
-	private static boolean isValidTaskIDInput(String input){
+	private static boolean isValidTaskIDInput(String input, String commandString){
 		String errorMessage = "";
 		
 		if (isEmptyInput(input)){
@@ -216,10 +232,24 @@ public class InputMain {
 		}
 		
 		String inputString[] = input.split(" ");
-		if (isNotNumberDeleteArgs(inputString)){
-			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
+		
+		if (commandString.equals(COMMAND_DELETE)){
+			if (isNotNumberArgs(inputString, commandString)){
+				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+				return false;
+			}
+		} else if (commandString.equals(COMMAND_DONE)){
+			if (isNotNumberArgs(inputString, commandString)){
+				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+				return false;
+			}
+		} else if (commandString.equals(COMMAND_EDIT)){
+			if (isNotNumberArgs(inputString, commandString)){
+				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+				return false;
+			}
 		}
+
 		
 		if(isNotInteger(input) || isInvalidID(input)){
 			outputIdError(input);
@@ -229,10 +259,21 @@ public class InputMain {
 		return true;
 	}
 	
-	private static boolean isNotNumberDeleteArgs(String[] inputString){
-		if (inputString.length != LENGTH_DELETE){
-			return true;
+	private static boolean isNotNumberArgs(String[] inputString, String commandString){
+		if (commandString.equals(COMMAND_DELETE)){
+			if (inputString.length != LENGTH_DELETE){
+				return true;
+			}
+		} else if (commandString.equals(COMMAND_DONE)){
+			if (inputString.length != LENGTH_DONE){
+				return true;
+			}
+		} else if (commandString.equals(COMMAND_EDIT)){
+			if (inputString.length != LENGTH_EDIT){
+				return true;
+			}
 		}
+
 		return false;
 	}
 	
@@ -304,7 +345,7 @@ public class InputMain {
 		if (isInvalidParameterNumber(splitInput.length)){
 			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 			return false;
-		} else if (!isValidTaskIDInput(splitInput[0])) {
+		} else if (!isValidTaskIDInput(splitInput[0], COMMAND_EDIT)) {
 			outputIdError(splitInput[0]);
 			return false;
 		}
@@ -325,6 +366,11 @@ public class InputMain {
 	}
 
 	private static void searchTask(String input) {
+		if (isEmptyInput(input)){
+			inputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			return;
+		}
+		
 		clearInputParameters();
 		putInputParameters(PARAMETER_SEARCH_KEYWORD, input);
 		inputObject = new Input(COMMAND_SEARCH, inputParameters);		
