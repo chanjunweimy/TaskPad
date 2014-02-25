@@ -5,6 +5,10 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
 
 
 
@@ -24,7 +28,9 @@ public class InputFrame extends GuiFrame{
 	private final double COMPUTER_HEIGHT = 
 			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	
+	//inputTextBox
 	protected static JTextField input = new JTextField(15);
+	
 	protected final static int INPUTFRAME_WIDTH = 350;
 	protected final static int INPUTFRAME_HEIGHT = 30;
 	
@@ -64,4 +70,26 @@ public class InputFrame extends GuiFrame{
 		input.requestFocus();
 	}
 
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		super.nativeKeyPressed(arg0);
+		
+		boolean isCtrlI = arg0.getKeyCode() == NativeKeyEvent.VK_I
+	            && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+		
+		if (isCtrlI){
+			Runnable inputBoxFocus = requestFocusOnInputBox();
+            SwingUtilities.invokeLater(inputBoxFocus);
+		} 
+	}
+	
+	private Runnable requestFocusOnInputBox() {
+		Runnable inputBoxFocus = new Runnable(){
+			public void run(){
+				input.requestFocus();
+			}
+		};
+		return inputBoxFocus;
+	}
 }
