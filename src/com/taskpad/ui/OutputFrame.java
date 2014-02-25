@@ -50,6 +50,9 @@ public class OutputFrame extends GuiFrame{
 		//add JTextArea to JScrollPane will provide a scrollbar for it.
 		_scrollSpace = new JScrollPane(output);
 		
+		//disable horizontal scrollbar
+		_scrollSpace.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		
 		this.getContentPane().add(_scrollSpace);
 	}
 
@@ -57,6 +60,10 @@ public class OutputFrame extends GuiFrame{
 	private void initialOutputBox() {
 		// Don't let the user change the output.
 		output.setEditable(false);
+		
+		// Fix the maximum length of the line
+		output.setLineWrap(true);
+		
 		output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 		output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
 	}
@@ -73,44 +80,29 @@ public class OutputFrame extends GuiFrame{
 	public void nativeKeyPressed(NativeKeyEvent arg0) {
 		super.nativeKeyPressed(arg0);
 		
-		boolean isUpArrow = arg0.getKeyCode() == NativeKeyEvent.VK_UP;
-		boolean isDownArrow = arg0.getKeyCode() == NativeKeyEvent.VK_DOWN;
-		boolean isLeftArrow = arg0.getKeyCode() == NativeKeyEvent.VK_LEFT;
-		boolean isRightArrow = arg0.getKeyCode() == NativeKeyEvent.VK_RIGHT;
-		boolean isCtrlO = arg0.getKeyCode() == NativeKeyEvent.VK_O
-	            && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+		boolean isCtrlW= arg0.getKeyCode() == NativeKeyEvent.VK_W
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
 	                    "Ctrl");
+		boolean isCtrlS = arg0.getKeyCode() == NativeKeyEvent.VK_S				
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+
 		
-		if (isUpArrow){
-			Runnable upScroller = new BarScroller(true, _scrollSpace.getVerticalScrollBar());
-			SwingUtilities.invokeLater(upScroller);
+		if (isCtrlW){
+			scrollUp();
 			
-		} else if (isDownArrow){
-			Runnable downScroller = new BarScroller(false, _scrollSpace.getVerticalScrollBar());
-			SwingUtilities.invokeLater(downScroller);
-			
-		} else if (isLeftArrow){
-			Runnable leftScroller = new BarScroller(true, _scrollSpace.getHorizontalScrollBar());
-			SwingUtilities.invokeLater(leftScroller);
-			
-		} else if (isRightArrow){
-			Runnable rightScroller = new BarScroller(false, _scrollSpace.getHorizontalScrollBar());
-			SwingUtilities.invokeLater(rightScroller);
-			
-		} else if (isCtrlO){
-			Runnable outputBoxFocus = requestFocusOnOutputBox();
-            SwingUtilities.invokeLater(outputBoxFocus);
+		} else if (isCtrlS){
+			scrollDown();
 		}
 	}
 
-
-	private Runnable requestFocusOnOutputBox() {
-		Runnable outputBoxFocus = new Runnable(){
-			public void run(){
-				output.requestFocus();
-			}
-		};
-		return outputBoxFocus;
+	private void scrollDown() {
+		Runnable downScroller = new BarScroller(false, _scrollSpace.getVerticalScrollBar());
+		SwingUtilities.invokeLater(downScroller);
 	}
 
+	private void scrollUp() {
+		Runnable upScroller = new BarScroller(true, _scrollSpace.getVerticalScrollBar());
+		SwingUtilities.invokeLater(upScroller);
+	}
 }

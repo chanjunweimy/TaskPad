@@ -29,9 +29,9 @@ public class BarScroller implements Runnable {
 		private int scroll() {
 			int increment = _anyScrollBar.getBlockIncrement();
 			int current = _anyScrollBar.getValue();
-			if (!_forward){//up, left
+			if (_forward){//down, right
 				current -= increment;
-			} else if (_forward){//down, right
+			} else if (!_forward){//up, left
 				current += increment;
 			}
 			return current;
