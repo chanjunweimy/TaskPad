@@ -13,6 +13,7 @@ public class Help {
 	private static String KEY_ADD_TASK = "ADD TASK";
 	private static String KEY_ADD_INFO_TASK = "ADD INFO TO TASK";
 	private static String KEY_CLEAR_DATA = "CLEAR MEMORY";
+	private static String KEY_CLEAR_SCREEN = "CLEAR SCREEN";
 	private static String KEY_DELETE_TASK = "DELETE TASK";
 	private static String KEY_EDIT_TASK = "EDIT TASK DESCRIPTION";
 	private static String KEY_EXIT = "EXIT PROGRAM";
@@ -32,6 +33,7 @@ public class Help {
 		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time> -e <end time> -v <venue");
 		helpCommands.put(KEY_ADD_INFO_TASK, "addinfo <taskID> <info>");
 		helpCommands.put(KEY_CLEAR_DATA, "clc");
+		helpCommands.put(KEY_CLEAR_SCREEN, "clcsr");
 		helpCommands.put(KEY_DELETE_TASK, "del <taskID>");
 		helpCommands.put(KEY_EDIT_TASK, "edit <taskID> <new desc>");
 		helpCommands.put(KEY_SEARCH, "search <keyword>");

@@ -7,7 +7,7 @@ import java.util.Map;
 public class Command {
 	
 	public enum CommandType{
-		ADD, ADD_INFO, CLEAR_ALL, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
+		ADD, ADD_INFO, CLEAR_ALL, CLEAR_SCREEN, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
@@ -45,6 +45,7 @@ public class Command {
 		putAddVariations();
 		putAddInfoVariations();
 		putClearVariations();
+		putClearScreenVariations();
 		putDeleteVariations();
 		putDoneVariations();
 		putEditVariations();
@@ -58,7 +59,7 @@ public class Command {
 	/* Helper methods for creating the hashmap */
 	
 	private static void putAddVariations(){
-		String[] addVariations = {"ADD", "NEW", "CREATE"};
+		String[] addVariations = {"ADD", "NEW", "CREATE", "INSERT"};
 		commandVariations.put(CommandType.ADD, addVariations);
 	}
 	
@@ -80,6 +81,11 @@ public class Command {
 	private static void putClearVariations(){
 		String[] clearVariations = {"CLEAR", "CLR", "CLEAN"};
 		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
+	}
+	
+	private static void putClearScreenVariations(){
+		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR"};
+		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
 	}
 	
 	private static void putEditVariations(){

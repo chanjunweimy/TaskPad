@@ -89,6 +89,9 @@ public class InputMain {
 			case CLEAR_ALL:
 				clearAllTasks();
 				break;
+			case CLEAR_SCREEN:
+				clearScreen();
+				break;
 			case DELETE:
 				deleteTask(input);
 				break;
@@ -270,6 +273,10 @@ public class InputMain {
 		putInputParameters(PARAMETER_NULL, "");
 		inputObject = new Input(COMMAND_CLEAR, inputParameters);
 		passObjectToExecutor();
+	}
+	
+	private static void clearScreen(){
+		inputManager.clearScreen();
 	}
 	
 	private static void undoLast() {
