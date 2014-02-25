@@ -14,7 +14,7 @@ import com.taskpad.input.Add;
 
 public class TestAddInput {
 	
-	private static Scanner sc = new Scanner("add one -d 21/02/1993");
+	private static Scanner sc = new Scanner("add one -d 21/02/1993 -v venue -s 13:00 -e 14:00");
 	
 	public static void main(String[] args){
 		Map<String, String> inputParams = new HashMap<String, String>();
@@ -26,8 +26,7 @@ public class TestAddInput {
 		
 		Add add = new Add(input);
 		inputParams = add.run();
-		System.out.println("Size of params: " + inputParams.size());
-		
+		System.out.println("Size of params: " + inputParams.size());		
 	}
 	
 	
