@@ -26,6 +26,7 @@ public class InputMain {
 	private static final int LENGTH_EDIT = 3;
 	private static final int LENGTH_DELETE = 1;
 	private static final int LENGTH_DONE = 1;
+	private static final int LENGTH_ADD_INFO = 2;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";
@@ -146,15 +147,32 @@ public class InputMain {
 	private static void addInfoTask(String input) {
 		String[] splitInput = input.split(" ");
 		
-		if (isValidEditInput(splitInput)){
+		if (isEmptyInput(input)){
+			inputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			return;
+		}
+		
+		if (isValidAddInfoInput(splitInput)){
 			clearInputParameters();
 			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
 			putInputParameters(PARAMETER_INFO, splitInput[1]);
 			inputObject = new Input(COMMAND_ADD_INFO, inputParameters);
 			passObjectToExecutor();
-		} else {
-			return;
+		} 
+	}
+	
+	private static boolean isValidAddInfoInput(String[] input){		
+		if (input.length != LENGTH_ADD_INFO){
+			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			return false;
+		} 
+		
+		if(isNotInteger(input[0]) || isInvalidID(input[0])){
+			outputIdError(input[0]);
+			return false;
 		}
+		
+		return true;
 	}
 	
 	private static void listTask(String input){
