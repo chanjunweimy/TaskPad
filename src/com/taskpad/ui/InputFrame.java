@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 
-import javax.swing.JFrame;
 import javax.swing.JTextField;
 
 
@@ -38,9 +37,7 @@ public class InputFrame extends GuiFrame{
 	private void initialInputFrame() {
 		//make JFrame Disappear
 		setUndecorated(true);
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pack();
+
 		setSize(INPUTFRAME_WIDTH,INPUTFRAME_HEIGHT);
 		
 		int leftShift = INPUTFRAME_WIDTH - OutputFrame.OUTPUTFRAME_WIDTH;

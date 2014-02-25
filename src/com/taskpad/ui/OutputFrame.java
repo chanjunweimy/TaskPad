@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 public class OutputFrame extends GuiFrame{
@@ -37,8 +36,6 @@ public class OutputFrame extends GuiFrame{
 		//make JFrame Disappear
 		setUndecorated(true);
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		pack();
 		setSize(OUTPUTFRAME_WIDTH,OUTPUTFRAME_HEIGHT);
 		setLocation((int)(COMPUTER_WIDTH/2),
 					(int)(COMPUTER_HEIGHT/2 - OUTPUTFRAME_HEIGHT));
