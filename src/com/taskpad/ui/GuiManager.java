@@ -10,13 +10,14 @@ public class GuiManager {
 	}
 
 	public static void initialGuiManager(InputFrame inputFrame,
-			OutputFrame outputFrame) {
+		OutputFrame outputFrame) {
 		setInputFrame(inputFrame);
 		setOutputFrame(outputFrame);
 	}
 	
 	public static void callExit(){
 		closeAllWindows();
+		
 	}
 
 	private static void closeAllWindows() {
@@ -25,7 +26,7 @@ public class GuiManager {
 	}
 	
 	public static void callOutput(String out){
-		OutputFrame.output.append(out + "\n");
+		GuiManager._outputFrame.addLine(out + "\n");
 	}
 	
 	public static void passInput(String in){
@@ -38,5 +39,9 @@ public class GuiManager {
 
 	public static void setOutputFrame(OutputFrame _outputFrame) {
 		GuiManager._outputFrame = _outputFrame;
+	}
+	
+	public static void clearOutput(){
+		GuiManager._outputFrame.clearOutputBox();
 	}
 }
