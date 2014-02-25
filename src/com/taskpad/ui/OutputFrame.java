@@ -23,7 +23,7 @@ public class OutputFrame extends GuiFrame{
 	private final Color OUTPUTBOX_BACKGROUND_COLOR = 
 			new Color(242, 242, 242);
 	
-	protected final static int OUTPUTFRAME_WIDTH = 300;
+	protected final static int OUTPUTFRAME_WIDTH = 350;
 	protected final static int OUTPUTFRAME_HEIGHT = 150;
 	protected static JTextArea output = new JTextArea(5, 15);
 	
