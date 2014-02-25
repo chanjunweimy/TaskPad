@@ -17,6 +17,7 @@ public class GuiManager {
 	
 	public static void callExit(){
 		closeAllWindows();
+		
 	}
 
 	private static void closeAllWindows() {

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class OutputFrame extends GuiFrame{
@@ -32,7 +33,7 @@ public class OutputFrame extends GuiFrame{
 		initialOutputFrame();
 	}
 
-	private void initialOutputFrame() {
+	private void initialOutputFrame() {		
 		//make JFrame Disappear
 		setUndecorated(true);
 		
@@ -40,7 +41,10 @@ public class OutputFrame extends GuiFrame{
 		setLocation((int)(COMPUTER_WIDTH/2),
 					(int)(COMPUTER_HEIGHT/2 - OUTPUTFRAME_HEIGHT));
 		
-		this.getContentPane().add(output);
+		//add JTextArea to JScrollPane will provide a scrollbar for it.
+		JScrollPane scrollSpace = new JScrollPane(output);
+		
+		this.getContentPane().add(scrollSpace);
 		
 		setVisible(true);
 	}
