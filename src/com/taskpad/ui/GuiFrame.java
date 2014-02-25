@@ -20,11 +20,20 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private static final long serialVersionUID = 1L;
 	
 	public GuiFrame(){
+		//to disable the titlebar
+		setUndecorated(true);
+		
 		addWindowListener(this);
+		
+		showWindow(true);
 	}
 	
 	protected void close(){
 		dispose();
+	}
+	
+	protected void showWindow(boolean isVisible){
+		setVisible(isVisible);
 	}
 
 	@Override
@@ -47,19 +56,54 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		 //Clean up the native hook.
+		 endProgram();
+	}
+	
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		boolean isEscapeKey = arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE;
+		boolean isHomeKey = arg0.getKeyCode() == NativeKeyEvent.VK_HOME;
+		boolean isEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END;
+		if (isEndKey) {
+			Runnable changeState = getStateChanges();
+            SwingUtilities.invokeLater(changeState);
+		} else if (isHomeKey){
+			Runnable changeVisibility = getVisibilityChanges();
+            SwingUtilities.invokeLater(changeVisibility);
+		} else if (isEscapeKey){
+			endProgram();
+		}
+	}
+
+	private void endProgram() {
+		//Clean up the native hook.
         GlobalScreen.unregisterNativeHook();
         System.runFinalization();
         System.exit(0);
 	}
 	
-	@Override
-	public void nativeKeyPressed(NativeKeyEvent arg0) {
-		if (arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
-			Runnable changeState = getStateChanges();
-            SwingUtilities.invokeLater(changeState);
-            requestFocusInWindow();
-		}
+	private Runnable getVisibilityChanges() {
+		Runnable changeVisibility = new Runnable(){
+			public void run(){
+				boolean isShown = isVisible() == true;
+				boolean isHided = isVisible() == false;
+				if (isShown){
+					hide();
+				} else if (isHided){
+					show();
+				}
+			}
+
+			private void show() {
+				showWindow(true);
+				setState(Frame.NORMAL);
+			}
+
+			private void hide() {
+				showWindow(false);
+			}
+		};
+		return changeVisibility;
 	}
 
 	private Runnable getStateChanges() {

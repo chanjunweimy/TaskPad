@@ -8,18 +8,13 @@ package com.taskpad.ui;
 
 import javax.swing.SwingUtilities;
 
-import com.taskpad.input.InputMain;
-
-public class TaskPadMain{
+public class TaskPadMain{	
 	public static void main(String[] args){
-		Runnable runTaskPad = new Runnable() {
-			public void run() {
-				new InputMain();
-				InputFrame inputFrame = new InputFrame();
-				OutputFrame outputFrame = new OutputFrame();
-				GuiManager.initialGuiManager(inputFrame, outputFrame);
-			}
-		};
+		runProgram();
+	}
+
+	private static void runProgram() {
+		Runnable runTaskPad = new TaskPadLauncher();
 		SwingUtilities.invokeLater(runTaskPad);
 	}
 }
