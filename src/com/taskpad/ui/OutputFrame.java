@@ -52,5 +52,13 @@ public class OutputFrame extends GuiFrame{
 		output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
 	}
 	
+	protected void clearOutputBox() {
+		output.setText("");
+	}
+	
+	protected void addLine(String line) {
+		output.append(line);
+	}
+	
 
 }
