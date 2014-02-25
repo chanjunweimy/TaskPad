@@ -67,7 +67,7 @@ public class Add {
 	private void parseNextParam(String param){
 		String firstChar = getFirstChar(param);
 		param = removeFirstChar(param);
-		
+
 		switch (firstChar){
 		case "d":
 			getDeadline(param);
@@ -118,7 +118,7 @@ public class Add {
 	}
 	
 	private static String removeFirstChar(String input) {
-		return input.replace(getFirstChar(input), "").trim();
+		return input.replaceFirst(getFirstChar(input), "").trim();
 	}
 	
 	private static String getFirstChar(String input) {
