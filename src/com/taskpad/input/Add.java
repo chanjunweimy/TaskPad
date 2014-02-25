@@ -9,10 +9,7 @@ public class Add {
 	private static String input;
 	private static Map<String,String> inputParameters;
 	private static Scanner sc = new Scanner(System.in);
-	private boolean invalidParameters = false;
-	
-	private static String MESSAGE_EMPTY_INPUT = "Error: Empty Input. Type 'help' if you need to! :)";
-	private static String COMMAND_ADD = "ADD";
+	private static boolean invalidParameters = false;
 	
 	private static String PARAMETER_DEADLINE_DAY = "DAY";
 	private static String PARAMETER_DEADLINE_MONTH = "MONTH";
@@ -24,13 +21,13 @@ public class Add {
 
 	public Add(String input){
 		this.input = input;
-		this.inputParameters = new HashMap<String,String>();
+		inputParameters = new HashMap<String,String>();
 	}
 	
-	public Map<String,String> run(){
+	public static Map<String,String> run(){
 		if (isEmptyString()){
-			this.inputParameters.clear();
-			return this.inputParameters;
+			inputParameters.clear();
+			return inputParameters;
 		} 
 		
 		splitInputParameters();
@@ -39,23 +36,23 @@ public class Add {
 			Add.inputParameters.clear();
 		}
 		
-		return this.inputParameters;
+		return inputParameters;
 	}
 	
-	private boolean isEmptyString(){
-		if (this.input.isEmpty()){
+	private static boolean isEmptyString(){
+		if (input.isEmpty()){
 			return true;
 		}
 		return false;
 	}
 	
-	private void splitInputParameters(){
+	private static void splitInputParameters(){
 		int count = 0;
-		sc = new Scanner(this.input).useDelimiter("\\s-");
+		sc = new Scanner(input).useDelimiter("\\s-");
 		while(sc.hasNext()){
 			String nextParam = sc.next();
 			if (count == 0){
-				this.inputParameters.put(PARAMETER_DESCRIPTION, nextParam);
+				inputParameters.put(PARAMETER_DESCRIPTION, nextParam);
 			} else {
 				parseNextParam(nextParam);
 			}
@@ -63,7 +60,7 @@ public class Add {
 		}
 	}
 	
-	private void parseNextParam(String param){
+	private static void parseNextParam(String param){
 		String firstChar = getFirstChar(param);
 		param = removeFirstChar(param);
 
@@ -85,7 +82,7 @@ public class Add {
 		}
 	}
 
-	private void getDeadline(String param) {
+	private static void getDeadline(String param) {
 		String[] splitParam = param.split("/", -1);
 		String day = splitParam[0];
 		String month = splitParam[1];
@@ -93,27 +90,27 @@ public class Add {
 		inputDeadlines(day,month, year);
 	}
 	
-	private void inputDeadlines(String day, String month, String year){
-		this.inputParameters.put(PARAMETER_DEADLINE_DAY, day);
-		this.inputParameters.put(PARAMETER_DEADLINE_MONTH, month);
-		this.inputParameters.put(PARAMETER_DEADLINE_YEAR, year);
+	private static void inputDeadlines(String day, String month, String year){
+		inputParameters.put(PARAMETER_DEADLINE_DAY, day);
+		inputParameters.put(PARAMETER_DEADLINE_MONTH, month);
+		inputParameters.put(PARAMETER_DEADLINE_YEAR, year);
 	}
 
-	private void inputVenue(String param) {
-		this.inputParameters.put(PARAMETER_VENUE, param);		
+	private static void inputVenue(String param) {
+		inputParameters.put(PARAMETER_VENUE, param);		
 	}
 
-	private void inputStartTime(String param) {
-		this.inputParameters.put(PARAMETER_START, param);	
+	private static void inputStartTime(String param) {
+		inputParameters.put(PARAMETER_START, param);	
 		
 	}
 
-	private void inputEndTime(String param) {
-		this.inputParameters.put(PARAMETER_END, param);	
+	private static void inputEndTime(String param) {
+		inputParameters.put(PARAMETER_END, param);	
 	}
 
-	private void invalidParam() {
-		this.invalidParameters = true;
+	private static void invalidParam() {
+		invalidParameters = true;
 	}
 	
 	private static String removeFirstChar(String input) {
