@@ -7,6 +7,8 @@ import com.taskpad.input.Command.CommandType;
 
 public class InputMain {
 
+	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "Confirm clear screen? (Y/N)";
+	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "Confirm clear data? (Y/N)";
 	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
 	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
@@ -16,6 +18,7 @@ public class InputMain {
 	private static final String COMMAND_ADD = "ADD";
 	private static final String COMMAND_ADD_INFO = "ADDINFO";
 	private static final String COMMAND_CLEAR = "CLEAR";
+	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
 	private static final String COMMAND_DELETE = "DELETE";
 	private static final String COMMAND_DONE = "DONE";
 	private static final String COMMAND_EDIT = "EDIT";
@@ -40,6 +43,8 @@ public class InputMain {
 	private static Command command;
 	private static InputManager inputManager;
 	private static Input inputObject;
+	private static boolean isConfirmation = false;
+	private static String currentCommand = "";
 	
 	private static Map<String, String> inputParameters;
 	
@@ -50,20 +55,49 @@ public class InputMain {
 	}
 	
 	public static void receiveInput(String input){
-		String inputCopy = input;
-		if (errorIfNoInput(input)){
-			return;
-		}
-		String commandTypeString = parseInput(inputCopy);
-		Command.CommandType commandType = determineCommandType(commandTypeString);
-
-		if (isValidCommandType(commandType)){		
-			input = removeFirstWord(input);
-			performCommand (commandType, input);
+		if (isConfirmation){
+			if (isConfirmClear(input)){
+				processConfirmation();
+			}
+			resetConfirmationVariable();
 		} else {
-			invalidCommand(input);
+			String inputCopy = input;
+			if (errorIfNoInput(input)){
+				return;
+			}
+			String commandTypeString = parseInput(inputCopy);
+			Command.CommandType commandType = determineCommandType(commandTypeString);
+	
+			if (isValidCommandType(commandType)){		
+				input = removeFirstWord(input);
+				performCommand (commandType, input);
+			} else {
+				invalidCommand(input);
+			}
 		}
 
+	}
+	
+	private static boolean isConfirmClear(String input){
+		if (input.equalsIgnoreCase("Y")){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	private static void processConfirmation(){
+		if (currentCommand.equals(COMMAND_CLEAR)){
+			clearAllTasks();
+			
+		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
+			inputManager.clearScreen();
+		}
+	}
+	
+	private static void resetConfirmationVariable(){
+		isConfirmation = false;
+		currentCommand = "";
 	}
 	
 	private static boolean errorIfNoInput(String input) {
@@ -92,9 +126,13 @@ public class InputMain {
 			case LIST:
 				listTask(input);
 			case CLEAR_ALL:
-				clearAllTasks();
+				isConfirmation = true;
+				currentCommand = COMMAND_CLEAR;
+				clearAllTasksConfirmation();
 				break;
 			case CLEAR_SCREEN:
+				isConfirmation = true;
+				currentCommand = COMMAND_CLEAR_SCREEN;
 				clearScreen();
 				break;
 			case DELETE:
@@ -317,6 +355,10 @@ public class InputMain {
 		inputParameters.put(parameter, input);
 	}
 
+	private static void clearAllTasksConfirmation(){
+		inputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_DATA);
+	}
+	
 	private static void clearAllTasks() {
 		clearInputParameters();
 		putInputParameters(PARAMETER_NULL, "");
@@ -325,7 +367,7 @@ public class InputMain {
 	}
 	
 	private static void clearScreen(){
-		inputManager.clearScreen();
+		inputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_SCREEN);
 	}
 	
 	private static void undoLast() {

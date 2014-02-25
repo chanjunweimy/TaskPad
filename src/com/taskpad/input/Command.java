@@ -79,7 +79,7 @@ public class Command {
 	}
 	
 	private static void putClearVariations(){
-		String[] clearVariations = {"CLEAR", "CLR", "CLEAN"};
+		String[] clearVariations = {"CLEAR", "CLR", "CLEAN", "CLC"};
 		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
 	}
 	
