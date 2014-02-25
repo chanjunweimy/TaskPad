@@ -35,9 +35,6 @@ public class InputFrame extends GuiFrame{
 	}
 
 	private void initialInputFrame() {
-		//make JFrame Disappear
-		setUndecorated(true);
-
 		setSize(INPUTFRAME_WIDTH,INPUTFRAME_HEIGHT);
 		
 		int leftShift = INPUTFRAME_WIDTH - OutputFrame.OUTPUTFRAME_WIDTH;
@@ -48,7 +45,6 @@ public class InputFrame extends GuiFrame{
 		
 		this.getContentPane().add(input);
 		
-		setVisible(true);
 		input.requestFocus();        // start with focus on this field
 	}
 
@@ -63,6 +59,7 @@ public class InputFrame extends GuiFrame{
 		input.addActionListener(tfListener);
 	}
 	
+	@Override
 	public void windowDeiconified(WindowEvent arg0) {
 		input.requestFocus();
 	}

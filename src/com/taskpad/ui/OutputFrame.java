@@ -33,10 +33,7 @@ public class OutputFrame extends GuiFrame{
 		initialOutputFrame();
 	}
 
-	private void initialOutputFrame() {		
-		//make JFrame Disappear
-		setUndecorated(true);
-		
+	private void initialOutputFrame() {				
 		setSize(OUTPUTFRAME_WIDTH,OUTPUTFRAME_HEIGHT);
 		setLocation((int)(COMPUTER_WIDTH/2),
 					(int)(COMPUTER_HEIGHT/2 - OUTPUTFRAME_HEIGHT));
@@ -45,8 +42,6 @@ public class OutputFrame extends GuiFrame{
 		JScrollPane scrollSpace = new JScrollPane(output);
 		
 		this.getContentPane().add(scrollSpace);
-		
-		setVisible(true);
 	}
 
 	private void initialOutputBox() {
