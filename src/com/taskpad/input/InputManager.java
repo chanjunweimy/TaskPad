@@ -31,7 +31,7 @@ public class InputManager {
 	}
 	
 	public static void clearScreen(){
-		//Clear GUI output frame
+		guiManager.clearOutput();
 	}
 	
 	public static void passToExecutor(Input input){
