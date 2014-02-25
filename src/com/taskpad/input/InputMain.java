@@ -23,7 +23,7 @@ public class InputMain {
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final String COMMAND_UNDO = "UNDO";
 	
-	private static final int LENGTH_EDIT = 3;
+	private static final int LENGTH_EDIT = 2;
 	private static final int LENGTH_DELETE = 1;
 	private static final int LENGTH_DONE = 1;
 	private static final int LENGTH_ADD_INFO = 2;
@@ -261,13 +261,7 @@ public class InputMain {
 				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 				return false;
 			}
-		} else if (commandString.equals(COMMAND_EDIT)){
-			if (isNotNumberArgs(inputString, commandString)){
-				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-				return false;
-			}
-		}
-
+		} 
 		
 		if(isNotInteger(input) || isInvalidID(input)){
 			outputIdError(input);
@@ -286,12 +280,8 @@ public class InputMain {
 			if (inputString.length != LENGTH_DONE){
 				return true;
 			}
-		} else if (commandString.equals(COMMAND_EDIT)){
-			if (inputString.length != LENGTH_EDIT){
-				return true;
-			}
-		}
-
+		} 
+		
 		return false;
 	}
 	
@@ -313,9 +303,9 @@ public class InputMain {
 	
 	private static boolean isInvalidID(String input){
 		int inputNum = Integer.parseInt(input);
-		if (inputNum > inputManager.retrieveNumberOfTasks()){
-			return true;
-		}
+//		if (inputNum > inputManager.retrieveNumberOfTasks()){
+//			return true;
+//		}
 		return false;
 	}
 	
@@ -346,6 +336,11 @@ public class InputMain {
 	}
 	
 	private static void editTask(String input) {
+		if (isEmptyInput(input)){
+			inputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			return;
+		}
+		
 		String[] splitInput = input.split(" ");
 		
 		if (isValidEditInput(splitInput)){
@@ -363,10 +358,11 @@ public class InputMain {
 		if (isInvalidParameterNumber(splitInput.length)){
 			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 			return false;
-		} else if (!isValidTaskIDInput(splitInput[0], COMMAND_EDIT)) {
+		} 	else if(isNotInteger(splitInput[0]) || isInvalidID(splitInput[0])){
 			outputIdError(splitInput[0]);
 			return false;
 		}
+		
 		return true;
 	}
 
@@ -378,9 +374,9 @@ public class InputMain {
 	
 	private static boolean isInvalidParameterNumber(int length){
 		if (length != LENGTH_EDIT){
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	private static void searchTask(String input) {
