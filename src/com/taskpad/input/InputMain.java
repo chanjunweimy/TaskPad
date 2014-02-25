@@ -10,7 +10,7 @@ public class InputMain {
 	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
 	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
-	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters. Type help if you need! :)";
+	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final String COMMAND_ADD_INFO = "ADDINFO";
@@ -22,7 +22,7 @@ public class InputMain {
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final String COMMAND_UNDO = "UNDO";
 	
-	private static final int LENGTH_EDIT = 2;
+	private static final int LENGTH_EDIT = 3;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";

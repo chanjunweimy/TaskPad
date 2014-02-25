@@ -13,7 +13,7 @@ import com.taskpad.input.Add;
 
 public class TestAddInput {
 	
-	private static Scanner sc = new Scanner(System.in);
+	private static Scanner sc = new Scanner("add one -d 21/02/1993");
 	
 	public static void main(String[] args){
 		Map<String, String> inputParams = new HashMap<String, String>();

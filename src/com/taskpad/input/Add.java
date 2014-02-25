@@ -23,7 +23,6 @@ public class Add {
 	private static String PARAMETER_DESCRIPTION = "DESC";
 
 	public Add(String input){
-		System.out.println(input);
 		this.input = input;
 		this.inputParameters = new HashMap<String,String>();
 	}
@@ -87,10 +86,10 @@ public class Add {
 	}
 
 	private void getDeadline(String param) {
-		sc = new Scanner(Add.input).useDelimiter("\\s/");
-		String day = sc.next();
-		String month = sc.next();
-		String year = sc.next();
+		String[] splitParam = param.split("/", -1);
+		String day = splitParam[0];
+		String month = splitParam[1];
+		String year = splitParam[2];
 		inputDeadlines(day,month, year);
 	}
 	
