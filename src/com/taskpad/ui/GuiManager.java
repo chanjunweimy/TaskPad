@@ -1,6 +1,6 @@
 package com.taskpad.ui;
 
-import com.taskpad.inputproc.InputManager;
+import com.taskpad.input.InputManager;
 
 public class GuiManager {
 	private static InputFrame _inputFrame;

@@ -3,7 +3,7 @@ package com.taskpad.tests;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.taskpad.inputproc.InputMain;
+import com.taskpad.input.InputMain;
 import com.taskpad.ui.GuiManager;
 import com.taskpad.ui.InputFrame;
 import com.taskpad.ui.OutputFrame;

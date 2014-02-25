@@ -8,7 +8,7 @@ package com.taskpad.ui;
 
 import javax.swing.SwingUtilities;
 
-import com.taskpad.inputproc.InputMain;
+import com.taskpad.input.InputMain;
 
 public class TaskPadMain{
 	public static void main(String[] args){

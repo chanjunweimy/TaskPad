@@ -1,9 +1,9 @@
-package com.taskpad.inputproc;
+package com.taskpad.input;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.taskpad.inputproc.Command.CommandType;
+import com.taskpad.input.Command.CommandType;
 
 public class InputMain {
 
@@ -44,14 +44,15 @@ public class InputMain {
 	}
 	
 	public static void receiveInput(String input){
+		String inputCopy = input;
 		if (errorIfNoInput(input)){
 			return;
 		}
-		String commandTypeString = parseInput(input);
+		String commandTypeString = parseInput(inputCopy);
 		Command.CommandType commandType = determineCommandType(commandTypeString);
 
-		if (isValidCommandType(commandType)){			
-			input = removeFirstWord(commandTypeString);
+		if (isValidCommandType(commandType)){		
+			input = removeFirstWord(input);
 			performCommand (commandType, input);
 		} else {
 			invalidCommand(input);

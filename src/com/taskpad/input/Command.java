@@ -1,4 +1,4 @@
-package com.taskpad.inputproc;
+package com.taskpad.input;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +108,7 @@ public class Command {
 	}
 	
 	private static void putExitVariations(){
-		String[] exitVariations = {"EXIT", "QUIT", "END"};
+		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE"};
 		commandVariations.put(CommandType.EXIT, exitVariations);
 	}
 }

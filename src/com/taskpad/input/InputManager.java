@@ -1,4 +1,4 @@
-package com.taskpad.inputproc;
+package com.taskpad.input;
 
 import com.taskpad.execute.ExcecutorManager;
 import com.taskpad.ui.GuiManager;

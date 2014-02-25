@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.taskpad.inputproc.Command;
-import com.taskpad.inputproc.Command.CommandType;
+import com.taskpad.input.Command;
+import com.taskpad.input.Command.CommandType;
 
 
 public class TestInput {
