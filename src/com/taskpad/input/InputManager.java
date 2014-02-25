@@ -30,6 +30,10 @@ public class InputManager {
 		guiManager.callExit();
 	}
 	
+	public static void clearScreen(){
+		//Clear GUI output frame
+	}
+	
 	public static void passToExecutor(Input input){
 		//
 	}
