@@ -11,12 +11,6 @@ import com.taskpad.input.Command.CommandType;
 public class TestInput {
 	//Command command = new Command();
 	
-	//testing Add.java
-	@Test
-	public void testAdd() {
-		
-	}
-	
 	//testing Command.java
 	@Test
 	public void testCommand() {

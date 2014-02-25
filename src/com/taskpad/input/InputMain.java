@@ -23,6 +23,7 @@ public class InputMain {
 	private static final String COMMAND_UNDO = "UNDO";
 	
 	private static final int LENGTH_EDIT = 3;
+	private static final int LENGTH_DELETE = 1;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";
@@ -211,12 +212,25 @@ public class InputMain {
 			return false;
 		}
 		
+		String inputString[] = input.split(" ");
+		if (isNotNumberDeleteArgs(inputString)){
+			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			return false;
+		}
+		
 		if(isNotInteger(input) || isInvalidID(input)){
 			outputIdError(input);
 			return false;
 		}
 		
 		return true;
+	}
+	
+	private static boolean isNotNumberDeleteArgs(String[] inputString){
+		if (inputString.length != LENGTH_DELETE){
+			return true;
+		}
+		return false;
 	}
 	
 	private static boolean isEmptyInput(String input){
@@ -230,17 +244,17 @@ public class InputMain {
 		try{
 			Integer.parseInt(input);
 		} catch (NumberFormatException e){
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	private static boolean isInvalidID(String input){
 		int inputNum = Integer.parseInt(input);
 		if (inputNum > inputManager.retrieveNumberOfTasks()){
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	
 	private static void clearInputParameters(){

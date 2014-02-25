@@ -1,6 +1,7 @@
 /* @author: Lynnette Ng 
  * 
  * This is just a class for me to test the adding and splitting of string 
+ * Was only used during development time
  */
 
 package com.taskpad.tests;
