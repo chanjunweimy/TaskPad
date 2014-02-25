@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
+import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
@@ -25,7 +26,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		addWindowListener(this);
 		
+		//to make hotkey works
 		showWindow(true);
+		showWindow(false);
 	}
 	
 	protected void close(){
@@ -62,12 +65,16 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent arg0) {
 		boolean isEscapeKey = arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE;
-		boolean isHomeKey = arg0.getKeyCode() == NativeKeyEvent.VK_HOME;
-		boolean isEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END;
-		if (isEndKey) {
+		boolean isAltHomeKey = arg0.getKeyCode() == NativeKeyEvent.VK_HOME 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
+		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
+		if (isAltEndKey) {
 			Runnable changeState = getStateChanges();
             SwingUtilities.invokeLater(changeState);
-		} else if (isHomeKey){
+		} else if (isAltHomeKey){
 			Runnable changeVisibility = getVisibilityChanges();
             SwingUtilities.invokeLater(changeVisibility);
 		} else if (isEscapeKey){
