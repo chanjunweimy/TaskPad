@@ -79,17 +79,16 @@ public class InputFrame extends GuiFrame{
 	                    "Ctrl");
 		
 		if (isCtrlI){
-			Runnable inputBoxFocus = requestFocusOnInputBox();
-            SwingUtilities.invokeLater(inputBoxFocus);
+			requestFocusOnInputBox();
 		} 
 	}
 	
-	private Runnable requestFocusOnInputBox() {
+	private void requestFocusOnInputBox() {
 		Runnable inputBoxFocus = new Runnable(){
 			public void run(){
 				input.requestFocus();
 			}
 		};
-		return inputBoxFocus;
+		SwingUtilities.invokeLater(inputBoxFocus);
 	}
 }
