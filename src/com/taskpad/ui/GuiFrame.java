@@ -26,9 +26,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		addWindowListener(this);
 		
-		//to make hotkey works
 		showWindow(true);
-		showWindow(false);
 	}
 	
 	protected void close(){
