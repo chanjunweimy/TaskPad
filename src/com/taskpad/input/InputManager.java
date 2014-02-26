@@ -1,5 +1,6 @@
 package com.taskpad.input;
 
+import com.taskpad.data.DataManager;
 import com.taskpad.execute.ExcecutorManager;
 import com.taskpad.ui.GuiManager;
 
@@ -13,9 +14,12 @@ public class InputManager {
 	
 	private static GuiManager guiManager;
 	private static ExcecutorManager executorManager;
+	private static DataManager dataManager;
 	
 	public InputManager(){
 		guiManager = new GuiManager();
+		dataManager = new DataManager();
+		executorManager = new ExcecutorManager();
 	}
 	
 	public static void receiveFromGui(String inputString){
@@ -35,13 +39,11 @@ public class InputManager {
 	}
 	
 	public static void passToExecutor(Input input){
-		//
+		executorManager.receiveFromInput(input);
 	}
 	
 	public static int retrieveNumberOfTasks(){
-		int numberOfTasks = 0;
-		//Call function to get number
-		return numberOfTasks;
+		return dataManager.retrieveNumberOfTasks();
 	}
 	
 }
