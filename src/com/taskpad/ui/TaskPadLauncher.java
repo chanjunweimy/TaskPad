@@ -15,6 +15,7 @@ public class TaskPadLauncher implements Runnable {
 	private void setUpGui() {
 		initialFrames();
 		GuiManager.initialGuiManager(_inputFrame, _outputFrame);
+		GuiManager.callOutput("Welcome to Taskpad! Type a command or type \"help\"");
 	}
 
 	private void initialFrames() {
