@@ -72,14 +72,22 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
 		if (isAltEndKey) {
-			Runnable changeState = getStateChanges();
-            SwingUtilities.invokeLater(changeState);
+			minimizeOrRestore();
 		} else if (isAltHomeKey){
-			Runnable changeVisibility = getVisibilityChanges();
-            SwingUtilities.invokeLater(changeVisibility);
+			hideOrShow();
 		} else if (isEscapeKey){
 			endProgram();
 		}
+	}
+
+	private void hideOrShow() {
+		Runnable changeVisibility = getVisibilityChanges();
+		SwingUtilities.invokeLater(changeVisibility);
+	}
+
+	private void minimizeOrRestore() {
+		Runnable changeState = getStateChanges();
+		SwingUtilities.invokeLater(changeState);
 	}
 
 	private void endProgram() {
