@@ -1,5 +1,5 @@
 package com.taskpad.data;
 
-public class DataStorage {
+public class DataMain {
 
 }

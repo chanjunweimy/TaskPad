@@ -1,5 +1,5 @@
 package com.taskpad.execute;
 
-public class Executor {
+public class ExecutorMain {
 
 }
