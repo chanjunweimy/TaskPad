@@ -1,6 +1,7 @@
 package com.taskpad.ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
@@ -30,6 +31,9 @@ public class OutputFrame extends GuiFrame{
 	
 	protected final static int OUTPUTFRAME_WIDTH = 350;
 	protected final static int OUTPUTFRAME_HEIGHT = 150;
+	
+	private final Color defaultFontColor = Color.black;
+	private final Color reminderFontColor = Color.red;
 	
 	//outputTextBox
 	protected static JTextArea output = new JTextArea(5, 15);
@@ -66,6 +70,14 @@ public class OutputFrame extends GuiFrame{
 		
 		output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 		output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
+		
+		initializeFont();
+	}
+
+	private void initializeFont() {
+		Font font = new Font("Verdana", Font.BOLD, 12);
+		output.setFont(font);
+		output.setForeground(defaultFontColor);
 	}
 	
 	protected void clearOutputBox() {
@@ -73,6 +85,12 @@ public class OutputFrame extends GuiFrame{
 	}
 	
 	protected void addLine(String line) {
+		output.setForeground(defaultFontColor);
+		output.append(line);
+	}
+	
+	protected void addReminder(String line) {
+		output.setForeground(reminderFontColor);
 		output.append(line);
 	}
 	

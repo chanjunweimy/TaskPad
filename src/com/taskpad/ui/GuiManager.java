@@ -29,6 +29,10 @@ public class GuiManager {
 		GuiManager._outputFrame.addLine(out + "\n");
 	}
 	
+	public static void remindUser(String out){
+		GuiManager._outputFrame.addReminder(out + "\n");
+	}
+	
 	public static void passInput(String in){
 		InputManager.receiveFromGui(in);
 	}
