@@ -30,11 +30,12 @@ public class FlexiFontOutputFrame extends OutputFrame {
 
 	private final int DEFAULT_ALIGNMENT = StyleConstants.ALIGN_JUSTIFIED;
 	private final String DEFAULT_FONT_TYPE = "Lucida Console";
+	private final int DEFAULT_FONT_SIZE = 14;
 	private final Color DEFAULT_COLOR_NORMAL = Color.BLACK;
 	private final Color DEFAULT_COLOR_REMINDER = Color.RED;
 
-	private final int MARGIN_TOP = 5;
-	private final int MARGIN_LEFT = 5;
+	private final int MARGIN_TOP = 10;
+	private final int MARGIN_LEFT = 10;
 	private final int MARGIN_BOTTOM = 5;
 	private final int MARGIN_RIGHT = 5;
 	
@@ -168,6 +169,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		aset = setFontColor(c, sc, aset);
 		aset = setFontType(sc, aset);
 		aset = setAlignment(sc, aset);
+		aset = sc.addAttribute(aset, StyleConstants.FontSize, DEFAULT_FONT_SIZE);
 		return aset;
 	}
 
