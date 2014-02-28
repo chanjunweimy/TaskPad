@@ -1,4 +1,4 @@
-package com.TaskPad.data;
+package com.taskpad.data;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -16,7 +16,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.TaskPad.execute.Task;
+import com.taskpad.execute.Task;
 
 public class DataStorage {
 	public static LinkedList<Task> retrieve() {
