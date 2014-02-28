@@ -3,14 +3,15 @@ package com.taskpad.ui;
 import com.taskpad.input.InputManager;
 
 public class GuiManager {
+	private static final String NEWLINE = "\n";
 	private static InputFrame _inputFrame;
-	private static OutputFrame _outputFrame;
+	private static FlexiFontOutputFrame _outputFrame;
 	
 	public GuiManager(){
 	}
 
 	public static void initialGuiManager(InputFrame inputFrame,
-		OutputFrame outputFrame) {
+		FlexiFontOutputFrame outputFrame) {
 		setInputFrame(inputFrame);
 		setOutputFrame(outputFrame);
 	}
@@ -26,11 +27,11 @@ public class GuiManager {
 	}
 	
 	public static void callOutput(String out){
-		GuiManager._outputFrame.addLine(out + "\n");
+		GuiManager._outputFrame.addLine(out + NEWLINE);
 	}
 	
 	public static void remindUser(String out){
-		GuiManager._outputFrame.addReminder(out + "\n");
+		GuiManager._outputFrame.addReminder(out + NEWLINE);
 	}
 	
 	public static void passInput(String in){
@@ -41,7 +42,7 @@ public class GuiManager {
 		GuiManager._inputFrame = _inputFrame;
 	}
 
-	public static void setOutputFrame(OutputFrame _outputFrame) {
+	public static void setOutputFrame(FlexiFontOutputFrame _outputFrame) {
 		GuiManager._outputFrame = _outputFrame;
 	}
 	

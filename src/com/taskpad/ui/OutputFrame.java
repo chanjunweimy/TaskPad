@@ -1,8 +1,19 @@
+/**
+ * ===============DEPRECATED================
+ * 
+ * This class is deprecated as this class can only 
+ * show text font with only one color.
+ * 
+ * But we need different font color for reminder...
+ * JTextArea doesn't support this functionality 
+ * so we have to implement a new class......
+ * 
+ */
+
 package com.taskpad.ui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
@@ -19,79 +30,90 @@ public class OutputFrame extends GuiFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final double COMPUTER_WIDTH = 
-			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-	private final double COMPUTER_HEIGHT = 
-			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-	
-	private final Color OUTPUTBOX_BORDER_COLOR = 
+	protected final Color OUTPUTBOX_BORDER_COLOR = 
 			new Color(112, 48, 160);
-	private final Color OUTPUTBOX_BACKGROUND_COLOR = 
+	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
 			new Color(242, 242, 242);
 	
-	protected final static int OUTPUTFRAME_WIDTH = 350;
-	protected final static int OUTPUTFRAME_HEIGHT = 150;
+	private final static int OUTPUTFRAME_WIDTH = 350;
+	private final static int OUTPUTFRAME_HEIGHT = 150;
 	
-	private final Color defaultFontColor = Color.black;
-	private final Color reminderFontColor = Color.red;
+	private final Color DEFAULT_FONT_COLOR = Color.black;
 	
 	//outputTextBox
-	protected static JTextArea output = new JTextArea(5, 15);
+	private JTextArea _output = new JTextArea(5, 15);
 	
-	private JScrollPane _scrollSpace;
+	//children should have scroll bar too
+	protected JScrollPane _scrollBox  = new JScrollPane();
 	
 	public OutputFrame(){
 		super();
-		initialOutputBox();
-		initialOutputFrame();
+		initializeOutputFrame();
+	}
+	
+	//things that I want to be inherited by FlexiFontOutputFrame;
+	//as long as there is a boolean parameter
+	//then it is the child class
+	protected OutputFrame(boolean inherit){
+		super();
 	}
 
-	private void initialOutputFrame() {				
+	protected void setUpFrame() {
 		setSize(OUTPUTFRAME_WIDTH,OUTPUTFRAME_HEIGHT);
 		setLocation((int)(COMPUTER_WIDTH/2),
 					(int)(COMPUTER_HEIGHT/2 - OUTPUTFRAME_HEIGHT));
+	}
+
+	private void initializeOutputFrame() {				
+		setUpFrame();
 		
-		//add JTextArea to JScrollPane will provide a scrollbar for it.
-		_scrollSpace = new JScrollPane(output);
+		initializeOutputBox();
 		
-		//disable horizontal scrollbar
-		_scrollSpace.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		this.getContentPane().add(_scrollSpace);
+		setUpScrollBar();
+
+		this.getContentPane().add(_scrollBox);
+	}
+
+	protected void setUpScrollBar() {
+		//JScrollPane provides scroll bar, so I add outputbox inside it.
+		_scrollBox = new JScrollPane(_output);
+		disableHorizontalScrollBar();
+	}
+
+	protected void disableHorizontalScrollBar() {
+		_scrollBox.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	}
 
 
-	private void initialOutputBox() {
+	protected void initializeOutputBox() {
 		// Don't let the user change the output.
-		output.setEditable(false);
+		_output.setEditable(false);
 		
 		// Fix the maximum length of the line
-		output.setLineWrap(true);
+		_output.setLineWrap(true);
 		
-		output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
-		output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
+		_output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
+		_output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
 		
 		initializeFont();
 	}
 
 	private void initializeFont() {
 		Font font = new Font("Verdana", Font.BOLD, 12);
-		output.setFont(font);
-		output.setForeground(defaultFontColor);
+		_output.setFont(font);
+		_output.setForeground(DEFAULT_FONT_COLOR);
 	}
 	
 	protected void clearOutputBox() {
-		output.setText("");
+		_output.setText("");
 	}
 	
 	protected void addLine(String line) {
-		output.setForeground(defaultFontColor);
-		output.append(line);
+		_output.append(line);
 	}
 	
 	protected void addReminder(String line) {
-		output.setForeground(reminderFontColor);
-		output.append(line);
+		_output.append(line);
 	}
 	
 	@Override
@@ -115,12 +137,16 @@ public class OutputFrame extends GuiFrame{
 	}
 
 	private void scrollDown() {
-		Runnable downScroller = new BarScroller(false, _scrollSpace.getVerticalScrollBar());
+		Runnable downScroller = new BarScroller(false, _scrollBox.getVerticalScrollBar());
 		SwingUtilities.invokeLater(downScroller);
 	}
 
 	private void scrollUp() {
-		Runnable upScroller = new BarScroller(true, _scrollSpace.getVerticalScrollBar());
+		Runnable upScroller = new BarScroller(true, _scrollBox.getVerticalScrollBar());
 		SwingUtilities.invokeLater(upScroller);
+	}
+	
+	protected static int showWidth(){
+		return OUTPUTFRAME_WIDTH;
 	}
 }

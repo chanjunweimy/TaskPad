@@ -1,7 +1,6 @@
 package com.taskpad.ui;
 
 import java.awt.Color;
-import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JTextField;
@@ -9,7 +8,6 @@ import javax.swing.SwingUtilities;
 
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
-
 
 
 public class InputFrame extends GuiFrame{
@@ -22,45 +20,42 @@ public class InputFrame extends GuiFrame{
 	private final Color INPUTBOX_BACKGROUND_COLOR = 
 			new Color(219, 219, 219);
 	
-	private final double COMPUTER_WIDTH = 
-			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-	
-	private final double COMPUTER_HEIGHT = 
-			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-	
 	//inputTextBox
-	protected static JTextField input = new JTextField(15);
+	private static JTextField input = new JTextField(15);
 	
-	protected final static int INPUTFRAME_WIDTH = 350;
-	protected final static int INPUTFRAME_HEIGHT = 30;
+	private final static int INPUTFRAME_WIDTH = 350;
+	private final static int INPUTFRAME_HEIGHT = 30;
 	
 	public InputFrame(){
 		super();
-		initialInputBox();
-		initialInputFrame();
+		initializeInputFrame();
 	}
 
-	private void initialInputFrame() {
+	private void initializeInputFrame() {		
+		setUpFrame();
+		
+		initializeInputBox();
+		input.requestFocus();        // start with focus on this field
+		this.getContentPane().add(input);
+	}
+
+	private void setUpFrame() {
 		setSize(INPUTFRAME_WIDTH,INPUTFRAME_HEIGHT);
 		
-		int leftShift = INPUTFRAME_WIDTH - OutputFrame.OUTPUTFRAME_WIDTH;
+		int leftShift = INPUTFRAME_WIDTH - OutputFrame.showWidth();
 		leftShift /= 2;
 		
 		setLocation((int)(COMPUTER_WIDTH/2 - leftShift),
 					(int)(COMPUTER_HEIGHT/2));
-		
-		this.getContentPane().add(input);
-		
-		input.requestFocus();        // start with focus on this field
 	}
 
-	private void initialInputBox() {
-		inputboxReadyForEvent();
+	private void initializeInputBox() {
+		makeInputboxReadyForEvent();
 		
 		input.setBackground(INPUTBOX_BACKGROUND_COLOR);//grey color
 	}
 
-	private void inputboxReadyForEvent() {
+	private void makeInputboxReadyForEvent() {
 		TextFieldListener tfListener = new TextFieldListener();
 		input.addActionListener(tfListener);
 	}
@@ -90,5 +85,13 @@ public class InputFrame extends GuiFrame{
 			}
 		};
 		SwingUtilities.invokeLater(inputBoxFocus);
+	}
+	
+	protected static String getText(){
+		return input.getText();
+	}
+	
+	protected static void reset(){
+		input.setText("");
 	}
 }
