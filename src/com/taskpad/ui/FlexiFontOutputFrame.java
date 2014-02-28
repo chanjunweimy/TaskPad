@@ -7,12 +7,12 @@
 package com.taskpad.ui;
 
 import java.awt.Color;
-import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
@@ -34,8 +34,8 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	private final Color DEFAULT_COLOR_NORMAL = Color.BLACK;
 	private final Color DEFAULT_COLOR_REMINDER = Color.RED;
 
-	private final int MARGIN_TOP = 10;
-	private final int MARGIN_LEFT = 10;
+	private final int MARGIN_TOP = 5;
+	private final int MARGIN_LEFT = 5;
 	private final int MARGIN_BOTTOM = 5;
 	private final int MARGIN_RIGHT = 5;
 	
@@ -67,13 +67,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 
 		_outputBox.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 
-		Border line = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
-		_outputBox.setBorder(line);
-
-
-		Insets margin = new Insets(MARGIN_TOP, MARGIN_LEFT, MARGIN_BOTTOM, MARGIN_RIGHT);
-		_outputBox.setMargin(margin);
-
+		setUpBorderAndMargin();
 		
 		/* Testing
 		appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
@@ -82,6 +76,13 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		appendToPane(_outputBox, "Over", Color.MAGENTA);
 		appendToPane(_outputBox, "flow", Color.ORANGE);
 		*/
+	}
+
+	private void setUpBorderAndMargin() {
+		Border border = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
+		Border margin =  BorderFactory.createEmptyBorder(MARGIN_TOP, MARGIN_LEFT, MARGIN_BOTTOM, MARGIN_RIGHT);
+		CompoundBorder marginBorder = BorderFactory.createCompoundBorder(border, margin);
+		_outputBox.setBorder(marginBorder);
 	}
 
 	@Override
