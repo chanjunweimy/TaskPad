@@ -19,6 +19,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
@@ -30,9 +31,9 @@ public class OutputFrame extends GuiFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private final Color OUTPUTBOX_BORDER_COLOR = 
+	protected final Color OUTPUTBOX_BORDER_COLOR = 
 			new Color(112, 48, 160);
-	private final Color OUTPUTBOX_BACKGROUND_COLOR = 
+	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
 			new Color(242, 242, 242);
 	
 	private final static int OUTPUTFRAME_WIDTH = 350;
@@ -93,7 +94,9 @@ public class OutputFrame extends GuiFrame{
 		_output.setLineWrap(true);
 		
 		_output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
-		_output.setBorder(BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR));
+		
+		Border line = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
+		_output.setBorder(line);
 		
 		initializeFont();
 	}
