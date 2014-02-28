@@ -53,7 +53,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		setUpFrame();       
 		initializeOutputBox();
 		setUpScrollBar();
-		getContentPane().add(_scrollBox);
+		this.getContentPane().add(_scrollBox);
 	}
 
 	@Override
@@ -90,9 +90,20 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		_scrollBox = new JScrollPane(_outputBox);
 		disableHorizontalScrollBar();
 	}
+	
+	//needs to override this because 
+	//we declare _output as JTextPane, not JTextArea
+	//so better write one more time to avoid confusion
+	@Override
+	protected void clearOutputBox() {
+		_outputBox.setText("");
+	}
 
-	private void appendToPane(JTextPane tp, String msg, Color c)
-	{
+	private void appendToPane(String msg, Color c){
+		appendToPane(_outputBox, msg, c);		
+	}
+	
+	private void appendToPane(JTextPane tp, String msg, Color c){
 		StyleContext sc = StyleContext.getDefaultStyleContext();
 		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
