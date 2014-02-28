@@ -4,7 +4,7 @@ import com.taskpad.input.InputMain;
 
 public class TaskPadLauncher implements Runnable {
 	private static InputFrame _inputFrame;
-	private static FlexiFontOutputFrame _outputFrame;
+	private static OutputFrame _outputFrame;
 	
 	@Override
 	public void run() {

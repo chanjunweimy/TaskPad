@@ -5,13 +5,13 @@ import com.taskpad.input.InputManager;
 public class GuiManager {
 	private static final String NEWLINE = "\n";
 	private static InputFrame _inputFrame;
-	private static FlexiFontOutputFrame _outputFrame;
+	private static OutputFrame _outputFrame;
 	
 	public GuiManager(){
 	}
 
 	public static void initialGuiManager(InputFrame inputFrame,
-		FlexiFontOutputFrame outputFrame) {
+		OutputFrame outputFrame) {
 		setInputFrame(inputFrame);
 		setOutputFrame(outputFrame);
 	}
@@ -42,7 +42,7 @@ public class GuiManager {
 		GuiManager._inputFrame = _inputFrame;
 	}
 
-	public static void setOutputFrame(FlexiFontOutputFrame _outputFrame) {
+	public static void setOutputFrame(OutputFrame _outputFrame) {
 		GuiManager._outputFrame = _outputFrame;
 	}
 	
