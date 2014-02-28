@@ -36,15 +36,18 @@ public class DataStorage {
 			for(Task taskInList: taskList) {
 				Element task = doc.createElement("Task");
 				rootElement.appendChild(task);
-				
+				// task.setAttribute("id", "1");
+				Element firstname = doc.createElement("firstname");
+				firstname.appendChild(doc.createTextNode("yong"));
+				staff.appendChild(firstname);
 				
 			}
  
 		} catch (ParserConfigurationException pce) {
 		  	pce.printStackTrace();
-		} //catch (TransformerException tfe) {
-		  	//tfe.printStackTrace();
-		//}
+		} catch (TransformerException tfe) {
+		  	tfe.printStackTrace();
+		}
 
 	}
 }
