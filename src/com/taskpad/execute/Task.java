@@ -16,6 +16,37 @@ public class Task {
 		this.details = details;
 		this.done = 0;
 	}
+
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getDeadline() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getStartTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getEndTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getDetails() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getDone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	
 }
