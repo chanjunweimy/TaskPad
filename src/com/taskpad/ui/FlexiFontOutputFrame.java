@@ -65,23 +65,23 @@ public class FlexiFontOutputFrame extends OutputFrame {
 
 		//JTextPane turn on wrapping by default
 
-		_outputBox.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
+		//_outputBox.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 
-		Border line = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
-		_outputBox.setBorder(line);
+		//Border line = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
+		//_outputBox.setBorder(line);
 
 
-		Insets margin = new Insets(MARGIN_TOP, MARGIN_LEFT, MARGIN_BOTTOM, MARGIN_RIGHT);
-		_outputBox.setMargin(margin);
+		//Insets margin = new Insets(MARGIN_TOP, MARGIN_LEFT, MARGIN_BOTTOM, MARGIN_RIGHT);
+		//_outputBox.setMargin(margin);
 
 		
-		/* Testing
+		// /* Testing
 		appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
 		appendToPane(_outputBox, "I wish I could be ONE of THE BEST on ", Color.BLUE);
 		appendToPane(_outputBox, "Stack", Color.DARK_GRAY);
 		appendToPane(_outputBox, "Over", Color.MAGENTA);
 		appendToPane(_outputBox, "flow", Color.ORANGE);
-		*/
+		// */
 	}
 
 	@Override
@@ -98,15 +98,12 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	protected void clearOutputBox() {
 		_outputBox.setText("");
 	}
-	
-	@Override
-	protected void addLine(String line) {
-		appendToPane(line, DEFAULT_COLOR_NORMAL);
-	}
 
+	/*
 	private void appendToPane(String msg, Color c){
 		appendToPane(_outputBox, msg, c);		
 	}
+	*/
 	
 	private void appendToPane(JTextPane tp, String msg, Color c){
 		StyleContext sc = StyleContext.getDefaultStyleContext();
