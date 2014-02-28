@@ -27,12 +27,19 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	
 	public GuiFrame(){
+		initalizeGuiFrame();
+	}
+
+	private void initalizeGuiFrame() {
 		//to disable the titlebar
 		setUndecorated(true);
 		
 		addWindowListener(this);
 		
 		showWindow(true);
+		
+		//to clear the memory
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	protected void close(){

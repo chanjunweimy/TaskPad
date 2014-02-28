@@ -30,9 +30,9 @@ public class OutputFrame extends GuiFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected final Color OUTPUTBOX_BORDER_COLOR = 
+	private final Color OUTPUTBOX_BORDER_COLOR = 
 			new Color(112, 48, 160);
-	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
+	private final Color OUTPUTBOX_BACKGROUND_COLOR = 
 			new Color(242, 242, 242);
 	
 	private final static int OUTPUTFRAME_WIDTH = 350;
