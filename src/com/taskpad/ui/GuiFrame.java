@@ -1,6 +1,7 @@
 package com.taskpad.ui;
 
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -19,6 +20,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	 * default
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	protected final double COMPUTER_WIDTH = 
+			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+	protected final double COMPUTER_HEIGHT = 
+			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	
 	public GuiFrame(){
 		//to disable the titlebar

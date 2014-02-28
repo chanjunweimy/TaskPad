@@ -7,8 +7,8 @@ public class TextFieldListener implements ActionListener
 {  
 	public void actionPerformed(ActionEvent evt)
 	{  
-		String inputString = InputFrame.input.getText();
+		String inputString = InputFrame.getText();
 		GuiManager.passInput(inputString);
-		InputFrame.input.setText("");
+		InputFrame.reset();
 	}
 }

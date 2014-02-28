@@ -4,7 +4,7 @@ import com.taskpad.input.InputMain;
 
 public class TaskPadLauncher implements Runnable {
 	private static InputFrame _inputFrame;
-	private static OutputFrame _outputFrame;
+	private static FlexiFontOutputFrame _outputFrame;
 	
 	@Override
 	public void run() {
@@ -16,11 +16,13 @@ public class TaskPadLauncher implements Runnable {
 		initialFrames();
 		GuiManager.initialGuiManager(_inputFrame, _outputFrame);
 		GuiManager.callOutput("Welcome to Taskpad! Type a command or type \"help\"");
+		GuiManager.remindUser("HELLO! Reminder: ");
 	}
 
 	private void initialFrames() {
 		_inputFrame = new InputFrame();
-		_outputFrame = new OutputFrame();
+		//_outputFrame = new OutputFrame(); //DEPRECATED!!!
+		_outputFrame = new FlexiFontOutputFrame();
 	}
 
 	private void setUpInputProcessor() {
