@@ -42,9 +42,9 @@ public class DataStorage {
  
 		} catch (ParserConfigurationException pce) {
 		  	pce.printStackTrace();
-		} catch (TransformerException tfe) {
-		  	tfe.printStackTrace();
-		}
+		} //catch (TransformerException tfe) {
+		  	//tfe.printStackTrace();
+		//}
 
 	}
 }

@@ -41,36 +41,37 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	private JTextPane _outputBox = new JTextPane();
 	
-    private JTextPane tPane;
     private JScrollPane sBar;
 
     public FlexiFontOutputFrame()
     {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);            
-
-        EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
-
-        tPane = new JTextPane();                
-        tPane.setBorder(eb);
-        //tPane.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-        tPane.setMargin(new Insets(5, 5, 5, 5));
-
-        sBar = new JScrollPane(tPane);
-        //topPanel.add(tPane);
-        
-        appendToPane(tPane, "My Name is Too Good.\n", Color.RED);
-        appendToPane(tPane, "I wish I could be ONE of THE BEST on ", Color.BLUE);
-        appendToPane(tPane, "Stack", Color.DARK_GRAY);
-        appendToPane(tPane, "Over", Color.MAGENTA);
-        appendToPane(tPane, "flow", Color.ORANGE);
-
-        getContentPane().add(sBar);
-
-        pack();
-        setVisible(true);   
+    	super(true);
+    	initializeFlexiOutputFrame();
     }
 
+	private void initializeFlexiOutputFrame() {
+		setUpFrame();       
+
+
+        _outputBox = new JTextPane();                        
+
+        appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
+        appendToPane(_outputBox, "I wish I could be ONE of THE BEST on ", Color.BLUE);
+        appendToPane(_outputBox, "Stack", Color.DARK_GRAY);
+        appendToPane(_outputBox, "Over", Color.MAGENTA);
+        appendToPane(_outputBox, "flow", Color.ORANGE);
+
+        setUpScrollBar();
+        getContentPane().add(_scrollBox);
+	}
+
+    @Override
+	protected void setUpScrollBar() {
+		//JScrollPane provides scroll bar, so I add outputbox inside it.
+		_scrollBox = new JScrollPane(_outputBox);
+		disableHorizontalScrollBar();
+	}
+    
     private void appendToPane(JTextPane tp, String msg, Color c)
     {
         StyleContext sc = StyleContext.getDefaultStyleContext();
