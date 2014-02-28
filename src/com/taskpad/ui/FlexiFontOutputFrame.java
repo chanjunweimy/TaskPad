@@ -98,6 +98,11 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	protected void clearOutputBox() {
 		_outputBox.setText("");
 	}
+	
+	@Override
+	protected void addLine(String line) {
+		appendToPane(line, DEFAULT_COLOR_NORMAL);
+	}
 
 	private void appendToPane(String msg, Color c){
 		appendToPane(_outputBox, msg, c);		
