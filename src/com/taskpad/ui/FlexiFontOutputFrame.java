@@ -10,10 +10,12 @@ import java.awt.Color;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -37,115 +39,49 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	private final int MARGIN_BOTTOM = 5;
 	private final int MARGIN_RIGHT = 5;
 	
-	private JTextPane _output = new JTextPane();
+	private JTextPane _outputBox = new JTextPane();
 	
-	public FlexiFontOutputFrame(){
-		super(true);
-		initializeFfOutputFrame();
-	}
-	
-	private void initializeFfOutputFrame() {	
-		setUpFrame();
-		initializeOutputBox();
-		setUpScrollBar();
-		
-		//this.getContentPane().add(_output);
-		this.getContentPane().add(_scrollBox);
-		appendToPane("My Name is Too Good.\n", Color.RED);
-	}
-	
-	@Override
-	protected void initializeOutputBox() {
-		_output = new JTextPane();
-		
-		// Don't let the user change the output.
-		_output.setEditable(false);
-		
-		//JTextPane turn on wrapping by default
-		
-		_output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
-		
-		Border line = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
-		_output.setBorder(line);
-		
-		
-		Insets margin = new Insets(MARGIN_TOP, MARGIN_LEFT, MARGIN_BOTTOM, MARGIN_RIGHT);
-		_output.setMargin(margin);
-		
-	}
-	
-	//needs to override this because 
-	//we declare _output as JTextPane, not JTextArea
-	//so better write one more time to avoid confusion
-	@Override
-	protected void clearOutputBox() {
-		_output.setText("");
-	}
-	
-	@Override
-	protected void addLine(String line) {
-		appendToPane(line, DEFAULT_COLOR_NORMAL);
-	}
-	
-	@Override
-	protected void addReminder(String line) {
-		appendToPane(line, DEFAULT_COLOR_REMINDER);
-	}
+    private JTextPane tPane;
+    private JScrollPane sBar;
 
-	@Override
-	protected void setUpScrollBar() {
-		//JScrollPane provides scroll bar, so I add outputbox inside it.
-		_scrollBox = new JScrollPane(_output);
-		disableHorizontalScrollBar();
-	}
-	
-	private void appendToPane(String msg, Color anyColor)
-    {		
-		//declare Style context to build the attribute set
-        StyleContext sc = StyleContext.getDefaultStyleContext();
+    public FlexiFontOutputFrame()
+    {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);            
+
+        EmptyBorder eb = new EmptyBorder(new Insets(10, 10, 10, 10));
+
+        tPane = new JTextPane();                
+        tPane.setBorder(eb);
+        //tPane.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        tPane.setMargin(new Insets(5, 5, 5, 5));
+
+        sBar = new JScrollPane(tPane);
+        //topPanel.add(tPane);
         
-        AttributeSet aset = setUpAttributeSet(anyColor, sc);
+        appendToPane(tPane, "My Name is Too Good.\n", Color.RED);
+        appendToPane(tPane, "I wish I could be ONE of THE BEST on ", Color.BLUE);
+        appendToPane(tPane, "Stack", Color.DARK_GRAY);
+        appendToPane(tPane, "Over", Color.MAGENTA);
+        appendToPane(tPane, "flow", Color.ORANGE);
 
-        showMessage(msg, aset);
+        getContentPane().add(sBar);
+
+        pack();
+        setVisible(true);   
     }
 
-	private void showMessage(String msg, AttributeSet aset) {
-		System.err.println(msg);
-		int len = _output.getDocument().getLength();
-        _output.setCaretPosition(len);
-        _output.setCharacterAttributes(aset, false);
-        _output.replaceSelection(msg);
-	}
+    private void appendToPane(JTextPane tp, String msg, Color c)
+    {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
 
-	private AttributeSet setUpAttributeSet(Color anyColor, StyleContext sc) {
-		AttributeSet aset = SimpleAttributeSet.EMPTY;
-		aset = setFontColor(anyColor, sc, aset);
-        aset = setFontType(sc, aset);
-        aset = setFontAlignment(sc, aset);
-		return aset;
-	}
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
-	private AttributeSet setFontAlignment(StyleContext sc, AttributeSet aset) {
-		aset = sc.addAttribute(aset, StyleConstants.Alignment, DEFAULT_ALIGNMENT);
-		return aset;
-	}
-
-	private AttributeSet setFontType(StyleContext sc, AttributeSet aset) {
-		aset = sc.addAttribute(aset, StyleConstants.FontFamily, DEFAULT_FONT_TYPE);
-		return aset;
-	}
-
-	private AttributeSet setFontColor(Color anyColor, StyleContext sc, AttributeSet aset) {
-		aset = sc.addAttribute(aset, StyleConstants.Foreground, anyColor);
-		return aset;
-	}
-	
-	public static void main(String... args){
-        SwingUtilities.invokeLater(new Runnable(){
-                public void run(){
-                    new FlexiFontOutputFrame();
-                }
-            });
+        int len = tp.getDocument().getLength();
+        tp.setCaretPosition(len);
+        tp.setCharacterAttributes(aset, false);
+        tp.replaceSelection(msg);
     }
-
 }
