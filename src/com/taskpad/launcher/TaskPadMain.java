@@ -4,7 +4,7 @@
  * Team: W13-3j
  */
 
-package com.taskpad.ui;
+package com.taskpad.launcher;
 
 import javax.swing.SwingUtilities;
 

@@ -40,19 +40,13 @@ public class InputMain {
 	
 	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
 	
-	private static Command command;
-	private static InputManager inputManager;
+	private static Command command = new Command();
+	private static InputManager inputManager = new InputManager();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
 	private static String currentCommand = "";
 	
-	private static Map<String, String> inputParameters;
-	
-	public InputMain(){
-		command = new Command();
-		inputManager = new InputManager();
-		inputParameters = new HashMap<String, String>();
-	}
+	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
 	public static void receiveInput(String input){
 		if (isConfirmation){
