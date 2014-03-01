@@ -3,6 +3,7 @@ package com.taskpad.execute;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.taskpad.data.CommandRecord;
 import com.taskpad.data.DataFile;
 import com.taskpad.data.DataManager;
 import com.taskpad.input.Input;
@@ -12,11 +13,8 @@ public class ExcecutorManager {
 	
 	// private LinkedList<Task> listOfTasks;
 
-	public ExcecutorManager(){
-		
-	}
 	
-	public void receiveFromInput(Input input){
+	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
 		Map<String, String> parameters = input.getParameters();
 		
@@ -26,21 +24,28 @@ public class ExcecutorManager {
 					parameters.get("MONTH"), parameters.get("YEAR"),
 					parameters.get("START"), parameters.get("END"),
 					parameters.get("VENUE"));
+			
+			CommandRecord.setPreviousCommand(command);
 			break;
 		case "DELETE":
 			delete(parameters.get("TASKID"));
+			CommandRecord.setPreviousCommand(command);
 			break;
 		case "ADDINFO":
 			addInfo(parameters.get("TASKID"), parameters.get("INFO"));
+			CommandRecord.setPreviousCommand(command);
 			break;
 		case "CLEAR":
 			clear();
+			CommandRecord.setPreviousCommand(command);
 			break;
 		case "DONE":
 			markAsDone(parameters.get("TASKID"));
+			CommandRecord.setPreviousCommand(command);
 			break;
 		case "EDIT":
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
+			CommandRecord.setPreviousCommand(command);
 			break;
 		case "SEARCH":
 			search(parameters.get("KEYWORD"));
@@ -52,9 +57,10 @@ public class ExcecutorManager {
 			list(parameters.get("KEY"));
 			break;
 		}
+		
 	}
 
-	private void list(String option) {
+	private static void list(String option) {
 		switch(option) {
 		case "ALL":
 			listAll();
@@ -65,25 +71,96 @@ public class ExcecutorManager {
 		case "UNDONE":
 			listUndone();
 			break;
-		}
-		
+		}	
 	}
 
-	private void listAll() {
+	private static void listUndone() {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 
-		String text = "";
+		LinkedList<String[]> tasks = new LinkedList<String[]>();
+		int index = 0;
 		for (Task task : listOfTasks) {
-			
+			if (task.getDone() == 1) {
+				continue;
+			}
+			String[] taskToDisplay = new String[2];
+			String taskIdString = Integer.toString(index + 1);
+			String description = task.getDescription();
+			taskToDisplay[0] = taskIdString;
+			taskToDisplay[1] = description;
+			tasks.add(taskToDisplay);
 		}
-	}
-
-	private void undo() {
-		// TODO Auto-generated method stub
+		
+		if (tasks.size() == 0) {
+			passFeedbackToGui("No undone task found.");
+		} else {
+			String text = generateTextForTasks(tasks);
+			passFeedbackToGui(text);
+		}
 		
 	}
 
-	private void search(String keywordsString) {
+	private static void listDone() {
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+
+		LinkedList<String[]> tasks = new LinkedList<String[]>();
+		int index = 0;
+		for (Task task : listOfTasks) {
+			if (task.getDone() == 0) {
+				continue;
+			}
+			String[] taskToDisplay = new String[2];
+			String taskIdString = Integer.toString(index + 1);
+			String description = task.getDescription();
+			taskToDisplay[0] = taskIdString;
+			taskToDisplay[1] = description;
+			tasks.add(taskToDisplay);
+		}
+		
+		if (tasks.size() == 0) {
+			passFeedbackToGui("No finished task found.");
+		} else {
+			String text = generateTextForTasks(tasks);
+			passFeedbackToGui(text);
+		}
+	}
+
+	private static void listAll() {
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+
+		LinkedList<String[]> tasks = new LinkedList<String[]>();
+		int index = 0;
+		for (Task task : listOfTasks) {
+			String[] taskToDisplay = new String[2];
+			String taskIdString = Integer.toString(index + 1);
+			String description = task.getDescription();
+			taskToDisplay[0] = taskIdString;
+			taskToDisplay[1] = description;
+			tasks.add(taskToDisplay);
+		}
+		
+		if (tasks.size() == 0) {
+			passFeedbackToGui("No finished task found.");
+		} else {
+			String text = generateTextForTasks(tasks);
+			passFeedbackToGui(text);
+		}
+	}
+
+	private static void undo() {
+		if (!DataFile.isValidPrevious()) {
+			passFeedbackToGui("You don't have things to undo, or you just performed an undo operation.");
+			return;
+		}
+
+		DataFile.setPreviousIsValid(false);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE_PREV);
+		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		
+		passFeedbackToGui("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+	}
+
+	private static void search(String keywordsString) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 		
 		String[] keywords = keywordsString.split(" ");
@@ -114,7 +191,7 @@ public class ExcecutorManager {
 		passFeedbackToGui(feedback);
 	}
 
-	private String generateTextForTasks(LinkedList<String[]> tasks) {
+	private static String generateTextForTasks(LinkedList<String[]> tasks) {
 		String text = "";
 		for(String[] task: tasks) {
 			text += generateTextForOneTask(task[0], task[1]);
@@ -123,41 +200,55 @@ public class ExcecutorManager {
 		return text;
 	}
 
-	private void edit(String taskIdString, String description) {
+	private static void edit(String taskIdString, String description) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
+		String taskHistory = generateTextForOneTask(taskIdString, task.getDescription());
+		
 		task.setDescription(description);
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		// pass feedback to gui
+		passFeedbackToGui("'" + taskHistory + "' changed to '" 
+				+ generateTextForOneTask(taskIdString, description) + "'");
 	}
 
-	private void markAsDone(String taskIdString) {
+	private static void markAsDone(String taskIdString) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
 		task.setDone();
+		
+		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		
+		// passFeedbackToGui to be implemented
 	}
 
-	private Task getTaskById(LinkedList<Task> listOfTasks, String taskIdString) {
+	private static Task getTaskById(LinkedList<Task> listOfTasks, String taskIdString) {
 		int taskId = Integer.parseInt(taskIdString);
 		int index = taskId - 1;
 		Task task = listOfTasks.get(index);
 		return task;
 	}
 
-	private void clear() {
-		LinkedList<Task> listOfTasks = new LinkedList<Task>();
+	private static void clear() {
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		
+		listOfTasks = new LinkedList<Task>();
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		// pass feedback to gui
 	}
 
-	private void addInfo(String taskId, String info) {
+	private static void addInfo(String taskIdString, String info) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
-		int index = Integer.parseInt(taskId) - 1;
+		int index = getIndexById(taskIdString);
 		Task task = listOfTasks.get(index);
 		String details = task.getDetails();
 		details += info;
@@ -165,15 +256,22 @@ public class ExcecutorManager {
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		passFeedbackToGui(getInfoOfTask(taskId));
+		passFeedbackToGui(getInfoOfTask(index, listOfTasks));
 	}
 
-	private String getInfoOfTask(String taskId) {
+	private static String getInfoOfTask(int index, LinkedList<Task> listOfTasks) {
+		Task task = listOfTasks.get(index);
+		// to be implemented
 		return null;
 	}
 
-	private void delete(String index) {
+	private static int getIndexById(String taskIdString) {
+		return Integer.parseInt(taskIdString) - 1;
+	}
+
+	private static void delete(String index) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
 		int indexOfTask = Integer.parseInt(index);
 		Task taskDeleted = listOfTasks.get(indexOfTask);
@@ -184,14 +282,15 @@ public class ExcecutorManager {
 		passFeedbackToGui(generateFeedbackForDelete(taskDeleted));
 	}
 
-	private String generateFeedbackForDelete(Task taskDeleted) {
+	private static String generateFeedbackForDelete(Task taskDeleted) {
 		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
 	}
 	
-	private void add(String description, String deadlineDay,
+	private static void add(String description, String deadlineDay,
 			String deadlineMonth, String deadlineYear, String startTime,
 			String endTime, String venue) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
 		Task taskToAdd = new Task(description, deadlineDay, deadlineMonth, deadlineYear,
 				startTime, endTime, venue);
@@ -204,17 +303,17 @@ public class ExcecutorManager {
 		passFeedbackToGui(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
-	private String generateFeedbackForAdd(String taskIdString, String description) {
+	private static String generateFeedbackForAdd(String taskIdString, String description) {
 		String firstLine = FEEDBACK_ADD;
 		String secondLine = generateTextForOneTask(taskIdString, description);
 		return firstLine + "\n" + secondLine;
 	}
 
-	private String generateTextForOneTask(String taskIdString, String description) {
+	private static String generateTextForOneTask(String taskIdString, String description) {
 		return taskIdString +". "+ description;
 	}
 
-	private void passFeedbackToGui(String feedback) {
+	private static void passFeedbackToGui(String feedback) {
 		// TODO Auto-generated method stub
 		
 	}
