@@ -2,24 +2,34 @@ package com.taskpad.execute;
 
 public class Task {
 	private String description;
-	private String deadline;
+	//private String deadline;
+	private String deadlineDay;
+	private String deadlineMonth;
+	private String deadlineYear;
 	private String startTime;
-	private String endTime; 
+	private String endTime;
+	private String venue; 
 	private String details;
 	private int done;
 	
-	public Task(String description, String deadline, String startTime, String endTime, String details) {
+	public Task(String description, String deadlineDay, String deadlineMonth,
+			String deadlineYear, String startTime, String endTime, String venue, String details) {
 		this.description = description;
-		this.deadline = deadline;
+		this.deadlineDay = deadlineDay;
+		this.deadlineMonth = deadlineMonth;
+		this.deadlineYear = deadlineYear;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.venue = venue;
 		this.details = details;
 		this.done = 0;
 	}
 	
 	public Task(String description, String deadline, String startTime, String endTime, String details, int done) {
 		this.description = description;
-		this.deadline = deadline;
+		this.deadlineDay = deadlineDay;
+		this.deadlineMonth = deadlineMonth;
+		this.deadlineYear = deadlineYear;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.details = details;
@@ -31,7 +41,7 @@ public class Task {
 		return null;
 	}
 
-	public String getDeadline() {
+	public String getDeadlineDay() {
 		// TODO Auto-generated method stub
 		return null;
 	}
