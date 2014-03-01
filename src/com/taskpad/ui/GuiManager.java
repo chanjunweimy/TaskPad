@@ -42,7 +42,7 @@ public class GuiManager {
 		GuiManager._inputFrame = _inputFrame;
 	}
 
-	public static void setOutputFrame(OutputFrame _outputFrame) {
+	private static void setOutputFrame(OutputFrame _outputFrame) {
 		GuiManager._outputFrame = _outputFrame;
 	}
 	
