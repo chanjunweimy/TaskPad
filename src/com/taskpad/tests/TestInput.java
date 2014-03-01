@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.taskpad.input.Command;
-import com.taskpad.input.Command.CommandType;
+import com.taskpad.input.CommandTypes;
+import com.taskpad.input.CommandTypes.CommandType;
 
 
 public class TestInput {
@@ -14,7 +14,7 @@ public class TestInput {
 	//testing Command.java
 	@Test
 	public void testCommand() {
-		new Command();
+		new CommandTypes();
 		
 		//invalid
 		testFindValueCommand("Find null", CommandType.INVALID, "");
@@ -49,8 +49,8 @@ public class TestInput {
 		testFindValueCommand("Find quit", CommandType.EXIT, "quIT");
 	}
 	
-	private void testFindValueCommand (String description, Command.CommandType expected, String input){
-		assertEquals(description, expected, Command.find(input));
+	private void testFindValueCommand (String description, CommandTypes.CommandType expected, String input){
+		assertEquals(description, expected, CommandTypes.find(input));
 	}
 
 }

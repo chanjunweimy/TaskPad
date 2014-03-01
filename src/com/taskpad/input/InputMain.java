@@ -3,7 +3,7 @@ package com.taskpad.input;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.taskpad.input.Command.CommandType;
+import com.taskpad.input.CommandTypes.CommandType;
 
 public class InputMain {
 
@@ -40,7 +40,7 @@ public class InputMain {
 	
 	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
 	
-	private static Command command = new Command();
+	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
 	private static String currentCommand = "";
@@ -59,7 +59,7 @@ public class InputMain {
 				return;
 			}
 			String commandTypeString = parseInput(inputCopy);
-			Command.CommandType commandType = determineCommandType(commandTypeString);
+			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 	
 			if (isValidCommandType(commandType)){		
 				input = removeFirstWord(input);
@@ -427,9 +427,9 @@ public class InputMain {
 		InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));	
 	}
 
-	private static Command.CommandType determineCommandType(String commandTypeString) {
+	private static CommandTypes.CommandType determineCommandType(String commandTypeString) {
 		String commandToFind = getFirstWord(commandTypeString);
-		Command.CommandType commandType = Command.find(commandToFind);
+		CommandTypes.CommandType commandType = CommandTypes.find(commandToFind);
 		
 		return commandType;
 	}

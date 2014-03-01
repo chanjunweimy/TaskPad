@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 //import java.util.ArrayList;
 
-public class Command {
+public class CommandTypes {
 	
 	public enum CommandType{
 		ADD, ADD_INFO, CLEAR_ALL, CLEAR_SCREEN, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
@@ -13,7 +13,7 @@ public class Command {
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
 
 	
-	public Command(){
+	public CommandTypes(){
 		createHashMap();
 	}
 	
