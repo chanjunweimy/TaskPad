@@ -21,7 +21,7 @@ public class InputFrame extends GuiFrame{
 			new Color(219, 219, 219);
 	
 	//inputTextBox
-	private static JTextField input = new JTextField(15);
+	private static JTextField _input = new JTextField(15);
 	
 	private final static int INPUTFRAME_WIDTH = 350;
 	private final static int INPUTFRAME_HEIGHT = 30;
@@ -35,34 +35,31 @@ public class InputFrame extends GuiFrame{
 		setUpFrame();
 		
 		initializeInputBox();
-		input.requestFocus();        // start with focus on this field
-		this.getContentPane().add(input);
+		_input.requestFocus();        // start with focus on this field
+		this.getContentPane().add(_input);
 	}
 
 	private void setUpFrame() {
 		setSize(INPUTFRAME_WIDTH,INPUTFRAME_HEIGHT);
 		
-		int leftShift = INPUTFRAME_WIDTH - OutputFrame.showWidth();
-		leftShift /= 2;
-		
-		setLocation((int)(COMPUTER_WIDTH/2 - leftShift),
+		setLocation((int)(COMPUTER_WIDTH/2),
 					(int)(COMPUTER_HEIGHT/2));
 	}
 
 	private void initializeInputBox() {
 		makeInputboxReadyForEvent();
 		
-		input.setBackground(INPUTBOX_BACKGROUND_COLOR);//grey color
+		_input.setBackground(INPUTBOX_BACKGROUND_COLOR);//grey color
 	}
 
 	private void makeInputboxReadyForEvent() {
 		TextFieldListener tfListener = new TextFieldListener();
-		input.addActionListener(tfListener);
+		_input.addActionListener(tfListener);
 	}
 	
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		input.requestFocus();
+		_input.requestFocus();
 	}
 
 	@Override
@@ -81,17 +78,17 @@ public class InputFrame extends GuiFrame{
 	private void requestFocusOnInputBox() {
 		Runnable inputBoxFocus = new Runnable(){
 			public void run(){
-				input.requestFocus();
+				_input.requestFocus();
 			}
 		};
 		SwingUtilities.invokeLater(inputBoxFocus);
 	}
 	
 	protected static String getText(){
-		return input.getText();
+		return _input.getText();
 	}
 	
 	protected static void reset(){
-		input.setText("");
+		_input.setText("");
 	}
 }

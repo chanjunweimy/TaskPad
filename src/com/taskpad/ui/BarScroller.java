@@ -11,10 +11,10 @@ public class BarScroller implements Runnable {
 		}
 		
 		public BarScroller(boolean forward, JScrollBar anyScrollBar){
-			initialBarScroller(forward, anyScrollBar);
+			initializeBarScroller(forward, anyScrollBar);
 		}
 
-		private void initialBarScroller(boolean forward, JScrollBar anyScrollBar) {
+		private void initializeBarScroller(boolean forward, JScrollBar anyScrollBar) {
 			_forward = forward;
 			_anyScrollBar = anyScrollBar;
 		}
