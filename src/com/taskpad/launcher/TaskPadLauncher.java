@@ -1,11 +1,13 @@
 package com.taskpad.launcher;
 
+import com.taskpad.input.InputMain;
 import com.taskpad.ui.GuiManager;
 
 public class TaskPadLauncher implements Runnable {
 
 	@Override
 	public void run() {
+		setUpInputProcessor();
 		setUpGui();
 	}
 
@@ -13,5 +15,9 @@ public class TaskPadLauncher implements Runnable {
 		GuiManager.initialGuiManager();
 		GuiManager.callOutput("Welcome to Taskpad! Type a command or type \"help\"");
 		GuiManager.remindUser("HELLO! Reminder: ");
+	}
+	
+	private void setUpInputProcessor() {
+		new InputMain();
 	}
 }
