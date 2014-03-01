@@ -1,120 +1,68 @@
+/* 
+ * Abstract class for processing the commands 
+ */
+
 package com.taskpad.input;
 
 import java.util.HashMap;
 import java.util.Map;
-//import java.util.ArrayList;
 
-public class Command {
-	
-	public enum CommandType{
-		ADD, ADD_INFO, CLEAR_ALL, CLEAR_SCREEN, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
-	};
-	
-	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
+public abstract class Command {
 
+	private static Input inputObject;
+	private static Map<String, String> inputParameters;
+	private static String input;
 	
-	public Command(){
-		createHashMap();
+	private static int NUMBER_ARGUMENTS;
+	private static String COMMAND;
+	
+	protected Command(String input){
+		this.input = input;
+		inputParameters = new HashMap<String,String>();
 	}
 	
-	public static CommandType find(String inputCommand){
-		String variations[];
-
-		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
-			variations = entry.getValue();
-			for (int i=0; i<variations.length; i++){
-				if (isValueInputCommand(variations[i], inputCommand)){
-					return (CommandType) entry.getKey();
-				}
-			}
-		}
+	protected void run(){
+		exitIfEmptyString();
+		initialiseParametersToNull();
+	}
+	
+	private void exitIfEmptyString() {
+		// TODO Auto-generated method stub
 		
-		return CommandType.INVALID;
 	}
 	
-	private static boolean isValueInputCommand(String value, String inputCommand) {
-		inputCommand = inputCommand.trim();
-		if (value.equalsIgnoreCase(inputCommand)){
+	private void initialiseParametersToNull(){
+		
+	}
+	
+	private static Input createInputObject() {
+		clearInputParameters();
+		putInputParameters();
+		inputObject = new Input(COMMAND, inputParameters);		
+		return inputObject;
+	}
+
+	private static void putInputParameters(){
+		
+	}
+	
+	private static void clearInputParameters(){
+		inputParameters.clear();
+	}
+	
+	private static boolean isEmptyString(){
+		if (input.isEmpty()){
 			return true;
 		}
-		
 		return false;
 	}
-
-	private static void createHashMap(){
-		putAddVariations();
-		putAddInfoVariations();
-		putClearVariations();
-		putClearScreenVariations();
-		putDeleteVariations();
-		putDoneVariations();
-		putEditVariations();
-		putExitVariations();
-		putHelpVariations();
-		putListVariations();
-		putSearchVariations();
-		putUndoVariations();
+	
+	private static void putInputParameters(String parameter, String input){
+		inputParameters.put(parameter, input);
 	}
 	
-	/* Helper methods for creating the hashmap */
-	
-	private static void putAddVariations(){
-		String[] addVariations = {"ADD", "NEW", "CREATE", "INSERT"};
-		commandVariations.put(CommandType.ADD, addVariations);
+	private static void passObjectToExecutor(){
+		InputManager.passToExecutor(inputObject);
 	}
 	
-	private static void putAddInfoVariations(){
-		String[] addInfoVariations = {"ADDINFO", "ADDDESC", "CREATEDESC"};
-		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
-	}
-	
-	private static void putDeleteVariations(){
-		String[] deleteVariations = {"DELETE", "DEL", "REMOVE"};
-		commandVariations.put(CommandType.DELETE, deleteVariations);
-	}
-	
-	private static void putDoneVariations(){
-		String[] doneVariations = {"DONE", "FINISHED", "COMPLETED"};
-		commandVariations.put(CommandType.DONE, doneVariations);
-	}
-	
-	private static void putClearVariations(){
-		String[] clearVariations = {"CLEAR", "CLR", "CLEAN", "CLC"};
-		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
-	}
-	
-	private static void putClearScreenVariations(){
-		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR"};
-		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
-	}
-	
-	private static void putEditVariations(){
-		String[] editVariations = {"EDIT", "CHANGE"};
-		commandVariations.put(CommandType.EDIT, editVariations);
-	}
-	
-	private static void putUndoVariations(){
-		String[] undoVariations = {"UNDO"};
-		commandVariations.put(CommandType.UNDO, undoVariations);
-	}
-	
-	private static void putSearchVariations(){
-		String[] searchVariations = {"SEARCH", "FIND"};
-		commandVariations.put(CommandType.SEARCH, searchVariations);
-	}
-	
-	private static void putListVariations(){
-		String[] listVariations = {"LIST", "LS", "SHOW", "DISPLAY"};
-		commandVariations.put(CommandType.LIST, listVariations);
-	}
-	
-	public static void putHelpVariations(){
-		String[] helpVariations = {"HELP", "HLP", "MAN"};
-		commandVariations.put(CommandType.HELP, helpVariations);
-	}
-	
-	private static void putExitVariations(){
-		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE"};
-		commandVariations.put(CommandType.EXIT, exitVariations);
-	}
 }
