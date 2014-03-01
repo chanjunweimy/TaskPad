@@ -22,9 +22,8 @@ import org.w3c.dom.NodeList;
 import com.taskpad.execute.Task;
 
 public class DataStorage {
-	private String file;
 	
-	public LinkedList<Task> retrieve() {
+	public LinkedList<Task> retrieve(String file) {
 		LinkedList<Task> listOfTasks = new LinkedList<Task>();
 		
 		try {
@@ -63,7 +62,7 @@ public class DataStorage {
 		return null;
 	}
 	
-	public void storeBack(LinkedList<Task> taskList) {
+	public void storeBack(LinkedList<Task> taskList, String file) {
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -102,21 +101,21 @@ public class DataStorage {
 				done.appendChild(doc.createTextNode(taskInList.getDone()));
 				task.appendChild(done);
 				
-			}
-			
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(file));
-			
-			transformer.transform(source, result);
- 
+				}
+				
+				// write the content into xml file
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(new File(file));
+				
+				transformer.transform(source, result);
+	 
 		} catch (ParserConfigurationException pce) {
-		  	pce.printStackTrace();
+			pce.printStackTrace();
 		} catch (TransformerException tfe) {
 		  	tfe.printStackTrace();
 		}
-
+	
 	}
 }
