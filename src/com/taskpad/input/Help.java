@@ -1,3 +1,11 @@
+/* 
+ * This is the class for the command HELP 
+ * 
+ * Current syntax: help
+ * 
+ * Output: Output frame shows list of commands and their syntax
+ */
+
 package com.taskpad.input;
 
 import java.util.Iterator;
