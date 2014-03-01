@@ -26,7 +26,7 @@ public class DataManager {
 	}
 	
 	public int retrieveNumberOfTasks(String file){
-		int numberOfTasks = retrieve(file).size();	//Please call your function, thanks! Needed for input manager
+		int numberOfTasks = retrieve(file).size();
 		return numberOfTasks;
 	}
 		
@@ -50,13 +50,17 @@ public class DataManager {
 					Element task = (Element) taskNode;
 		 
 					String description = task.getElementsByTagName("description").item(0).getTextContent();
-					String deadline = task.getElementsByTagName("deadline").item(0).getTextContent();
+					String deadlineDay = task.getElementsByTagName("deadline_day").item(0).getTextContent();
+					String deadlineMonth = task.getElementsByTagName("deadline_month").item(0).getTextContent();
+					String deadlineYear = task.getElementsByTagName("deadline_year").item(0).getTextContent();
 					String startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
 					String endTime = task.getElementsByTagName("end_time").item(0).getTextContent();
+					String venue = task.getElementsByTagName("venue").item(0).getTextContent();
 					String details = task.getElementsByTagName("details").item(0).getTextContent();
 					int done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
 					
-					listOfTasks.add(new Task(description, deadline, startTime, endTime, details, done));
+					listOfTasks.add(new Task(description, deadlineDay, deadlineMonth, deadlineYear,
+							startTime, endTime, venue, details, done));
 				}
 			}
 			
@@ -88,9 +92,17 @@ public class DataManager {
 				description.appendChild(doc.createTextNode(taskInList.getDescription()));
 				task.appendChild(description);
 				
-				Element deadline = doc.createElement("deadline");
-				deadline.appendChild(doc.createTextNode(taskInList.getDeadline()));
-				task.appendChild(deadline);
+				Element deadlineDay = doc.createElement("deadline_day");
+				deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadlineDay()));
+				task.appendChild(deadlineDay);
+				
+				Element deadlineMonth = doc.createElement("deadline_month");
+				deadlineMonth.appendChild(doc.createTextNode(taskInList.getDeadlineMonth()));
+				task.appendChild(deadlineMonth);
+				
+				Element deadlineYear = doc.createElement("deadline_year");
+				deadlineYear.appendChild(doc.createTextNode(taskInList.getDeadlineYear()));
+				task.appendChild(deadlineYear);
 				
 				Element startTime = doc.createElement("start_time");
 				startTime.appendChild(doc.createTextNode(taskInList.getStartTime()));
@@ -105,7 +117,7 @@ public class DataManager {
 				task.appendChild(details);
 				
 				Element done = doc.createElement("done");
-				done.appendChild(doc.createTextNode(taskInList.getDone()));
+				done.appendChild(doc.createTextNode(Integer.toString(taskInList.getDone())));
 				task.appendChild(done);
 				
 				}

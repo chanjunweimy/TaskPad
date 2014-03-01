@@ -10,7 +10,7 @@ public class Task {
 	private String endTime;
 	private String venue; 
 	private String details;
-	private int done;
+	private int done;	// 0 for undone, 1 for done
 	
 	public Task(String description, String deadlineDay, String deadlineMonth,
 			String deadlineYear, String startTime, String endTime, String venue) {
@@ -23,8 +23,10 @@ public class Task {
 		this.venue = venue;
 		this.done = 0;
 	}
-	
-	public Task(String description, String deadline, String startTime, String endTime, String venue, String details, int done) {
+
+	public Task(String description, String deadlineDay, String deadlineMonth,
+			String deadlineYear, String startTime, String endTime, String venue,
+			String details, int done) {
 		this.description = description;
 		this.deadlineDay = deadlineDay;
 		this.deadlineMonth = deadlineMonth;
@@ -37,33 +39,39 @@ public class Task {
 	}
 
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return description;
 	}
 
 	public String getDeadlineDay() {
-		// TODO Auto-generated method stub
-		return null;
+		return deadlineDay;
+	}
+	
+	public String getDeadlineMonth() {
+		return deadlineMonth;
+	}
+
+	public String getDeadlineYear() {
+		return deadlineYear;
 	}
 
 	public String getStartTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return startTime;
 	}
 
 	public String getEndTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return endTime;
+	}
+	
+	public String getVenue() {
+		return venue;
 	}
 
 	public String getDetails() {
-		// TODO Auto-generated method stub
-		return null;
+		return details;
 	}
 
-	public String getDone() {
-		// TODO Auto-generated method stub
-		return null;
+	public int getDone() {
+		return done;
 	}
 
 	public void setDetails(String details) {
@@ -73,6 +81,12 @@ public class Task {
 	public void setDone() {
 		this.done = 1;
 	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
 
 	
 	
