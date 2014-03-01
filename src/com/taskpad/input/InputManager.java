@@ -12,38 +12,28 @@ import com.taskpad.ui.GuiManager;
 
 public class InputManager {
 	
-	private static GuiManager guiManager;
-	private static ExcecutorManager executorManager;
-	private static DataManager dataManager;
-	
-	public InputManager(){
-		guiManager = new GuiManager();
-		dataManager = new DataManager();
-		executorManager = new ExcecutorManager();
-	}
-	
 	public static void receiveFromGui(String inputString){
 		InputMain.receiveInput(inputString);
 	}
 
 	public static void outputToGui(String outputString){
-		guiManager.callOutput(outputString);
+		GuiManager.callOutput(outputString);
 	}
 	
 	public static void callGuiExit(){
-		guiManager.callExit();
+		GuiManager.callExit();
 	}
 	
 	public static void clearScreen(){
-		guiManager.clearOutput();
+		GuiManager.clearOutput();
 	}
 	
 	public static void passToExecutor(Input input){
-		executorManager.receiveFromInput(input);
+		ExecutorManager.receiveFromInput(input);
 	}
 	
 	public static int retrieveNumberOfTasks(){
-		return dataManager.retrieveNumberOfTasks();
+		return DataManager.retrieveNumberOfTasks();
 	}
 	
 }
