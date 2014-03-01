@@ -1,3 +1,9 @@
+/*
+ * This is the Add object 
+ * 
+ * Current syntax: add <desc> -d <dd/mm/yyyy> -v <venue> -c <category> -s <start time> -e<end time>
+ */
+
 package com.taskpad.input;
 
 import java.util.HashMap;
@@ -20,13 +26,13 @@ public class Add {
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
 
-	public Add(String input){
+	protected Add(String input){
 		this.input = input;
 		inputParameters = new HashMap<String,String>();
 		initialiseParametersToNull();
 	}
 	
-	public static Map<String,String> run(){
+	protected static Map<String,String> run(){
 		if (isEmptyString()){
 			inputParameters.clear();
 			return inputParameters;

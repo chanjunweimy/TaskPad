@@ -41,7 +41,6 @@ public class InputMain {
 	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
 	
 	private static Command command = new Command();
-	private static InputManager inputManager = new InputManager();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
 	private static String currentCommand = "";
@@ -85,7 +84,7 @@ public class InputMain {
 			clearAllTasks();
 			
 		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
-			inputManager.clearScreen();
+			InputManager.clearScreen();
 		}
 	}
 	
@@ -96,7 +95,7 @@ public class InputMain {
 	
 	private static boolean errorIfNoInput(String input) {
 		if (input.equals("")){
-			inputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
 			return true;
 		}
 		return false;
@@ -180,7 +179,7 @@ public class InputMain {
 		String[] splitInput = input.split(" ");
 		
 		if (isEmptyInput(input)){
-			inputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 			return;
 		}
 		
@@ -195,7 +194,7 @@ public class InputMain {
 	
 	private static boolean isValidAddInfoInput(String[] input){		
 		if (input.length != LENGTH_ADD_INFO){
-			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 			return false;
 		} 
 		
@@ -209,10 +208,10 @@ public class InputMain {
 	
 	private static void listTask(String input){
 		if (isEmptyInput(input)){
-			inputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
 			return;
 		} else if (isInvalidListInput(input)){
-			inputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
+			InputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
 			return; 
 		} else {
 			inputObject = createListObject(input);
@@ -237,12 +236,8 @@ public class InputMain {
 	}
 	
 	private static void deleteTask(String input) {
-		if (isValidTaskIDInput(input, COMMAND_DELETE)){
-			inputObject = createDeleteObject(input);
-			passObjectToExecutor();
-		} else {
-			return;
-		}
+		Delete delete = new Delete(input);
+		delete.run();
 	}
 
 	private static void doneTask(String input) {
@@ -260,16 +255,9 @@ public class InputMain {
 		inputObject = new Input(COMMAND_DONE, inputParameters);
 		return inputObject;
 	}
-
-	private static Input createDeleteObject(String input) {
-		clearInputParameters();
-		putInputParameters(PARAMETER_TASK_ID, input);
-		inputObject = new Input(COMMAND_DELETE, inputParameters);		
-		return inputObject;
-	}
 	
 	private static void passObjectToExecutor(){
-		inputManager.passToExecutor(inputObject);
+		InputManager.passToExecutor(inputObject);
 	}
 	
 	private static boolean isValidTaskIDInput(String input, String commandString){
@@ -277,7 +265,7 @@ public class InputMain {
 		
 		if (isEmptyInput(input)){
 			errorMessage = String.format(MESSAGE_EMPTY_INPUT);
-			inputManager.outputToGui(errorMessage);
+			InputManager.outputToGui(errorMessage);
 			return false;
 		}
 		
@@ -285,12 +273,12 @@ public class InputMain {
 		
 		if (commandString.equals(COMMAND_DELETE)){
 			if (isNotNumberArgs(inputString, commandString)){
-				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+				InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 				return false;
 			}
 		} else if (commandString.equals(COMMAND_DONE)){
 			if (isNotNumberArgs(inputString, commandString)){
-				inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+				InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 				return false;
 			}
 		} 
@@ -335,9 +323,9 @@ public class InputMain {
 	
 	private static boolean isInvalidID(String input){
 		int inputNum = Integer.parseInt(input);
-//		if (inputNum > inputManager.retrieveNumberOfTasks()){
-//			return true;
-//		}
+		if (inputNum > InputManager.retrieveNumberOfTasks()){
+			return true;
+		}
 		return false;
 	}
 	
@@ -350,7 +338,7 @@ public class InputMain {
 	}
 
 	private static void clearAllTasksConfirmation(){
-		inputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_DATA);
+		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_DATA);
 	}
 	
 	private static void clearAllTasks() {
@@ -361,7 +349,7 @@ public class InputMain {
 	}
 	
 	private static void clearScreen(){
-		inputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_SCREEN);
+		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_SCREEN);
 	}
 	
 	private static void undoLast() {
@@ -373,7 +361,7 @@ public class InputMain {
 	
 	private static void editTask(String input) {
 		if (isEmptyInput(input)){
-			inputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 			return;
 		}
 		
@@ -392,7 +380,7 @@ public class InputMain {
 	
 	private static boolean isValidEditInput(String[] splitInput){
 		if (isInvalidParameterNumber(splitInput.length)){
-			inputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
 			return false;
 		} 	else if(isNotInteger(splitInput[0]) || isInvalidID(splitInput[0])){
 			outputIdError(splitInput[0]);
@@ -404,7 +392,7 @@ public class InputMain {
 
 	private static void outputIdError(String input) {
 		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
-		inputManager.outputToGui(errorMessage);
+		InputManager.outputToGui(errorMessage);
 	}
 	
 	
@@ -417,7 +405,7 @@ public class InputMain {
 
 	private static void searchTask(String input) {
 		if (isEmptyInput(input)){
-			inputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 			return;
 		}
 		
@@ -432,11 +420,11 @@ public class InputMain {
 	}
 
 	private static void exitProgram() {
-		inputManager.callGuiExit();
+		InputManager.callGuiExit();
 	}
 
 	private static void invalidCommand(String input) {
-		inputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));	
+		InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));	
 	}
 
 	private static Command.CommandType determineCommandType(String commandTypeString) {
