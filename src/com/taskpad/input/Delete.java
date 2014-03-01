@@ -2,6 +2,9 @@
  * This class creates a Delete object
  * 
  * Current syntax for delete: del <taskID>
+ * 
+ * @postconditions: passes Input object to executor to delete
+ * 
  */
 
 package com.taskpad.input;

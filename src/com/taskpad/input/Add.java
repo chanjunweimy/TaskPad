@@ -2,6 +2,9 @@
  * This is the Add object 
  * 
  * Current syntax: add <desc> -d <dd/mm/yyyy> -v <venue> -c <category> -s <start time> -e<end time>
+ * 
+ * @postconditions: passes add object to executor to add into data base
+ * 
  */
 
 package com.taskpad.input;
