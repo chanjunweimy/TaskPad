@@ -13,7 +13,7 @@ public class Task {
 	private int done;
 	
 	public Task(String description, String deadlineDay, String deadlineMonth,
-			String deadlineYear, String startTime, String endTime, String venue, String details) {
+			String deadlineYear, String startTime, String endTime, String venue) {
 		this.description = description;
 		this.deadlineDay = deadlineDay;
 		this.deadlineMonth = deadlineMonth;
@@ -21,11 +21,10 @@ public class Task {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.venue = venue;
-		this.details = details;
 		this.done = 0;
 	}
 	
-	public Task(String description, String deadline, String startTime, String endTime, String details, int done) {
+	public Task(String description, String deadline, String startTime, String endTime, String venue, String details, int done) {
 		this.description = description;
 		this.deadlineDay = deadlineDay;
 		this.deadlineMonth = deadlineMonth;
@@ -33,6 +32,7 @@ public class Task {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.details = details;
+		this.venue = venue;
 		this.done = done;
 	}
 
@@ -64,6 +64,10 @@ public class Task {
 	public String getDone() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	
