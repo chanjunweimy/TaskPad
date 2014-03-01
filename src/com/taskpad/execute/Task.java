@@ -70,6 +70,10 @@ public class Task {
 		this.details = details;
 	}
 
+	public void setDone() {
+		this.done = 1;
+	}
+
 	
 	
 }

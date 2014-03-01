@@ -3,17 +3,17 @@ package com.taskpad.execute;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.taskpad.data.DataFile;
 import com.taskpad.data.DataManager;
 import com.taskpad.input.Input;
 
 public class ExcecutorManager {
 	private static final String FEEDBACK_ADD = "Added:";
 	
-	private String file;
 	private LinkedList<Task> listOfTasks;
 
-	public ExcecutorManager(String file){
-		this.file = file;
+	public ExcecutorManager(){
+		
 	}
 	
 	public void receiveFromInput(Input input){
@@ -35,7 +35,15 @@ public class ExcecutorManager {
 			break;
 		case "CLEAR":
 			clear();
+		case "DONE":
+			markAsDone(parameters.get("TASKID"));
 		}
+	}
+
+	private void clear() {
+		listOfTasks = new LinkedList<Task>();
+		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		// pass feedback to gui
 	}
 
 	private void addInfo(String taskId, String info) {
@@ -45,7 +53,7 @@ public class ExcecutorManager {
 		details += info;
 		task.setDetails(details);
 		
-		DataManager.storeBack(listOfTasks, file);
+		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		passFeedbackToGui(getInfoOfTask(taskId));
 	}
@@ -59,7 +67,7 @@ public class ExcecutorManager {
 		Task taskDeleted = listOfTasks.get(indexOfTask);
 		listOfTasks.remove(indexOfTask);
 		
-		DataManager.storeBack(listOfTasks, file);
+		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		passFeedbackToGui(generateFeedbackForDelete(taskDeleted));
 	}
@@ -79,7 +87,7 @@ public class ExcecutorManager {
 				startTime, endTime, venue);
 		listOfTasks.add(taskToAdd);
 
-		DataManager.storeBack(listOfTasks, file);
+		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		int index = listOfTasks.size() - 1;
 		passFeedbackToGui(generateFeedbackForAdd(taskToAdd, index));

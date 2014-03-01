@@ -69,7 +69,7 @@ public class DataManager {
 		return null;
 	}
 	
-	public void storeBack(LinkedList<Task> taskList, String file) {
+	public static void storeBack(LinkedList<Task> taskList, String file) {
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
