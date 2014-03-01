@@ -7,12 +7,13 @@ import com.taskpad.data.DataManager;
 import com.taskpad.input.Input;
 
 public class ExcecutorManager {
-	private static final String FEEDBACK_ADD = "Added:\n";
+	private static final String FEEDBACK_ADD = "Added:";
 	
+	private String file;
 	private LinkedList<Task> listOfTasks;
 
-	public ExcecutorManager(){
-		
+	public ExcecutorManager(String file){
+		this.file = file;
 	}
 	
 	public void receiveFromInput(Input input){
@@ -25,7 +26,46 @@ public class ExcecutorManager {
 					parameters.get("MONTH"), parameters.get("YEAR"),
 					parameters.get("START"), parameters.get("END"),
 					parameters.get("VENUE"));
+			break;
+		case "DELETE":
+			delete(parameters.get("TASKID"));
+			break;
+		case "ADDINFO":
+			addInfo(parameters.get("TASKID"), parameters.get("INFO"));
+			break;
+		case "CLEAR":
+			clear();
 		}
+	}
+
+	private void addInfo(String taskId, String info) {
+		int index = Integer.parseInt(taskId) - 1;
+		Task task = listOfTasks.get(index);
+		String details = task.getDetails();
+		details += info;
+		task.setDetails(details);
+		
+		DataManager.storeBack(listOfTasks, file);
+		
+		passFeedbackToGui(getInfoOfTask(taskId));
+	}
+
+	private String getInfoOfTask(String taskId) {
+		
+	}
+
+	private void delete(String index) {
+		int indexOfTask = Integer.parseInt(index);
+		Task taskDeleted = listOfTasks.get(indexOfTask);
+		listOfTasks.remove(indexOfTask);
+		
+		DataManager.storeBack(listOfTasks, file);
+		
+		passFeedbackToGui(generateFeedbackForDelete(taskDeleted));
+	}
+
+	private String generateFeedbackForDelete(Task taskDeleted) {
+		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
 	}
 
 	private void getListOfTasks(String file) {
@@ -39,12 +79,16 @@ public class ExcecutorManager {
 				startTime, endTime, venue);
 		listOfTasks.add(taskToAdd);
 
+		DataManager.storeBack(listOfTasks, file);
+		
 		int index = listOfTasks.size() - 1;
 		passFeedbackToGui(generateFeedbackForAdd(taskToAdd, index));
 	}
 
 	private String generateFeedbackForAdd(Task taskToAdd, int index) {
-		return index+". "+taskToAdd.getDescription();
+		String firstLine = FEEDBACK_ADD;
+		String secondLine = index+". "+taskToAdd.getDescription();
+		return firstLine + "\n" + secondLine;
 	}
 
 	private void passFeedbackToGui(String feedback) {
