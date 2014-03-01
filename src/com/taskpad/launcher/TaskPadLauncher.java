@@ -4,7 +4,10 @@ import com.taskpad.input.InputManager;
 import com.taskpad.ui.GuiManager;
 
 public class TaskPadLauncher implements Runnable {
-
+	public TaskPadLauncher(){
+	}
+	
+	
 	@Override
 	public void run() {
 		setUpInputProcessor();

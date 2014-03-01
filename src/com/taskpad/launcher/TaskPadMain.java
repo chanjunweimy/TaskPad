@@ -9,6 +9,11 @@ package com.taskpad.launcher;
 import javax.swing.SwingUtilities;
 
 public class TaskPadMain{	
+	//private constructor signifies that
+	//this class cannot be created as an instance
+	private TaskPadMain(){
+	}
+	
 	public static void main(String[] args){
 		runProgram();
 	}
