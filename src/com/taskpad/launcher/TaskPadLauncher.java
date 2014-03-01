@@ -1,6 +1,9 @@
-package com.taskpad.ui;
+package com.taskpad.launcher;
 
-import com.taskpad.input.InputMain;
+import com.taskpad.ui.FlexiFontOutputFrame;
+import com.taskpad.ui.GuiManager;
+import com.taskpad.ui.InputFrame;
+import com.taskpad.ui.OutputFrame;
 
 public class TaskPadLauncher implements Runnable {
 	private static InputFrame _inputFrame;
@@ -8,7 +11,6 @@ public class TaskPadLauncher implements Runnable {
 	
 	@Override
 	public void run() {
-		setUpInputProcessor();
 		setUpGui();
 	}
 
@@ -23,10 +25,6 @@ public class TaskPadLauncher implements Runnable {
 		_inputFrame = new InputFrame();
 		//_outputFrame = new OutputFrame(); //DEPRECATED!!!
 		_outputFrame = new FlexiFontOutputFrame();
-	}
-
-	private void setUpInputProcessor() {
-		new InputMain();
 	}
 
 }
