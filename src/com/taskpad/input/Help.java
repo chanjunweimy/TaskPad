@@ -1,3 +1,11 @@
+/* 
+ * This is the class for the command HELP 
+ * 
+ * Current syntax: help
+ * 
+ * Output: Output frame shows list of commands and their syntax
+ */
+
 package com.taskpad.input;
 
 import java.util.Iterator;
@@ -22,7 +30,7 @@ public class Help {
 	private static String KEY_SEARCH = "SEARCH TASKS";
 	private static String KEY_UNDO_LAST_DONE = "UNDO LAST DONE";
 	
-	public Help(){
+	protected Help(){
 		helpCommands  = new LinkedHashMap<String, String>();
 		initialiseCommands();
 		outputHelp();
@@ -43,7 +51,7 @@ public class Help {
 		helpCommands.put(KEY_EXIT, "exit");
 	}
 	
-	public void outputHelp(){
+	protected void outputHelp(){
 		String output = "";
 		Iterator<Entry<String, String>> it = helpCommands.entrySet().iterator();
 		while (it.hasNext()){
