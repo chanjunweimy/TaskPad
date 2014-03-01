@@ -18,10 +18,12 @@ public class Add {
 	private static String PARAMETER_END = "END";
 	private static String PARAMETER_VENUE = "VENUE";
 	private static String PARAMETER_DESCRIPTION = "DESC";
+	private static String PARAMETER_CATEGORY = "CATEGORY";
 
 	public Add(String input){
 		this.input = input;
 		inputParameters = new HashMap<String,String>();
+		initialiseParametersToNull();
 	}
 	
 	public static Map<String,String> run(){
@@ -37,6 +39,17 @@ public class Add {
 		}
 		
 		return inputParameters;
+	}
+	
+	private static void initialiseParametersToNull(){
+		inputParameters.put(PARAMETER_DEADLINE_DAY, "");
+		inputParameters.put(PARAMETER_DEADLINE_MONTH, "");
+		inputParameters.put(PARAMETER_DEADLINE_YEAR, "");
+		inputParameters.put(PARAMETER_DEADLINE_YEAR, "");
+		inputParameters.put(PARAMETER_DESCRIPTION, "");
+		inputParameters.put(PARAMETER_END, "");
+		inputParameters.put(PARAMETER_START, "");
+		inputParameters.put(PARAMETER_VENUE, "");
 	}
 	
 	private static boolean isEmptyString(){
@@ -77,6 +90,9 @@ public class Add {
 		case "e": 
 			inputEndTime(param);
 			break;
+		case "c":
+			inputCategory(param);
+			break;
 		default:
 			invalidParam();
 		}
@@ -109,6 +125,10 @@ public class Add {
 		inputParameters.put(PARAMETER_END, param);	
 	}
 
+	private static void inputCategory(String param){
+		inputParameters.put(PARAMETER_CATEGORY, param);
+	}
+	
 	private static void invalidParam() {
 		invalidParameters = true;
 	}
