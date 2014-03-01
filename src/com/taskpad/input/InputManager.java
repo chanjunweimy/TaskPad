@@ -11,6 +11,9 @@ import com.taskpad.ui.GuiManager;
  */
 
 public class InputManager {
+	public static void startInputProcessor(){
+		new InputMain();
+	}
 	
 	public static void receiveFromGui(String inputString){
 		InputMain.receiveInput(inputString);
