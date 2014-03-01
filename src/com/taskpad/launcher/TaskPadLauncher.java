@@ -1,6 +1,6 @@
 package com.taskpad.launcher;
 
-import com.taskpad.input.InputMain;
+import com.taskpad.input.InputManager;
 import com.taskpad.ui.GuiManager;
 
 public class TaskPadLauncher implements Runnable {
@@ -18,6 +18,6 @@ public class TaskPadLauncher implements Runnable {
 	}
 	
 	private void setUpInputProcessor() {
-		new InputMain();
+		InputManager.startInputProcessor();
 	}
 }
