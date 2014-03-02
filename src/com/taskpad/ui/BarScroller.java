@@ -7,10 +7,10 @@ public class BarScroller implements Runnable {
 		private boolean _forward;
 		private JScrollBar _anyScrollBar;
 	
-		public BarScroller(){
+		protected BarScroller(){
 		}
 		
-		public BarScroller(boolean forward, JScrollBar anyScrollBar){
+		protected BarScroller(boolean forward, JScrollBar anyScrollBar){
 			initializeBarScroller(forward, anyScrollBar);
 		}
 
