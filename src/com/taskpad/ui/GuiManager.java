@@ -50,7 +50,7 @@ public class GuiManager {
 		remindUser(MESSAGE_START_REMINDER);
 	}
 	
-	private static void remindUser(String out){
+	public static void remindUser(String out){
 		_outputFrame.addReminder(out + NEWLINE);
 	}
 
