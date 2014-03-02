@@ -1,6 +1,6 @@
 /* Public API to call dates */
 
-package com.taskpad.date;
+package com.taskpad.day;
 
 public class DateManager {
 	
