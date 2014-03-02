@@ -17,6 +17,8 @@ public abstract class Command {
 	private static String COMMAND;
 	
 	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
+	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
+	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	
 	protected Command(String input){
 		this.input = input;
@@ -24,10 +26,13 @@ public abstract class Command {
 	}
 	
 	protected void run(){
-		exitIfEmptyString();
-		initialiseParametersToNull();
-		inputObject = commandSpecificRun();
-		passObjectToExecutor();
+		if (checkIfEmptyString() || checkIfIncorrectArguments()){
+			return;
+		} else {
+			initialiseParametersToNull();
+			inputObject = commandSpecificRun();
+			passObjectToExecutor();
+		}
 	}
 	
 	private static Input commandSpecificRun(){
@@ -36,24 +41,31 @@ public abstract class Command {
 		return input;
 	}
 	
-	private static void exitIfEmptyString() {
+	private static boolean checkIfEmptyString() {
 		if(isEmptyString()){
 			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+			return true;
 		}
-		
+		return false;
 	}
 	
 	private static void initialiseParametersToNull(){
 		//Children methods will initialise these 
 	}
 	
-	private static void checkTaskID(){
-		if (isValidTaskIDInput()){
-			inputObject = createInputObject();
-			passObjectToExecutor();
-		} else {
-			return;
+	private static boolean checkIfIncorrectArguments(){
+		String inputString[] = input.split(" ");
+		
+		if (isNotNumberArgs(inputString)){
+			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			return true;
 		}
+		
+		if(isNotInteger(input) || isInvalidID(input)){
+			outputIdError();
+			return true;
+		}
+		return false;
 	}
 	
 	private static Input createInputObject() {
@@ -101,6 +113,18 @@ public abstract class Command {
 			return true;
 		}
 		return false;
+	}
+	
+	private static boolean isNotNumberArgs(String[] inputString){
+		if (inputString.length != NUMBER_ARGUMENTS){
+			return true;
+		}
+		return false;
+	}
+	
+	private static void outputIdError() {
+		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
+		InputManager.outputToGui(errorMessage);
 	}
 	
 }
