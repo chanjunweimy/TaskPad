@@ -9,23 +9,23 @@ import java.util.Map;
 
 public abstract class Command {
 
-	private static Input inputObject;
-	private static Map<String, String> inputParameters;
-	private static String input;
+	protected static Input inputObject;
+	protected static Map<String, String> inputParameters;
+	protected static String input;
 	
-	private static int NUMBER_ARGUMENTS;
-	private static String COMMAND;
+	protected static int NUMBER_ARGUMENTS;
+	protected static String COMMAND;
 	
-	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
-	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
-	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
+	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
+	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
+	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	
-	protected Command(String input){
+	public Command(String input){
 		this.input = input;
 		inputParameters = new HashMap<String,String>();
 	}
 	
-	protected void run(){
+	public void run(){
 		if (checkIfEmptyString() || checkIfIncorrectArguments()){
 			return;
 		} else {
@@ -35,13 +35,9 @@ public abstract class Command {
 		}
 	}
 	
-	private static Input commandSpecificRun(){
-		//Run methods for specific commands 
-		Input input = createInputObject();
-		return input;
-	}
+	protected abstract Input commandSpecificRun();
 	
-	private static boolean checkIfEmptyString() {
+	protected static boolean checkIfEmptyString() {
 		if(isEmptyString()){
 			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 			return true;
@@ -49,11 +45,9 @@ public abstract class Command {
 		return false;
 	}
 	
-	private static void initialiseParametersToNull(){
-		//Children methods will initialise these 
-	}
+	protected abstract void initialiseParametersToNull();
 	
-	private static boolean checkIfIncorrectArguments(){
+	protected static boolean checkIfIncorrectArguments(){
 		String inputString[] = input.split(" ");
 		
 		if (isNotNumberArgs(inputString)){
@@ -68,37 +62,35 @@ public abstract class Command {
 		return false;
 	}
 	
-	private static Input createInputObject() {
+	protected Input createInputObject() {
 		clearInputParameters();
 		putInputParameters();
-		inputObject = new Input(COMMAND, inputParameters);		
+		inputObject = new Input(getCOMMAND(), inputParameters);		
 		return inputObject;
 	}
 
-	private static void putInputParameters(){
-		//Children will put in input parameters
-	}
+	protected abstract void putInputParameters();
 	
-	private static void clearInputParameters(){
+	protected static void clearInputParameters(){
 		inputParameters.clear();
 	}
 	
-	private static boolean isEmptyString(){
+	protected static boolean isEmptyString(){
 		if (input.isEmpty()){
 			return true;
 		}
 		return false;
 	}
 	
-	private static void putInputParameters(String parameter, String input){
+	protected static void putOneParameter(String parameter, String input){
 		inputParameters.put(parameter, input);
 	}
 	
-	private static void passObjectToExecutor(){
+	protected static void passObjectToExecutor(){
 		InputManager.passToExecutor(inputObject);
 	}
 	
-	private static boolean isNotInteger(String input){
+	protected static boolean isNotInteger(String input){
 		try{
 			Integer.parseInt(input);
 		} catch (NumberFormatException e){
@@ -107,7 +99,7 @@ public abstract class Command {
 		return false;
 	}
 	
-	private static boolean isInvalidID(String input){
+	protected static boolean isInvalidID(String input){
 		int inputNum = Integer.parseInt(input);
 		if (inputNum > InputManager.retrieveNumberOfTasks()){
 			return true;
@@ -115,16 +107,32 @@ public abstract class Command {
 		return false;
 	}
 	
-	private static boolean isNotNumberArgs(String[] inputString){
-		if (inputString.length != NUMBER_ARGUMENTS){
+	protected static boolean isNotNumberArgs(String[] inputString){
+		if (inputString.length != getNUMBER_ARGUMENTS()){
 			return true;
 		}
 		return false;
 	}
 	
-	private static void outputIdError() {
+	protected static void outputIdError() {
 		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
 		InputManager.outputToGui(errorMessage);
+	}
+
+	protected static int getNUMBER_ARGUMENTS() {
+		return NUMBER_ARGUMENTS;
+	}
+
+	protected static void setNUMBER_ARGUMENTS(int nUMBER_ARGUMENTS) {
+		NUMBER_ARGUMENTS = nUMBER_ARGUMENTS;
+	}
+
+	protected static String getCOMMAND() {
+		return COMMAND;
+	}
+
+	protected static void setCOMMAND(String cOMMAND) {
+		COMMAND = cOMMAND;
 	}
 	
 }
