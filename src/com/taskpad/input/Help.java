@@ -18,7 +18,7 @@ public class Help {
 
 	private static LinkedHashMap<String, String> helpCommands;
 	
-	private static String KEY_START = "START";
+	private static String KEY_START = "TASKPAD HELP";
 	private static String KEY_ADD_TASK = "ADD TASK";
 	private static String KEY_ADD_INFO_TASK = "ADD INFO TO TASK";
 	private static String KEY_CLEAR_DATA = "CLEAR MEMORY";

@@ -1,9 +1,9 @@
-/* 
+/**
  * This class creates a Delete object
  * 
  * Current syntax for delete: del <taskID>
  * 
- * @postconditions: passes Input object to executor to delete
+ * Returns Input object
  * 
  */
 
@@ -14,18 +14,19 @@ import java.util.Map;
 
 public class Delete extends Command{
 	
+	private static String COMMAND_DELETE = "DELETE";
 	private static String PARAMETER_TASK_ID = "TASKID";
+	private static int NUMBER_ARGUMENTS = 1;		//Number of arguments for delete
 
 	public Delete(String input) {
 		super(input);
-		setNUMBER_ARGUMENTS(1);
-		setCOMMAND("DELETE");
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		setCOMMAND(COMMAND_DELETE);
 	}
 
 	@Override
-	protected Input commandSpecificRun() {
-		inputObject = createInputObject();
-		return inputObject;
+	protected boolean commandSpecificRun() {
+		return true;
 	}
 
 	@Override

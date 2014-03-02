@@ -104,7 +104,7 @@ public class CommandTypes {
 	}
 	
 	private static void putListVariations(){
-		String[] listVariations = {"LIST", "LS", "SHOW", "DISPLAY"};
+		String[] listVariations = {"LIST", "LS", "SHOW", "DISPLAY", "LST"};
 		commandVariations.put(CommandType.LIST, listVariations);
 	}
 	

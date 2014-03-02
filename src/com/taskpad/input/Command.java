@@ -30,14 +30,19 @@ public abstract class Command {
 			return;
 		} else {
 			initialiseParametersToNull();
-			inputObject = commandSpecificRun();
-			passObjectToExecutor();
+			if (commandSpecificRun()){
+				putInputParameters();
+				createInputObject();
+				passObjectToExecutor();
+			}else {
+				return;
+			}
 		}
 	}
 	
-	protected abstract Input commandSpecificRun();
+	protected abstract boolean commandSpecificRun();
 	
-	protected static boolean checkIfEmptyString() {
+	protected boolean checkIfEmptyString() {
 		if(isEmptyString()){
 			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 			return true;
@@ -47,11 +52,11 @@ public abstract class Command {
 	
 	protected abstract void initialiseParametersToNull();
 	
-	protected static boolean checkIfIncorrectArguments(){
+	protected boolean checkIfIncorrectArguments(){
 		String inputString[] = input.split(" ");
 		
 		if (isNotNumberArgs(inputString)){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			invalidParameterError();
 			return true;
 		}
 		
@@ -75,22 +80,22 @@ public abstract class Command {
 		inputParameters.clear();
 	}
 	
-	protected static boolean isEmptyString(){
+	protected boolean isEmptyString(){
 		if (input.isEmpty()){
 			return true;
 		}
 		return false;
 	}
 	
-	protected static void putOneParameter(String parameter, String input){
+	protected void putOneParameter(String parameter, String input){
 		inputParameters.put(parameter, input);
 	}
 	
-	protected static void passObjectToExecutor(){
+	protected void passObjectToExecutor(){
 		InputManager.passToExecutor(inputObject);
 	}
 	
-	protected static boolean isNotInteger(String input){
+	protected boolean isNotInteger(String input){
 		try{
 			Integer.parseInt(input);
 		} catch (NumberFormatException e){
@@ -99,7 +104,7 @@ public abstract class Command {
 		return false;
 	}
 	
-	protected static boolean isInvalidID(String input){
+	protected boolean isInvalidID(String input){
 		int inputNum = Integer.parseInt(input);
 		if (inputNum > InputManager.retrieveNumberOfTasks()){
 			return true;
@@ -107,31 +112,36 @@ public abstract class Command {
 		return false;
 	}
 	
-	protected static boolean isNotNumberArgs(String[] inputString){
+	protected boolean isNotNumberArgs(String[] inputString){
 		if (inputString.length != getNUMBER_ARGUMENTS()){
 			return true;
 		}
 		return false;
 	}
 	
-	protected static void outputIdError() {
+	protected void invalidParameterError(){
+		String errorMessage = String.format(MESSAGE_INVALID_PARAMETER_NUMBER);
+		InputManager.outputToGui(errorMessage);
+	}
+	
+	protected void outputIdError() {
 		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
 		InputManager.outputToGui(errorMessage);
 	}
 
-	protected static int getNUMBER_ARGUMENTS() {
+	protected int getNUMBER_ARGUMENTS() {
 		return NUMBER_ARGUMENTS;
 	}
 
-	protected static void setNUMBER_ARGUMENTS(int nUMBER_ARGUMENTS) {
+	protected void setNUMBER_ARGUMENTS(int nUMBER_ARGUMENTS) {
 		NUMBER_ARGUMENTS = nUMBER_ARGUMENTS;
 	}
 
-	protected static String getCOMMAND() {
+	protected String getCOMMAND() {
 		return COMMAND;
 	}
 
-	protected static void setCOMMAND(String cOMMAND) {
+	protected void setCOMMAND(String cOMMAND) {
 		COMMAND = cOMMAND;
 	}
 	
