@@ -8,6 +8,7 @@
 
 package com.taskpad.input;
 
+import java.awt.Color;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -56,15 +57,16 @@ public class Help {
 		Iterator<Entry<String, String>> it = helpCommands.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, String> entry = it.next();
-			output += formatOutput(entry.getKey(), entry.getValue());
-		}
-		
-		InputManager.outputToGui(output);
+			formatOutput(entry.getKey(), entry.getValue());
+		}		
 	}
 	
-	private static String formatOutput(String key, String value){
-		String formattedOutput = "" + key + "\n" + value + "\n";
-		return formattedOutput;
+	private static void formatOutput(String key, String value){
+		InputManager.outputFormatString(key + "\n", Color.BLUE, true);
+		InputManager.outputFormatString(value + "\n", Color.BLACK, false);
+		
+		//deprecated
+		//String formattedOutput = "" + key + "\n" + value + "\n";
 	}
 	
 }
