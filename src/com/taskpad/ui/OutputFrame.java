@@ -47,7 +47,7 @@ public abstract class OutputFrame extends GuiFrame{
 	//children should have scroll bar too
 	protected JScrollPane _scrollBox  = new JScrollPane();
 	
-	public OutputFrame(){
+	protected OutputFrame(){
 		super();
 		initializeOutputFrame();
 	}

@@ -23,7 +23,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	protected final double COMPUTER_HEIGHT = 
 			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	
-	public GuiFrame(){
+	protected GuiFrame(){
 		initalizeGuiFrame();
 	}
 
@@ -152,6 +152,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		return changeState;
 	}
 	
+	
+	//won't implement
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		

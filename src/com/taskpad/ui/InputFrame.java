@@ -26,7 +26,7 @@ public class InputFrame extends GuiFrame{
 	private final static int INPUTFRAME_WIDTH = 350;
 	private final static int INPUTFRAME_HEIGHT = 30;
 	
-	public InputFrame(){
+	protected InputFrame(){
 		super();
 		initializeInputFrame();
 	}

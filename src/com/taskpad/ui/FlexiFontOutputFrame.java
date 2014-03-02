@@ -40,7 +40,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	private JTextPane _outputBox = new JTextPane();
 
-	public FlexiFontOutputFrame()
+	protected FlexiFontOutputFrame()
 	{
 		super(true);
 		initializeFlexiOutputFrame();
@@ -117,7 +117,8 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	 * without changing its status anymore!
 	 */
 	private void append(String msg, Color c){
-		append(msg, c, false);
+		boolean isBold = false;
+		append(msg, c, isBold);
 	}
 	
 	private void append(String msg, Color c, boolean isBold){
@@ -178,8 +179,13 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		aset = setFontType(sc, aset);
 		aset = setAlignment(sc, aset);
 		aset = setFontSize(sc, aset);
-		aset = sc.addAttribute(aset, StyleConstants.Bold, isBold);
+		aset = setBold(sc, isBold, aset);
 		return aset;
+	}
+
+	private AttributeSet setBold(StyleContext sc, boolean isBold,
+			AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.Bold, isBold);
 	}
 
 	private AttributeSet setFontSize(StyleContext sc, AttributeSet aset) {
