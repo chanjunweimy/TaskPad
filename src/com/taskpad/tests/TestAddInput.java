@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import com.taskpad.input.Add;
+import com.taskpad.input.Add_old;
 
 public class TestAddInput {
 	
@@ -24,8 +24,8 @@ public class TestAddInput {
 		
 		input = removeFirstWord(input);
 		
-		Add add = new Add(input);
-		inputParams = add.run();
+		Add_old add_old = new Add_old(input);
+		inputParams = add_old.run();
 		System.out.println("Size of params: " + inputParams.size());		
 	}
 	
