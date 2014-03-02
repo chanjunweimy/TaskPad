@@ -236,8 +236,22 @@ public class InputMain {
 	}
 	
 	private static void deleteTask(String input) {
-		Delete delete = new Delete(input);
-		delete.run();
+//		Delete delete = new Delete(input);
+//		delete.run();
+		
+		if (isValidTaskIDInput(input, COMMAND_DELETE)){
+			inputObject = createDeleteObject(input);
+			passObjectToExecutor();
+		} else {
+			return;
+		}
+	}
+	
+	private static Input createDeleteObject(String input) {
+		clearInputParameters();
+		putInputParameters(PARAMETER_TASK_ID, input);
+		inputObject = new Input(COMMAND_DELETE, inputParameters);		
+		return inputObject;
 	}
 
 	private static void doneTask(String input) {
