@@ -40,7 +40,7 @@ public class Help {
 	
 	private static void initialiseCommands(){
 		helpCommands.put(KEY_START, "Here's a list of commands TaskPad can perform!");
-		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time> -e <end time> -v <venue");
+		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time> -e <end time> -v <venue> -c <category>");
 		helpCommands.put(KEY_ADD_INFO_TASK, "addinfo <taskID> <info>");
 		helpCommands.put(KEY_ADD_REM_TASK, "addr <taskID> <day> <time (optional)>");
 		helpCommands.put(KEY_CLEAR_DATA, "clc");

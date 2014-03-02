@@ -164,9 +164,9 @@ public class InputMain {
 	/* Methods to perform commands */
 	
 	private static void addTask(String input) {
-		Add add = new Add(input);
+		Add_old add_old = new Add_old(input);
 		inputParameters.clear();
-		inputParameters = add.run();
+		inputParameters = add_old.run();
 		if (isEmptyInputParameters()){
 			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 		} else {

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Add {
+public class Add_old {
 	
 	private static String input;
 	private static Map<String,String> inputParameters;
@@ -29,7 +29,7 @@ public class Add {
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
 
-	public Add(String input){
+	public Add_old(String input){
 		this.input = input;
 		inputParameters = new HashMap<String,String>();
 		initialiseParametersToNull();
@@ -44,13 +44,14 @@ public class Add {
 		splitInputParameters();
 		
 		if (invalidParameters){
-			Add.inputParameters.clear();
+			Add_old.inputParameters.clear();
 		}
 		
 		return inputParameters;
 	}
 	
 	private static void initialiseParametersToNull(){
+		inputParameters.put(PARAMETER_CATEGORY, "");
 		inputParameters.put(PARAMETER_DEADLINE_DAY, "");
 		inputParameters.put(PARAMETER_DEADLINE_MONTH, "");
 		inputParameters.put(PARAMETER_DEADLINE_YEAR, "");
