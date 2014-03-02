@@ -30,7 +30,7 @@ public abstract class Command {
 			return;
 		} 
 		
-		inputParameters.clear();
+		clearInputParameters();
 		initialiseParametersToNull();
 		if (commandSpecificRun()){
 			putInputParameters();
