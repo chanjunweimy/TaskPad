@@ -19,7 +19,7 @@ public class TaskPadLauncher implements Runnable {
 	private void setUpGui() {
 		GuiManager.initialGuiManager();
 		GuiManager.callOutput(MESSAGE_WELCOME);
-		GuiManager.remindUser();
+		GuiManager.startRemindingUser();
 	}
 	
 	private void setUpInputProcessor() {

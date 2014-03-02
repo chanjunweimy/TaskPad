@@ -46,7 +46,7 @@ public class GuiManager {
 		_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);
 	}
 
-	public static void remindUser(){
+	public static void startRemindingUser(){
 		remindUser(MESSAGE_START_REMINDER);
 	}
 	
