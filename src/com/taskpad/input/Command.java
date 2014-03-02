@@ -28,16 +28,18 @@ public abstract class Command {
 	public void run(){
 		if (checkIfEmptyString() || checkIfIncorrectArguments()){
 			return;
-		} else {
-			initialiseParametersToNull();
-			if (commandSpecificRun()){
-				putInputParameters();
-				createInputObject();
-				passObjectToExecutor();
-			}else {
-				return;
-			}
+		} 
+		
+		inputParameters.clear();
+		initialiseParametersToNull();
+		if (commandSpecificRun()){
+			putInputParameters();
+			createInputObject();
+			passObjectToExecutor();
+		}else {
+			return;
 		}
+		
 	}
 	
 	protected abstract boolean commandSpecificRun();
@@ -60,13 +62,18 @@ public abstract class Command {
 			return true;
 		}
 		
-		if(isNotInteger(input) || isInvalidID(input)){
-			outputIdError();
-			return true;
-		}
+		checkIfValidTaskID(inputString[0]);
+		
 		return false;
 	}
 	
+	protected boolean checkIfValidTaskID(String taskID){
+		if(isNotInteger(input) || isInvalidID(input)){
+			outputIdError();
+			return false;
+		}
+		return true;
+	}
 	protected Input createInputObject() {
 		clearInputParameters();
 		putInputParameters();

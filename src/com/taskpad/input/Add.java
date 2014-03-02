@@ -1,25 +1,11 @@
-/*
- * This is the Add object 
- * 
- * Current syntax: add <desc> -d <dd/mm/yyyy> -v <venue> -c <category> -s <start time> -e<end time>
- * 
- * @postconditions: passes add object to executor to add into data base
- * 
- */
-
 package com.taskpad.input;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
-public class Add {
+public class Add extends Command{
 	
-	private static String input;
-	private static Map<String,String> inputParameters;
-	private static Scanner sc = new Scanner(System.in);
-	private static boolean invalidParameters = false;
-	
+	private static String COMMAND_ADD = "ADD";
+		
 	private static String PARAMETER_DEADLINE_DAY = "DAY";
 	private static String PARAMETER_DEADLINE_MONTH = "MONTH";
 	private static String PARAMETER_DEADLINE_YEAR = "YEAR";
@@ -28,53 +14,58 @@ public class Add {
 	private static String PARAMETER_VENUE = "VENUE";
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
+	
+	private static boolean invalidParameters = false;
+	
+	private static Scanner sc;
 
-	public Add(String input){
-		this.input = input;
-		inputParameters = new HashMap<String,String>();
-		initialiseParametersToNull();
+	public Add(String input) {
+		super(input);
+		setNUMBER_ARGUMENTS(1);
+		setCOMMAND(COMMAND_ADD);
+		sc = new Scanner(System.in);
 	}
 	
-	public static Map<String,String> run(){
-		if (isEmptyString()){
-			inputParameters.clear();
-			return inputParameters;
-		} 
-		
+	@Override
+	protected boolean commandSpecificRun() {
 		splitInputParameters();
 		
 		if (invalidParameters){
-			Add.inputParameters.clear();
+			return false;
 		}
 		
-		return inputParameters;
+		return true;		
 	}
-	
-	private static void initialiseParametersToNull(){
-		inputParameters.put(PARAMETER_DEADLINE_DAY, "");
-		inputParameters.put(PARAMETER_DEADLINE_MONTH, "");
-		inputParameters.put(PARAMETER_DEADLINE_YEAR, "");
-		inputParameters.put(PARAMETER_DEADLINE_YEAR, "");
-		inputParameters.put(PARAMETER_DESCRIPTION, "");
-		inputParameters.put(PARAMETER_END, "");
-		inputParameters.put(PARAMETER_START, "");
-		inputParameters.put(PARAMETER_VENUE, "");
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_CATEGORY, "");
+		putOneParameter(PARAMETER_DEADLINE_DAY, "");
+		putOneParameter(PARAMETER_DEADLINE_MONTH, "");
+		putOneParameter(PARAMETER_DEADLINE_YEAR, "");
+		putOneParameter(PARAMETER_DEADLINE_YEAR, "");
+		putOneParameter(PARAMETER_DESCRIPTION, "");
+		putOneParameter(PARAMETER_END, "");
+		putOneParameter(PARAMETER_START, "");
+		putOneParameter(PARAMETER_VENUE, "");
 	}
-	
-	private static boolean isEmptyString(){
-		if (input.isEmpty()){
-			return true;
-		}
+
+	@Override
+	protected void putInputParameters() {		
+	}
+
+	@Override
+	protected boolean checkIfIncorrectArguments(){
 		return false;
 	}
 	
-	private static void splitInputParameters(){
+	private void splitInputParameters(){
 		int count = 0;
 		sc = new Scanner(input).useDelimiter("\\s-");
 		while(sc.hasNext()){
 			String nextParam = sc.next();
 			if (count == 0){
-				inputParameters.put(PARAMETER_DESCRIPTION, nextParam);
+				putOneParameter(PARAMETER_DESCRIPTION, nextParam);
 			} else {
 				parseNextParam(nextParam);
 			}
@@ -82,7 +73,7 @@ public class Add {
 		}
 	}
 	
-	private static void parseNextParam(String param){
+	private void parseNextParam(String param){
 		String firstChar = getFirstChar(param);
 		param = removeFirstChar(param);
 
@@ -106,8 +97,8 @@ public class Add {
 			invalidParam();
 		}
 	}
-
-	private static void getDeadline(String param) {
+	
+	private void getDeadline(String param) {
 		String[] splitParam = param.split("/", -1);
 		String day = splitParam[0];
 		String month = splitParam[1];
@@ -115,38 +106,38 @@ public class Add {
 		inputDeadlines(day,month, year);
 	}
 	
-	private static void inputDeadlines(String day, String month, String year){
+	private void inputDeadlines(String day, String month, String year){
 		inputParameters.put(PARAMETER_DEADLINE_DAY, day);
 		inputParameters.put(PARAMETER_DEADLINE_MONTH, month);
 		inputParameters.put(PARAMETER_DEADLINE_YEAR, year);
 	}
-
-	private static void inputVenue(String param) {
+	
+	private void inputVenue(String param) {
 		inputParameters.put(PARAMETER_VENUE, param);		
 	}
 
-	private static void inputStartTime(String param) {
+	private void inputStartTime(String param) {
 		inputParameters.put(PARAMETER_START, param);	
 		
 	}
 
-	private static void inputEndTime(String param) {
+	private void inputEndTime(String param) {
 		inputParameters.put(PARAMETER_END, param);	
 	}
 
-	private static void inputCategory(String param){
+	private void inputCategory(String param){
 		inputParameters.put(PARAMETER_CATEGORY, param);
 	}
 	
-	private static void invalidParam() {
+	private void invalidParam() {
 		invalidParameters = true;
 	}
 	
-	private static String removeFirstChar(String input) {
+	private String removeFirstChar(String input) {
 		return input.replaceFirst(getFirstChar(input), "").trim();
 	}
 	
-	private static String getFirstChar(String input) {
+	private String getFirstChar(String input) {
 		String firstChar = input.trim().split("\\s+")[0];
 		return firstChar;
 	}
