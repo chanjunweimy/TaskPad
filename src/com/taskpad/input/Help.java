@@ -21,6 +21,7 @@ public class Help {
 	private static String KEY_START = "TASKPAD HELP";
 	private static String KEY_ADD_TASK = "ADD TASK";
 	private static String KEY_ADD_INFO_TASK = "ADD INFO TO TASK";
+	private static String KEY_ADD_REM_TASK = "ADD REMINDER";
 	private static String KEY_CLEAR_DATA = "CLEAR MEMORY";
 	private static String KEY_CLEAR_SCREEN = "CLEAR SCREEN";
 	private static String KEY_DELETE_TASK = "DELETE TASK";
@@ -39,8 +40,9 @@ public class Help {
 	
 	private static void initialiseCommands(){
 		helpCommands.put(KEY_START, "Here's a list of commands TaskPad can perform!");
-		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time> -e <end time> -v <venue");
+		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time> -e <end time> -v <venue> -c <category>");
 		helpCommands.put(KEY_ADD_INFO_TASK, "addinfo <taskID> <info>");
+		helpCommands.put(KEY_ADD_REM_TASK, "addr <taskID> <day> <time (optional)>");
 		helpCommands.put(KEY_CLEAR_DATA, "clc");
 		helpCommands.put(KEY_CLEAR_SCREEN, "clcsr");
 		helpCommands.put(KEY_DELETE_TASK, "del <taskID>");
