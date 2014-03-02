@@ -16,9 +16,6 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
 
-	/**
-	 * default
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	protected final double COMPUTER_WIDTH = 

@@ -23,9 +23,6 @@ import javax.swing.text.StyledDocument;
 
 public class FlexiFontOutputFrame extends OutputFrame {
 
-	/**
-	 * default
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private final int DEFAULT_ALIGNMENT = StyleConstants.ALIGN_JUSTIFIED;
