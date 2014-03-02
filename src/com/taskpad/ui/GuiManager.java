@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+import java.awt.Color;
+
 import com.taskpad.input.InputManager;
 
 public class GuiManager {
@@ -37,6 +39,10 @@ public class GuiManager {
 
 	public static void callOutput(String out){
 		GuiManager._outputFrame.addLine(out + NEWLINE);
+	}
+	
+	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
+		GuiManager._outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);
 	}
 
 	public static void remindUser(String out){

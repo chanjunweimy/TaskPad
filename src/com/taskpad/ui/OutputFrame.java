@@ -24,7 +24,7 @@ import javax.swing.border.Border;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
-public class OutputFrame extends GuiFrame{
+public abstract class OutputFrame extends GuiFrame{
 
 	/**
 	 * default
@@ -152,4 +152,6 @@ public class OutputFrame extends GuiFrame{
 	protected static int showWidth(){
 		return OUTPUTFRAME_WIDTH;
 	}
+	
+	abstract protected void addSelfDefinedLine(String line, Color c, boolean isBold);
 }
