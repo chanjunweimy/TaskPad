@@ -29,13 +29,13 @@ public class Add {
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
 
-	protected Add(String input){
+	public Add(String input){
 		this.input = input;
 		inputParameters = new HashMap<String,String>();
 		initialiseParametersToNull();
 	}
 	
-	protected static Map<String,String> run(){
+	public static Map<String,String> run(){
 		if (isEmptyString()){
 			inputParameters.clear();
 			return inputParameters;

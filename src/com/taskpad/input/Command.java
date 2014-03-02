@@ -16,6 +16,8 @@ public abstract class Command {
 	private static int NUMBER_ARGUMENTS;
 	private static String COMMAND;
 	
+	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
+	
 	protected Command(String input){
 		this.input = input;
 		inputParameters = new HashMap<String,String>();
@@ -24,15 +26,34 @@ public abstract class Command {
 	protected void run(){
 		exitIfEmptyString();
 		initialiseParametersToNull();
+		inputObject = commandSpecificRun();
+		passObjectToExecutor();
 	}
 	
-	private void exitIfEmptyString() {
-		// TODO Auto-generated method stub
+	private static Input commandSpecificRun(){
+		//Run methods for specific commands 
+		Input input = createInputObject();
+		return input;
+	}
+	
+	private static void exitIfEmptyString() {
+		if(isEmptyString()){
+			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+		}
 		
 	}
 	
-	private void initialiseParametersToNull(){
-		
+	private static void initialiseParametersToNull(){
+		//Children methods will initialise these 
+	}
+	
+	private static void checkTaskID(){
+		if (isValidTaskIDInput()){
+			inputObject = createInputObject();
+			passObjectToExecutor();
+		} else {
+			return;
+		}
 	}
 	
 	private static Input createInputObject() {
@@ -43,7 +64,7 @@ public abstract class Command {
 	}
 
 	private static void putInputParameters(){
-		
+		//Children will put in input parameters
 	}
 	
 	private static void clearInputParameters(){
@@ -63,6 +84,23 @@ public abstract class Command {
 	
 	private static void passObjectToExecutor(){
 		InputManager.passToExecutor(inputObject);
+	}
+	
+	private static boolean isNotInteger(String input){
+		try{
+			Integer.parseInt(input);
+		} catch (NumberFormatException e){
+			return true;
+		}
+		return false;
+	}
+	
+	private static boolean isInvalidID(String input){
+		int inputNum = Integer.parseInt(input);
+		if (inputNum > InputManager.retrieveNumberOfTasks()){
+			return true;
+		}
+		return false;
 	}
 	
 }
