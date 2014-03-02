@@ -17,6 +17,7 @@ public class InputMain {
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final String COMMAND_ADD_INFO = "ADDINFO";
+	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final String COMMAND_CLEAR = "CLEAR";
 	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
 	private static final String COMMAND_DELETE = "DELETE";
@@ -30,12 +31,15 @@ public class InputMain {
 	private static final int LENGTH_DELETE = 1;
 	private static final int LENGTH_DONE = 1;
 	private static final int LENGTH_ADD_INFO = 2;
+	private static final int LENGTH_REM = 2;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";
 	private static final String PARAMETER_DESC = "DESC";
 	private static final String PARAMETER_INFO = "INFO";
 	private static final String PARAMETER_LIST_KEY = "KEY";
+	private static final String PARAMETER_REM_DATE = "DATE";
+	private static final String PARAMETER_REM_TIME = "TIME";
 	private static final String PARAMETER_SEARCH_KEYWORD = "KEYWORD";
 	
 	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
@@ -115,6 +119,9 @@ public class InputMain {
 				break;
 			case ADD_INFO:
 				addInfoTask(input);
+				break;
+			case ADD_REM:
+				addRemTask(input);
 				break;
 			case LIST:
 				listTask(input);
@@ -206,17 +213,53 @@ public class InputMain {
 		return true;
 	}
 	
-	private static void listTask(String input){
+	private static void addRemTask(String input){
+		String[] splitInput = input.split(" ");
+		
 		if (isEmptyInput(input)){
-			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
 			return;
-		} else if (isInvalidListInput(input)){
-			InputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
-			return; 
-		} else {
-			inputObject = createListObject(input);
+		}
+		
+		if (isValidAddRemInput(splitInput)){
+			clearInputParameters();
+			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
+			putInputParameters(PARAMETER_REM_DATE, splitInput[1]);
+			if (splitInput.length == 3){
+				putInputParameters(PARAMETER_REM_TIME, splitInput[2]);
+			}
+			inputObject = new Input(COMMAND_ADD_REM, inputParameters);
 			passObjectToExecutor();
 		}
+	}
+	
+	private static boolean isValidAddRemInput(String[] input){
+		if (input.length != LENGTH_REM || input.length != LENGTH_REM+1){
+			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
+			return false;
+		}
+		
+		if(isNotInteger(input[0]) || isInvalidID(input[0])){
+			outputIdError(input[0]);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private static void listTask(String input){
+		List list = new List(input);
+		list.run();
+//		if (isEmptyInput(input)){
+//			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+//			return;
+//		} else if (isInvalidListInput(input)){
+//			InputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
+//			return; 
+//		} else {
+//			inputObject = createListObject(input);
+//			passObjectToExecutor();
+//		}
 	}
 	
 	private static boolean isInvalidListInput(String input){
