@@ -6,6 +6,7 @@ import com.taskpad.input.InputManager;
 
 public class GuiManager {
 	private static final String NEWLINE = "\n";
+	private static final String MESSAGE_START_REMINDER = "HELLO! Reminder: ";
 	private static InputFrame _inputFrame;
 	private static OutputFrame _outputFrame;
 
@@ -38,15 +39,19 @@ public class GuiManager {
 	}
 
 	public static void callOutput(String out){
-		GuiManager._outputFrame.addLine(out + NEWLINE);
+		_outputFrame.addLine(out + NEWLINE);
 	}
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
-		GuiManager._outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);
+		_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);
 	}
 
-	public static void remindUser(String out){
-		GuiManager._outputFrame.addReminder(out + NEWLINE);
+	public static void remindUser(){
+		remindUser(MESSAGE_START_REMINDER);
+	}
+	
+	private static void remindUser(String out){
+		_outputFrame.addReminder(out + NEWLINE);
 	}
 
 	public static void passInput(String in){
@@ -64,6 +69,6 @@ public class GuiManager {
 	 */
 
 	public static void clearOutput(){
-		GuiManager._outputFrame.clearOutputBox();
+		_outputFrame.clearOutputBox();
 	}
 }
