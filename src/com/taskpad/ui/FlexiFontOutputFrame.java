@@ -104,7 +104,13 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	@Override
 	protected void addReminder(String line) {
-		append(line, DEFAULT_COLOR_REMINDER);
+		boolean isBold = true;
+		append(line, DEFAULT_COLOR_REMINDER, isBold);
+	}
+	
+	@Override
+	protected void addSelfDefinedLine(String line, Color c, boolean isBold) {
+		append(line, c, isBold);
 	}
 	
 	/*
@@ -114,8 +120,12 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	 * without changing its status anymore!
 	 */
 	private void append(String msg, Color c){
+		append(msg, c, false);
+	}
+	
+	private void append(String msg, Color c, boolean isBold){
 		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = setUpAttributeSet(c, sc);
+		AttributeSet aset = setUpAttributeSet(c, sc, isBold);
 		StyledDocument doc = _outputBox.getStyledDocument();
 		int len = doc.getLength();
 		
@@ -165,13 +175,18 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		tp.replaceSelection(msg);
 	}*/
 
-	private AttributeSet setUpAttributeSet(Color c, StyleContext sc) {
+	private AttributeSet setUpAttributeSet(Color c, StyleContext sc, boolean isBold) {
 		AttributeSet aset = SimpleAttributeSet.EMPTY;
 		aset = setFontColor(c, sc, aset);
 		aset = setFontType(sc, aset);
 		aset = setAlignment(sc, aset);
-		aset = sc.addAttribute(aset, StyleConstants.FontSize, DEFAULT_FONT_SIZE);
+		aset = setFontSize(sc, aset);
+		aset = sc.addAttribute(aset, StyleConstants.Bold, isBold);
 		return aset;
+	}
+
+	private AttributeSet setFontSize(StyleContext sc, AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.FontSize, DEFAULT_FONT_SIZE);
 	}
 
 	private AttributeSet setAlignment(StyleContext sc, AttributeSet aset) {
