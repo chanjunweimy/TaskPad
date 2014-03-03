@@ -120,15 +120,15 @@ public class DataManager {
 				done.appendChild(doc.createTextNode(Integer.toString(taskInList.getDone())));
 				task.appendChild(done);
 				
-				}
+			}
 				
-				// write the content into xml file
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(new File(file));
-				
-				transformer.transform(source, result);
+			// write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(file));
+			
+			transformer.transform(source, result);
 	 
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
