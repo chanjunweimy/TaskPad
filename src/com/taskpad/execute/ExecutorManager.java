@@ -20,7 +20,7 @@ public class ExecutorManager {
 		Map<String, String> parameters = input.getParameters();
 		
 		switch (commandType) {
-		case "ADD":
+		case "ADD":	// should show full info?
 			add(parameters.get("DESC"), parameters.get("DAY"),
 					parameters.get("MONTH"), parameters.get("YEAR"),
 					parameters.get("START"), parameters.get("END"),
@@ -32,7 +32,7 @@ public class ExecutorManager {
 			delete(parameters.get("TASKID"));
 			CommandRecord.setPreviousCommand(command);
 			break;
-		case "ADDINFO":
+		case "ADDINFO":	// should show full info?
 			addInfo(parameters.get("TASKID"), parameters.get("INFO"));
 			CommandRecord.setPreviousCommand(command);
 			break;
@@ -40,21 +40,21 @@ public class ExecutorManager {
 			clear();
 			CommandRecord.setPreviousCommand(command);
 			break;
-		case "DONE":
+		case "DONE":	// should show full info?
 			markAsDone(parameters.get("TASKID"));
 			CommandRecord.setPreviousCommand(command);
 			break;
-		case "EDIT":
+		case "EDIT":	// ?
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
 			CommandRecord.setPreviousCommand(command);
 			break;
-		case "SEARCH":
+		case "SEARCH":	// should show full info?
 			search(parameters.get("KEYWORD"));
 			break;
 		case "UNDO":
 			undo();
 			break;
-		case "LIST":
+		case "LIST":	// should show full info?
 			list(parameters.get("KEY"));
 			break;
 		}
