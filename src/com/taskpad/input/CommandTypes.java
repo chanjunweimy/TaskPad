@@ -70,17 +70,17 @@ public class CommandTypes {
 	}
 	
 	private static void putAddRemVariations(){
-		String[] addRemVariations = {"ADDR", "ADDREM", "ADDREMINDER", "REM", "REMINDER"};
+		String[] addRemVariations = {"ADDR", "ADDREM", "ADDREMINDER", "REMIND", "REMINDER"};
 		commandVariations.put(CommandType.ADD_REM, addRemVariations);
 	}
 	
 	private static void putDeleteVariations(){
-		String[] deleteVariations = {"DELETE", "DEL", "REMOVE"};
+		String[] deleteVariations = {"DELETE", "DEL", "REMOVE", "REM"};
 		commandVariations.put(CommandType.DELETE, deleteVariations);
 	}
 	
 	private static void putDoneVariations(){
-		String[] doneVariations = {"DONE", "FINISHED", "COMPLETED"};
+		String[] doneVariations = {"DONE", "FINISHED", "COMPLETED", "FINISH", "COMPLETE"};
 		commandVariations.put(CommandType.DONE, doneVariations);
 	}
 	
@@ -100,7 +100,7 @@ public class CommandTypes {
 	}
 	
 	private static void putUndoVariations(){
-		String[] undoVariations = {"UNDO"};
+		String[] undoVariations = {"UNDO", "U"};
 		commandVariations.put(CommandType.UNDO, undoVariations);
 	}
 	
