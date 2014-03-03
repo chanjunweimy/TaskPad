@@ -143,6 +143,8 @@ public class ExecutorManager {
 			passFeedbackToGui("No finished task found.");
 		} else {
 			String text = generateTextForTasks(tasks);
+			//debug
+			System.out.println(text);
 			passFeedbackToGui(text);
 		}
 	}
