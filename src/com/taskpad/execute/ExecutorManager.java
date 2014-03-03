@@ -7,6 +7,7 @@ import com.taskpad.data.CommandRecord;
 import com.taskpad.data.DataFile;
 import com.taskpad.data.DataManager;
 import com.taskpad.input.Input;
+import com.taskpad.ui.GuiManager;
 
 public class ExecutorManager {
 	private static final String FEEDBACK_ADD = "Added:";
@@ -95,7 +96,7 @@ public class ExecutorManager {
 			passFeedbackToGui("No undone task found.");
 		} else {
 			String text = generateTextForTasks(tasks);
-			passFeedbackToGui(text);
+			GuiManager.callOutput(text);
 		}
 		
 	}
@@ -121,7 +122,7 @@ public class ExecutorManager {
 			passFeedbackToGui("No finished task found.");
 		} else {
 			String text = generateTextForTasks(tasks);
-			passFeedbackToGui(text);
+			GuiManager.callOutput(text);
 		}
 	}
 
@@ -143,15 +144,15 @@ public class ExecutorManager {
 			passFeedbackToGui("No finished task found.");
 		} else {
 			String text = generateTextForTasks(tasks);
-			//debug
-			System.out.println(text);
-			passFeedbackToGui(text);
+			// debug
+			// System.out.println(text);
+			GuiManager.callOutput(text);
 		}
 	}
 
 	private static void undo() {
 		if (!DataFile.isValidPrevious()) {
-			passFeedbackToGui("You don't have things to undo, or you just performed an undo operation.");
+			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
 			return;
 		}
 
@@ -159,7 +160,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE_PREV);
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		passFeedbackToGui("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 	}
 
 	private static void search(String keywordsString) {
@@ -190,7 +191,7 @@ public class ExecutorManager {
 		
 		// pass feedback to GUI
 		String feedback = generateTextForTasks(results);
-		passFeedbackToGui(feedback);
+		GuiManager.callOutput(feedback);
 	}
 
 	private static String generateTextForTasks(LinkedList<String[]> tasks) {
@@ -214,7 +215,7 @@ public class ExecutorManager {
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		// pass feedback to gui
-		passFeedbackToGui("'" + taskHistory + "' changed to '" 
+		GuiManager.callOutput("'" + taskHistory + "' changed to '" 
 				+ generateTextForOneTask(taskIdString, description) + "'");
 	}
 
@@ -243,7 +244,9 @@ public class ExecutorManager {
 		
 		listOfTasks = new LinkedList<Task>();
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		
 		// pass feedback to gui
+		GuiManager.callOutput("All tasks have been deleted. You can use undo to get them them.");
 	}
 
 	private static void addInfo(String taskIdString, String info) {
@@ -258,7 +261,7 @@ public class ExecutorManager {
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		passFeedbackToGui(getInfoOfTask(index, listOfTasks));
+		GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
 	}
 
 	private static String getInfoOfTask(int index, LinkedList<Task> listOfTasks) {
@@ -281,7 +284,7 @@ public class ExecutorManager {
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		passFeedbackToGui(generateFeedbackForDelete(taskDeleted));
+		GuiManager.callOutput(generateFeedbackForDelete(taskDeleted));
 	}
 
 	private static String generateFeedbackForDelete(Task taskDeleted) {
@@ -302,7 +305,7 @@ public class ExecutorManager {
 		
 		int taskId = listOfTasks.size();
 		String taskIdString = Integer.toString(taskId);
-		passFeedbackToGui(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
 	private static String generateFeedbackForAdd(String taskIdString, String description) {
