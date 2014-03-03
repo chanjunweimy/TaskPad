@@ -41,23 +41,73 @@ public class DataManager {
 			
 			doc.getDocumentElement().normalize();
 			
-			NodeList nList = doc.getElementsByTagName("task");
+			NodeList nList = doc.getElementsByTagName("TaskPad");
 			
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node taskNode = nList.item(i);
 		 
 				if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element task = (Element) taskNode;
-		 
-					String description = task.getElementsByTagName("description").item(0).getTextContent();
-					String deadlineDay = task.getElementsByTagName("deadline_day").item(0).getTextContent();
-					String deadlineMonth = task.getElementsByTagName("deadline_month").item(0).getTextContent();
-					String deadlineYear = task.getElementsByTagName("deadline_year").item(0).getTextContent();
-					String startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
-					String endTime = task.getElementsByTagName("end_time").item(0).getTextContent();
-					String venue = task.getElementsByTagName("venue").item(0).getTextContent();
-					String details = task.getElementsByTagName("details").item(0).getTextContent();
-					int done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
+					
+					String description;
+					String deadlineDay;
+					String deadlineMonth;
+					String deadlineYear;
+					String startTime;
+					String endTime;
+					String venue;
+					String details;
+					int done;
+					
+					if (task.getElementsByTagName("description") != null) {
+						description = task.getElementsByTagName("description").item(0).getTextContent();
+					} else {
+						description = null;
+					}
+					
+					if(task.getElementsByTagName("deadline_day") != null) {
+						deadlineDay = task.getElementsByTagName("deadline_day").item(0).getTextContent();
+					} else {
+						deadlineDay = null;
+					}
+					
+					if (task.getElementsByTagName("deadline_month") != null) {
+						deadlineMonth = task.getElementsByTagName("deadline_month").item(0).getTextContent();
+					} else {
+						deadlineMonth = null;
+					}
+					
+					if(task.getElementsByTagName("deadline_year") != null) {
+						deadlineYear = task.getElementsByTagName("deadline_year").item(0).getTextContent();
+					} else {
+						deadlineYear = null;
+					}
+					
+					if (task.getElementsByTagName("start_time") != null) {
+						startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
+					} else {
+						startTime = null;
+					}
+					
+					if (task.getElementsByTagName("end_time") != null) {
+						endTime = task.getElementsByTagName("end_time").item(0).getTextContent();
+					} else {
+						endTime = null;
+					}
+					
+					if (task.getElementsByTagName("venue") != null) {
+						venue = task.getElementsByTagName("venue").item(0).getTextContent();
+					} else {
+						venue = null;
+					}
+					
+					if(task.getElementsByTagName("details") != null) {
+						details = task.getElementsByTagName("details").item(0).getTextContent();
+					} else {
+						details = null;
+					}
+					
+					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
 					
 					listOfTasks.add(new Task(description, deadlineDay, deadlineMonth, deadlineYear,
 							startTime, endTime, venue, details, done));
