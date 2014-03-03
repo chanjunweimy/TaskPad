@@ -1,6 +1,6 @@
 /* This class creates the date object */
 
-package com.taskpad.day;
+package com.taskpad.timeanddate;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
