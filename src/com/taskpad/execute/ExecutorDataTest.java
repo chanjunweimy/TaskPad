@@ -19,5 +19,11 @@ public class ExecutorDataTest {
 		map.put("DESC", "do homework");
 		Input inputObj = new Input("ADD", map);
 		ExecutorManager.receiveFromInput(inputObj,input);
+		
+		String input1 = "ls";
+		HashMap<String, String> map1 = new HashMap<String, String>();
+		map1.put("KEY", "ALL");
+		Input inputObj1 = new Input("LIST", map1);
+		ExecutorManager.receiveFromInput(inputObj1,input1);
 	}
 }

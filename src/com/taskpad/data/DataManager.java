@@ -76,6 +76,7 @@ public class DataManager {
 	public static void storeBack(LinkedList<Task> taskList, String file) {
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			docFactory.setNamespaceAware(true);
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 	 
 			// root elements
@@ -88,33 +89,47 @@ public class DataManager {
 				rootElement.appendChild(task);
 				// task.setAttribute("id", "1");
 				
-				Element description = doc.createElement("description");
-				description.appendChild(doc.createTextNode(taskInList.getDescription()));
-				task.appendChild(description);
+				if(taskInList.getDescription() != null) {
+					Element description = doc.createElement("description");
+					description.appendChild(doc.createTextNode(taskInList.getDescription()));
+					task.appendChild(description);
+				}
 				
-				Element deadlineDay = doc.createElement("deadline_day");
-				deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadlineDay()));
-				task.appendChild(deadlineDay);
+				if(taskInList.getDeadlineDay() != null) {
+					Element deadlineDay = doc.createElement("deadline_day");
+					deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadlineDay()));
+					task.appendChild(deadlineDay);
+				}
 				
-				Element deadlineMonth = doc.createElement("deadline_month");
-				deadlineMonth.appendChild(doc.createTextNode(taskInList.getDeadlineMonth()));
-				task.appendChild(deadlineMonth);
+				if(taskInList.getDeadlineMonth() != null) {
+					Element deadlineMonth = doc.createElement("deadline_month");
+					deadlineMonth.appendChild(doc.createTextNode(taskInList.getDeadlineMonth()));
+					task.appendChild(deadlineMonth);
+				}
 				
-				Element deadlineYear = doc.createElement("deadline_year");
-				deadlineYear.appendChild(doc.createTextNode(taskInList.getDeadlineYear()));
-				task.appendChild(deadlineYear);
+				if (taskInList.getDeadlineYear() != null) {
+					Element deadlineYear = doc.createElement("deadline_year");
+					deadlineYear.appendChild(doc.createTextNode(taskInList.getDeadlineYear()));
+					task.appendChild(deadlineYear);
+				}
 				
-				Element startTime = doc.createElement("start_time");
-				startTime.appendChild(doc.createTextNode(taskInList.getStartTime()));
-				task.appendChild(startTime);
+				if (taskInList.getStartTime() != null) {
+					Element startTime = doc.createElement("start_time");
+					startTime.appendChild(doc.createTextNode(taskInList.getStartTime()));
+					task.appendChild(startTime);
+				}
 				
-				Element endTime = doc.createElement("end_time");
-				endTime.appendChild(doc.createTextNode(taskInList.getEndTime()));
-				task.appendChild(endTime);
+				if (taskInList.getEndTime() != null) {
+					Element endTime = doc.createElement("end_time");
+					endTime.appendChild(doc.createTextNode(taskInList.getEndTime()));
+					task.appendChild(endTime);
+				}
 				
-				Element details = doc.createElement("details");
-				details.appendChild(doc.createTextNode(taskInList.getDetails()));
-				task.appendChild(details);
+				if (taskInList.getDetails() != null) {
+					Element details = doc.createElement("details");
+					details.appendChild(doc.createTextNode(taskInList.getDetails()));
+					task.appendChild(details);
+				}
 				
 				Element done = doc.createElement("done");
 				done.appendChild(doc.createTextNode(Integer.toString(taskInList.getDone())));
