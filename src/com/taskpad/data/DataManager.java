@@ -59,49 +59,50 @@ public class DataManager {
 					String details;
 					int done;
 					
-					if (task.getElementsByTagName("description") != null) {
+					if (task.getElementsByTagName("description").item(0) != null) {
 						description = task.getElementsByTagName("description").item(0).getTextContent();
 					} else {
-						description = null;
+						// description = null;
+						return listOfTasks; // description cannot be null
 					}
 					
-					if(task.getElementsByTagName("deadline_day") != null) {
+					if(task.getElementsByTagName("deadline_day").item(0) != null) {
 						deadlineDay = task.getElementsByTagName("deadline_day").item(0).getTextContent();
 					} else {
 						deadlineDay = null;
 					}
 					
-					if (task.getElementsByTagName("deadline_month") != null) {
+					if (task.getElementsByTagName("deadline_month").item(0) != null) {
 						deadlineMonth = task.getElementsByTagName("deadline_month").item(0).getTextContent();
 					} else {
 						deadlineMonth = null;
 					}
 					
-					if(task.getElementsByTagName("deadline_year") != null) {
+					if(task.getElementsByTagName("deadline_year").item(0) != null) {
 						deadlineYear = task.getElementsByTagName("deadline_year").item(0).getTextContent();
 					} else {
 						deadlineYear = null;
 					}
 					
-					if (task.getElementsByTagName("start_time") != null) {
+					if (task.getElementsByTagName("start_time").item(0) != null) {
 						startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
 					} else {
 						startTime = null;
 					}
 					
-					if (task.getElementsByTagName("end_time") != null) {
+					if (task.getElementsByTagName("end_time").item(0) != null) {
 						endTime = task.getElementsByTagName("end_time").item(0).getTextContent();
 					} else {
 						endTime = null;
 					}
 					
-					if (task.getElementsByTagName("venue") != null) {
+					if (task.getElementsByTagName("venue").item(0) != null) {
 						venue = task.getElementsByTagName("venue").item(0).getTextContent();
 					} else {
 						venue = null;
 					}
 					
-					if(task.getElementsByTagName("details") != null) {
+					if(task.getElementsByTagName("details").item(0) != null) {
 						details = task.getElementsByTagName("details").item(0).getTextContent();
 					} else {
 						details = null;
