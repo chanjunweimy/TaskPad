@@ -5,6 +5,7 @@
 
 package com.taskpad.input;
 
+import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +25,6 @@ public class TimeParser {
 		
 		String time = replaceColonTypo(input);
 		
-		long timeMillisecs = decodeTime(time);
-		
 		return time;
 	}
 	
@@ -39,14 +38,12 @@ public class TimeParser {
 		
 		if (timeInt >= 0000 && timeInt <= 2400){
 			return true;
-		} else if (    ){
-			return true;
-		}
+		} 
 		
 		return false;
 	}
 	
-	private long decodeTime(String input){
+	private static long decodeTime(String input){
 		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
 	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[:.]?([0-5][0-9])?)$");
 	    
@@ -82,7 +79,7 @@ public class TimeParser {
 	            hours = "0";
 	        }
 
-	        Long time = (Long.inputOf(hours) * 60 + Long.inputOf(minutes)) * 60 * 1000;
+	        long time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
 
 	        if (input.contains("p") && !hours.equals("12")) {
 	            // "pm" adds 12 hours to the total, except for 12pm
@@ -91,8 +88,13 @@ public class TimeParser {
 
 	        return time;
 	    }
-	    return null;
+	    return 0;
 	    
+	}
+	
+	private static String convertToTime(long milliseconds){
+		Date date = new Date(milliseconds);
+		return "";
 	}
 	
 	private String stripTimeDelimiters(String input){
