@@ -11,8 +11,6 @@ package com.taskpad.input;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.taskpad.input.CommandTypes.CommandType;
-
 public class List extends Command{
 
 	private static String COMMAND_LIST = "LIST";
@@ -56,6 +54,10 @@ public class List extends Command{
 		putOneParameter(PARAMETER_LIST_KEY, parameterList);		
 	}
 	
+	@Override
+	protected boolean checkIfIncorrectArguments(){
+		return false;
+	}	
 
 	/* This method sets the default parameter ALL to the list parameter
 	 * 	 
