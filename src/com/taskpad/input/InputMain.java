@@ -28,10 +28,6 @@ public class InputMain {
 	private static final String COMMAND_UNDO = "UNDO";
 	
 	private static final int LENGTH_EDIT = 2;
-	private static final int LENGTH_DELETE = 1;
-	private static final int LENGTH_DONE = 1;
-	private static final int LENGTH_ADD_INFO = 2;
-	private static final int LENGTH_REM = 2;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";
@@ -41,9 +37,7 @@ public class InputMain {
 	private static final String PARAMETER_REM_DATE = "DATE";
 	private static final String PARAMETER_REM_TIME = "TIME";
 	private static final String PARAMETER_SEARCH_KEYWORD = "KEYWORD";
-	
-	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
-	
+		
 	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
@@ -271,18 +265,6 @@ public class InputMain {
 	private static void editTask(String input) {
 		Edit edit = new Edit(input);
 		edit.run();
-	}
-	
-	private static boolean isValidEditInput(String[] splitInput){
-		if (isInvalidParameterNumber(splitInput.length)){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
-		} 	else if(isNotInteger(splitInput[0]) || isInvalidID(splitInput[0])){
-			outputIdError(splitInput[0]);
-			return false;
-		}
-		
-		return true;
 	}
 
 	private static void outputIdError(String input) {

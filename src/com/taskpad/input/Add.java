@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 public class Add extends Command{
 	
-	private static String COMMAND_ADD = "ADD";
+	private static final String COMMAND_ADD = "ADD";
+	private static final int NUMBER_ARGUMENTS = 1;
 		
 	private static String PARAMETER_DEADLINE = "DEADLINE";
 	private static String PARAMETER_START_DATE = "START DATE";
@@ -25,7 +26,7 @@ public class Add extends Command{
 
 	public Add(String input) {
 		super(input);
-		setNUMBER_ARGUMENTS(1);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_ADD);
 		sc = new Scanner(System.in);
 	}
