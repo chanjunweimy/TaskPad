@@ -25,7 +25,7 @@ public class Done extends Command{
 
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_TASK_ID, _taskID);
+		putOneParameter(PARAMETER_TASK_ID, "");
 	}
 
 	@Override

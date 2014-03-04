@@ -216,51 +216,6 @@ public class InputMain {
 		InputManager.passToExecutor(inputObject);
 	}
 	
-	private static boolean isValidTaskIDInput(String input, String commandString){
-		String errorMessage = "";
-		
-		if (isEmptyInput(input)){
-			errorMessage = String.format(MESSAGE_EMPTY_INPUT);
-			InputManager.outputToGui(errorMessage);
-			return false;
-		}
-		
-		String inputString[] = input.split(" ");
-		
-		if (commandString.equals(COMMAND_DELETE)){
-			if (isNotNumberArgs(inputString, commandString)){
-				InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-				return false;
-			}
-		} else if (commandString.equals(COMMAND_DONE)){
-			if (isNotNumberArgs(inputString, commandString)){
-				InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-				return false;
-			}
-		} 
-		
-		if(isNotInteger(input) || isInvalidID(input)){
-			outputIdError(input);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private static boolean isNotNumberArgs(String[] inputString, String commandString){
-		if (commandString.equals(COMMAND_DELETE)){
-			if (inputString.length != LENGTH_DELETE){
-				return true;
-			}
-		} else if (commandString.equals(COMMAND_DONE)){
-			if (inputString.length != LENGTH_DONE){
-				return true;
-			}
-		} 
-		
-		return false;
-	}
-	
 	private static boolean isEmptyInput(String input){
 		if (input.equals("")){
 			return true;
@@ -314,22 +269,8 @@ public class InputMain {
 	}
 	
 	private static void editTask(String input) {
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		String[] splitInput = input.split(" ");
-		
-		if (isValidEditInput(splitInput)){
-			clearInputParameters();
-			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-			putInputParameters(PARAMETER_DESC, splitInput[1]);
-			inputObject = new Input(COMMAND_EDIT, inputParameters);
-			passObjectToExecutor();
-		} else {
-			return;
-		}
+		Edit edit = new Edit(input);
+		edit.run();
 	}
 	
 	private static boolean isValidEditInput(String[] splitInput){
