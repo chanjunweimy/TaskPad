@@ -37,7 +37,20 @@ public class Task {
 		this.venue = venue;
 		this.done = done;
 	}
-
+	
+	/**
+	 * =====To Taining===============================
+	 * please implement this function
+	 * to let the comparator works! :)
+	 * The comparator can be find in
+	 * CompareDateAndTime.java
+	 * 
+	 */
+	public String getDeadline() {
+		return null;
+	}
+	
+	
 	public String getDescription() {
 		return description;
 	}
