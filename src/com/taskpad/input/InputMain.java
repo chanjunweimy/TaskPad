@@ -195,38 +195,6 @@ public class InputMain {
 	private static void addRemTask(String input){
 		Addrem addRem = new Addrem(input);
 		addRem.run();
-		
-//		String[] splitInput = input.split(" ");
-//		
-//		if (isEmptyInput(input)){
-//			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-//			return;
-//		}
-//		
-//		if (isValidAddRemInput(splitInput)){
-//			clearInputParameters();
-//			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-//			putInputParameters(PARAMETER_REM_DATE, splitInput[1]);
-//			if (splitInput.length == 3){
-//				putInputParameters(PARAMETER_REM_TIME, splitInput[2]);
-//			}
-//			inputObject = new Input(COMMAND_ADD_REM, inputParameters);
-//			passObjectToExecutor();
-//		}
-	}
-	
-	private static boolean isValidAddRemInput(String[] input){
-		if (input.length != LENGTH_REM || input.length != LENGTH_REM+1){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
-		}
-		
-		if(isNotInteger(input[0]) || isInvalidID(input[0])){
-			outputIdError(input[0]);
-			return false;
-		}
-		
-		return true;
 	}
 	
 	private static void listTask(String input){
