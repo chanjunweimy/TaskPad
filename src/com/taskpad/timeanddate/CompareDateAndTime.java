@@ -1,19 +1,16 @@
 package com.taskpad.timeanddate;
 
-/*
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
-*/
 
-//import com.taskpad.execute.Task;
+
+import com.taskpad.execute.Task;
 
 //sorting comparator created for executor
 public class CompareDateAndTime {
-	/*
-	 //Comparator to Task not implemented yet
-	 //Due to attribute changing
+	
 	public static final Comparator<Task> ACCENDING_ORDER = 
 			new Comparator<Task>() {
 			@Override
@@ -28,10 +25,9 @@ public class CompareDateAndTime {
 				System.err.println(e.getMessage());
 				return 0;
 			}
-			return 0;
+			return d1.compareTo(d2);
 		}
 	};
-	*/
 	
 	
 	/**
