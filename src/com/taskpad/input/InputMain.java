@@ -195,20 +195,23 @@ public class InputMain {
 	}
 
 	private static void addInfoTask(String input) {
-		String[] splitInput = input.split(" ");
+		Addinfo addinfo = new Addinfo(input);
+		addinfo.run();
 		
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		if (isValidAddInfoInput(splitInput)){
-			clearInputParameters();
-			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-			putInputParameters(PARAMETER_INFO, splitInput[1]);
-			inputObject = new Input(COMMAND_ADD_INFO, inputParameters);
-			passObjectToExecutor();
-		} 
+//		String[] splitInput = input.split(" ");
+//		
+//		if (isEmptyInput(input)){
+//			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+//			return;
+//		}
+//		
+//		if (isValidAddInfoInput(splitInput)){
+//			clearInputParameters();
+//			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
+//			putInputParameters(PARAMETER_INFO, splitInput[1]);
+//			inputObject = new Input(COMMAND_ADD_INFO, inputParameters);
+//			passObjectToExecutor();
+//		} 
 	}
 	
 	private static boolean isValidAddInfoInput(String[] input){		
