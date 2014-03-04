@@ -273,12 +273,14 @@ public class InputMain {
 	}
 
 	private static void doneTask(String input) {
-		if (isValidTaskIDInput(input, "DONE")){
-			inputObject = createDoneObject(input);
-			passObjectToExecutor();
-		} else {
-			return;
-		}
+		Done done = new Done(input);
+		done.run();
+//		if (isValidTaskIDInput(input, "DONE")){
+//			inputObject = createDoneObject(input);
+//			passObjectToExecutor();
+//		} else {
+//			return;
+//		}
 	}
 	
 	private static Input createDoneObject(String input) {
@@ -387,10 +389,6 @@ public class InputMain {
 	private static void undoLast() {
 		Undo undo = new Undo("");
 		undo.run();
-//		clearInputParameters();
-//		putInputParameters(PARAMETER_NULL, "");
-//		inputObject = new Input(COMMAND_UNDO, inputParameters);
-//		passObjectToExecutor();
 	}
 	
 	private static void editTask(String input) {
