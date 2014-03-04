@@ -4,6 +4,6 @@
 
 package com.taskpad.input;
 
-public class DateTimeParser {
+public class DateParser {
 
 }
