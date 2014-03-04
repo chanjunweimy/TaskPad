@@ -25,5 +25,12 @@ public class ExecutorDataTest {
 		map1.put("KEY", "ALL");
 		Input inputObj1 = new Input("LIST", map1);
 		ExecutorManager.receiveFromInput(inputObj1,input1);
+		
+		String input2 = "addinfo 1 with Jean";
+		HashMap<String, String> map2 = new HashMap<String, String>();
+		map2.put("TASKID", "1");
+		map2.put("INFO", "with Jean");
+		Input inputObj2 = new Input("ADDINFO", map2);
+		ExecutorManager.receiveFromInput(inputObj2,input2);
 	}
 }
