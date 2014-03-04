@@ -34,7 +34,7 @@ public class Add extends Command{
 	protected boolean commandSpecificRun() {
 		splitInputParameters();
 		
-		if (invalidParameters){
+		if (_invalidParameters){
 			return false;
 		}
 		
@@ -102,6 +102,7 @@ public class Add extends Command{
 	}
 	
 	private void getDeadline(String param) {
+		param = stripWhiteSpaces(param);
 		inputDeadline(param);
 		
 		/* deprecated
@@ -126,9 +127,9 @@ public class Add extends Command{
 		String[] splitParam = param.split(",");
 		
 		if (isValidTimeArgs(splitParam)){
-			putOneParameter(PARAMETER_START_TIME, splitParam[0]);
+			putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
 			if (splitParam.length == LENGTH_TIME){
-				putOneParameter(PARAMETER_START_DATE, splitParam[1]);
+				putOneParameter(PARAMETER_START_DATE, stripWhiteSpaces(splitParam[1]));
 			}
 		}
 	}
@@ -137,9 +138,9 @@ public class Add extends Command{
 		String[] splitParam = param.split(",");
 		
 		if (isValidTimeArgs(splitParam)){
-			putOneParameter(PARAMETER_END_TIME, splitParam[0]);
+			putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0]));
 			if (splitParam.length == LENGTH_TIME){
-				putOneParameter(PARAMETER_END_DATE, splitParam[1]);
+				putOneParameter(PARAMETER_END_DATE, stripWhiteSpaces(splitParam[1]));
 			}
 		}
 	}
@@ -162,7 +163,7 @@ public class Add extends Command{
 	}
 	
 	private boolean isValidTimeArgs(String[] args){
-		if (args.length != LENGTH_TIME){
+		if (args.length > LENGTH_TIME){
 			outputTimeArgsError(args.length);
 			return false;
 		} else {
@@ -174,6 +175,10 @@ public class Add extends Command{
 		String errorMessage = String.format(MESSAGE_ERROR_TIME, length);
 		InputManager.outputToGui(errorMessage);
 		return errorMessage;
+	}
+	
+	private String stripWhiteSpaces(String input){
+		return input.replaceAll(" ", "");
 	}
 
 }
