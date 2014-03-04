@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateAndTime {	
-	private SimpleDateFormat _sdf;
+	private SimpleDateFormat _formater;
 	private Date _today;
 	
 	protected DateAndTime(){
@@ -14,18 +14,18 @@ public class DateAndTime {
 	}
 	
 	protected String getCurrentDate(){
-		_sdf = new SimpleDateFormat("dd/MM/yyyy");
-		return _sdf.format(_today);
+		_formater = new SimpleDateFormat("dd.MM.yyyy");
+		return _formater.format(_today);
 	}
 	
 	protected String getCurrentTime(){
-		_sdf = new SimpleDateFormat("HH:mm");
-		return _sdf.format(_today);
+		_formater = new SimpleDateFormat("HH:mm");
+		return _formater.format(_today);
 	}
 	
 	protected String getCurrentDay(){
-		_sdf = new SimpleDateFormat("E");
-		return _sdf.format(_today);
+		_formater = new SimpleDateFormat("E");
+		return _formater.format(_today);
 	}
 	
 }
