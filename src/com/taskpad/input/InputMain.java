@@ -130,6 +130,7 @@ public class InputMain {
 				break;
 			case LIST:
 				listTask(commandTypeString);
+				break;
 			case CLEAR_ALL:
 				isConfirmation = true;
 				currentCommand = COMMAND_CLEAR;
@@ -271,51 +272,11 @@ public class InputMain {
 	private static void listTask(String input){
 		List list = new List(input);
 		list.run();
-//		if (isEmptyInput(input)){
-//			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
-//			return;
-//		} else if (isInvalidListInput(input)){
-//			InputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
-//			return; 
-//		} else {
-//			inputObject = createListObject(input);
-//			passObjectToExecutor();
-//		}
-	}
-	
-	private static boolean isInvalidListInput(String input){
-		for (int i=0; i<PARAMETER_LIST.length; i++){
-			if (input.equalsIgnoreCase(PARAMETER_LIST[i])){
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private static Input createListObject(String input){
-		clearInputParameters();
-		putInputParameters(PARAMETER_LIST_KEY, input);
-		inputObject = new Input(COMMAND_LIST, inputParameters);
-		return inputObject;
 	}
 	
 	private static void deleteTask(String input) {
 		Delete delete = new Delete(input);
 		delete.run();
-		
-//		if (isValidTaskIDInput(input, COMMAND_DELETE)){
-//			inputObject = createDeleteObject(input);
-//			passObjectToExecutor();
-//		} else {
-//			return;
-//		}
-	}
-	
-	private static Input createDeleteObject(String input) {
-		clearInputParameters();
-		putInputParameters(PARAMETER_TASK_ID, input);
-		inputObject = new Input(COMMAND_DELETE, inputParameters);		
-		return inputObject;
 	}
 
 	private static void doneTask(String input) {

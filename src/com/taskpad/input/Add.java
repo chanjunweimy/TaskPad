@@ -13,7 +13,6 @@ public class Add extends Command{
 	private static String PARAMETER_END = "END";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
 	private static String PARAMETER_DESCRIPTION = "DESC";
-	private static String PARAMETER_PRIORITY = "PRIORITY";
 	private static String PARAMETER_VENUE = "VENUE";
 	
 	private static boolean invalidParameters = false;
@@ -47,7 +46,6 @@ public class Add extends Command{
 		putOneParameter(PARAMETER_DEADLINE_YEAR, "");
 		putOneParameter(PARAMETER_DESCRIPTION, "");
 		putOneParameter(PARAMETER_END, "");
-		putOneParameter(PARAMETER_PRIORITY, "NONE");		//Default no priority for tasks
 		putOneParameter(PARAMETER_START, "");
 		putOneParameter(PARAMETER_VENUE, "");
 	}
