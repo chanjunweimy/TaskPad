@@ -261,7 +261,8 @@ public class ExecutorManager {
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
+		// System.out.println("success");
+		// GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
 	}
 
 	private static String getInfoOfTask(int index, LinkedList<Task> listOfTasks) {
