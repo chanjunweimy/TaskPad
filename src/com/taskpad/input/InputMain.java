@@ -11,22 +11,10 @@ public class InputMain {
 	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "Confirm clear data? (Y/N)";
 	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
-	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
-	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
-	private static final String MESSAGE_ERROR_LIST = "Error: Invalid list parameters.\n Type help if you need! :)";
 	
 	private static final String COMMAND_CLEAR = "CLEAR";
 	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
-	
-	private static final String PARAMETER_TASK_ID = "TASKID";
-	private static final String PARAMETER_NULL = "NULL";
-	private static final String PARAMETER_DESC = "DESC";
-	private static final String PARAMETER_INFO = "INFO";
-	private static final String PARAMETER_LIST_KEY = "KEY";
-	private static final String PARAMETER_REM_DATE = "DATE";
-	private static final String PARAMETER_REM_TIME = "TIME";
-	private static final String PARAMETER_SEARCH_KEYWORD = "KEYWORD";
-		
+			
 	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
@@ -219,10 +207,8 @@ public class InputMain {
 	}
 	
 	private static void clearAllTasks() {
-		clearInputParameters();
-		putInputParameters(PARAMETER_NULL, "");
-		inputObject = new Input(COMMAND_CLEAR, inputParameters);
-		passObjectToExecutor();
+		ClearTasks clearTask = new ClearTasks("");
+		clearTask.run();
 	}
 	
 	private static void clearScreen(){
@@ -237,11 +223,6 @@ public class InputMain {
 	private static void editTask(String input) {
 		Edit edit = new Edit(input);
 		edit.run();
-	}
-
-	private static void outputIdError(String input) {
-		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
-		InputManager.outputToGui(errorMessage);
 	}
 
 	private static void searchTask(String input) {
@@ -289,7 +270,6 @@ public class InputMain {
 		String commandTypeString = getFirstWord(input);
 		return commandTypeString;			
 	}
-
 	
 	/* Helper methods for parsing commands */ 
 	private static boolean isInvalidCommand(String userCommand) {
