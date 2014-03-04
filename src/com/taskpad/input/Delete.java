@@ -38,6 +38,5 @@ public class Delete extends Command{
 	protected void putInputParameters() {
 		putOneParameter(PARAMETER_TASK_ID, input);
 	}
-
 	
 }
