@@ -18,7 +18,7 @@ public class InputMain {
 	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
-	private static boolean hasCheckedFlexi = false;
+	protected static boolean hasCheckedFlexi = false;
 	private static String currentCommand = "";
 	
 	private static Map<String, String> inputParameters = new HashMap<String, String>();

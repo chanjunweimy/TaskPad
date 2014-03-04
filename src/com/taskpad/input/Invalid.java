@@ -2,10 +2,13 @@ package com.taskpad.input;
 
 public class Invalid extends Command {
 	
-	private static boolean hasCheckedFlexi = false;
-
 	public Invalid(String input) {
 		super(input);
+	}
+	
+	@Override
+	public void run(){
+		
 	}
 
 	@Override
