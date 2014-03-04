@@ -385,10 +385,12 @@ public class InputMain {
 	}
 	
 	private static void undoLast() {
-		clearInputParameters();
-		putInputParameters(PARAMETER_NULL, "");
-		inputObject = new Input(COMMAND_UNDO, inputParameters);
-		passObjectToExecutor();
+		Undo undo = new Undo("");
+		undo.run();
+//		clearInputParameters();
+//		putInputParameters(PARAMETER_NULL, "");
+//		inputObject = new Input(COMMAND_UNDO, inputParameters);
+//		passObjectToExecutor();
 	}
 	
 	private static void editTask(String input) {
