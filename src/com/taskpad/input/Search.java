@@ -6,7 +6,7 @@ public class Search extends Command{
 	private static final int NUMBER_ARGUMENTS = 1;
 	
 	private static String PARAMETER_KEYWORD = "KEY";
-	private static String _keyword = "";
+	private static String _keyword;
 
 	public Search(String input) {
 		super(input);
@@ -14,6 +14,16 @@ public class Search extends Command{
 		setCOMMAND(COMMAND_SEARCH);
 	}
 
+	@Override
+	public void run(){
+		if (checkIfEmptyString()){
+			return; 
+		}
+		initialiseParametersToNull();
+		putInputParameters();
+		createInputObject();
+	}
+	
 	@Override
 	protected boolean commandSpecificRun() {
 		_keyword = input;

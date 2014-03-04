@@ -15,19 +15,8 @@ public class InputMain {
 	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	private static final String MESSAGE_ERROR_LIST = "Error: Invalid list parameters.\n Type help if you need! :)";
 	
-	private static final String COMMAND_ADD = "ADD";
-	private static final String COMMAND_ADD_INFO = "ADDINFO";
-	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final String COMMAND_CLEAR = "CLEAR";
 	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
-	private static final String COMMAND_DELETE = "DELETE";
-	private static final String COMMAND_DONE = "DONE";
-	private static final String COMMAND_EDIT = "EDIT";
-	private static final String COMMAND_LIST = "LIST";
-	private static final String COMMAND_SEARCH = "SEARCH";
-	private static final String COMMAND_UNDO = "UNDO";
-	
-	private static final int LENGTH_EDIT = 2;
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_NULL = "NULL";
@@ -217,23 +206,6 @@ public class InputMain {
 		return false;
 	}
 	
-	private static boolean isNotInteger(String input){
-		try{
-			Integer.parseInt(input);
-		} catch (NumberFormatException e){
-			return true;
-		}
-		return false;
-	}
-	
-	private static boolean isInvalidID(String input){
-		int inputNum = Integer.parseInt(input);
-		if (inputNum > InputManager.retrieveNumberOfTasks()){
-			return true;
-		}
-		return false;
-	}
-	
 	private static void clearInputParameters(){
 		inputParameters.clear();
 	}
@@ -271,24 +243,10 @@ public class InputMain {
 		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
 		InputManager.outputToGui(errorMessage);
 	}
-	
-	
-	private static boolean isInvalidParameterNumber(int length){
-		if (length != LENGTH_EDIT){
-			return true;
-		}
-		return false;
-	}
 
 	private static void searchTask(String input) {
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		clearInputParameters();
-		putInputParameters(PARAMETER_SEARCH_KEYWORD, input);
-		inputObject = new Input(COMMAND_SEARCH, inputParameters);		
+		Search search = new Search(input);
+		search.run();	
 	}
 	
 	private static void help() {

@@ -33,7 +33,6 @@ public abstract class Command {
 		clearInputParameters();
 		initialiseParametersToNull();
 		if (commandSpecificRun()){
-			putInputParameters();
 			createInputObject();
 			passObjectToExecutor();
 		} else {
