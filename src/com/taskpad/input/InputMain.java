@@ -47,11 +47,13 @@ public class InputMain {
 	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
+	private static boolean hasCheckedFlexi = false;
 	private static String currentCommand = "";
 	
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
 	public static void receiveInput(String input){
+		hasCheckedFlexi = false;
 		if (isConfirmation){
 			if (isConfirmClear(input)){
 				processConfirmation();
@@ -66,8 +68,8 @@ public class InputMain {
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 	
 			if (isValidCommandType(commandType)){		
-				input = removeFirstWord(input);
-				performCommand (commandType, input);
+				commandTypeString = removeFirstWord(input);
+				performCommand (commandType, commandTypeString, input);
 			} else {
 				invalidCommand(input);
 			}
@@ -112,19 +114,19 @@ public class InputMain {
 		return true;
 	}
 
-	private static void performCommand(CommandType commandType, String input) {
+	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
 		switch(commandType){
 			case ADD:
-				addTask(input);
+				addTask(commandTypeString);
 				break;
 			case ADD_INFO:
-				addInfoTask(input);
+				addInfoTask(commandTypeString);
 				break;
 			case ADD_REM:
-				addRemTask(input);
+				addRemTask(commandTypeString);
 				break;
 			case LIST:
-				listTask(input);
+				listTask(commandTypeString);
 			case CLEAR_ALL:
 				isConfirmation = true;
 				currentCommand = COMMAND_CLEAR;
@@ -136,16 +138,16 @@ public class InputMain {
 				clearScreen();
 				break;
 			case DELETE:
-				deleteTask(input);
+				deleteTask(commandTypeString);
 				break;
 			case DONE:
-				doneTask(input);
+				doneTask(commandTypeString);
 				break;
 			case EDIT:
-				editTask(input);
+				editTask(commandTypeString);
 				break;
 			case SEARCH:
-				searchTask(input);
+				searchTask(commandTypeString);
 				break;
 			case HELP:
 				help();
@@ -156,8 +158,16 @@ public class InputMain {
 			case UNDO:
 				undoLast();
 				break;
+			case INVALID:
+				if (hasCheckedFlexi){
+					invalidCommand(input);
+				} else {
+					hasCheckedFlexi = true;
+					flexiCommand(input);
+				}
+				break;
 			default:
-				invalidCommand(input);
+				invalidCommand(commandTypeString);
 		}
 	}
 
@@ -482,7 +492,19 @@ public class InputMain {
 	private static void exitProgram() {
 		InputManager.callGuiExit();
 	}
-
+	
+	private static void flexiCommand(String input){
+		hasCheckedFlexi = true;
+		CommandType command = CommandTypes.findFlexi(input);
+	
+		String commandTypeString = replaceCommandWord(input, command);
+		performCommand(command, commandTypeString, input);
+	}
+	
+	private static String replaceCommandWord (String input, CommandType command){
+		return input.replaceFirst("(?i)"+command.toString(), "");
+	}
+	
 	private static void invalidCommand(String input) {
 		InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));	
 	}
