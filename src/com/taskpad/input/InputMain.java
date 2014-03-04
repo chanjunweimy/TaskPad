@@ -180,16 +180,6 @@ public class InputMain {
 	private static void addTask(String input) {
 		Add add = new Add(input);
 		add.run();
-		
-//		Add_old add_old = new Add_old(input);
-//		inputParameters.clear();
-//		inputParameters = add_old.run();
-//		if (isEmptyInputParameters()){
-//			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-//		} else {
-//			inputObject = new Input(COMMAND_ADD, inputParameters);
-//			passObjectToExecutor();
-//		}
 	}
 
 	private static boolean isEmptyInputParameters() {
