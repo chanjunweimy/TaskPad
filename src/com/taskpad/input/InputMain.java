@@ -11,43 +11,14 @@ public class InputMain {
 	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "Confirm clear data? (Y/N)";
 	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
-	private static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
-	private static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
-	private static final String MESSAGE_ERROR_LIST = "Error: Invalid list parameters.\n Type help if you need! :)";
 	
-	private static final String COMMAND_ADD = "ADD";
-	private static final String COMMAND_ADD_INFO = "ADDINFO";
-	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final String COMMAND_CLEAR = "CLEAR";
 	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
-	private static final String COMMAND_DELETE = "DELETE";
-	private static final String COMMAND_DONE = "DONE";
-	private static final String COMMAND_EDIT = "EDIT";
-	private static final String COMMAND_LIST = "LIST";
-	private static final String COMMAND_SEARCH = "SEARCH";
-	private static final String COMMAND_UNDO = "UNDO";
-	
-	private static final int LENGTH_EDIT = 2;
-	private static final int LENGTH_DELETE = 1;
-	private static final int LENGTH_DONE = 1;
-	private static final int LENGTH_ADD_INFO = 2;
-	private static final int LENGTH_REM = 2;
-	
-	private static final String PARAMETER_TASK_ID = "TASKID";
-	private static final String PARAMETER_NULL = "NULL";
-	private static final String PARAMETER_DESC = "DESC";
-	private static final String PARAMETER_INFO = "INFO";
-	private static final String PARAMETER_LIST_KEY = "KEY";
-	private static final String PARAMETER_REM_DATE = "DATE";
-	private static final String PARAMETER_REM_TIME = "TIME";
-	private static final String PARAMETER_SEARCH_KEYWORD = "KEYWORD";
-	
-	private static final String[] PARAMETER_LIST = {"ALL", "UNDONE", "DONE"};
-	
+			
 	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
-	private static boolean hasCheckedFlexi = false;
+	protected static boolean hasCheckedFlexi = false;
 	private static String currentCommand = "";
 	
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
@@ -180,23 +151,6 @@ public class InputMain {
 	private static void addTask(String input) {
 		Add add = new Add(input);
 		add.run();
-		
-//		Add_old add_old = new Add_old(input);
-//		inputParameters.clear();
-//		inputParameters = add_old.run();
-//		if (isEmptyInputParameters()){
-//			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-//		} else {
-//			inputObject = new Input(COMMAND_ADD, inputParameters);
-//			passObjectToExecutor();
-//		}
-	}
-
-	private static boolean isEmptyInputParameters() {
-		if (inputParameters.size() == 0){
-			return true;
-		}
-		return false;
 	}
 	
 	private static void addPriTask(String input){
@@ -205,68 +159,13 @@ public class InputMain {
 	}
 
 	private static void addInfoTask(String input) {
-		String[] splitInput = input.split(" ");
-		
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		if (isValidAddInfoInput(splitInput)){
-			clearInputParameters();
-			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-			putInputParameters(PARAMETER_INFO, splitInput[1]);
-			inputObject = new Input(COMMAND_ADD_INFO, inputParameters);
-			passObjectToExecutor();
-		} 
-	}
-	
-	private static boolean isValidAddInfoInput(String[] input){		
-		if (input.length != LENGTH_ADD_INFO){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
-		} 
-		
-		if(isNotInteger(input[0]) || isInvalidID(input[0])){
-			outputIdError(input[0]);
-			return false;
-		}
-		
-		return true;
+		Addinfo addinfo = new Addinfo(input);
+		addinfo.run();
 	}
 	
 	private static void addRemTask(String input){
-		String[] splitInput = input.split(" ");
-		
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		if (isValidAddRemInput(splitInput)){
-			clearInputParameters();
-			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-			putInputParameters(PARAMETER_REM_DATE, splitInput[1]);
-			if (splitInput.length == 3){
-				putInputParameters(PARAMETER_REM_TIME, splitInput[2]);
-			}
-			inputObject = new Input(COMMAND_ADD_REM, inputParameters);
-			passObjectToExecutor();
-		}
-	}
-	
-	private static boolean isValidAddRemInput(String[] input){
-		if (input.length != LENGTH_REM || input.length != LENGTH_REM+1){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
-		}
-		
-		if(isNotInteger(input[0]) || isInvalidID(input[0])){
-			outputIdError(input[0]);
-			return false;
-		}
-		
-		return true;
+		Addrem addRem = new Addrem(input);
+		addRem.run();
 	}
 	
 	private static void listTask(String input){
@@ -280,89 +179,16 @@ public class InputMain {
 	}
 
 	private static void doneTask(String input) {
-		if (isValidTaskIDInput(input, "DONE")){
-			inputObject = createDoneObject(input);
-			passObjectToExecutor();
-		} else {
-			return;
-		}
-	}
-	
-	private static Input createDoneObject(String input) {
-		clearInputParameters();
-		putInputParameters(PARAMETER_TASK_ID, input);
-		inputObject = new Input(COMMAND_DONE, inputParameters);
-		return inputObject;
+		Done done = new Done(input);
+		done.run();
 	}
 	
 	private static void passObjectToExecutor(){
 		InputManager.passToExecutor(inputObject);
 	}
 	
-	private static boolean isValidTaskIDInput(String input, String commandString){
-		String errorMessage = "";
-		
-		if (isEmptyInput(input)){
-			errorMessage = String.format(MESSAGE_EMPTY_INPUT);
-			InputManager.outputToGui(errorMessage);
-			return false;
-		}
-		
-		String inputString[] = input.split(" ");
-		
-		if (commandString.equals(COMMAND_DELETE)){
-			if (isNotNumberArgs(inputString, commandString)){
-				InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-				return false;
-			}
-		} else if (commandString.equals(COMMAND_DONE)){
-			if (isNotNumberArgs(inputString, commandString)){
-				InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-				return false;
-			}
-		} 
-		
-		if(isNotInteger(input) || isInvalidID(input)){
-			outputIdError(input);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private static boolean isNotNumberArgs(String[] inputString, String commandString){
-		if (commandString.equals(COMMAND_DELETE)){
-			if (inputString.length != LENGTH_DELETE){
-				return true;
-			}
-		} else if (commandString.equals(COMMAND_DONE)){
-			if (inputString.length != LENGTH_DONE){
-				return true;
-			}
-		} 
-		
-		return false;
-	}
-	
 	private static boolean isEmptyInput(String input){
 		if (input.equals("")){
-			return true;
-		}
-		return false;
-	}
-	
-	private static boolean isNotInteger(String input){
-		try{
-			Integer.parseInt(input);
-		} catch (NumberFormatException e){
-			return true;
-		}
-		return false;
-	}
-	
-	private static boolean isInvalidID(String input){
-		int inputNum = Integer.parseInt(input);
-		if (inputNum > InputManager.retrieveNumberOfTasks()){
 			return true;
 		}
 		return false;
@@ -381,10 +207,8 @@ public class InputMain {
 	}
 	
 	private static void clearAllTasks() {
-		clearInputParameters();
-		putInputParameters(PARAMETER_NULL, "");
-		inputObject = new Input(COMMAND_CLEAR, inputParameters);
-		passObjectToExecutor();
+		ClearTasks clearTask = new ClearTasks("");
+		clearTask.run();
 	}
 	
 	private static void clearScreen(){
@@ -392,65 +216,18 @@ public class InputMain {
 	}
 	
 	private static void undoLast() {
-		clearInputParameters();
-		putInputParameters(PARAMETER_NULL, "");
-		inputObject = new Input(COMMAND_UNDO, inputParameters);
-		passObjectToExecutor();
+		Undo undo = new Undo("");
+		undo.run();
 	}
 	
 	private static void editTask(String input) {
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		String[] splitInput = input.split(" ");
-		
-		if (isValidEditInput(splitInput)){
-			clearInputParameters();
-			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-			putInputParameters(PARAMETER_DESC, splitInput[1]);
-			inputObject = new Input(COMMAND_EDIT, inputParameters);
-			passObjectToExecutor();
-		} else {
-			return;
-		}
-	}
-	
-	private static boolean isValidEditInput(String[] splitInput){
-		if (isInvalidParameterNumber(splitInput.length)){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
-		} 	else if(isNotInteger(splitInput[0]) || isInvalidID(splitInput[0])){
-			outputIdError(splitInput[0]);
-			return false;
-		}
-		
-		return true;
-	}
-
-	private static void outputIdError(String input) {
-		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
-		InputManager.outputToGui(errorMessage);
-	}
-	
-	
-	private static boolean isInvalidParameterNumber(int length){
-		if (length != LENGTH_EDIT){
-			return true;
-		}
-		return false;
+		Edit edit = new Edit(input);
+		edit.run();
 	}
 
 	private static void searchTask(String input) {
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		clearInputParameters();
-		putInputParameters(PARAMETER_SEARCH_KEYWORD, input);
-		inputObject = new Input(COMMAND_SEARCH, inputParameters);		
+		Search search = new Search(input);
+		search.run();	
 	}
 	
 	private static void help() {
@@ -493,7 +270,6 @@ public class InputMain {
 		String commandTypeString = getFirstWord(input);
 		return commandTypeString;			
 	}
-
 	
 	/* Helper methods for parsing commands */ 
 	private static boolean isInvalidCommand(String userCommand) {

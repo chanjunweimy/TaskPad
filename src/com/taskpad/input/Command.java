@@ -33,7 +33,6 @@ public abstract class Command {
 		clearInputParameters();
 		initialiseParametersToNull();
 		if (commandSpecificRun()){
-			putInputParameters();
 			createInputObject();
 			passObjectToExecutor();
 		} else {
@@ -69,7 +68,7 @@ public abstract class Command {
 	}
 	
 	protected boolean isNotValidTaskID(String taskID){
-		if(isNotInteger(input) || isInvalidID(input)){
+		if(isNotInteger(taskID) || isInvalidID(taskID)){
 			outputIdError();
 			return true;
 		}
