@@ -146,7 +146,7 @@ public class ExecutorManager {
 			String text = generateTextForTasks(tasks);
 			// debug
 			// System.out.println(text);
-			GuiManager.callOutput(text);
+			// GuiManager.callOutput(text);
 		}
 	}
 
@@ -261,7 +261,7 @@ public class ExecutorManager {
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
+		// GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
 	}
 
 	private static String getInfoOfTask(int index, LinkedList<Task> listOfTasks) {
@@ -305,7 +305,7 @@ public class ExecutorManager {
 		
 		int taskId = listOfTasks.size();
 		String taskIdString = Integer.toString(taskId);
-		GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		// GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
 	private static String generateFeedbackForAdd(String taskIdString, String description) {
