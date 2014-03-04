@@ -7,12 +7,11 @@ import java.util.Map;
 public class CommandTypes {
 	
 	public enum CommandType{
-		ADD, ADD_INFO, ADD_REM, CLEAR_ALL, CLEAR_SCREEN, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
+		ADD, ADD_INFO, ADD_REM, ADD_PRI, CLEAR_ALL, CLEAR_SCREEN, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
 
-	
 	public CommandTypes(){
 		createHashMap();
 	}
@@ -32,6 +31,25 @@ public class CommandTypes {
 		return CommandType.INVALID;
 	}
 	
+	public static CommandType findFlexi(String input){
+		String variations[];
+		
+		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
+			variations = entry.getValue();
+			for (int i=0; i<variations.length; i++){
+				if (isContainsInput(variations[i], input)){
+					return (CommandType) entry.getKey();
+				}
+			}
+		}
+		
+		return CommandType.INVALID;
+	}
+	
+	private static boolean isContainsInput(String value, String input){
+		return input.toUpperCase().contains(value);
+	}
+	
 	private static boolean isValueInputCommand(String value, String inputCommand) {
 		inputCommand = inputCommand.trim();
 		if (value.equalsIgnoreCase(inputCommand)){
@@ -45,6 +63,7 @@ public class CommandTypes {
 		putAddVariations();
 		putAddInfoVariations();
 		putAddRemVariations();
+		putAddPriVariations();
 		putClearVariations();
 		putClearScreenVariations();
 		putDeleteVariations();
@@ -72,6 +91,11 @@ public class CommandTypes {
 	private static void putAddRemVariations(){
 		String[] addRemVariations = {"ADDR", "ADDREM", "ADDREMINDER", "REMIND", "REMINDER"};
 		commandVariations.put(CommandType.ADD_REM, addRemVariations);
+	}
+	
+	private static void putAddPriVariations(){
+		String[] addPriVariations = {"ADDPRI", "ADDPRIORITY", "PRI", "PRIORITY"};
+		commandVariations.put(CommandType.ADD_PRI, addPriVariations);
 	}
 	
 	private static void putDeleteVariations(){
@@ -120,7 +144,7 @@ public class CommandTypes {
 	}
 	
 	private static void putExitVariations(){
-		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE"};
+		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN"};
 		commandVariations.put(CommandType.EXIT, exitVariations);
 	}
 }

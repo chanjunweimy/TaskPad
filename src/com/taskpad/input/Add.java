@@ -11,9 +11,9 @@ public class Add extends Command{
 	private static String PARAMETER_DEADLINE_YEAR = "YEAR";
 	private static String PARAMETER_START = "START";
 	private static String PARAMETER_END = "END";
-	private static String PARAMETER_VENUE = "VENUE";
-	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
+	private static String PARAMETER_DESCRIPTION = "DESC";
+	private static String PARAMETER_VENUE = "VENUE";
 	
 	private static boolean invalidParameters = false;
 	

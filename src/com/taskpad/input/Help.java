@@ -55,7 +55,7 @@ public class Help {
 	}
 	
 	protected void outputHelp(){
-		String output = "";
+		InputManager.clearScreen();
 		Iterator<Entry<String, String>> it = helpCommands.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<String, String> entry = it.next();
@@ -64,11 +64,9 @@ public class Help {
 	}
 	
 	private static void formatOutput(String key, String value){
-		InputManager.outputFormatString(key + "\n", Color.BLUE, true);
+		InputManager.outputFormatString(key, Color.BLUE, true);
 		InputManager.outputFormatString(value + "\n", Color.BLACK, false);
 		
-		//deprecated
-		//String formattedOutput = "" + key + "\n" + value + "\n";
 	}
 	
 }

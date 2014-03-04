@@ -15,6 +15,11 @@ import com.taskpad.ui.GuiManager;
 
 public class InputManager {
 	
+	private static String STATUS_CLEAR = "Clear GUI Screen";
+	private static String STATUS_EXECUTOR = "Passed to Executor";
+	private static String STATUS_EXIT = "Exit program";
+	private static String STATUS_GUI_OUTPUT = "Output to GUI: %s";
+	
 	public static void startInputProcessor(){
 		new InputMain();
 	}
@@ -23,28 +28,35 @@ public class InputManager {
 		InputMain.receiveInput(inputString);
 	}
 
-	public static void outputToGui(String outputString){
+	public static String outputToGui(String outputString){
 		GuiManager.callOutput(outputString);
+		return String.format(STATUS_GUI_OUTPUT, outputString);
 	}
 	
-	public static void outputFormatString(String outputString, Color c, boolean isBold){
+	public static String outputFormatString(String outputString, Color c, boolean isBold){
 		GuiManager.showSelfDefinedMessage(outputString, c, isBold);
+		return String.format(STATUS_GUI_OUTPUT, outputString);
 	}
 	
-	public static void callGuiExit(){
+	public static String callGuiExit(){
 		GuiManager.callExit();
+		return STATUS_EXIT;
 	}
 	
-	public static void clearScreen(){
+	public static String clearScreen(){
 		GuiManager.clearOutput();
+		return STATUS_CLEAR;
 	}
 	
-	public static void passToExecutor(Input input){
-		ExecutorManager.receiveFromInput(input);
+	public static String passToExecutor(Input input){
+		String command = input.getCommand();
+		ExecutorManager.receiveFromInput(input, command);
+		return STATUS_EXECUTOR;
 	}
 	
 	public static int retrieveNumberOfTasks(){
-		return DataManager.retrieveNumberOfTasks();
+//		return DataManager.retrieveNumberOfTasks();
+		return 0;
 	}
 	
 }

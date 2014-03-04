@@ -47,11 +47,13 @@ public class InputMain {
 	private static CommandTypes commandTypes = new CommandTypes();
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
+	private static boolean hasCheckedFlexi = false;
 	private static String currentCommand = "";
 	
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
 	public static void receiveInput(String input){
+		hasCheckedFlexi = false;
 		if (isConfirmation){
 			if (isConfirmClear(input)){
 				processConfirmation();
@@ -66,8 +68,8 @@ public class InputMain {
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 	
 			if (isValidCommandType(commandType)){		
-				input = removeFirstWord(input);
-				performCommand (commandType, input);
+				commandTypeString = removeFirstWord(input);
+				performCommand (commandType, commandTypeString, input);
 			} else {
 				invalidCommand(input);
 			}
@@ -112,19 +114,23 @@ public class InputMain {
 		return true;
 	}
 
-	private static void performCommand(CommandType commandType, String input) {
+	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
 		switch(commandType){
 			case ADD:
-				addTask(input);
+				addTask(commandTypeString);
 				break;
 			case ADD_INFO:
-				addInfoTask(input);
+				addInfoTask(commandTypeString);
 				break;
 			case ADD_REM:
-				addRemTask(input);
+				addRemTask(commandTypeString);
+				break;
+			case ADD_PRI:
+				addPriTask(commandTypeString);
 				break;
 			case LIST:
-				listTask(input);
+				listTask(commandTypeString);
+				break;
 			case CLEAR_ALL:
 				isConfirmation = true;
 				currentCommand = COMMAND_CLEAR;
@@ -136,16 +142,16 @@ public class InputMain {
 				clearScreen();
 				break;
 			case DELETE:
-				deleteTask(input);
+				deleteTask(commandTypeString);
 				break;
 			case DONE:
-				doneTask(input);
+				doneTask(commandTypeString);
 				break;
 			case EDIT:
-				editTask(input);
+				editTask(commandTypeString);
 				break;
 			case SEARCH:
-				searchTask(input);
+				searchTask(commandTypeString);
 				break;
 			case HELP:
 				help();
@@ -156,8 +162,16 @@ public class InputMain {
 			case UNDO:
 				undoLast();
 				break;
+			case INVALID:
+				if (hasCheckedFlexi){
+					invalidCommand(input);
+				} else {
+					hasCheckedFlexi = true;
+					flexiCommand(input);
+				}
+				break;
 			default:
-				invalidCommand(input);
+				invalidCommand(commandTypeString);
 		}
 	}
 
@@ -183,6 +197,11 @@ public class InputMain {
 			return true;
 		}
 		return false;
+	}
+	
+	private static void addPriTask(String input){
+		AddPri addPri = new AddPri(input);
+		addPri.run();
 	}
 
 	private static void addInfoTask(String input) {
@@ -253,51 +272,11 @@ public class InputMain {
 	private static void listTask(String input){
 		List list = new List(input);
 		list.run();
-//		if (isEmptyInput(input)){
-//			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
-//			return;
-//		} else if (isInvalidListInput(input)){
-//			InputManager.outputToGui(String.format(MESSAGE_ERROR_LIST));
-//			return; 
-//		} else {
-//			inputObject = createListObject(input);
-//			passObjectToExecutor();
-//		}
-	}
-	
-	private static boolean isInvalidListInput(String input){
-		for (int i=0; i<PARAMETER_LIST.length; i++){
-			if (input.equalsIgnoreCase(PARAMETER_LIST[i])){
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	private static Input createListObject(String input){
-		clearInputParameters();
-		putInputParameters(PARAMETER_LIST_KEY, input);
-		inputObject = new Input(COMMAND_LIST, inputParameters);
-		return inputObject;
 	}
 	
 	private static void deleteTask(String input) {
 		Delete delete = new Delete(input);
 		delete.run();
-		
-//		if (isValidTaskIDInput(input, COMMAND_DELETE)){
-//			inputObject = createDeleteObject(input);
-//			passObjectToExecutor();
-//		} else {
-//			return;
-//		}
-	}
-	
-	private static Input createDeleteObject(String input) {
-		clearInputParameters();
-		putInputParameters(PARAMETER_TASK_ID, input);
-		inputObject = new Input(COMMAND_DELETE, inputParameters);		
-		return inputObject;
 	}
 
 	private static void doneTask(String input) {
@@ -482,7 +461,19 @@ public class InputMain {
 	private static void exitProgram() {
 		InputManager.callGuiExit();
 	}
-
+	
+	private static void flexiCommand(String input){
+		hasCheckedFlexi = true;
+		CommandType command = CommandTypes.findFlexi(input);
+	
+		String commandTypeString = replaceCommandWord(input, command);
+		performCommand(command, commandTypeString, input);
+	}
+	
+	private static String replaceCommandWord (String input, CommandType command){
+		return input.replaceFirst("(?i)"+command.toString(), "");
+	}
+	
 	private static void invalidCommand(String input) {
 		InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));	
 	}
