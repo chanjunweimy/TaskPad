@@ -181,13 +181,6 @@ public class InputMain {
 		Add add = new Add(input);
 		add.run();
 	}
-
-	private static boolean isEmptyInputParameters() {
-		if (inputParameters.size() == 0){
-			return true;
-		}
-		return false;
-	}
 	
 	private static void addPriTask(String input){
 		AddPri addPri = new AddPri(input);
@@ -197,6 +190,11 @@ public class InputMain {
 	private static void addInfoTask(String input) {
 		Addinfo addinfo = new Addinfo(input);
 		addinfo.run();
+	}
+	
+	private static void addRemTask(String input){
+		Addrem addRem = new Addrem(input);
+		addRem.run();
 		
 //		String[] splitInput = input.split(" ");
 //		
@@ -205,47 +203,16 @@ public class InputMain {
 //			return;
 //		}
 //		
-//		if (isValidAddInfoInput(splitInput)){
+//		if (isValidAddRemInput(splitInput)){
 //			clearInputParameters();
 //			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-//			putInputParameters(PARAMETER_INFO, splitInput[1]);
-//			inputObject = new Input(COMMAND_ADD_INFO, inputParameters);
+//			putInputParameters(PARAMETER_REM_DATE, splitInput[1]);
+//			if (splitInput.length == 3){
+//				putInputParameters(PARAMETER_REM_TIME, splitInput[2]);
+//			}
+//			inputObject = new Input(COMMAND_ADD_REM, inputParameters);
 //			passObjectToExecutor();
-//		} 
-	}
-	
-	private static boolean isValidAddInfoInput(String[] input){		
-		if (input.length != LENGTH_ADD_INFO){
-			InputManager.outputToGui(MESSAGE_INVALID_PARAMETER_NUMBER);
-			return false;
-		} 
-		
-		if(isNotInteger(input[0]) || isInvalidID(input[0])){
-			outputIdError(input[0]);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private static void addRemTask(String input){
-		String[] splitInput = input.split(" ");
-		
-		if (isEmptyInput(input)){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return;
-		}
-		
-		if (isValidAddRemInput(splitInput)){
-			clearInputParameters();
-			putInputParameters(PARAMETER_TASK_ID, splitInput[0]);
-			putInputParameters(PARAMETER_REM_DATE, splitInput[1]);
-			if (splitInput.length == 3){
-				putInputParameters(PARAMETER_REM_TIME, splitInput[2]);
-			}
-			inputObject = new Input(COMMAND_ADD_REM, inputParameters);
-			passObjectToExecutor();
-		}
+//		}
 	}
 	
 	private static boolean isValidAddRemInput(String[] input){
@@ -275,19 +242,6 @@ public class InputMain {
 	private static void doneTask(String input) {
 		Done done = new Done(input);
 		done.run();
-//		if (isValidTaskIDInput(input, "DONE")){
-//			inputObject = createDoneObject(input);
-//			passObjectToExecutor();
-//		} else {
-//			return;
-//		}
-	}
-	
-	private static Input createDoneObject(String input) {
-		clearInputParameters();
-		putInputParameters(PARAMETER_TASK_ID, input);
-		inputObject = new Input(COMMAND_DONE, inputParameters);
-		return inputObject;
 	}
 	
 	private static void passObjectToExecutor(){
