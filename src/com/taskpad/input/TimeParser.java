@@ -5,6 +5,7 @@
 
 package com.taskpad.input;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeParser {
@@ -48,8 +49,14 @@ public class TimeParser {
 	private long decodeTime(String input){
 		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
 	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[:.]?([0-5][0-9])?)$");
-
-	    if (time12.test(input) || time24.test(input)) {
+	    
+	    Matcher time12M = time12.matcher(input);
+	    boolean time12Match = time12M.matches();
+	    
+	    Matcher time24M = time24.matcher(input);
+	    boolean time24Match = time24M.matches();
+	    
+	    if (time12Match || time24Match) {
 
 	        String hours = "0", minutes = "0";
 
