@@ -12,12 +12,11 @@ public class CommandTypes {
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
 
-	
-	public CommandTypes(){
+	protected CommandTypes(){
 		createHashMap();
 	}
 	
-	public static CommandType find(String inputCommand){
+	protected static CommandType find(String inputCommand){
 		String variations[];
 
 		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
@@ -30,6 +29,25 @@ public class CommandTypes {
 		}
 		
 		return CommandType.INVALID;
+	}
+	
+	protected static CommandType findFlexi(String input){
+		String variations[];
+		
+		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
+			variations = entry.getValue();
+			for (int i=0; i<variations.length; i++){
+				if (isContainsInput(variations[i], input)){
+					return (CommandType) entry.getKey();
+				}
+			}
+		}
+		
+		return CommandType.INVALID;
+	}
+	
+	private static boolean isContainsInput(String value, String input){
+		return input.toUpperCase().contains(value);
 	}
 	
 	private static boolean isValueInputCommand(String value, String inputCommand) {
