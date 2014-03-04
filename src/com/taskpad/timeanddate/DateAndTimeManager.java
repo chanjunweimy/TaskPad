@@ -23,6 +23,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public String getTodayDay(){
 		return _dateAndTimeObject.getCurrentDay();
 	}
+
+
 	
 	
 	//for debug:
