@@ -6,16 +6,20 @@ public class Add extends Command{
 	
 	private static String COMMAND_ADD = "ADD";
 		
-	private static String PARAMETER_DEADLINE_DAY = "DAY";
-	private static String PARAMETER_DEADLINE_MONTH = "MONTH";
-	private static String PARAMETER_DEADLINE_YEAR = "YEAR";
-	private static String PARAMETER_START = "START";
-	private static String PARAMETER_END = "END";
+	private static String PARAMETER_DEADLINE = "DEADLINE";
+	private static String PARAMETER_START_DATE = "START DATE";
+	private static String PARAMETER_START_TIME = "START TIME";
+	private static String PARAMETER_END_DATE = "END DATE";
+	private static String PARAMETER_END_TIME = "END TIME";
 	private static String PARAMETER_CATEGORY = "CATEGORY";
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_VENUE = "VENUE";
 	
-	private static boolean invalidParameters = false;
+	private static String MESSAGE_ERROR_TIME = "Error: Invalid variables for time: %d";
+	
+	private static int LENGTH_TIME = 2;
+	
+	private static boolean _invalidParameters = false;
 	
 	private static Scanner sc;
 
@@ -40,13 +44,12 @@ public class Add extends Command{
 	@Override
 	protected void initialiseParametersToNull() {
 		putOneParameter(PARAMETER_CATEGORY, "");
-		putOneParameter(PARAMETER_DEADLINE_DAY, "");
-		putOneParameter(PARAMETER_DEADLINE_MONTH, "");
-		putOneParameter(PARAMETER_DEADLINE_YEAR, "");
-		putOneParameter(PARAMETER_DEADLINE_YEAR, "");
+		putOneParameter(PARAMETER_DEADLINE, "");
 		putOneParameter(PARAMETER_DESCRIPTION, "");
-		putOneParameter(PARAMETER_END, "");
-		putOneParameter(PARAMETER_START, "");
+		putOneParameter(PARAMETER_START_DATE, "");
+		putOneParameter(PARAMETER_END_DATE, "");
+		putOneParameter(PARAMETER_END_TIME, "");
+		putOneParameter(PARAMETER_START_TIME, "");
 		putOneParameter(PARAMETER_VENUE, "");
 	}
 
@@ -99,38 +102,54 @@ public class Add extends Command{
 	}
 	
 	private void getDeadline(String param) {
+		inputDeadline(param);
+		
+		/* deprecated
 		String[] splitParam = param.split("/", -1);
 		String day = splitParam[0];
 		String month = splitParam[1];
 		String year = splitParam[2];
 		inputDeadlines(day,month, year);
+		*/
 	}
 	
-	private void inputDeadlines(String day, String month, String year){
-		inputParameters.put(PARAMETER_DEADLINE_DAY, day);
-		inputParameters.put(PARAMETER_DEADLINE_MONTH, month);
-		inputParameters.put(PARAMETER_DEADLINE_YEAR, year);
+	private void inputDeadline(String deadline){
+		putOneParameter(PARAMETER_DEADLINE, deadline);
 	}
 	
 	private void inputVenue(String param) {
-		inputParameters.put(PARAMETER_VENUE, param);		
+		putOneParameter(PARAMETER_VENUE, param);		
 	}
 
+	//TODO: Check if splitParam[0] is valid time and splitParam[1] is valid Date
 	private void inputStartTime(String param) {
-		inputParameters.put(PARAMETER_START, param);	
+		String[] splitParam = param.split(",");
 		
+		if (isValidTimeArgs(splitParam)){
+			putOneParameter(PARAMETER_START_TIME, splitParam[0]);
+			if (splitParam.length == LENGTH_TIME){
+				putOneParameter(PARAMETER_START_DATE, splitParam[1]);
+			}
+		}
 	}
 
 	private void inputEndTime(String param) {
-		inputParameters.put(PARAMETER_END, param);	
+		String[] splitParam = param.split(",");
+		
+		if (isValidTimeArgs(splitParam)){
+			putOneParameter(PARAMETER_END_TIME, splitParam[0]);
+			if (splitParam.length == LENGTH_TIME){
+				putOneParameter(PARAMETER_END_DATE, splitParam[1]);
+			}
+		}
 	}
 
 	private void inputCategory(String param){
-		inputParameters.put(PARAMETER_CATEGORY, param);
+		putOneParameter(PARAMETER_CATEGORY, param);
 	}
 	
 	private void invalidParam() {
-		invalidParameters = true;
+		_invalidParameters = true;
 	}
 	
 	private String removeFirstChar(String input) {
@@ -140,6 +159,21 @@ public class Add extends Command{
 	private String getFirstChar(String input) {
 		String firstChar = input.trim().split("\\s+")[0];
 		return firstChar;
+	}
+	
+	private boolean isValidTimeArgs(String[] args){
+		if (args.length != LENGTH_TIME){
+			outputTimeArgsError(args.length);
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private String outputTimeArgsError(int length){
+		String errorMessage = String.format(MESSAGE_ERROR_TIME, length);
+		InputManager.outputToGui(errorMessage);
+		return errorMessage;
 	}
 
 }
