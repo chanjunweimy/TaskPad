@@ -42,7 +42,12 @@ public class InputMain {
 				commandTypeString = removeFirstWord(input);
 				performCommand (commandType, commandTypeString, input);
 			} else {
-				invalidCommand(input);
+				if (hasCheckedFlexi){
+					invalidCommand(input);
+				} else {
+					hasCheckedFlexi = true;
+					flexiCommand(input);
+				}
 			}
 		}
 
@@ -132,14 +137,6 @@ public class InputMain {
 				break;
 			case UNDO:
 				undoLast();
-				break;
-			case INVALID:
-				if (hasCheckedFlexi){
-					invalidCommand(input);
-				} else {
-					hasCheckedFlexi = true;
-					flexiCommand(input);
-				}
 				break;
 			default:
 				invalidCommand(commandTypeString);
