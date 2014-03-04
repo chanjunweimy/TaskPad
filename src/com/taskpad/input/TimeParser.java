@@ -109,9 +109,9 @@ public class TimeParser {
 		return time.replace(";", ":").trim();
 	}
 	
-	public static void main(String[] args){
-		String input = "13:00";
-		System.out.println(parseTime(input));
-	}
+//	public static void main(String[] args){
+//		String input = "13:00";
+//		System.out.println(parseTime(input));
+//	}
 	
 }
