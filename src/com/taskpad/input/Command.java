@@ -21,7 +21,7 @@ public abstract class Command {
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	
 	public Command(String input){
-		this.input = input;
+		Command.input = input;
 		inputParameters = new HashMap<String,String>();
 	}
 	
@@ -36,10 +36,9 @@ public abstract class Command {
 			putInputParameters();
 			createInputObject();
 			passObjectToExecutor();
-		}else {
+		} else {
 			return;
 		}
-		
 	}
 	
 	protected abstract boolean commandSpecificRun();
@@ -62,17 +61,19 @@ public abstract class Command {
 			return true;
 		}
 		
-		checkIfValidTaskID(inputString[0]);
+		if (isNotValidTaskID(inputString[0])){
+			return true;
+		}
 		
 		return false;
 	}
 	
-	protected boolean checkIfValidTaskID(String taskID){
+	protected boolean isNotValidTaskID(String taskID){
 		if(isNotInteger(input) || isInvalidID(input)){
 			outputIdError();
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 	protected Input createInputObject() {
 		clearInputParameters();

@@ -125,6 +125,9 @@ public class InputMain {
 			case ADD_REM:
 				addRemTask(commandTypeString);
 				break;
+			case ADD_PRI:
+				addPriTask(commandTypeString);
+				break;
 			case LIST:
 				listTask(commandTypeString);
 			case CLEAR_ALL:
@@ -193,6 +196,11 @@ public class InputMain {
 			return true;
 		}
 		return false;
+	}
+	
+	private static void addPriTask(String input){
+		AddPri addPri = new AddPri(input);
+		addPri.run();
 	}
 
 	private static void addInfoTask(String input) {
