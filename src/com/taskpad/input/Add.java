@@ -1,6 +1,10 @@
 package com.taskpad.input;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.sun.xml.internal.ws.util.StringUtils;
 
 public class Add extends Command{
 	
@@ -21,6 +25,7 @@ public class Add extends Command{
 	private static int LENGTH_TIME = 2;
 	
 	private static boolean _invalidParameters = false;
+	private static int _count = 0;
 	
 	private static Scanner _sc;
 
@@ -34,7 +39,6 @@ public class Add extends Command{
 	@Override
 	protected boolean commandSpecificRun() {
 		splitInputParameters();
-		checkDeadlineInDesc();
 		
 		if (_invalidParameters){
 			return false;
@@ -65,16 +69,15 @@ public class Add extends Command{
 	}
 	
 	private void splitInputParameters(){
-		int count = 0;
 		_sc = new Scanner(input).useDelimiter("\\s-");
 		while(_sc.hasNext()){
 			String nextParam = _sc.next();
-			if (count == 0){
+			if (_count == 0){
 				putOneParameter(PARAMETER_DESCRIPTION, nextParam);
 			} else {
 				parseNextParam(nextParam);
 			}
-			count++;
+			_count++;
 		}
 	}
 	
@@ -136,8 +139,8 @@ public class Add extends Command{
 		}
 	}
 	
-	private void checkDeadlineInDesc(){
-		
+	private static void checkDeadlineInDesc(String input){
+
 	}
 
 	private void inputEndTime(String param) {
@@ -185,6 +188,18 @@ public class Add extends Command{
 	
 	private String stripWhiteSpaces(String input){
 		return input.replaceAll(" ", "");
+	}
+	
+	public static void main(String[] args){
+		String input = "Hi \"I am Lynnette\" ng -d hajsdkhkj -e";
+		String string = "engine\"eri\"ng";
+		Pattern pattern = Pattern.compile("([\"\'])"); 
+		Matcher m = pattern.matcher(input);
+		while (m.find()){
+			System.out.println(m.group(0));
+		}
+
+//		System.out.println(input.split("\"")[1]);
 	}
 
 }
