@@ -17,6 +17,7 @@ public class TaskPadLauncher implements Runnable {
 	}
 
 	private void setUpGui() {
+		System.loadLibrary("jawt");
 		GuiManager.initialGuiManager();
 		GuiManager.callOutput(MESSAGE_WELCOME);
 		GuiManager.startRemindingUser();

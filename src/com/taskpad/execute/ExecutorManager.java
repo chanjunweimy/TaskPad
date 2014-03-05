@@ -305,7 +305,7 @@ public class ExecutorManager {
 		
 		int taskId = listOfTasks.size();
 		String taskIdString = Integer.toString(taskId);
-		// GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		 GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
 	private static String generateFeedbackForAdd(String taskIdString, String description) {
