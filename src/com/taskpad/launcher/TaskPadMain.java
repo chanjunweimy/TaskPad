@@ -14,7 +14,7 @@ public class TaskPadMain{
 	}
 	
 	public static void main(String[] args){
-		System.loadLibrary("jawt");//to solve mac issue
+		//System.loadLibrary("jawt");//to solve mac issue
 		runProgram();
 	}
 
