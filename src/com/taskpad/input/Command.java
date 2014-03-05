@@ -94,7 +94,7 @@ public abstract class Command {
 		return false;
 	}
 	
-	protected void putOneParameter(String parameter, String input){
+	protected static void putOneParameter(String parameter, String input){
 		inputParameters.put(parameter, input);
 	}
 	

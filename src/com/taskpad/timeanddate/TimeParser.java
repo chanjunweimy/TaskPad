@@ -92,9 +92,20 @@ public class TimeParser {
 	    
 	}
 	
-	private static String convertToTime(long milliseconds){
-		Date date = new Date(milliseconds);
-		return "";
+	private static String convertMillisecondsToTime(long milliseconds){
+		int minutes = (int) ((milliseconds / (1000*60)) % 60);
+		int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+		String hourString = "" + hours;
+		if (hourString.length() == 1){
+			hourString = "0" + hourString;
+		}
+		
+		String minuteString = "" + minutes;
+		if (minuteString.length() == 1){
+			minuteString = minuteString + "0";
+		}
+		String timeString = hourString + ":" + minuteString;
+		return timeString;
 	}
 	
 	private String stripTimeDelimiters(String input){
@@ -109,9 +120,11 @@ public class TimeParser {
 		return time.replace(";", ":").trim();
 	}
 	
-//	public static void main(String[] args){
-//		String input = "13:00";
-//		System.out.println(parseTime(input));
-//	}
+	public static void main(String[] args){
+		String input = "8.00 am";
+		long time = decodeTime(input);
+		String timeString = convertMillisecondsToTime(time);
+		System.out.println(input + " " + timeString);
+	}
 	
 }
