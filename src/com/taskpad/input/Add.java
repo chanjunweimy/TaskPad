@@ -26,6 +26,7 @@ public class Add extends Command{
 	
 	private static boolean _invalidParameters = false;
 	private static int _count = 0;
+	private static String _desc = "";
 	
 	private static Scanner _sc;
 
@@ -39,6 +40,14 @@ public class Add extends Command{
 	@Override
 	protected boolean commandSpecificRun() {
 		splitInputParameters();
+		
+		/* Not ready
+		if (isNotDelimitedString()){
+			getDescInQuotes();
+			removeDesc();
+			parseTheRest();
+		}
+		*/
 		
 		if (_invalidParameters){
 			return false;
@@ -60,7 +69,8 @@ public class Add extends Command{
 	}
 
 	@Override
-	protected void putInputParameters() {		
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_DESCRIPTION, _desc);
 	}
 
 	@Override
@@ -73,7 +83,7 @@ public class Add extends Command{
 		while(_sc.hasNext()){
 			String nextParam = _sc.next();
 			if (_count == 0){
-				putOneParameter(PARAMETER_DESCRIPTION, nextParam);
+				_desc = nextParam;
 			} else {
 				parseNextParam(nextParam);
 			}
@@ -109,14 +119,6 @@ public class Add extends Command{
 	private void getDeadline(String param) {
 		param = stripWhiteSpaces(param);
 		inputDeadline(param);
-		
-		/* deprecated
-		String[] splitParam = param.split("/", -1);
-		String day = splitParam[0];
-		String month = splitParam[1];
-		String year = splitParam[2];
-		inputDeadlines(day,month, year);
-		*/
 	}
 	
 	private void inputDeadline(String deadline){
@@ -139,8 +141,14 @@ public class Add extends Command{
 		}
 	}
 	
-	private static void checkDeadlineInDesc(String input){
+	private void getDescInQuotes(){
+		Pattern pattern = Pattern.compile(".*(\\\"|\\\')(.*)(\\\"|\\\').*"); 
+		Matcher m = pattern.matcher(input);
+		while (m.find()){
+			_desc = m.group(2);
+		}
 
+//		System.out.println(input.split("\"")[1]);
 	}
 
 	private void inputEndTime(String param) {
@@ -160,6 +168,13 @@ public class Add extends Command{
 	
 	private void invalidParam() {
 		_invalidParameters = true;
+	}
+	
+	private boolean isNotDelimitedString(){
+		if (_count == 1){
+			return true;
+		}
+		return false;
 	}
 	
 	private String removeFirstChar(String input) {
@@ -186,20 +201,17 @@ public class Add extends Command{
 		return errorMessage;
 	}
 	
-	private String stripWhiteSpaces(String input){
-		return input.replaceAll(" ", "");
+	private void removeDesc(){
+		input.replace(_desc, "");
 	}
 	
-	public static void main(String[] args){
-		String input = "Hi \"I am Lynnette\" ng -d hajsdkhkj -e";
-		String string = "engine\"eri\"ng";
-		Pattern pattern = Pattern.compile("([\"\'])"); 
-		Matcher m = pattern.matcher(input);
-		while (m.find()){
-			System.out.println(m.group(0));
-		}
-
-//		System.out.println(input.split("\"")[1]);
+	//To be completed: PARSE The rest for date & time
+	private void parseTheRest(){
+		
+	}
+	
+	private String stripWhiteSpaces(String input){
+		return input.replaceAll(" ", "");
 	}
 
 }
