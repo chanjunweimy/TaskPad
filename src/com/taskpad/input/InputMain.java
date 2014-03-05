@@ -281,7 +281,7 @@ public class InputMain {
 	}
 	
 	private static String removeFirstWord(String input) {
-		return input.replace(getFirstWord(input), "").trim();
+		return input.replaceFirst(getFirstWord(input), "").trim();
 	}
 	
 	private static String getFirstWord(String input) {
