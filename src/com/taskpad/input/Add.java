@@ -22,18 +22,19 @@ public class Add extends Command{
 	
 	private static boolean _invalidParameters = false;
 	
-	private static Scanner sc;
+	private static Scanner _sc;
 
 	public Add(String input) {
 		super(input);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_ADD);
-		sc = new Scanner(System.in);
+		_sc = new Scanner(System.in);
 	}
 	
 	@Override
 	protected boolean commandSpecificRun() {
 		splitInputParameters();
+		checkDeadlineInDesc();
 		
 		if (_invalidParameters){
 			return false;
@@ -65,9 +66,9 @@ public class Add extends Command{
 	
 	private void splitInputParameters(){
 		int count = 0;
-		sc = new Scanner(input).useDelimiter("\\s-");
-		while(sc.hasNext()){
-			String nextParam = sc.next();
+		_sc = new Scanner(input).useDelimiter("\\s-");
+		while(_sc.hasNext()){
+			String nextParam = _sc.next();
 			if (count == 0){
 				putOneParameter(PARAMETER_DESCRIPTION, nextParam);
 			} else {
@@ -133,6 +134,10 @@ public class Add extends Command{
 				putOneParameter(PARAMETER_START_DATE, stripWhiteSpaces(splitParam[1]));
 			}
 		}
+	}
+	
+	private void checkDeadlineInDesc(){
+		
 	}
 
 	private void inputEndTime(String param) {

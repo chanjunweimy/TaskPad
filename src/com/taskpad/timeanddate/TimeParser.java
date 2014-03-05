@@ -3,7 +3,7 @@
  */
 
 
-package com.taskpad.input;
+package com.taskpad.timeanddate;
 
 import java.sql.Date;
 import java.util.regex.Matcher;
