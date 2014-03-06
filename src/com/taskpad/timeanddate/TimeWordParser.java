@@ -30,7 +30,7 @@ public class TimeWordParser extends NumberParser{
 	
 	/*
 	public static void main(String[] args){
-		String input = "twenty hours";
+		String input = "20 hours";
 		TimeWordParser twp = new TimeWordParser();
 		System.out.println(twp.timeWord(input));
 	}
@@ -131,7 +131,7 @@ public class TimeWordParser extends NumberParser{
 	}
 	
 	private String formatTime(Date time){
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		return sdf.format(time);
 	}
 	
@@ -168,9 +168,10 @@ public class TimeWordParser extends NumberParser{
 	private Date getCurrentTime(){
 		Date date;
 		DateAndTimeManager dtm = new DateAndTimeManager();
-		String todayTime = dtm.getTodayTime();	
+		String todayTime = dtm.getTodayDateAndTime();
+//		String todayTime = dtm.getTodayTime();	
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
 			date = sdf.parse(todayTime);
 		} catch (ParseException e) {
