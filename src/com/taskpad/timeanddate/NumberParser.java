@@ -114,7 +114,7 @@ public class NumberParser {
 	}
 
 	private String getKey(String[] numWords, int pos) {
-		String key = numWords[pos].trim();
+		String key = numWords[pos];
 		key = key.toLowerCase();
 		return key;
 	}
