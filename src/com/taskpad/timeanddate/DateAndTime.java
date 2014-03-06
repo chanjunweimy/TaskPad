@@ -14,7 +14,7 @@ public class DateAndTime {
 	}
 	
 	protected String getCurrentDate(){
-		_formater = new SimpleDateFormat("dd.MM.yyyy");
+		_formater = new SimpleDateFormat("dd/MM/yyyy");
 		return _formater.format(_today);
 	}
 	
