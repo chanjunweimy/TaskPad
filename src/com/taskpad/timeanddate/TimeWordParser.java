@@ -1,5 +1,10 @@
 package com.taskpad.timeanddate;
 
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,10 +13,11 @@ public class TimeWordParser extends NumberParser{
 	private static Map<String, String[]> timewordsMap = new HashMap<String, String[]>();
 	private static NumberParser _numberparser;
 	
-	private static  final String TIME_MIN = "MIN";
+	private static final String TIME_MIN = "MIN";
 	private static final String TIME_HOURS = "HOUR";
 	private static final String TIME_DAY = "DAY";
 	private static final String TIME_WEEKS = "WEEK";
+	private static final String TIME_MONTH = "MONTH";
 	private static final String TIME_YEAR = "YEAR";
 	
 	private  String _timeword = "";
@@ -28,8 +34,8 @@ public class TimeWordParser extends NumberParser{
 		if (containsTimeWord(input)){
 			input = removeTimeWord(input);
 			_numberword = _numberparser.parseTheNumbers(input);
-			long timeLong = addTime();
-			time = convertMillisecondsToTime(timeLong);
+			Date newTime = addTime();
+			time = formatTime(newTime);
 		}
 		
 		return time;
@@ -56,6 +62,7 @@ public class TimeWordParser extends NumberParser{
 		initialiseHoursString();
 		initialiseDayString();
 		initialiseWeekString();
+		initialiseMonthString();
 		initialiseYearString();
 	}
 
@@ -81,6 +88,11 @@ public class TimeWordParser extends NumberParser{
 		timewordsMap.put(TIME_WEEKS, weekString);
 		
 	}
+	
+	private void initialiseMonthString(){
+		String monthString[] = {"MONTH", "MONTHS", "MTH", "MTHS"};
+		timewordsMap.put(TIME_MONTH, monthString);
+	}
 
 	private void initialiseYearString() {
 		String yearString[] = {"YEAR", "YEARS", "YR", "YRS"};
@@ -100,29 +112,54 @@ public class TimeWordParser extends NumberParser{
 		return input.replace(_timeword, "");
 	}
 	
-	private  String convertMillisecondsToTime(long milliseconds){
-		int minutes = (int) ((milliseconds / (1000*60)) % 60);
-		int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
-		
-		String hourString = "" + hours;
-		if (hourString.length() == 1){
-			hourString = "0" + hourString;
-		}
-		
-		String minuteString = "" + minutes;
-		if (minuteString.length() == 1){
-			minuteString = "0" + minuteString;
-		}
-		String timeString = hourString + ":" + minuteString;
-		
-		return timeString;
+	private String formatTime(Date time){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		return sdf.format(time);
 	}
 	
-	private long addTime(){
+	private Date addTime(){
+		Date date = getCurrentTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		
+		int increment = Integer.parseInt(_numberword);
+		
+		switch (_timeword){
+			case TIME_MIN:
+				cal.add(Calendar.MINUTE, increment);
+				break;
+			case TIME_HOURS:
+				cal.add(Calendar.HOUR, increment);
+				break;
+			case TIME_WEEKS:
+				cal.add(Calendar.WEEK_OF_MONTH, increment);
+				break;
+			case TIME_MONTH:
+				cal.add(Calendar.MONTH, increment);
+				break;
+			case TIME_YEAR:
+				cal.add(Calendar.YEAR, increment);
+				break;
+			default:
+				break;
+		}
+		
+		return cal.getTime();
+	}
+	
+	private Date getCurrentTime(){
+		Date date;
 		DateAndTimeManager dtm = new DateAndTimeManager();
 		String todayTime = dtm.getTodayTime();	
 		
-		return 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		try {
+			date = sdf.parse(todayTime);
+		} catch (ParseException e) {
+			return null;	//To do: Handle exception
+		}
+		
+		return date;
 	}
 	
 }
