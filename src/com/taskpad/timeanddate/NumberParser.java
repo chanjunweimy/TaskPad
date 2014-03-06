@@ -73,8 +73,13 @@ public class NumberParser {
 
 	//this method returns null when error occurs
 	public String parseTheNumbers(String input){
+		boolean isEmptyString = STRING_EMPTY.equals(input);
+		if(isEmptyString){
+			return null;
+		}
+		
 		String[] numWords = input.split(" ");
-		Integer total = 0;
+		Integer total = null;
 		int space = 0;
 		boolean isFirstPass = true;
 		
@@ -84,7 +89,7 @@ public class NumberParser {
 			//System.err.println(key); for debug purpose
 			
 			boolean hasSuchNumber = _numberMap.containsKey(key);
-			boolean isEmptyString = STRING_EMPTY.equals(key);
+			isEmptyString = STRING_EMPTY.equals(key);
 			
 			if(isEmptyString){
 				space++;
