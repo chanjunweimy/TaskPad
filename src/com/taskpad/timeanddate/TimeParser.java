@@ -16,9 +16,16 @@ public class TimeParser {
 	 * 
 	 */
 	public static String parseTime(String input){
-		long time = decodeTime(input);
-		String timeString = convertMillisecondsToTime(time);
+		TimeWordParser twp = new TimeWordParser();
+		String timeString = "";
+		long time = 0;
 		
+		timeString = twp.timeWord(input);
+		if(!inputContainsTimeWords(timeString)){
+			time = decodeTime(input);
+			timeString = convertMillisecondsToTime(time);
+		}
+				
 		if (isInvalidTime(timeString)){
 			return timeErrorMessage(input);
 		}
@@ -26,18 +33,13 @@ public class TimeParser {
 		return timeString;
 	}
 	
-	/* This method takes in a time and check if its a valid 24h clock time
-	 * If not, decode it
-	 * 
-	 */
-	public static boolean isInvalidTime(String timeString){
-		if (timeString.equals("-1:-1")){
+	private static boolean inputContainsTimeWords(String input) {
+		if (input.equals("")){
 			return true;
 		}
-		
 		return false;
 	}
-	
+
 	private static long decodeTime(String input){
 		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
 	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[;:.]?([0-5][0-9])?)$");
@@ -48,8 +50,9 @@ public class TimeParser {
 	    Matcher time24M = time24.matcher(input);
 	    boolean time24Match = time24M.matches();
 	    
+        String hours = "-1", minutes = "-1";
+	    
 	    if (time12Match || time24Match) {
-	        String hours = "-1", minutes = "-1";
 
 	        if (input.contains(":") || input.contains(".") || input.contains(";")) {
 	            String[] inputs = input.split("[:.;]");
@@ -87,8 +90,6 @@ public class TimeParser {
 	        return time;
 	    } 
 	    else {
-	    	String hours = "-1";
-	    	String minutes = "-1";
 	    	//To take care of strings like 800 am
             if (input.contains("a")) {
                 hours = input.substring(0, input.indexOf("a")).trim();	//am strings
@@ -134,6 +135,13 @@ public class TimeParser {
 	private static String timeErrorMessage(String input){
 		String errorMessage = String.format(MESSAGE_TIME_ERROR);
 		return errorMessage;
+	}
+	
+	public static boolean isInvalidTime(String timeString){
+		if (timeString.equals("-1:-1")){
+			return true;
+		}
+		return false;
 	}
 	
 	/* Testing
