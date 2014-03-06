@@ -27,26 +27,32 @@ public class ExecutorManager {
 					parameters.get("VENUE"));
 			
 			CommandRecord.setPreviousCommand(command);
+			DataFile.setPreviousIsValid(true);
 			break;
 		case "DELETE":
 			delete(parameters.get("TASKID"));
 			CommandRecord.setPreviousCommand(command);
+			DataFile.setPreviousIsValid(true);
 			break;
 		case "ADDINFO":	// should show full info?
 			addInfo(parameters.get("TASKID"), parameters.get("INFO"));
 			CommandRecord.setPreviousCommand(command);
+			DataFile.setPreviousIsValid(true);
 			break;
 		case "CLEAR":
 			clear();
 			CommandRecord.setPreviousCommand(command);
+			DataFile.setPreviousIsValid(true);
 			break;
 		case "DONE":	// should show full info?
 			markAsDone(parameters.get("TASKID"));
 			CommandRecord.setPreviousCommand(command);
+			DataFile.setPreviousIsValid(true);
 			break;
 		case "EDIT":	// ?
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
 			CommandRecord.setPreviousCommand(command);
+			DataFile.setPreviousIsValid(true);
 			break;
 		case "SEARCH":	// should show full info?
 			search(parameters.get("KEYWORD"));
@@ -305,7 +311,7 @@ public class ExecutorManager {
 		
 		int taskId = listOfTasks.size();
 		String taskIdString = Integer.toString(taskId);
-		 GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
 	private static String generateFeedbackForAdd(String taskIdString, String description) {
