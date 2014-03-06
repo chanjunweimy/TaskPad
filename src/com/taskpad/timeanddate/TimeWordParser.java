@@ -1,6 +1,5 @@
 package com.taskpad.timeanddate;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,17 +19,25 @@ public class TimeWordParser extends NumberParser{
 	private static final String TIME_MONTH = "MONTH";
 	private static final String TIME_YEAR = "YEAR";
 	
-	private  String _timeword = "";
-	private  String _numberword = "";
+	private static String _timeword = "";
+	private static String _numberword = "";
+	private static int _index = -2;
 	
 	public TimeWordParser(){
 		initialiseTimewords();
 		_numberparser = new NumberParser();
 	}
 	
-	public String timeWord(String input){		
+	/*
+	public static void main(String[] args){
+		String input = "twenty hours";
+		TimeWordParser twp = new TimeWordParser();
+		System.out.println(twp.timeWord(input));
+	}
+	*/
+	
+	public String timeWord(String input){	
 		String time = "";
-		
 		if (containsTimeWord(input)){
 			input = removeTimeWord(input);
 			_numberword = _numberparser.parseTheNumbers(input);
@@ -101,7 +108,8 @@ public class TimeWordParser extends NumberParser{
 	
 	private  boolean isValueFound(String value, String input) {
 		input = input.trim();
-		if (value.equalsIgnoreCase(input)){
+		if (input.toUpperCase().contains(value)){
+			_index = input.toUpperCase().indexOf(value);
 			return true;
 		}
 		
@@ -109,11 +117,21 @@ public class TimeWordParser extends NumberParser{
 	}
 	
 	private  String removeTimeWord(String input){
-		return input.replace(_timeword, "");
+		int index = input.indexOf(' ', _index);
+		String replace;
+		if (index == -1){
+			replace = input.substring(0, _index);
+		} else {
+			String temp = input.substring(_index, input.indexOf(' ', _index));
+			replace = input.replace(temp, "");
+		}
+				
+//		return input.replaceAll("(?i)"+_timewordOriginal, "").trim();
+		return replace.trim();
 	}
 	
 	private String formatTime(Date time){
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		return sdf.format(time);
 	}
 	
