@@ -73,11 +73,6 @@ public class NumberParser {
 
 	//this method returns null when error occurs
 	public String parseTheNumbers(String input){
-		boolean isEmptyString = STRING_EMPTY.equals(input);
-		if(isEmptyString){
-			return null;
-		}
-		
 		String[] numWords = input.split(" ");
 		Integer total = null;
 		int space = 0;
@@ -89,7 +84,7 @@ public class NumberParser {
 			//System.err.println(key); for debug purpose
 			
 			boolean hasSuchNumber = _numberMap.containsKey(key);
-			isEmptyString = STRING_EMPTY.equals(key);
+			boolean isEmptyString = STRING_EMPTY.equals(key);
 			
 			if(isEmptyString){
 				space++;
@@ -109,6 +104,12 @@ public class NumberParser {
 				total = combineNumbers(numWords, total, i, value, space);
 			}
 		}
+		
+		//is either empty string or string with spaces
+		if (total == null){
+			return null;
+		}
+		
 		return STRING_EMPTY + total;
 	}
 
