@@ -5,13 +5,10 @@
 
 package com.taskpad.timeanddate;
 
-import java.sql.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeParser {
-	
-	private static int TIME_LENGTH = 5;
 	
 	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
 
@@ -54,21 +51,25 @@ public class TimeParser {
 	    boolean time24Match = time24M.matches();
 	    
 	    if (time12Match || time24Match) {
-
 	        String hours = "0", minutes = "0";
 
 	        if (input.contains(":") || input.contains(".")) {
 	            String[] inputs = input.split("[:.]");
 	            hours =  inputs[0];
 	            minutes = inputs[1].substring(0, 2);
+	            System.out.println("Contains ." + hours + " " + minutes);
 	        } else {
 	            // Process strings like "8", "8p", "8pm", "2300"
 	            if (input.contains("a")) {
-	                hours = input.substring(0, input.indexOf("a")).trim();
+	                hours = input.substring(0, input.indexOf("a")).trim();	//am strings
+	                System.out.println(hours);
+
 	            } else if (input.contains("p")) {
-	                hours = input.substring(0, input.indexOf("p")).trim();
+	                hours = input.substring(0, input.indexOf("p")).trim();	//pm strings
+
 	            } else if (input.length() < 3) {
 	                hours = input;
+	                
 	            } else {
 	                hours =  input.substring(0, input.length() - 2);
 	                minutes = input.substring(input.length() - 2);
@@ -82,15 +83,32 @@ public class TimeParser {
 	        long time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
 
 	        if (input.contains("p") && !hours.equals("12")) {
-	            // "pm" adds 12 hours to the total, except for 12pm
+	            // Add 12 hours for pm times
 	            time += 12 * 60 * 60 * 1000;
 	        }
 
 	        return time;
+	    } else {
+	    	String hours = "0";
+	    	String minutes = "0";
+	    	//To take care of strings like 800 am
+            if (input.contains("a")) {
+                hours = input.substring(0, input.indexOf("a")).trim();	//am strings
+                System.out.println(hours);
+
+            } else if (input.contains("p")) {
+                hours = input.substring(0, input.indexOf("p")).trim();	//pm strings
+            }
+            
+	        long time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
+	        
+	        if (input.contains("p") && !hours.equals("12")) {
+	            time += 12 * 60 * 60 * 1000;
+	        }
+	        
+	        return time;
 	    }
-	    return 0;
-	    
-	}
+	 }
 	
 	private static String convertMillisecondsToTime(long milliseconds){
 		int minutes = (int) ((milliseconds / (1000*60)) % 60);
@@ -120,11 +138,11 @@ public class TimeParser {
 		return time.replace(";", ":").trim();
 	}
 	
-	public static void main(String[] args){
-		String input = "8.00 am";
-		long time = decodeTime(input);
-		String timeString = convertMillisecondsToTime(time);
-		System.out.println(input + " " + timeString);
-	}
+//	public static void main(String[] args){
+//		String input = "0800 pm";
+//		long time = decodeTime(input);
+//		String timeString = convertMillisecondsToTime(time);
+//		System.out.println(input + " " + timeString);
+//	}
 	
 }
