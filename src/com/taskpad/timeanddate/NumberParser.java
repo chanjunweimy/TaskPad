@@ -73,6 +73,10 @@ public class NumberParser {
 
 	//this method returns null when error occurs
 	public String parseTheNumbers(String input){
+		if (isDigitString(input)){
+			return STRING_EMPTY + Integer.parseInt(input);
+		}
+		
 		String[] numWords = input.split(" ");
 		Integer total = null;
 		int space = 0;
@@ -80,9 +84,7 @@ public class NumberParser {
 		
 		for (int i = numWords.length - 1 ; i >= 0; i--){
 			String key = getKey(numWords, i); 
-			
-			//System.err.println(key); for debug purpose
-			
+						
 			boolean hasSuchNumber = _numberMap.containsKey(key);
 			boolean isEmptyString = STRING_EMPTY.equals(key);
 			
@@ -111,6 +113,15 @@ public class NumberParser {
 		}
 		
 		return STRING_EMPTY + total;
+	}
+
+	private boolean isDigitString(String input) {
+		try{
+			Integer.parseInt(input);
+			return true;
+		} catch (NumberFormatException e){
+			return false;
+		}
 	}
 
 	private String getKey(String[] numWords, int pos) {

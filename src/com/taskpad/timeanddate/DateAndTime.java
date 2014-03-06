@@ -28,4 +28,9 @@ public class DateAndTime {
 		return _formater.format(_today);
 	}
 	
+	protected String getCurrentTimeAndDate(){
+		_formater = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		return _formater.format(_today);
+	}
+	
 }

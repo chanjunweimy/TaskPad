@@ -21,6 +21,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public String getTodayDay(){
 		return _dateAndTimeObject.getCurrentDay();
 	}
+	
+	public String getTodayDateAndTime(){
+		return _dateAndTimeObject.getCurrentTimeAndDate();
+	}
 
 
 	
