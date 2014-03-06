@@ -12,6 +12,11 @@ public class TimeParser {
 	
 	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
 
+	//this class is not designed to be an object
+	//it is just used to be a helper class
+	private TimeParser(){
+	}
+	
 	/* This method takes in a time and parses it
 	 * 
 	 */
