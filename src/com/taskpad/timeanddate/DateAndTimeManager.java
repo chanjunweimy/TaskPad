@@ -10,12 +10,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		_dateAndTimeObject = new DateAndTime();
 	}
 
-	//implements time:
 	public String getTodayTime(){
 		return _dateAndTimeObject.getCurrentTime();
 	}
 	
-	//implements date:
 	public String getTodayDate(){
 		return _dateAndTimeObject.getCurrentDate();
 	}
