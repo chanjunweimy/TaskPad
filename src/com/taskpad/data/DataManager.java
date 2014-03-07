@@ -1,6 +1,8 @@
 package com.taskpad.data;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,6 +18,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.taskpad.execute.Task;
 
@@ -116,12 +119,15 @@ public class DataManager {
 			}
 			
 			return listOfTasks;
+	    } catch (FileNotFoundException e) {
+	    	// empty file, just start the program
+	    	return listOfTasks;
 	    } catch (Exception e) {
-	    	e.printStackTrace();
-	    }
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listOfTasks;
 		
-		
-		return null;
 	}
 	
 	public static void storeBack(LinkedList<Task> taskList, String file) {
