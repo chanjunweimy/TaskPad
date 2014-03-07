@@ -50,10 +50,10 @@ public class DataManager {
 					Element task = (Element) taskNode;
 					
 					String description;
-					String deadlineDay;
-					String deadlineMonth;
-					String deadlineYear;
+					String deadline;
+					String startDate;
 					String startTime;
+					String endDate;
 					String endTime;
 					String venue;
 					String details;

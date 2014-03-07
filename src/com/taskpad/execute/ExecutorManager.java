@@ -158,7 +158,8 @@ public class ExecutorManager {
 
 	private static void undo() {
 		if (!DataFile.isValidPrevious()) {
-			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
+			//GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
+			System.out.println("You don't have things to undo, or you just performed an undo operation.");
 			return;
 		}
 
@@ -166,7 +167,8 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE_PREV);
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+		// GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+		System.out.println("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 	}
 
 	private static void search(String keywordsString) {
@@ -311,7 +313,8 @@ public class ExecutorManager {
 		
 		int taskId = listOfTasks.size();
 		String taskIdString = Integer.toString(taskId);
-		GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		//GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		System.out.println(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
 	private static String generateFeedbackForAdd(String taskIdString, String description) {
