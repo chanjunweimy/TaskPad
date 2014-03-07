@@ -50,10 +50,10 @@ public class DataManager {
 					Element task = (Element) taskNode;
 					
 					String description;
-					String deadlineDay;
-					String deadlineMonth;
-					String deadlineYear;
+					String deadline;
+					String startDate;
 					String startTime;
+					String endDate;
 					String endTime;
 					String venue;
 					String details;
@@ -66,28 +66,28 @@ public class DataManager {
 						return listOfTasks; // description cannot be null
 					}
 					
-					if(task.getElementsByTagName("deadline_day").item(0) != null) {
-						deadlineDay = task.getElementsByTagName("deadline_day").item(0).getTextContent();
+					if(task.getElementsByTagName("deadline").item(0) != null) {
+						deadline = task.getElementsByTagName("deadline").item(0).getTextContent();
 					} else {
-						deadlineDay = null;
+						deadline = null;
 					}
 					
-					if (task.getElementsByTagName("deadline_month").item(0) != null) {
-						deadlineMonth = task.getElementsByTagName("deadline_month").item(0).getTextContent();
+					if (task.getElementsByTagName("start_date").item(0) != null) {
+						startDate = task.getElementsByTagName("start_date").item(0).getTextContent();
 					} else {
-						deadlineMonth = null;
-					}
-					
-					if(task.getElementsByTagName("deadline_year").item(0) != null) {
-						deadlineYear = task.getElementsByTagName("deadline_year").item(0).getTextContent();
-					} else {
-						deadlineYear = null;
+						startDate = null;
 					}
 					
 					if (task.getElementsByTagName("start_time").item(0) != null) {
 						startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
 					} else {
 						startTime = null;
+					}
+					
+					if (task.getElementsByTagName("end_date").item(0) != null) {
+						endDate = task.getElementsByTagName("end_date").item(0).getTextContent();
+					} else {
+						endDate = null;
 					}
 					
 					if (task.getElementsByTagName("end_time").item(0) != null) {
@@ -110,8 +110,8 @@ public class DataManager {
 					
 					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
 					
-					listOfTasks.add(new Task(description, deadlineDay, deadlineMonth, deadlineYear,
-							startTime, endTime, venue, details, done));
+					listOfTasks.add(new Task(description, deadline, startDate,
+							startTime, endDate, endTime, venue, details, done));
 				}
 			}
 			
@@ -146,28 +146,28 @@ public class DataManager {
 					task.appendChild(description);
 				}
 				
-				if(taskInList.getDeadlineDay() != null) {
-					Element deadlineDay = doc.createElement("deadline_day");
-					deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadlineDay()));
+				if(taskInList.getDeadline() != null) {
+					Element deadlineDay = doc.createElement("deadline");
+					deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadline()));
 					task.appendChild(deadlineDay);
 				}
 				
-				if(taskInList.getDeadlineMonth() != null) {
-					Element deadlineMonth = doc.createElement("deadline_month");
-					deadlineMonth.appendChild(doc.createTextNode(taskInList.getDeadlineMonth()));
-					task.appendChild(deadlineMonth);
-				}
-				
-				if (taskInList.getDeadlineYear() != null) {
-					Element deadlineYear = doc.createElement("deadline_year");
-					deadlineYear.appendChild(doc.createTextNode(taskInList.getDeadlineYear()));
-					task.appendChild(deadlineYear);
+				if (taskInList.getStartDate() != null) {
+					Element startDate = doc.createElement("start_date");
+					startDate.appendChild(doc.createTextNode(taskInList.getStartDate()));
+					task.appendChild(startDate);
 				}
 				
 				if (taskInList.getStartTime() != null) {
 					Element startTime = doc.createElement("start_time");
 					startTime.appendChild(doc.createTextNode(taskInList.getStartTime()));
 					task.appendChild(startTime);
+				}
+				
+				if (taskInList.getEndDate() != null) {
+					Element endDate = doc.createElement("end_date");
+					endDate.appendChild(doc.createTextNode(taskInList.getEndDate()));
+					task.appendChild(endDate);
 				}
 				
 				if (taskInList.getEndTime() != null) {
