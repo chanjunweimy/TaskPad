@@ -8,8 +8,6 @@ package com.taskpad.launcher;
 
 import javax.swing.SwingUtilities;
 
-import org.eclipse.swt.awt.SWT_AWT;
-
 public class TaskPadMain{	
 
 	private TaskPadMain(){
