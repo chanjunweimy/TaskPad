@@ -73,9 +73,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent arg0) {
 		boolean isEscapeKey = arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE;
-		boolean isAltHomeKey = arg0.getKeyCode() == NativeKeyEvent.VK_HOME 
+		boolean isAltHomeKey = arg0.getKeyCode() == NativeKeyEvent.VK_SPACE 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-				equals("Alt");
+				equals("Shift");
 		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
