@@ -8,13 +8,14 @@ package com.taskpad.launcher;
 
 import javax.swing.SwingUtilities;
 
+import org.eclipse.swt.awt.SWT_AWT;
+
 public class TaskPadMain{	
 
 	private TaskPadMain(){
 	}
 	
 	public static void main(String[] args){
-		//System.loadLibrary("jawt");//to solve mac issue
 		runProgram();
 	}
 
