@@ -85,9 +85,9 @@ public class DataManager {
 					}
 					
 					if (task.getElementsByTagName("end_date").item(0) != null) {
-						startDate = task.getElementsByTagName("end_date").item(0).getTextContent();
+						endDate = task.getElementsByTagName("end_date").item(0).getTextContent();
 					} else {
-						startDate = null;
+						endDate = null;
 					}
 					
 					if (task.getElementsByTagName("end_time").item(0) != null) {
@@ -110,8 +110,8 @@ public class DataManager {
 					
 					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
 					
-					listOfTasks.add(new Task(description, deadlineDay, deadlineMonth, deadlineYear,
-							startTime, endTime, venue, details, done));
+					listOfTasks.add(new Task(description, deadline, startDate,
+							startTime, endDate, endTime, venue, details, done));
 				}
 			}
 			
