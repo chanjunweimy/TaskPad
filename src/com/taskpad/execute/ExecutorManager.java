@@ -21,9 +21,15 @@ public class ExecutorManager {
 		
 		switch (commandType) {
 		case "ADD":	// should show full info?
+			/*
 			add(parameters.get("DESC"), parameters.get("DAY"),
 					parameters.get("MONTH"), parameters.get("YEAR"),
 					parameters.get("START"), parameters.get("END"),
+					parameters.get("VENUE"));
+			*/
+			add(parameters.get("DESC"), parameters.get("DEADLINE"),
+					parameters.get("START DATE"), parameters.get("START TIME"),
+					parameters.get("END DATE"), parameters.get("END TIME"),
 					parameters.get("VENUE"));
 			
 			CommandRecord.setPreviousCommand(command);
@@ -299,21 +305,21 @@ public class ExecutorManager {
 		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
 	}
 	
-	private static void add(String description, String deadlineDay,
-			String deadlineMonth, String deadlineYear, String startTime,
+	private static void add(String description, String deadline, String startDate,
+			String startTime, String endDate,
 			String endTime, String venue) {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
-		Task taskToAdd = new Task(description, deadlineDay, deadlineMonth, deadlineYear,
-				startTime, endTime, venue);
+		Task taskToAdd = new Task(description, deadline, startDate,
+				startTime, endDate, endTime, venue);
 		listOfTasks.add(taskToAdd);
 
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		int taskId = listOfTasks.size();
 		String taskIdString = Integer.toString(taskId);
-		//GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 		System.out.println(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
