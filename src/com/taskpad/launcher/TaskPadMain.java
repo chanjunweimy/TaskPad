@@ -10,8 +10,6 @@ import java.util.LinkedList;
 
 import javax.swing.SwingUtilities;
 
-import org.eclipse.swt.awt.SWT_AWT;
-
 import com.taskpad.data.DataFile;
 import com.taskpad.data.DataManager;
 import com.taskpad.execute.Task;

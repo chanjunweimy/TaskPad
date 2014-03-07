@@ -15,7 +15,7 @@ public class CompareDateAndTime {
 			new Comparator<Task>() {
 			@Override
 		public int compare(Task e1, Task e2) {
-			SimpleDateFormat dateConverter = new SimpleDateFormat();
+			SimpleDateFormat dateConverter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 			Date d1, d2;
 			try {
 				d1 = dateConverter.parse(e1.getDeadline() + e1.getEndTime());
