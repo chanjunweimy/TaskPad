@@ -120,8 +120,7 @@ public class DataManager {
 			
 			return listOfTasks;
 	    } catch (FileNotFoundException e) {
-	    	// empty file, just start the program
-	    	return listOfTasks;
+	    	e.printStackTrace();
 	    } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

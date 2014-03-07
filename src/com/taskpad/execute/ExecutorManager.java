@@ -10,11 +10,9 @@ import com.taskpad.input.Input;
 import com.taskpad.ui.GuiManager;
 
 public class ExecutorManager {
-	private static final String FEEDBACK_ADD = "Added:";
 	
 	// private LinkedList<Task> listOfTasks;
 
-	
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
 		Map<String, String> parameters = input.getParameters();
@@ -90,24 +88,19 @@ public class ExecutorManager {
 	private static void listUndone() {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 
-		LinkedList<String[]> tasks = new LinkedList<String[]>();
+		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
 		for (Task task : listOfTasks) {
 			if (task.getDone() == 1) {
 				continue;
 			}
-			String[] taskToDisplay = new String[2];
-			String taskIdString = Integer.toString(index + 1);
-			String description = task.getDescription();
-			taskToDisplay[0] = taskIdString;
-			taskToDisplay[1] = description;
-			tasks.add(taskToDisplay);
+			tasks.add(index);
 		}
 		
 		if (tasks.size() == 0) {
-			passFeedbackToGui("No undone task found.");
+			GuiManager.callOutput("No undone task found.");
 		} else {
-			String text = generateTextForTasks(tasks);
+			String text = generateTextForTasks(tasks, listOfTasks);
 			GuiManager.callOutput(text);
 		}
 		
@@ -116,24 +109,19 @@ public class ExecutorManager {
 	private static void listDone() {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 
-		LinkedList<String[]> tasks = new LinkedList<String[]>();
+		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
 		for (Task task : listOfTasks) {
 			if (task.getDone() == 0) {
 				continue;
 			}
-			String[] taskToDisplay = new String[2];
-			String taskIdString = Integer.toString(index + 1);
-			String description = task.getDescription();
-			taskToDisplay[0] = taskIdString;
-			taskToDisplay[1] = description;
-			tasks.add(taskToDisplay);
+			tasks.add(index);
 		}
 		
 		if (tasks.size() == 0) {
-			passFeedbackToGui("No finished task found.");
+			GuiManager.callOutput("No finished task found.");
 		} else {
-			String text = generateTextForTasks(tasks);
+			String text = generateTextForTasks(tasks, listOfTasks);
 			GuiManager.callOutput(text);
 		}
 	}
@@ -141,30 +129,25 @@ public class ExecutorManager {
 	private static void listAll() {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 
-		LinkedList<String[]> tasks = new LinkedList<String[]>();
+		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
 		for (Task task : listOfTasks) {
-			String[] taskToDisplay = new String[2];
-			String taskIdString = Integer.toString(index + 1);
-			String description = task.getDescription();
-			taskToDisplay[0] = taskIdString;
-			taskToDisplay[1] = description;
-			tasks.add(taskToDisplay);
+			tasks.add(index);
 		}
 		
 		if (tasks.size() == 0) {
-			passFeedbackToGui("No finished task found.");
+			GuiManager.callOutput("No task found.");
 		} else {
-			String text = generateTextForTasks(tasks);
+			String text = generateTextForTasks(tasks, listOfTasks);
 			// debug
 			// System.out.println(text);
-			// GuiManager.callOutput(text);
+			GuiManager.callOutput(text);
 		}
 	}
 
 	private static void undo() {
 		if (!DataFile.isValidPrevious()) {
-			//GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
+			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
 			System.out.println("You don't have things to undo, or you just performed an undo operation.");
 			return;
 		}
@@ -173,7 +156,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE_PREV);
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		// GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 		System.out.println("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 	}
 
@@ -181,7 +164,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
 		
 		String[] keywords = keywordsString.split(" ");
-		LinkedList<String[]> results = new LinkedList<String[]>();
+		LinkedList<Integer> results = new LinkedList<Integer>();
 		
 		int index = 0;
 		for(Task task: listOfTasks) {
@@ -195,23 +178,22 @@ public class ExecutorManager {
 			}
 			
 			if(isCandidate) {
-				String taskIdString = Integer.toString(index + 1);
-				String[] result = {taskIdString, task.getDescription()};
-				results.add(result);
+				results.add(index);
 			}
 				
 			index++;
 		}
 		
 		// pass feedback to GUI
-		String feedback = generateTextForTasks(results);
+		String feedback = generateTextForTasks(results, listOfTasks);
 		GuiManager.callOutput(feedback);
 	}
 
-	private static String generateTextForTasks(LinkedList<String[]> tasks) {
+	private static String generateTextForTasks(LinkedList<Integer> candidates, LinkedList<Task> listOfTasks) {
 		String text = "";
-		for(String[] task: tasks) {
-			text += generateTextForOneTask(task[0], task[1]);
+		for(int next: candidates) {
+			int taskId = next + 1;
+			text += generateTextForOneTask(taskId, listOfTasks.get(next));
 			text += "\n";
 		}
 		return text;
@@ -222,7 +204,7 @@ public class ExecutorManager {
 		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
-		String taskHistory = generateTextForOneTask(taskIdString, task.getDescription());
+		String taskHistory = generateTitleForOneTask(taskIdString, task.getDescription());
 		
 		task.setDescription(description);
 		
@@ -230,7 +212,12 @@ public class ExecutorManager {
 		
 		// pass feedback to gui
 		GuiManager.callOutput("'" + taskHistory + "' changed to '" 
-				+ generateTextForOneTask(taskIdString, description) + "'");
+				+ generateTitleForOneTask(taskIdString, description) + "'");
+	}
+
+	private static String generateTitleForOneTask(String taskIdString,
+			String description) {
+		return taskIdString + ". " + description;
 	}
 
 	private static void markAsDone(String taskIdString) {
@@ -278,12 +265,6 @@ public class ExecutorManager {
 		// GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
 	}
 
-	private static String getInfoOfTask(int index, LinkedList<Task> listOfTasks) {
-		Task task = listOfTasks.get(index);
-		// to be implemented
-		return null;
-	}
-
 	private static int getIndexById(String taskIdString) {
 		return Integer.parseInt(taskIdString) - 1;
 	}
@@ -318,23 +299,61 @@ public class ExecutorManager {
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		int taskId = listOfTasks.size();
-		String taskIdString = Integer.toString(taskId);
-		GuiManager.callOutput(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
-		System.out.println(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
+		GuiManager.callOutput(generateFeedbackForAdd(taskId, taskToAdd));
+		// System.out.println(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
-	private static String generateFeedbackForAdd(String taskIdString, String description) {
-		String firstLine = FEEDBACK_ADD;
-		String secondLine = generateTextForOneTask(taskIdString, description);
-		return firstLine + "\n" + secondLine;
+	private static String generateFeedbackForAdd(int taskId, Task taskAdded) {
+		return generateTextForOneTask(taskId, taskAdded);
 	}
 
-	private static String generateTextForOneTask(String taskIdString, String description) {
-		return taskIdString +". "+ description;
-	}
-
-	private static void passFeedbackToGui(String feedback) {
-		// TODO Auto-generated method stub
+	private static String generateTextForOneTask(int taskId, Task task) {
+		String text = "";
 		
+		text += "Task ID: " + taskId + "\n";
+		text += "Description: " + task.getDescription() + "\n";
+		
+		if (task.getDeadline() != null) {
+			text += "Deadline: " + task.getDeadline() + "\n";
+		}
+		
+		String start = "";
+		if (task.getStartTime() != null) {
+			start += task.getStartTime();
+		}
+		if (task.getStartDate() != null) {
+			start += (" " + task.getStartDate());
+		}
+		if (!start.equals("")) {
+			text += "Start: " + start + "\n";
+		}
+		
+		String end = "";
+		if (task.getEndTime() != null) {
+			end += task.getEndTime();
+		}
+		if (task.getEndDate() != null) {
+			end += (" " + task.getEndDate());
+		}
+		if (!end.equals("")) {
+			text += "end: " + end + "\n";
+		}
+		
+		if (task.getVenue() != null) {
+			text += "Venue: " + task.getVenue() + "\n";
+		}
+		
+		if (task.getDetails() != null) {
+			text += "Details: " + task.getDetails() + "\n";
+		}
+		
+		if (task.getDone() == 0) {
+			text += "Not done yet.";
+		} else {
+			text += "Task has been done.";
+		}
+		
+		return text;
 	}
+
 }
