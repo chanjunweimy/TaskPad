@@ -28,8 +28,8 @@ public class DataManager {
 		
 	}
 	
-	public int retrieveNumberOfTasks(String file){
-		int numberOfTasks = retrieve(file).size();
+	public int retrieveNumberOfTasks(){
+		int numberOfTasks = retrieve(DataFile.FILE).size();
 		return numberOfTasks;
 	}
 	
