@@ -86,6 +86,7 @@ public class List extends Command{
 			for (int i=0; i<listVariations.length; i++){
 				if (isInputFound(listVariations[i])){
 					parameterList = entry.getKey();
+					System.out.println(entry.getKey());
 					return false;
 				}
 			}
