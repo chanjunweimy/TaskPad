@@ -50,7 +50,7 @@ public class DataManager {
 			
 			doc.getDocumentElement().normalize();
 			
-			NodeList nList = doc.getElementsByTagName("TaskPad");
+			NodeList nList = doc.getElementsByTagName("Task");
 			
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node taskNode = nList.item(i);
@@ -146,10 +146,12 @@ public class DataManager {
 			Element rootElement = doc.createElement("TaskPad");
 			doc.appendChild(rootElement);
 	 
+			int id = 0;
 			for(Task taskInList: taskList) {
+				id++;
 				Element task = doc.createElement("Task");
 				rootElement.appendChild(task);
-				// task.setAttribute("id", "1");
+				task.setAttribute("id", Integer.toString(id));
 				
 				if(taskInList.getDescription() != null) {
 					Element description = doc.createElement("description");
