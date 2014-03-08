@@ -92,8 +92,10 @@ public class ExecutorManager {
 		int index = 0;
 		for (Task task : listOfTasks) {
 			if (task.getDone() == 1) {
+				index++;
 				continue;
 			}
+			index++;
 			tasks.add(index);
 		}
 		
@@ -113,9 +115,11 @@ public class ExecutorManager {
 		int index = 0;
 		for (Task task : listOfTasks) {
 			if (task.getDone() == 0) {
+				index++;
 				continue;
 			}
 			tasks.add(index);
+			index++;
 		}
 		
 		if (tasks.size() == 0) {
@@ -133,6 +137,7 @@ public class ExecutorManager {
 		int index = 0;
 		for (Task task : listOfTasks) {
 			tasks.add(index);
+			index++;
 		}
 		
 		if (tasks.size() == 0) {
@@ -247,7 +252,7 @@ public class ExecutorManager {
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		// pass feedback to gui
-		GuiManager.callOutput("All tasks have been deleted. You can use undo to get them them.");
+		GuiManager.callOutput("All tasks have been deleted. You can use undo to get them back.");
 	}
 
 	private static void addInfo(String taskIdString, String info) {
