@@ -1,20 +1,28 @@
 package com.taskpad.launcher;
 
+import com.taskpad.data.DataManager;
 import com.taskpad.input.InputManager;
 import com.taskpad.ui.GuiManager;
 
 public class TaskPadLauncher implements Runnable {
 	private final String MESSAGE_WELCOME = "Welcome to Taskpad! Type a command or type \"help\"";
 
-	public TaskPadLauncher(){
+	//TaskPadLauncher is meant to use in launcher package only
+	protected TaskPadLauncher(){
 	}
 	
 	
 	@Override
 	public void run() {
+		initialStorage();
 		setUpInputProcessor();
 		setUpGui();
 	}
+
+	private void initialStorage() {
+		DataManager.initializeXml();
+	}
+
 
 	private void setUpGui() {
 		GuiManager.initialGuiManager();
