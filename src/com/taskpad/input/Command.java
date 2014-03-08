@@ -98,6 +98,7 @@ public abstract class Command {
 	}
 	
 	protected void passObjectToExecutor(){
+		System.out.println("pass");
 		InputManager.passToExecutor(inputObject);
 	}
 	
