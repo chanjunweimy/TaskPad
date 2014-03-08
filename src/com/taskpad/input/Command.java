@@ -12,6 +12,7 @@ public abstract class Command {
 	protected static Input inputObject;
 	protected static Map<String, String> inputParameters;
 	protected static String input;
+	protected static String fullInput;
 	
 	protected static int NUMBER_ARGUMENTS;
 	protected static String COMMAND;
@@ -20,7 +21,8 @@ public abstract class Command {
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	
-	public Command(String input){
+	public Command(String input, String fullInput){
+		Command.fullInput = fullInput;
 		Command.input = input;
 		inputParameters = new HashMap<String,String>();
 	}
@@ -99,7 +101,7 @@ public abstract class Command {
 	
 	protected void passObjectToExecutor(){
 		System.out.println("pass");
-		InputManager.passToExecutor(inputObject);
+		InputManager.passToExecutor(inputObject, fullInput);
 	}
 	
 	protected boolean isNotInteger(String input){

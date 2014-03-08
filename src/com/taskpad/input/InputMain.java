@@ -93,19 +93,19 @@ public class InputMain {
 	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
 		switch(commandType){
 			case ADD:
-				addTask(commandTypeString);
+				addTask(commandTypeString, input);
 				break;
 			case ADD_INFO:
-				addInfoTask(commandTypeString);
+				addInfoTask(commandTypeString, input);
 				break;
 			case ADD_REM:
-				addRemTask(commandTypeString);
+				addRemTask(commandTypeString, input);
 				break;
 			case ADD_PRI:
-				addPriTask(commandTypeString);
+				addPriTask(commandTypeString, input);
 				break;
 			case LIST:
-				listTask(commandTypeString);
+				listTask(commandTypeString, input);
 				break;
 			case CLEAR_ALL:
 				isConfirmation = true;
@@ -118,16 +118,16 @@ public class InputMain {
 				clearScreen();
 				break;
 			case DELETE:
-				deleteTask(commandTypeString);
+				deleteTask(commandTypeString, input);
 				break;
 			case DONE:
-				doneTask(commandTypeString);
+				doneTask(commandTypeString, input);
 				break;
 			case EDIT:
-				editTask(commandTypeString);
+				editTask(commandTypeString, input);
 				break;
 			case SEARCH:
-				searchTask(commandTypeString);
+				searchTask(commandTypeString, input);
 				break;
 			case HELP:
 				help();
@@ -145,43 +145,43 @@ public class InputMain {
 
 	/* Methods to perform commands */
 	
-	private static void addTask(String input) {
-		Add add = new Add(input);
+	private static void addTask(String input, String fullInput) {
+		Add add = new Add(input, fullInput);
 		add.run();
 	}
 	
-	private static void addPriTask(String input){
-		AddPri addPri = new AddPri(input);
+	private static void addPriTask(String input, String fullInput){
+		AddPri addPri = new AddPri(input, fullInput);
 		addPri.run();
 	}
 
-	private static void addInfoTask(String input) {
-		Addinfo addinfo = new Addinfo(input);
+	private static void addInfoTask(String input, String fullInput) {
+		Addinfo addinfo = new Addinfo(input, fullInput);
 		addinfo.run();
 	}
 	
-	private static void addRemTask(String input){
-		Addrem addRem = new Addrem(input);
+	private static void addRemTask(String input, String fullInput){
+		Addrem addRem = new Addrem(input, fullInput);
 		addRem.run();
 	}
 	
-	private static void listTask(String input){
-		List list = new List(input);
+	private static void listTask(String input, String fullInput){
+		List list = new List(input, fullInput);
 		list.run();
 	}
 	
-	private static void deleteTask(String input) {
-		Delete delete = new Delete(input);
+	private static void deleteTask(String input, String fullInput) {
+		Delete delete = new Delete(input, fullInput);
 		delete.run();
 	}
 
-	private static void doneTask(String input) {
-		Done done = new Done(input);
+	private static void doneTask(String input, String fullInput) {
+		Done done = new Done(input, fullInput);
 		done.run();
 	}
 	
-	private static void passObjectToExecutor(){
-		InputManager.passToExecutor(inputObject);
+	private static void passObjectToExecutor(String fullInput){
+		InputManager.passToExecutor(inputObject, fullInput);
 	}
 	
 	private static boolean isEmptyInput(String input){
@@ -204,7 +204,7 @@ public class InputMain {
 	}
 	
 	private static void clearAllTasks() {
-		ClearTasks clearTask = new ClearTasks("");
+		ClearTasks clearTask = new ClearTasks("", "CLEAR");
 		clearTask.run();
 	}
 	
@@ -213,17 +213,17 @@ public class InputMain {
 	}
 	
 	private static void undoLast() {
-		Undo undo = new Undo("");
+		Undo undo = new Undo("", "UNDO");
 		undo.run();
 	}
 	
-	private static void editTask(String input) {
-		Edit edit = new Edit(input);
+	private static void editTask(String input, String fullInput) {
+		Edit edit = new Edit(input, fullInput);
 		edit.run();
 	}
 
-	private static void searchTask(String input) {
-		Search search = new Search(input);
+	private static void searchTask(String input, String fullInput) {
+		Search search = new Search(input, fullInput);
 		search.run();	
 	}
 	

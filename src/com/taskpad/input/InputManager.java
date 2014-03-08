@@ -48,9 +48,9 @@ public class InputManager {
 		return STATUS_CLEAR;
 	}
 	
-	public static String passToExecutor(Input input){
+	public static String passToExecutor(Input input, String fullInput){
 		String command = input.getCommand();
-		ExecutorManager.receiveFromInput(input, command);
+		ExecutorManager.receiveFromInput(input, fullInput);
 		return STATUS_EXECUTOR;
 	}
 	

@@ -9,8 +9,8 @@ public class Done extends Command{
 	
 	private static String _taskID = "";
 
-	public Done(String input) {
-		super(input);
+	public Done(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_DONE);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 	}
