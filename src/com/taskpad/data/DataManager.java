@@ -32,6 +32,12 @@ public class DataManager {
 		int numberOfTasks = retrieve(file).size();
 		return numberOfTasks;
 	}
+	
+	public static void initializeXml(){
+		LinkedList<Task> tasks = new LinkedList<Task>();
+		DataManager.storeBack(tasks, DataFile.FILE);
+		DataManager.storeBack(tasks, DataFile.FILE_PREV);
+	}
 		
 	public static LinkedList<Task> retrieve(String file) {
 		LinkedList<Task> listOfTasks = new LinkedList<Task>();
