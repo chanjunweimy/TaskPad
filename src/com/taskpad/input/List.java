@@ -17,15 +17,15 @@ public class List extends Command{
 	private static String PARAMETER_LIST_KEY = "KEY";
 	private static String parameterList = "";
 	
-	private static final String[] PARAMETER_VALID_LIST = {"ALL", "UNDONE", "DONE"};
+	private static final String[] PARAMETER_VALID_LIST = {"ALL", "DONE", "UNDONE"};
 	private static Map<String, String[]> parametersMap;
 	
 	private static final String MESSAGE_INVALID_PARAMETER = "Error: Invalid List Parameter. Type help if you need! :)";
 	
 	private static int NUMBER_ARGUMENTS = 1;
 	
-	public List(String input) {
-		super(input);
+	public List(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_LIST);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		
@@ -86,7 +86,6 @@ public class List extends Command{
 			for (int i=0; i<listVariations.length; i++){
 				if (isInputFound(listVariations[i])){
 					parameterList = entry.getKey();
-					System.out.println(entry.getKey());
 					return false;
 				}
 			}
