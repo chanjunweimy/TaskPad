@@ -29,7 +29,6 @@ public abstract class Command {
 		if (checkIfEmptyString() || checkIfIncorrectArguments()){
 			return;
 		} 
-		
 		clearInputParameters();
 		initialiseParametersToNull();
 		if (commandSpecificRun()){

@@ -25,8 +25,8 @@ public class Add extends Command{
 	private static int LENGTH_TIME = 2;
 	
 	private static boolean _invalidParameters = false;
-	private static int _count = 0;
-	private static String _desc = "";
+	private static int _count;
+	private static String _desc;
 	
 	private static Scanner _sc;
 
@@ -35,6 +35,8 @@ public class Add extends Command{
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_ADD);
 		_sc = new Scanner(System.in);
+		_count = 0;
+		_invalidParameters = false;
 	}
 	
 	@Override
