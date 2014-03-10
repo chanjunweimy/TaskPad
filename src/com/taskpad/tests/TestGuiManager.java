@@ -24,7 +24,7 @@ class Reminder {
 
     public Reminder(int seconds) {
         timer = new Timer();
-        timer.schedule(new RemindTask(), seconds*1000, seconds*1000);
+        timer.schedule(new RemindTask(), 0, seconds*1000);
         
 	}
 
