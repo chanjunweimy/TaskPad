@@ -261,13 +261,17 @@ public class ExecutorManager {
 		
 		int index = getIndexById(taskIdString);
 		Task task = listOfTasks.get(index);
-		String details = task.getDetails();
-		details += info;
-		task.setDetails(details);
+		if(task.getDetails() == null) {
+			task.setDetails(info);
+		} else {
+			String details = task.getDetails();
+			details += ("\n" + info);
+			task.setDetails(details);
+		}
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
-		// GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
+		GuiManager.callOutput(generateTextForOneTask(index + 1, task));
 	}
 
 	private static int getIndexById(String taskIdString) {
