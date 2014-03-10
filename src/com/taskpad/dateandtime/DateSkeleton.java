@@ -1,4 +1,4 @@
-package com.taskpad.timeanddate;
+package com.taskpad.dateandtime;
 
 public interface DateSkeleton {
 	public String getTodayDate();

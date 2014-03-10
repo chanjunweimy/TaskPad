@@ -1,4 +1,4 @@
-package com.taskpad.timeanddate;
+package com.taskpad.dateandtime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
