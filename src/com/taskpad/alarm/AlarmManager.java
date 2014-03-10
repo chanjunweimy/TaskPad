@@ -15,8 +15,12 @@ public class AlarmManager extends JApplet{
 	private static Sound _alarm = null;
 	private final static int ALARM_DURATION = 60;
 	
-	public AlarmManager() throws Exception{
-		initializeSong();
+	public AlarmManager(){
+		try {
+			initializeSong();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	public AlarmManager(String otherSong) throws Exception{
