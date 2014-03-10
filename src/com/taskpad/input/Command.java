@@ -115,8 +115,11 @@ public abstract class Command {
 	}
 	
 	protected boolean isInvalidID(String input){
-		int inputNum = Integer.parseInt(input);
-		if (inputNum > InputManager.retrieveNumberOfTasks() || inputNum < 1){
+		input = input.trim();
+		System.out.println(input);
+		int inputNum = Integer.parseInt(input.trim());
+		System.out.println("Tasks: " + InputManager.retrieveNumberOfTasks());
+		if (inputNum > InputManager.retrieveNumberOfTasks() || inputNum < 0){
 			return true;
 		}
 		return false;
