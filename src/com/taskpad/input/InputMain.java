@@ -220,8 +220,8 @@ public class InputMain {
 		InputManager.callGuiExit();
 	}
 	
-	private static void setUpAlarm(String commandTypeString, String input) {
-		
+	private static void setUpAlarm(String input, String fullInput) {
+		new Alarm(input, fullInput);
 	}
 	
 	private static void flexiCommand(String input){
