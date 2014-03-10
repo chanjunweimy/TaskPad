@@ -14,8 +14,13 @@ import java.util.Timer;
 public class TimerObject {
 	Timer timer;
 
-    protected TimerObject(int seconds) {
+    protected TimerObject(boolean isOn, int seconds) {
         timer = new Timer();
-        timer.schedule(new AlarmTask(), seconds*1000);
+        seconds *= 1000;
+        if (!isOn){
+        	timer.schedule(new AlarmOffTask(), seconds);
+        } else {
+        	timer.schedule(new AlarmOnTask(), seconds);
+        }
 	}
 }
