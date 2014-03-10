@@ -21,7 +21,7 @@ public class Edit extends Command{
 	protected boolean commandSpecificRun() {
 		String[] splitParams = input.split(" ");
 		_taskID = splitParams[0];
-		_info = removeFirstWord(input);		
+		_info = splitParams[1];		
 		return true;
 	}
 
