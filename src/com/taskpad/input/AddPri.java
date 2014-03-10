@@ -16,8 +16,8 @@ public class AddPri extends Command{
 	
 	private static final String MESSAGE_INVALID_PARAMETER = "Error: Invalid Priority Parameter. Type help if you need! :) ";
 
-	public AddPri(String input) {
-		super(input);
+	public AddPri(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_ADDPRI);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		

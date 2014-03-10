@@ -11,8 +11,8 @@ public class Addinfo extends Command{
 	private static String _info = "";
 	private static String _taskID = "";
 
-	public Addinfo(String input) {
-		super(input);
+	public Addinfo(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_ADD_INFO);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 	}

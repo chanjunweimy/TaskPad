@@ -1,6 +1,6 @@
 /* This helper class creates the date and time object */
 
-package com.taskpad.timeanddate;
+package com.taskpad.dateandtime;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

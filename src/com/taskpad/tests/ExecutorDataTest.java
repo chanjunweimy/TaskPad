@@ -1,4 +1,4 @@
-package com.taskpad.execute;
+package com.taskpad.tests;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.taskpad.data.DataFile;
 import com.taskpad.data.DataManager;
+import com.taskpad.execute.ExecutorManager;
+import com.taskpad.execute.Task;
 import com.taskpad.input.Input;
 
 public class ExecutorDataTest {

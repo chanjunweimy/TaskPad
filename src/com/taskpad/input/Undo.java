@@ -6,8 +6,8 @@ public class Undo extends Command{
 	
 	private static String PARAMETER_UNDO = "";
 	
-	public Undo(String input) {
-		super(input);
+	public Undo(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_UNDO);
 	}
 

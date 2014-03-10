@@ -48,15 +48,13 @@ public class InputManager {
 		return STATUS_CLEAR;
 	}
 	
-	public static String passToExecutor(Input input){
-		String command = input.getCommand();
-		ExecutorManager.receiveFromInput(input, command);
+	public static String passToExecutor(Input input, String fullInput){
+		ExecutorManager.receiveFromInput(input, fullInput);
 		return STATUS_EXECUTOR;
 	}
 	
 	public static int retrieveNumberOfTasks(){
-//		return DataManager.retrieveNumberOfTasks();
-		return 0;
+		return DataManager.retrieveNumberOfTasks();
 	}
 	
 }
