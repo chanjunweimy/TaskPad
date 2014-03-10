@@ -11,17 +11,16 @@ import java.util.TimerTask;
  */
 
 public class AlarmTask extends TimerTask {
-	private AlarmManager _alarm;
 	
-	protected AlarmTask(AlarmManager _alarm){
-		setAlarm(_alarm);
+	protected AlarmTask(){
 	}
 	
     public void run() {
-    	_alarm.stopSong();
+    	try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
     }
 
-	private void setAlarm(AlarmManager _alarm) {
-		this._alarm = _alarm;
-	}
 }

@@ -138,13 +138,16 @@ public class InputMain {
 			case UNDO:
 				undoLast();
 				break;
+			case ALARM://Lynnette, this is added by Jun Wei
+				setUpAlarm(commandTypeString, input);
+				break;
 			default:
 				invalidCommand(commandTypeString);
 		}
 	}
 
 	/* Methods to perform commands */
-	
+
 	private static void addTask(String input, String fullInput) {
 		Add add = new Add(input, fullInput);
 		add.run();
@@ -234,6 +237,10 @@ public class InputMain {
 
 	private static void exitProgram() {
 		InputManager.callGuiExit();
+	}
+	
+	private static void setUpAlarm(String commandTypeString, String input) {
+		
 	}
 	
 	private static void flexiCommand(String input){

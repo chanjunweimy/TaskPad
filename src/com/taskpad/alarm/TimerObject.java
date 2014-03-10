@@ -14,8 +14,8 @@ import java.util.Timer;
 public class TimerObject {
 	Timer timer;
 
-    protected TimerObject(int seconds, AlarmManager alarm) {
+    protected TimerObject(int seconds) {
         timer = new Timer();
-        timer.schedule(new AlarmTask(alarm), seconds*1000);
+        timer.schedule(new AlarmTask(), seconds*1000);
 	}
 }
