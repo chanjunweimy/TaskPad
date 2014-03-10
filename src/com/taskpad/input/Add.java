@@ -30,8 +30,8 @@ public class Add extends Command{
 	
 	private static Scanner _sc;
 
-	public Add(String input) {
-		super(input);
+	public Add(String input, String fullInput) {
+		super(input, fullInput);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_ADD);
 		_sc = new Scanner(System.in);

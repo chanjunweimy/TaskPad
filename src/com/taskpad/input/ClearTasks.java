@@ -7,8 +7,8 @@ public class ClearTasks extends Command{
 
 	private static final String PARAMETER_NULL = "NULL";
 	
-	public ClearTasks(String input) {
-		super(input);
+	public ClearTasks(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_CLEAR);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 	}

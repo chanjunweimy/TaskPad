@@ -1,6 +1,6 @@
 /* Public API to call dates */
 
-package com.taskpad.timeanddate;
+package com.taskpad.dateandtime;
 
 public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	

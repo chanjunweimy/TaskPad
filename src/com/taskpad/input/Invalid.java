@@ -2,8 +2,8 @@ package com.taskpad.input;
 
 public class Invalid extends Command {
 	
-	public Invalid(String input) {
-		super(input);
+	public Invalid(String input, String fullInput) {
+		super(input, fullInput);
 	}
 	
 	@Override

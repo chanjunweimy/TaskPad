@@ -18,8 +18,8 @@ public class Delete extends Command{
 	private static String PARAMETER_TASK_ID = "TASKID";
 	private static int NUMBER_ARGUMENTS = 1;		//Number of arguments for delete
 
-	public Delete(String input) {
-		super(input);
+	public Delete(String input, String fullInput) {
+		super(input, fullInput);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_DELETE);
 	}

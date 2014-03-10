@@ -11,8 +11,8 @@ public class Edit extends Command{
 	private static String _taskID = "";
 	private static String _info = "";
 
-	public Edit(String input) {
-		super(input);
+	public Edit(String input, String fullInput) {
+		super(input, fullInput);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_EDIT);
 	}

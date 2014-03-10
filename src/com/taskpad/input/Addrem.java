@@ -18,8 +18,8 @@ public class Addrem extends Command{
 	private static Scanner sc;
 	private static boolean _invalidParameters = false;
 
-	public Addrem(String input) {
-		super(input);
+	public Addrem(String input, String fullInput) {
+		super(input, fullInput);
 		setCOMMAND(COMMAND_ADD_REM);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		sc = new Scanner(System.in);

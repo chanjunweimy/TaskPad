@@ -2,7 +2,7 @@
  * This class is for FlexiCommands for date
  */
 
-package com.taskpad.timeanddate;
+package com.taskpad.dateandtime;
 
 public class DateParser {
 

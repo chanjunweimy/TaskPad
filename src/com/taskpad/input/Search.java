@@ -8,8 +8,8 @@ public class Search extends Command{
 	private static String PARAMETER_KEYWORD = "KEY";
 	private static String _keyword;
 
-	public Search(String input) {
-		super(input);
+	public Search(String input, String fullInput) {
+		super(input, fullInput);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_SEARCH);
 	}
