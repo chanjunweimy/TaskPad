@@ -5,7 +5,7 @@ public class Search extends Command{
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final int NUMBER_ARGUMENTS = 1;
 	
-	private static String PARAMETER_KEYWORD = "KEY";
+	private static String PARAMETER_KEYWORD = "KEYWORD";
 	private static String _keyword;
 
 	public Search(String input, String fullInput) {
@@ -20,13 +20,16 @@ public class Search extends Command{
 			return; 
 		}
 		initialiseParametersToNull();
+		commandSpecificRun();
 		putInputParameters();
 		createInputObject();
+		passObjectToExecutor();
 	}
 	
 	@Override
 	protected boolean commandSpecificRun() {
 		_keyword = input;
+		System.out.println(_keyword);
 		return true;
 	}
 

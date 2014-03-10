@@ -182,25 +182,6 @@ public class InputMain {
 		Done done = new Done(input, fullInput);
 		done.run();
 	}
-	
-	private static void passObjectToExecutor(String fullInput){
-		InputManager.passToExecutor(inputObject, fullInput);
-	}
-	
-	private static boolean isEmptyInput(String input){
-		if (input.equals("")){
-			return true;
-		}
-		return false;
-	}
-	
-	private static void clearInputParameters(){
-		inputParameters.clear();
-	}
-	
-	private static void putInputParameters(String parameter, String input){
-		inputParameters.put(parameter, input);
-	}
 
 	private static void clearAllTasksConfirmation(){
 		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_DATA);
@@ -248,11 +229,12 @@ public class InputMain {
 		CommandType command = CommandTypes.findFlexi(input);
 	
 		String commandTypeString = replaceCommandWord(input, command);
+		System.out.println(commandTypeString);
 		performCommand(command, commandTypeString, input);
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
-		return input.replaceFirst("(?i)"+command.toString(), "");
+		return input.replaceFirst("(?i)"+command.toString()+" ", "");
 	}
 	
 	private static void invalidCommand(String input) {

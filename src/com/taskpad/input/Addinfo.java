@@ -21,7 +21,7 @@ public class Addinfo extends Command{
 	protected boolean commandSpecificRun() {
 		String splitInput[] = input.split(" ");
 		_taskID = splitInput[0];
-		_info = removeFirstWord(input);
+		_info = getInfo(fullInput, _taskID);
 		return true;
 	}
 
@@ -43,6 +43,11 @@ public class Addinfo extends Command{
 			return true;
 		}
 		return false;
+	}
+	
+	private String getInfo(String input, String taskID){
+		input = removeFirstWord(input);
+		return input.replaceFirst(taskID, "").trim();
 	}
 	
 	private String removeFirstWord(String input){
