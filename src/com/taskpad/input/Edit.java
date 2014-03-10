@@ -6,7 +6,7 @@ public class Edit extends Command{
 	private static final int NUMBER_ARGUMENTS = 2;
 	
 	private static String PARAMETER_TASK_ID = "TASKID";
-	private static String PARAMETER_INFO = "INFO";
+	private static String PARAMETER_INFO = "DESC";
 	
 	private static String _taskID = "";
 	private static String _info = "";
@@ -20,8 +20,9 @@ public class Edit extends Command{
 	@Override
 	protected boolean commandSpecificRun() {
 		String[] splitParams = input.split(" ");
-		_taskID = splitParams[0];
-		_info = splitParams[1];		
+		_taskID = splitParams[0].trim();
+		_info = removeTaskID(fullInput, _taskID);
+		putInputParameters();
 		return true;
 	}
 
@@ -43,6 +44,11 @@ public class Edit extends Command{
 			return true;
 		}
 		return false;
+	}
+	
+	private String removeTaskID(String input, String taskID){
+		input = input.replaceFirst("(?i)"+COMMAND_EDIT, "").trim();
+		return input.replaceFirst(taskID, "").trim();
 	}
 	
 	private String removeFirstWord(String input){

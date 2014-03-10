@@ -54,6 +54,7 @@ public class ExecutorManager {
 			DataFile.setPreviousIsValid(true);
 			break;
 		case "EDIT":	// ?
+			System.out.println(parameters.get("TASKID") + " " + parameters.get("DESC"));
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
 			CommandRecord.setPreviousCommand(command);
 			DataFile.setPreviousIsValid(true);
