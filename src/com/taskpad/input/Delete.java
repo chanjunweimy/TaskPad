@@ -26,6 +26,7 @@ public class Delete extends Command{
 
 	@Override
 	protected boolean commandSpecificRun() {
+		putInputParameters();
 		return true;
 	}
 

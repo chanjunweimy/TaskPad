@@ -36,6 +36,7 @@ public abstract class Command {
 		if (commandSpecificRun()){
 			createInputObject();
 			passObjectToExecutor();
+			System.out.println(inputObject.getParameters().get("TASKID"));
 		} else {
 			return;
 		}
@@ -115,7 +116,7 @@ public abstract class Command {
 	
 	protected boolean isInvalidID(String input){
 		int inputNum = Integer.parseInt(input);
-		if (inputNum > InputManager.retrieveNumberOfTasks()){
+		if (inputNum > InputManager.retrieveNumberOfTasks() || inputNum < 1){
 			return true;
 		}
 		return false;
