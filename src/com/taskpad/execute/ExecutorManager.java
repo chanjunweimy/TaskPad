@@ -54,7 +54,6 @@ public class ExecutorManager {
 			DataFile.setPreviousIsValid(true);
 			break;
 		case "EDIT":	// ?
-			System.out.println(parameters.get("TASKID") + " " + parameters.get("DESC"));
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
 			CommandRecord.setPreviousCommand(command);
 			DataFile.setPreviousIsValid(true);
@@ -154,7 +153,7 @@ public class ExecutorManager {
 	private static void undo() {
 		if (!DataFile.isValidPrevious()) {
 			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
-			System.out.println("You don't have things to undo, or you just performed an undo operation.");
+			//System.out.println("You don't have things to undo, or you just performed an undo operation.");
 			return;
 		}
 
@@ -163,7 +162,7 @@ public class ExecutorManager {
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
 		
 		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
-		System.out.println("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+		//System.out.println("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 	}
 
 	private static void search(String keywordsString) {

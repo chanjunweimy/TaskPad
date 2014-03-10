@@ -222,12 +222,18 @@ public class InputMain {
 		CommandType command = CommandTypes.findFlexi(input);
 	
 		String commandTypeString = replaceCommandWord(input, command);
-		System.out.println(commandTypeString);
+		System.out.println("Command: " + commandTypeString);
 		performCommand(command, commandTypeString, input);
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
-		return input.replaceFirst("(?i)"+command.toString()+" ", "");
+		String result = "";
+		if (!input.replaceFirst("(?i)"+command.toString()+" ", "").equals(input)){
+			result = input.replaceFirst("(?i)"+command.toString()+" ", "");
+		} else {
+			result = input.replaceFirst("(?i)"+command.toString(), "");
+		}
+		return result.trim();
 	}
 	
 	private static void invalidCommand(String input) {
