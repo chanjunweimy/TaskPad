@@ -17,13 +17,20 @@ package com.taskpad.alarm;
  * 
  */
 public class AlarmExecutor {
-	public AlarmExecutor(int time){ //it should be a method in executor
+	
+	//it should find some way to be initialized first
+	//to increase TaskPad efficiency
+	private static AlarmManager _alarm = new AlarmManager();
+	
+	private AlarmExecutor(){ //it cannot be used as object
+	}
+	
+	public static void launchAlarm(int time) {//it should be a method in executor
+		assert(_alarm != null);
 		try {
-			AlarmManager alarm = new AlarmManager();
-			alarm.setAlarm(time);
+			_alarm.setAlarm(time);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		
 	}
 }

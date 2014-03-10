@@ -42,7 +42,7 @@ public class Alarm{
 		
 		int time = Integer.parseInt(numberString);
 		time *= _multiple;
-		new AlarmExecutor(time);
+		AlarmExecutor.launchAlarm(time);
 	}
 
 	private String parseNumber(String numberString) throws NullPointerException{
