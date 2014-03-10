@@ -4,6 +4,14 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import java.net.URL;
 
+/**
+ * 
+ * @author Jun
+ * This is a helper class
+ * to play the sound
+ *
+ */
+
 public class Sound {
 	private AudioClip _song; // Sound player
 	private URL _songPath; // Sound path
