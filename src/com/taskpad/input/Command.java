@@ -72,9 +72,10 @@ public abstract class Command {
 		if(isNotInteger(taskID) || isInvalidID(taskID)){
 			outputIdError();
 			return true;
-		}
+		}	
 		return false;
 	}
+	
 	protected Input createInputObject() {
 		clearInputParameters();
 		putInputParameters();

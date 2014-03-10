@@ -28,7 +28,7 @@ public class DataManager {
 		
 	}
 	
-	public int retrieveNumberOfTasks(){
+	public static int retrieveNumberOfTasks(){
 		int numberOfTasks = retrieve(DataFile.FILE).size();
 		return numberOfTasks;
 	}

@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.taskpad.timeanddate.NumberParser;
+import com.taskpad.dateandtime.NumberParser;
 
 public class TestNumberParser {
 

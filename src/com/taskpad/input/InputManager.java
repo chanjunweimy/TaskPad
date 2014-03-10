@@ -49,14 +49,12 @@ public class InputManager {
 	}
 	
 	public static String passToExecutor(Input input, String fullInput){
-		String command = input.getCommand();
 		ExecutorManager.receiveFromInput(input, fullInput);
 		return STATUS_EXECUTOR;
 	}
 	
 	public static int retrieveNumberOfTasks(){
-//		return DataManager.retrieveNumberOfTasks();
-		return 0;
+		return DataManager.retrieveNumberOfTasks();
 	}
 	
 }
