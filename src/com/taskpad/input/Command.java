@@ -36,7 +36,6 @@ public abstract class Command {
 		if (commandSpecificRun()){
 			createInputObject();
 			passObjectToExecutor();
-			System.out.println(inputObject.getParameters().get("TASKID"));
 		} else {
 			return;
 		}
