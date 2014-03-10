@@ -20,7 +20,7 @@ public class Done extends Command{
 		if (isNotValidTaskID(input)){
 			return false;
 		}
-		_taskID = input;
+		_taskID = input.trim();
 		return true;
 	}
 

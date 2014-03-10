@@ -37,7 +37,7 @@ public class Delete extends Command{
 
 	@Override
 	protected void putInputParameters() {
-		putOneParameter(PARAMETER_TASK_ID, input);
+		putOneParameter(PARAMETER_TASK_ID, input.trim());
 	}
 	
 }
