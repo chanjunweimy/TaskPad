@@ -50,8 +50,11 @@ public class ExecutorManager {
 			break;
 		case "DONE":	// should show full info?
 			markAsDone(parameters.get("TASKID"));
+			System.out.println("Done task " + parameters.get("TASKID"));
 			CommandRecord.setPreviousCommand(command);
+			System.out.println("Done task 2 " + parameters.get("TASKID"));
 			DataFile.setPreviousIsValid(true);
+			System.out.println("Done task 3 " + parameters.get("TASKID"));
 			break;
 		case "EDIT":	// ?
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
@@ -266,7 +269,6 @@ public class ExecutorManager {
 		task.setDetails(details);
 		
 		DataManager.storeBack(listOfTasks, DataFile.FILE);
-		
 		// GuiManager.callOutput(getInfoOfTask(index, listOfTasks));
 	}
 
