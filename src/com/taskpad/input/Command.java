@@ -35,7 +35,6 @@ public abstract class Command {
 		initialiseParametersToNull();
 		if (commandSpecificRun()){
 			createInputObject();
-			System.out.println("Done task" + inputObject.getParameters().get("TASKID"));
 			passObjectToExecutor();
 		} else {
 			return;

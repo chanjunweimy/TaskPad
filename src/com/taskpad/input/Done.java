@@ -20,6 +20,7 @@ public class Done extends Command{
 		if (isNotValidTaskID(input)){
 			return false;
 		}
+		_taskID = input;
 		return true;
 	}
 
