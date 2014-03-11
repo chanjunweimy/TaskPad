@@ -1,3 +1,9 @@
+/**
+ * 
+ * DEPRECATED
+ * COMPARATOR already moved to DateAndTimeManager!
+ * 
+ * 
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
@@ -29,7 +35,7 @@ public class CompareDateAndTime {
 		}
 	};
 	
-	
+	*/
 	/**
 	 * ==================below is testing=============================================================
 	 * Please don't proceed if you don't want to see unrelated stuff!!! ^^
@@ -79,6 +85,6 @@ public class CompareDateAndTime {
 		}
 		
 	}
-	*/
 	
 }
+	 */

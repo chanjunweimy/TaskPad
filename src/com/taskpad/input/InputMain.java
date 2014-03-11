@@ -138,13 +138,16 @@ public class InputMain {
 			case UNDO:
 				undoLast();
 				break;
+			case ALARM://Lynnette, this is added by Jun Wei
+				setUpAlarm(commandTypeString, input);
+				break;
 			default:
 				invalidCommand(commandTypeString);
 		}
 	}
 
 	/* Methods to perform commands */
-	
+
 	private static void addTask(String input, String fullInput) {
 		Add add = new Add(input, fullInput);
 		add.run();
@@ -217,23 +220,23 @@ public class InputMain {
 		InputManager.callGuiExit();
 	}
 	
+	private static void setUpAlarm(String input, String fullInput) {
+		//System.out.println("Alarm");
+		//InputManager.outputToGui("Creating alarm... " + fullInput);
+		new Alarm(input, fullInput);
+	}
+	
 	private static void flexiCommand(String input){
 		hasCheckedFlexi = true;
 		CommandType command = CommandTypes.findFlexi(input);
 	
 		String commandTypeString = replaceCommandWord(input, command);
-		System.out.println("Command: " + commandTypeString);
+		System.out.println(commandTypeString);
 		performCommand(command, commandTypeString, input);
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
-		String result = "";
-		if (!input.replaceFirst("(?i)"+command.toString()+" ", "").equals(input)){
-			result = input.replaceFirst("(?i)"+command.toString()+" ", "");
-		} else {
-			result = input.replaceFirst("(?i)"+command.toString(), "");
-		}
-		return result.trim();
+		return input.replaceFirst("(?i)"+command.toString()+" ", "");
 	}
 	
 	private static void invalidCommand(String input) {

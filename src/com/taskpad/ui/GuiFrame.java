@@ -14,6 +14,8 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
+import com.taskpad.alarm.AlarmManager;
+
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
 
 	private static final long serialVersionUID = 1L;
@@ -73,18 +75,31 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent arg0) {
 		boolean isEscapeKey = arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE;
-		boolean isAltHomeKey = arg0.getKeyCode() == NativeKeyEvent.VK_SPACE 
+		boolean isShiftSpaceKey = arg0.getKeyCode() == NativeKeyEvent.VK_SPACE 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Shift");
 		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
+		boolean isCtrlAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Ctrl");
 		if (isAltEndKey) {
 			minimizeOrRestore();
-		} else if (isAltHomeKey){
+		} else if (isShiftSpaceKey){
 			hideOrShow();
 		} else if (isEscapeKey){
 			endProgram();
+		} else if (isCtrlAKey){
+			switchOffAlarm();
+		}
+	}
+
+	private void switchOffAlarm() {
+		try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
