@@ -81,17 +81,30 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
-		boolean isCtrlAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
+		boolean isAltAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-				equals("Ctrl");
+				equals("Alt");
+		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
 		if (isAltEndKey) {
 			minimizeOrRestore();
 		} else if (isShiftSpaceKey){
 			hideOrShow();
 		} else if (isEscapeKey){
 			endProgram();
-		} else if (isCtrlAKey){
+		} else if (isAltAKey){
 			switchOffAlarm();
+		} else if (isAltCKey){
+			cancelAlarms();
+		}
+	}
+
+	private void cancelAlarms() {
+		try {
+			AlarmManager.cancelAlarms();
+		} catch (Exception e) {
+			//do nothing
 		}
 	}
 
@@ -99,7 +112,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		try {
 			AlarmManager.turnOffAlarm();
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
+			//do nothing
 		}
 	}
 

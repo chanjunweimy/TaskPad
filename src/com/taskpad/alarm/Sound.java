@@ -17,6 +17,7 @@ public class Sound {
 	private URL _songPath; // Sound path
 	
 	protected Sound(String filename) throws Exception{
+		assert (filename != null);
 		setUpSong(filename);
 	}
 
@@ -30,7 +31,7 @@ public class Sound {
 	}
 	
 	protected void stopSound(){
-		_song.stop(); // Stop
+		_song.stop(); // Stop		
 	}
 	
 	protected void playSoundOnce(){
