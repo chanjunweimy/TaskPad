@@ -16,6 +16,9 @@ import com.taskpad.dateandtime.NumberParser;
  */
 public class Alarm{	
 
+	private static final int HOUR = 60 * 60;
+	private static final int MINUTE = 60;
+	private static final int SECOND = 1;
 	private static final String SPACE = " ";
 	private static final Exception EXCEPTION_INVALID_INPUT = new Exception();//don't know choose which
 	private final String ERROR = "ERROR!";
@@ -30,6 +33,7 @@ public class Alarm{
 	}
 
 	private void initializeAlarm(String input, String fullInput) throws Exception{
+		
 		String inputString[] = fullInput.split(SPACE);
 		int length = inputString.length;
 		
@@ -66,19 +70,19 @@ public class Alarm{
 		case "s":
 		case "second":
 		case "seconds":
-			setMultiple(1);
+			setMultiple(SECOND);
 			break;
 
 		case "m":
 		case "minute":
 		case "minutes":
-			setMultiple(60);
+			setMultiple(MINUTE);
 			break;
 
 		case "h":
 		case "hour":
 		case "hours":
-			setMultiple(60 * 60);
+			setMultiple(HOUR);
 			break;
 
 		default:

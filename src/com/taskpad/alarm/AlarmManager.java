@@ -36,7 +36,7 @@ public class AlarmManager extends JApplet{
 	}
 
 	protected void playSong(){
-		assert(_alarm != null);
+		assert (_alarm != null);
 		_alarm.playSound();
 	}
 	
@@ -73,7 +73,7 @@ public class AlarmManager extends JApplet{
 	}
 	
 	public void setAlarm(int time){
-		assert(_alarm != null);
+		assert (_alarm != null);
 
 		boolean isOn = true;
 		new TimerObject(isOn, time);
