@@ -221,6 +221,8 @@ public class InputMain {
 	}
 	
 	private static void setUpAlarm(String input, String fullInput) {
+		//System.out.println("Alarm");
+		//InputManager.outputToGui("Creating alarm... " + fullInput);
 		new Alarm(input, fullInput);
 	}
 	
