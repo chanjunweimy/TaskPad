@@ -5,8 +5,11 @@ import java.util.Map;
 
 public class CommandTypes {
 	
+	//Lynnette: Alarm is added by Jun Wei
 	public enum CommandType{
-		ADD, ADD_INFO, ADD_REM, ADD_PRI, CLEAR_ALL, CLEAR_SCREEN, DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO  
+		ADD, ADD_INFO, ADD_REM, ADD_PRI, CLEAR_ALL, CLEAR_SCREEN, 
+		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO,
+		ALARM
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
@@ -73,6 +76,7 @@ public class CommandTypes {
 		putListVariations();
 		putSearchVariations();
 		putUndoVariations();
+		putAlarmVariations();
 	}
 	
 	/* Helper methods for creating the hashmap */
@@ -146,4 +150,12 @@ public class CommandTypes {
 		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN"};
 		commandVariations.put(CommandType.EXIT, exitVariations);
 	}
+	
+	
+	//To Lynnette: new function here
+	private static void putAlarmVariations() {
+		String[] exitVariations = {"ALARM", "AddAlarm", "SetAlarm", "SetTimer"};
+		commandVariations.put(CommandType.ALARM, exitVariations);
+	}
+
 }
