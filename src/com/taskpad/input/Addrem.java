@@ -60,6 +60,7 @@ public class Addrem extends Command{
 		return false;
 	}
 	
+	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		int count = 0;
 		sc = new Scanner(input).useDelimiter("\\s-");

@@ -14,6 +14,7 @@ public class Delete extends Command{
 	private static String COMMAND_DELETE = "DELETE";
 	private static String PARAMETER_TASK_ID = "TASKID";
 	private static int NUMBER_ARGUMENTS = 1;		//Number of arguments for delete
+	@SuppressWarnings("unused")
 	private static String TEST = "TESTING CONFLICTS";
 
 	public Delete(String input, String fullInput) {

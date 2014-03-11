@@ -135,7 +135,7 @@ public class ExecutorManager {
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
-		for (Task task : listOfTasks) {
+		for (@SuppressWarnings("unused") Task task : listOfTasks) {
 			tasks.add(index);
 			index++;
 		}
