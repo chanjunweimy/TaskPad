@@ -4,7 +4,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.xml.internal.ws.util.StringUtils;
+//import com.sun.xml.internal.ws.util.StringUtils;
 
 public class Add extends Command{
 	
@@ -80,11 +80,12 @@ public class Add extends Command{
 		return false;
 	}
 	
+	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		_sc = new Scanner(input).useDelimiter("\\s-");
 		while(_sc.hasNext()){
 			String nextParam = _sc.next();
-			if (_count == 0){
+			if (!nextParam.startsWith("-")){
 				_desc = nextParam;
 			} else {
 				parseNextParam(nextParam);
