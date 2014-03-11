@@ -28,11 +28,13 @@ public class AlarmExecutor {
 	}
 	
 	public static void initializeAlarm(int time){
+		assert time > 0;
 		new TimerObject(TIME_FORCE_WAIT, time - TIME_FORCE_WAIT);
 	}
 	
 	protected static void launchAlarm(int time) {//it should be a method in executor
-		assert(_alarm == null);
+		assert (_alarm == null);
+		
 		_alarm = new AlarmManager();
 		try {
 			_alarm.setAlarm(time);
