@@ -23,4 +23,10 @@ public class TimerObject {
         	timer.schedule(new AlarmOnTask(), seconds);
         }
 	}
+    
+    public TimerObject(int seconds, int time){
+    	timer = new Timer();
+    	timer.schedule(new ForceWaitTask(time), seconds);
+    }
+    
 }
