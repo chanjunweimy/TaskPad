@@ -1,5 +1,6 @@
 package com.taskpad.alarm;
 
+import java.util.LinkedList;
 import java.util.Timer;
 
 /**
@@ -12,21 +13,40 @@ import java.util.Timer;
  */
 
 public class TimerObject {
-	Timer timer;
+	private static LinkedList<Timer> _timers = new LinkedList<Timer>();
 
+	protected TimerObject(){
+	}
+	
+	/* DEPRECATED
     protected TimerObject(boolean isOn, int seconds) {
-        timer = new Timer();
+        initializeTimer(isOn, seconds);
+	}
+	*/
+
+	protected void setAlarmTimer(boolean isOn, int seconds) {
+		Timer alarmTimer = new Timer();
         seconds *= 1000;
         if (!isOn){
-        	timer.schedule(new AlarmOffTask(), seconds);
+        	alarmTimer.schedule(new AlarmOffTask(), seconds);
         } else {
-        	timer.schedule(new AlarmOnTask(), seconds);
+        	alarmTimer.schedule(new AlarmOnTask(), seconds);
         }
+        
+        _timers.add(alarmTimer);
 	}
-    
-    public TimerObject(int seconds, int time){
-    	timer = new Timer();
-    	timer.schedule(new ForceWaitTask(time), seconds);
-    }
+
+	protected void setForceStopTimer(int seconds, int time) {
+		Timer forceStopTimer = new Timer();
+    	forceStopTimer.schedule(new ForceWaitTask(time), seconds);
+    	
+    	_timers.add(forceStopTimer);
+	}
+	
+	protected static void cancelAlarms(){
+		for (Timer timer: _timers){
+			timer.cancel();
+		}
+	}
     
 }
