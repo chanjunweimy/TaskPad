@@ -15,12 +15,15 @@ public class InputMain {
 	private static final String COMMAND_CLEAR = "CLEAR";
 	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
 			
+	@SuppressWarnings("unused")
 	private static CommandTypes commandTypes = new CommandTypes();
+	@SuppressWarnings("unused")
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
 	protected static boolean hasCheckedFlexi = false;
 	private static String currentCommand = "";
 	
+	@SuppressWarnings("unused")
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
 	public static void receiveInput(String input){
@@ -83,6 +86,7 @@ public class InputMain {
 		return false;
 	}
 
+	@SuppressWarnings("static-access")
 	private static boolean isValidCommandType(CommandType commandType) {
 		if (commandType.equals(commandType.INVALID)){
 			return false;

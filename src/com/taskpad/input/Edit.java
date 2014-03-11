@@ -51,6 +51,7 @@ public class Edit extends Command{
 		return input.replaceFirst(taskID, "").trim();
 	}
 	
+	@SuppressWarnings("unused")
 	private String removeFirstWord(String input){
 		return input.replace(getFirstWord(input), "").trim();
 	}

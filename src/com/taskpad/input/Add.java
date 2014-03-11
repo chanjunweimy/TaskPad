@@ -184,6 +184,7 @@ public class Add extends Command{
 		}
 	}
 	
+	@SuppressWarnings("unused")
 	private void getDescInQuotes(){
 		Pattern pattern = Pattern.compile(".*(\\\"|\\\')(.*)(\\\"|\\\').*"); 
 		Matcher m = pattern.matcher(input);
@@ -213,6 +214,7 @@ public class Add extends Command{
 		_invalidParameters = true;
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean isNotDelimitedString(){
 		if (_count == 1){
 			return true;
@@ -244,11 +246,13 @@ public class Add extends Command{
 		return errorMessage;
 	}
 	
+	@SuppressWarnings("unused")
 	private void removeDesc(){
 		input.replace(_desc, "");
 	}
 	
 	//To be completed: PARSE The rest for date & time
+	@SuppressWarnings("unused")
 	private void parseTheRest(){
 		
 	}
