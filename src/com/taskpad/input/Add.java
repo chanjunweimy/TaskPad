@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 public class Add extends Command{
 	
+	private static final String DASH = "-";
+	private static final String SPACE = " ";
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
 		
@@ -41,7 +43,11 @@ public class Add extends Command{
 	
 	@Override
 	protected boolean commandSpecificRun() {
-		splitInputParameters();
+		input = putDescToFirst();
+		
+		if(!_invalidParameters){
+			splitInputParameters();
+		}
 		
 		/* Not ready
 		if (isNotDelimitedString()){
@@ -58,11 +64,45 @@ public class Add extends Command{
 		return true;		
 	}
 
+	@SuppressWarnings("resource")
+	public String putDescToFirst() {
+		//scanner that omits all white space character
+		_sc = new Scanner(input).useDelimiter("\\s");
+		
+		String tempDesc = null;
+		String normalString = "";
+		boolean isPrevDash = false;
+		boolean isFinish = false;
+		
+		while (_sc.hasNext()){
+			String buildString = _sc.next();
+			if (!isFinish){
+				if (!isPrevDash){
+					if (buildString.startsWith(DASH)){
+						isPrevDash = true;
+					} else {
+						tempDesc = buildString;
+						isFinish = true;
+						continue;
+					}
+				} else {
+					isPrevDash = false;
+				}
+			}
+			normalString = normalString + SPACE + buildString;
+		}
+		if (tempDesc == null){
+			invalidParam();
+			tempDesc = "";
+		}
+		return tempDesc + normalString;
+	}
+
 	@Override
 	protected void initialiseParametersToNull() {
 		putOneParameter(PARAMETER_CATEGORY, "");
 		putOneParameter(PARAMETER_DEADLINE, "");
-		putOneParameter(PARAMETER_DESCRIPTION, "");
+		putOneParameter(PARAMETER_DESCRIPTION, ""); 
 		putOneParameter(PARAMETER_START_DATE, "");
 		putOneParameter(PARAMETER_END_DATE, "");
 		putOneParameter(PARAMETER_END_TIME, "");
@@ -85,7 +125,7 @@ public class Add extends Command{
 		_sc = new Scanner(input).useDelimiter("\\s-");
 		while(_sc.hasNext()){
 			String nextParam = _sc.next();
-			if (!nextParam.startsWith("-")){
+			if (_count == 0){
 				_desc = nextParam;
 			} else {
 				parseNextParam(nextParam);
@@ -214,7 +254,7 @@ public class Add extends Command{
 	}
 	
 	private String stripWhiteSpaces(String input){
-		return input.replaceAll(" ", "");
+		return input.replaceAll(Add.SPACE, "");
 	}
 
 }

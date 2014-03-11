@@ -37,8 +37,14 @@ public abstract class Command {
 			createInputObject();
 			passObjectToExecutor();
 		} else {
+			showNoDesc();
 			return;
 		}
+	}
+
+	public void showNoDesc() {
+		String errorMessage = String.format(MESSAGE_INVALID_INPUT, "no description!");
+		InputManager.outputToGui(errorMessage);
 	}
 	
 	protected abstract boolean commandSpecificRun();
