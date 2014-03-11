@@ -284,6 +284,13 @@ public class ExecutorManager {
 		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
 		
 		int indexOfTask = Integer.parseInt(index);
+		
+		/**
+		 * indexOfTask should minus 1,
+		 * as the TaskID = LinkedListIndex + 1
+		 */
+		indexOfTask--;
+		
 		Task taskDeleted = listOfTasks.get(indexOfTask);
 		listOfTasks.remove(indexOfTask);
 		

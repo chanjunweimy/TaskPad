@@ -2,7 +2,6 @@ package com.taskpad.input;
 
 import com.taskpad.alarm.AlarmExecutor;
 import com.taskpad.dateandtime.NumberParser;
-import com.taskpad.ui.GuiManager;
 
 /**
  * 
@@ -83,7 +82,7 @@ public class Alarm{
 			break;
 
 		default:
-			GuiManager.callOutput(ERROR);
+			InputManager.outputToGui(ERROR);
 			throw EXCEPTION_INVALID_INPUT;
 		}
 	}

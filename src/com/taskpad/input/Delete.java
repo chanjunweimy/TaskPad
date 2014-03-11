@@ -9,9 +9,6 @@
 
 package com.taskpad.input;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Delete extends Command{
 	
 	private static String COMMAND_DELETE = "DELETE";
@@ -22,6 +19,8 @@ public class Delete extends Command{
 		super(input, fullInput);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_DELETE);
+		
+		//System.err.println(fullInput);
 	}
 
 	@Override
