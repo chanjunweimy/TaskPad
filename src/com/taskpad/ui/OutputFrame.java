@@ -52,9 +52,6 @@ public abstract class OutputFrame extends GuiFrame{
 		initializeOutputFrame();
 	}
 	
-	//things that I want to be inherited by FlexiFontOutputFrame;
-	//as long as there is a boolean parameter
-	//then it is the child class
 	protected OutputFrame(boolean inherit){
 		super();
 	}
