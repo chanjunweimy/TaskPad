@@ -5,11 +5,9 @@ import java.util.Map;
 
 public class CommandTypes {
 	
-	//Lynnette: Alarm is added by Jun Wei
 	public enum CommandType{
-		ADD, ADD_INFO, ADD_REM, ADD_PRI, CLEAR_ALL, CLEAR_SCREEN, 
-		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO,
-		ALARM
+		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
+		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
