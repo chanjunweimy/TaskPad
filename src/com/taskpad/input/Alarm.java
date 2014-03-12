@@ -46,7 +46,7 @@ public class Alarm{
 		int time = Integer.parseInt(numberString);
 		time *= _multiple;
 	
-		InputManager.outputToGui("Creating alarm1... " + fullInput);
+		InputManager.outputToGui("Creating alarm... " + fullInput);
 		
 		AlarmExecutor.initializeAlarm(time);		
 	}
