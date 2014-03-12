@@ -101,9 +101,9 @@ public class CommandTypes {
 		commandVariations.put(CommandType.ADD_PRI, addPriVariations);
 	}
 	
-	private static void putAlarmVariations1(){
-		String[] alarmVariations = {"ALARM", "RING"};
-		commandVariations.put(CommandType.ALARM, alarmVariations);
+	private static void putAlarmVariations() {
+		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER", "RING"};
+		commandVariations.put(CommandType.ALARM, exitVariations);
 	}
 	
 	private static void putDeleteVariations(){
@@ -154,11 +154,6 @@ public class CommandTypes {
 	private static void putExitVariations(){
 		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN"};
 		commandVariations.put(CommandType.EXIT, exitVariations);
-	}
-	
-	private static void putAlarmVariations() {
-		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER"};
-		commandVariations.put(CommandType.ALARM, exitVariations);
 	}
 
 }
