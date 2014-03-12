@@ -45,10 +45,10 @@ public class Edit extends Command{
 	 */
 	@Override
 	protected boolean isNotNumberArgs(String[] inputString){
-		if (inputString.length > getNUMBER_ARGUMENTS()){
-			return true;
+		if (inputString.length >= getNUMBER_ARGUMENTS()){
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	private String removeTaskID(String input, String taskID){
