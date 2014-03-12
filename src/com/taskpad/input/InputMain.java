@@ -99,6 +99,9 @@ public class InputMain {
 			case ADD:
 				addTask(commandTypeString, input);
 				break;
+			case ALARM:
+				setUpAlarm(commandTypeString, input);
+				break;
 			case ADD_INFO:
 				addInfoTask(commandTypeString, input);
 				break;
@@ -141,9 +144,6 @@ public class InputMain {
 				break;
 			case UNDO:
 				undoLast();
-				break;
-			case ALARM://Lynnette, this is added by Jun Wei
-				setUpAlarm(commandTypeString, input);
 				break;
 			default:
 				invalidCommand(commandTypeString);
@@ -225,8 +225,6 @@ public class InputMain {
 	}
 	
 	private static void setUpAlarm(String input, String fullInput) {
-		//System.out.println("Alarm");
-		//InputManager.outputToGui("Creating alarm... " + fullInput);
 		new Alarm(input, fullInput);
 	}
 	
