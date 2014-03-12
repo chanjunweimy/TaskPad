@@ -38,6 +38,11 @@ public class Edit extends Command{
 		putOneParameter(PARAMETER_INFO, _info);		
 	}
 	
+	/**
+	 * Lynnette, got bug here.
+	 * inputString.length should less that getNUMBER_ARGUMENTS
+	 * JunWei
+	 */
 	@Override
 	protected boolean isNotNumberArgs(String[] inputString){
 		if (inputString.length > getNUMBER_ARGUMENTS()){

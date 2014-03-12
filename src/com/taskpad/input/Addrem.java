@@ -51,6 +51,10 @@ public class Addrem extends Command{
 		putOneParameter(PARAMETER_REM_TIME, _remTime);		
 	}
 	
+	/**
+	 * I think the bug for addrem is come from here also ><
+	 * JunWei
+	 */
 	@Override
 	protected boolean isNotNumberArgs(String[] inputString){
 		if (inputString.length != getNUMBER_ARGUMENTS() ||
