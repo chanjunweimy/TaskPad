@@ -2,7 +2,6 @@ package com.taskpad.alarm;
 
 import javax.swing.JApplet;
 
-
 public class AlarmManager extends JApplet{
 
 	
@@ -106,6 +105,10 @@ public class AlarmManager extends JApplet{
 		boolean isOn = false;
 		_startAlarmTimer.setAlarmTimer(isOn, ALARM_DURATION);
 	}
+	
+	public static void initializeAlarm(int time){
+		AlarmExecutor.initializeAlarm(time);
+	} 
 	
 	/* deprecated
 	private void initializeSong(String otherSong) throws Exception{
