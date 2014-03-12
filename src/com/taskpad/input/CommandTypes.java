@@ -135,7 +135,7 @@ public class CommandTypes {
 	}
 	
 	private static void putSearchVariations(){
-		String[] searchVariations = {"SEARCH", "FIND"};
+		String[] searchVariations = {"SEARCH", "FIND", "S"};
 		commandVariations.put(CommandType.SEARCH, searchVariations);
 	}
 	
