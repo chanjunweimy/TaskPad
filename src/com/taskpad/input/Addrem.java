@@ -53,11 +53,14 @@ public class Addrem extends Command{
 	
 	@Override
 	protected boolean isNotNumberArgs(String[] inputString){
-		if (inputString.length != getNUMBER_ARGUMENTS() ||
-				inputString.length != getNUMBER_ARGUMENTS()+1	){
-			return true;
+		System.out.println(inputString.length);
+		if (inputString.length == getNUMBER_ARGUMENTS() ||
+				inputString.length == getNUMBER_ARGUMENTS()+1 || 
+				inputString.length == getNUMBER_ARGUMENTS()+2 || 
+				inputString.length == getNUMBER_ARGUMENTS()+3){
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	@SuppressWarnings("resource")
