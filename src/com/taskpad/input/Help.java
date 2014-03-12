@@ -42,16 +42,16 @@ public class Help {
 	private static void initialiseCommands(){
 		helpCommands.put(KEY_START, "Here's a list of commands TaskPad can perform!");
 		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time> -e <end time> -v <venue> -c <category>");
-		helpCommands.put(KEY_ADD_INFO_TASK, "addinfo <taskID> <info>");
-		helpCommands.put(KEY_ADD_REM_TASK, "addr <taskID> <date> <time (optional)>");
 		helpCommands.put(KEY_ALARM, "alarm <number> <time unit>");
 		helpCommands.put(KEY_CLEAR_DATA, "clc");
 		helpCommands.put(KEY_CLEAR_SCREEN, "clcsr");
 		helpCommands.put(KEY_DELETE_TASK, "del <taskID>");
+		helpCommands.put(KEY_MARK_DONE, "done <taskID>");
 		helpCommands.put(KEY_EDIT_TASK, "edit <taskID> <new desc>");
+		helpCommands.put(KEY_ADD_INFO_TASK, "info <taskID> <info>");
 		helpCommands.put(KEY_SEARCH, "search <keyword>");
 		helpCommands.put(KEY_LIST, "ls <parameter (done, undone, all)>");
-		helpCommands.put(KEY_MARK_DONE, "done <taskID>");
+		helpCommands.put(KEY_ADD_REM_TASK, "rem <taskID> <date> <time (optional)>");
 		helpCommands.put(KEY_UNDO_LAST_DONE, "undo");
 		helpCommands.put(KEY_EXIT, "exit");
 	}
