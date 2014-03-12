@@ -28,7 +28,7 @@ public class AlarmExecutor {
 	private AlarmExecutor(int time){
 	}
 	
-	public static void initializeAlarm(int time){
+	protected static void initializeAlarm(int time){
 		if (time >= 1){
 			_forceWaitTimer.setForceStopTimer(TIME_FORCE_WAIT, time - TIME_FORCE_WAIT);
 		} else {
