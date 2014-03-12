@@ -66,6 +66,7 @@ public class CommandTypes {
 		putAddInfoVariations();
 		putAddRemVariations();
 		putAddPriVariations();
+		putAlarmVariations();
 		putClearVariations();
 		putClearScreenVariations();
 		putDeleteVariations();
@@ -76,7 +77,6 @@ public class CommandTypes {
 		putListVariations();
 		putSearchVariations();
 		putUndoVariations();
-		putAlarmVariations();
 	}
 	
 	/* Helper methods for creating the hashmap */
@@ -87,18 +87,23 @@ public class CommandTypes {
 	}
 	
 	private static void putAddInfoVariations(){
-		String[] addInfoVariations = {"ADDINFO", "ADDDESC", "CREATEDESC"};
+		String[] addInfoVariations = {"INFO", "INFORMATION", "CREATEDESC"};
 		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
 	}
 	
 	private static void putAddRemVariations(){
-		String[] addRemVariations = {"ADDR", "ADDREM", "ADDREMINDER", "REMIND", "REMINDER"};
+		String[] addRemVariations = {"REM", "REMINDER", "REMIND", "REMINDER", "REMAINDER"};
 		commandVariations.put(CommandType.ADD_REM, addRemVariations);
 	}
 	
 	private static void putAddPriVariations(){
 		String[] addPriVariations = {"ADDPRI", "ADDPRIORITY", "PRI", "PRIORITY"};
 		commandVariations.put(CommandType.ADD_PRI, addPriVariations);
+	}
+	
+	private static void putAlarmVariations1(){
+		String[] alarmVariations = {"ALARM", "RING"};
+		commandVariations.put(CommandType.ALARM, alarmVariations);
 	}
 	
 	private static void putDeleteVariations(){
@@ -117,7 +122,7 @@ public class CommandTypes {
 	}
 	
 	private static void putClearScreenVariations(){
-		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR"};
+		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "SCREEN"};
 		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
 	}
 	
@@ -151,10 +156,8 @@ public class CommandTypes {
 		commandVariations.put(CommandType.EXIT, exitVariations);
 	}
 	
-	
-	//To Lynnette: new function here
 	private static void putAlarmVariations() {
-		String[] exitVariations = {"ALARM", "AddAlarm", "SetAlarm", "SetTimer"};
+		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER"};
 		commandVariations.put(CommandType.ALARM, exitVariations);
 	}
 
