@@ -1,6 +1,6 @@
 package com.taskpad.input;
 
-import com.taskpad.alarm.AlarmExecutor;
+import com.taskpad.alarm.AlarmManager;
 import com.taskpad.dateandtime.NumberParser;
 
 /**
@@ -48,7 +48,7 @@ public class Alarm{
 	
 		InputManager.outputToGui("Creating alarm... " + fullInput);
 		
-		AlarmExecutor.initializeAlarm(time);		
+		AlarmManager.initializeAlarm(time);		
 	}
 
 	private String parseNumber(String numberString) throws NullPointerException{
