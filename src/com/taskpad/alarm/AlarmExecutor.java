@@ -24,11 +24,13 @@ public class AlarmExecutor {
 	private static final int TIME_FORCE_WAIT = 1;
 	private static TimerObject _forceWaitTimer = new TimerObject();
 	
-	//make it cannot be initialized
+	private static String _desc = "";
+	
 	private AlarmExecutor(int time){
 	}
 	
-	protected static void initializeAlarm(int time){
+	protected static void initializeAlarm(String desc, int time){
+		_desc = desc;
 		if (time >= 1){
 			_forceWaitTimer.setForceStopTimer(TIME_FORCE_WAIT, time - TIME_FORCE_WAIT);
 		} else {
@@ -38,7 +40,7 @@ public class AlarmExecutor {
 	
 	protected static void launchAlarm(int time) {//it should be a method in executor		
 		try {
-			AlarmManager.setAlarm(time);
+			AlarmManager.setAlarm(_desc, time);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

@@ -1,6 +1,10 @@
 package com.taskpad.alarm;
 
+import java.awt.Color;
+
 import javax.swing.JApplet;
+
+import com.taskpad.ui.GuiManager;
 
 public class AlarmManager extends JApplet{
 
@@ -15,6 +19,9 @@ public class AlarmManager extends JApplet{
 	private final static int ALARM_DURATION = 60;
 	private static boolean _isPlaying = false;
 	private static TimerObject _startAlarmTimer = new TimerObject();
+	
+	private static String _desc = "";
+	private static final String MESSAGE_ALARM = "ALARM!! %s";
 	
 	private AlarmManager(){
 		/* deprecated, we no longer wants it to be an object
@@ -36,7 +43,8 @@ public class AlarmManager extends JApplet{
 		_alarm = setUpSong();
 	}
 	
-	public static void setAlarm(int time){
+	public static void setAlarm(String desc, int time){
+		_desc = desc;
 		ensureInitialization();
 
 		boolean isOn = true;
@@ -59,6 +67,10 @@ public class AlarmManager extends JApplet{
 	}
 	
 	protected static void turnOnAlarm() throws Exception{
+		//GuiManager.callOutput(String.format(MESSAGE_ALARM, _desc));
+		String alarmOutput = String.format(MESSAGE_ALARM, _desc);
+		GuiManager.showSelfDefinedMessage(alarmOutput, Color.RED, true);
+		
 		if (_alarm == null){
 			throw EXCEPTION_ERROR;
 		}
@@ -106,8 +118,8 @@ public class AlarmManager extends JApplet{
 		_startAlarmTimer.setAlarmTimer(isOn, ALARM_DURATION);
 	}
 	
-	public static void initializeAlarm(int time){
-		AlarmExecutor.initializeAlarm(time);
+	public static void initializeAlarm(String desc, int time){
+		AlarmExecutor.initializeAlarm(desc, time);
 	} 
 	
 	/* deprecated
