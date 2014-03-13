@@ -35,8 +35,16 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		showWindow(true);
 		
+		focusInputBox();
+		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	private void focusInputBox() {
+		//to make it focus to input box
+		minimizeOrRestore();
+		minimizeOrRestore();
 	}
 	
 	protected void close(){
@@ -72,6 +80,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	
 	@Override
 	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		
 		boolean isEscapeKey = arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE;
 		boolean isShiftSpaceKey = arg0.getKeyCode() == NativeKeyEvent.VK_SPACE 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
@@ -85,6 +94,16 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
+		
+		/**
+		 * @author Jun
+		 * we will disable some keys when TaskPad is in
+		 * hiding mode
+		 */
+		isEscapeKey = isEscapeKey && this.isVisible();
+		isAltEndKey = isAltEndKey && this.isVisible();
+		isAltCKey = isAltCKey && this.isVisible();
+		
 		if (isAltEndKey) {
 			minimizeOrRestore();
 		} else if (isShiftSpaceKey){
@@ -142,8 +161,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				} else if (isHided){
 					show();
 				}
+				focusInputBox();
 			}
-
+ 
 			private void show() {
 				showWindow(true);
 				setState(Frame.NORMAL);
