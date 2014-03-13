@@ -14,8 +14,6 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-import com.taskpad.alarm.AlarmManager;
-
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
 
 	private static final long serialVersionUID = 1L;
@@ -102,7 +100,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 
 	private void cancelAlarms() {
 		try {
-			AlarmManager.cancelAlarms();
+			GuiManager.cancelAlarms();
 		} catch (Exception e) {
 			//do nothing
 		}
@@ -110,7 +108,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 
 	private void switchOffAlarm() {
 		try {
-			AlarmManager.turnOffAlarm();
+			GuiManager.turnOffAlarm();
 		} catch (Exception e) {
 			//System.err.println(e.getMessage());
 			//do nothing

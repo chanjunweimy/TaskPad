@@ -2,6 +2,7 @@ package com.taskpad.ui;
 
 import java.awt.Color;
 
+import com.taskpad.alarm.AlarmManager;
 import com.taskpad.input.InputManager;
 
 public class GuiManager {
@@ -56,6 +57,23 @@ public class GuiManager {
 
 	public static void passInput(String in){
 		InputManager.receiveFromGui(in);
+	}
+	
+	protected static void turnOffAlarm(){
+		try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			//System.err.println(e.getMessage());
+			//do nothing
+		}
+	}
+	
+	protected static void cancelAlarms() {
+		try {
+			AlarmManager.cancelAlarms();
+		} catch (Exception e) {
+			//do nothing
+		}
 	}
 
 	/* deprecated
