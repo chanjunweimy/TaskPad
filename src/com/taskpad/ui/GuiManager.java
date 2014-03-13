@@ -55,7 +55,7 @@ public class GuiManager {
 		_outputFrame.addReminder(out + NEWLINE);
 	}
 
-	public static void passInput(String in){
+	protected static void passInput(String in){
 		InputManager.receiveFromGui(in);
 	}
 	
