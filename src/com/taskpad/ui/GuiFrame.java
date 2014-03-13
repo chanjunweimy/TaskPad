@@ -100,9 +100,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		 * we will disable some keys when TaskPad is in
 		 * hiding mode
 		 */
-		isEscapeKey = isEscapeKey && this.isVisible();
-		isAltEndKey = isAltEndKey && this.isVisible();
-		isAltCKey = isAltCKey && this.isVisible();
+		isEscapeKey = isEscapeKey && isVisible();
+		isAltEndKey = isAltEndKey && isVisible();
+		isAltCKey = isAltCKey && isVisible();
 		
 		if (isAltEndKey) {
 			minimizeOrRestore();
@@ -157,7 +157,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				boolean isShown = isVisible() == true;
 				boolean isHided = isVisible() == false;
 				if (isShown){
-					hide();
+				  	hide();
 				} else if (isHided){
 					show();
 				}
