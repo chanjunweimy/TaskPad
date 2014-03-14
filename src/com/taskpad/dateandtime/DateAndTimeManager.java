@@ -86,7 +86,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return t + EMPTY;
 	}
 	
-	private static String parseNumber(String numberString) throws NullPointerException{
+	public static String parseNumber(String numberString) throws NullPointerException{
 		NumberParser parser = new NumberParser();
 		return parser.parseTheNumbers(numberString);
 	}
