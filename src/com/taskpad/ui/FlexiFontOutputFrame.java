@@ -66,6 +66,8 @@ public class FlexiFontOutputFrame extends OutputFrame {
 
 		setUpBorderAndMargin();
 		
+		// Fix the maximum length of the line
+		
 		/* Testing
 		appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
 		appendToPane(_outputBox, "I wish I could be ONE of THE BEST on ", Color.BLUE);
@@ -124,9 +126,8 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	private void append(String msg, Color c, boolean isBold){
 		StyleContext sc = StyleContext.getDefaultStyleContext();
 		AttributeSet aset = setUpAttributeSet(c, sc, isBold);
-		StyledDocument doc = _outputBox.getStyledDocument();
+		final StyledDocument doc = _outputBox.getStyledDocument();
 		int len = doc.getLength();
-		
 		printMessage(msg, aset, doc, len);
 	}
 
