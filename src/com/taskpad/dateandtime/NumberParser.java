@@ -46,7 +46,7 @@ public class NumberParser {
 		"nineteen"
 	};
 
-	public NumberParser(){	
+	protected NumberParser(){	
 		initializeNumberMap();
 	}
 
@@ -72,7 +72,7 @@ public class NumberParser {
 	}
 
 	//this method returns null when error occurs
-	public String parseTheNumbers(String input){
+	protected String parseTheNumbers(String input){
 		if (isDigitString(input)){
 			return STRING_EMPTY + Integer.parseInt(input);
 		}

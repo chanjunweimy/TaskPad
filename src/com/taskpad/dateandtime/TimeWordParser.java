@@ -23,20 +23,20 @@ public class TimeWordParser extends NumberParser{
 	private static String _numberword = "";
 	private static int _index = -2;
 	
-	public TimeWordParser(){
+	protected TimeWordParser(){
 		initialiseTimewords();
 		_numberparser = new NumberParser();
 	}
 	
 	/*
-	public static void main(String[] args){
+	protected static void main(String[] args){
 		String input = "20 hours";
 		TimeWordParser twp = new TimeWordParser();
 		System.out.println(twp.timeWord(input));
 	}
 	*/
 	
-	public String timeWord(String input){	
+	protected String timeWord(String input){	
 		String time = "";
 		if (containsTimeWord(input)){
 			input = removeTimeWord(input);
@@ -48,7 +48,7 @@ public class TimeWordParser extends NumberParser{
 		return time;
 	}
 	
-	public boolean containsTimeWord(String input){
+	protected boolean containsTimeWord(String input){
 		String variations[];
 
 		for (Map.Entry<String, String[]> entry : timewordsMap.entrySet()){
