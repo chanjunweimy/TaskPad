@@ -4,21 +4,20 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import com.taskpad.data.CommandRecord;
-import com.taskpad.data.DataFile;
+import com.taskpad.data.DataFileStack;
 import com.taskpad.data.DataManager;
+import com.taskpad.data.NoPreviousCommandException;
+import com.taskpad.data.NoPreviousFileException;
 import com.taskpad.input.Input;
 import com.taskpad.ui.GuiManager;
 
 public class ExecutorManager {
-	
-	// private LinkedList<Task> listOfTasks;
-
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
 		Map<String, String> parameters = input.getParameters();
 		
 		switch (commandType) {
-		case "ADD":	// should show full info?
+		case "ADD":
 			/*
 			add(parameters.get("DESC"), parameters.get("DAY"),
 					parameters.get("MONTH"), parameters.get("YEAR"),
@@ -30,41 +29,35 @@ public class ExecutorManager {
 					parameters.get("END DATE"), parameters.get("END TIME"),
 					parameters.get("VENUE"));
 			
-			CommandRecord.setPreviousCommand(command);
-			DataFile.setPreviousIsValid(true);
+			CommandRecord.push(command);
 			break;
 		case "DELETE":
 			delete(parameters.get("TASKID"));
-			CommandRecord.setPreviousCommand(command);
-			DataFile.setPreviousIsValid(true);
+			CommandRecord.push(command);
 			break;
-		case "ADDINFO":	// should show full info?
+		case "ADDINFO":
 			addInfo(parameters.get("TASKID"), parameters.get("INFO"));
-			CommandRecord.setPreviousCommand(command);
-			DataFile.setPreviousIsValid(true);
+			CommandRecord.push(command);
 			break;
 		case "CLEAR":
 			clear();
-			CommandRecord.setPreviousCommand(command);
-			DataFile.setPreviousIsValid(true);
+			CommandRecord.push(command);
 			break;
-		case "DONE":	// should show full info?
+		case "DONE":
 			markAsDone(parameters.get("TASKID"));
-			CommandRecord.setPreviousCommand(command);
-			DataFile.setPreviousIsValid(true);
+			CommandRecord.push(command);
 			break;
-		case "EDIT":	// ?
+		case "EDIT":
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
-			CommandRecord.setPreviousCommand(command);
-			DataFile.setPreviousIsValid(true);
+			CommandRecord.push(command);
 			break;
-		case "SEARCH":	// should show full info?
+		case "SEARCH":
 			search(parameters.get("KEYWORD"));
 			break;
 		case "UNDO":
 			undo();
 			break;
-		case "LIST":	// should show full info?
+		case "LIST":
 			list(parameters.get("KEY"));
 			break;
 		}
@@ -86,7 +79,7 @@ public class ExecutorManager {
 	}
 
 	private static void listUndone() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
@@ -109,7 +102,7 @@ public class ExecutorManager {
 	}
 
 	private static void listDone() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
@@ -131,7 +124,7 @@ public class ExecutorManager {
 	}
 
 	private static void listAll() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
 		int index = 0;
@@ -151,22 +144,35 @@ public class ExecutorManager {
 	}
 
 	private static void undo() {
-		if (!DataFile.isValidPrevious()) {
+		/*
+		if (!DataFileStack.isValidPrevious()) {
 			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
-			//System.out.println("You don't have things to undo, or you just performed an undo operation.");
 			return;
 		}
 
-		DataFile.setPreviousIsValid(false);
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE_PREV);
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataFileStack.setPreviousIsValid(false);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE_PREV);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
-		//System.out.println("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
+		*/
+		try {
+			String previousFile = DataFileStack.pop();
+			LinkedList<Task> listOfTasks = DataManager.retrieve(previousFile);
+			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+			
+			GuiManager.callOutput("Undo of '" + CommandRecord.pop() + "' completed.");
+		} catch (NoPreviousFileException e) {
+			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
+		} catch (NoPreviousCommandException e) {
+			// should never come to this
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void search(String keywordsString) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
 		String[] keywords = keywordsString.split(" ");
 		LinkedList<Integer> results = new LinkedList<Integer>();
@@ -205,15 +211,17 @@ public class ExecutorManager {
 	}
 
 	private static void edit(String taskIdString, String description) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
-		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		String fileRecord = DataFileStack.requestDataFile();
+		DataManager.storeBack(listOfTasks, fileRecord);
+		DataFileStack.push(fileRecord);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
 		String taskHistory = generateTitleForOneTask(taskIdString, task.getDescription());
 		
 		task.setDescription(description);
 		
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		// pass feedback to gui
 		GuiManager.callOutput("'" + taskHistory + "' changed to '" 
@@ -226,13 +234,15 @@ public class ExecutorManager {
 	}
 
 	private static void markAsDone(String taskIdString) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
-		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		String fileRecord = DataFileStack.requestDataFile();
+		DataManager.storeBack(listOfTasks, fileRecord);
+		DataFileStack.push(fileRecord);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
 		task.setDone();
 		
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		// passFeedbackToGui to be implemented
 	}
@@ -245,19 +255,25 @@ public class ExecutorManager {
 	}
 
 	private static void clear() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
-		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		// LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		// DataManager.storeBack(listOfTasks, DataFileStack.FILE_PREV);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		String fileRecord = DataFileStack.requestDataFile();
+		DataManager.storeBack(listOfTasks, fileRecord);
+		DataFileStack.push(fileRecord);
 		
 		listOfTasks = new LinkedList<Task>();
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		// pass feedback to gui
 		GuiManager.callOutput("All tasks have been deleted. You can use undo to get them back.");
 	}
 
 	private static void addInfo(String taskIdString, String info) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
-		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		String fileRecord = DataFileStack.requestDataFile();
+		DataManager.storeBack(listOfTasks, fileRecord);
+		DataFileStack.push(fileRecord);
 		
 		int index = getIndexById(taskIdString);
 		Task task = listOfTasks.get(index);
@@ -269,7 +285,7 @@ public class ExecutorManager {
 			task.setDetails(details);
 		}
 		
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		GuiManager.callOutput(generateTextForOneTask(index + 1, task));
 	}
@@ -279,8 +295,10 @@ public class ExecutorManager {
 	}
 
 	private static void delete(String index) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
-		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		String fileRecord = DataFileStack.requestDataFile();
+		DataManager.storeBack(listOfTasks, fileRecord);
+		DataFileStack.push(fileRecord);
 		
 		int indexOfTask = Integer.parseInt(index);
 		
@@ -293,7 +311,7 @@ public class ExecutorManager {
 		Task taskDeleted = listOfTasks.get(indexOfTask);
 		listOfTasks.remove(indexOfTask);
 		
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		GuiManager.callOutput(generateFeedbackForDelete(taskDeleted));
 	}
@@ -305,14 +323,16 @@ public class ExecutorManager {
 	private static void add(String description, String deadline, String startDate,
 			String startTime, String endDate,
 			String endTime, String venue) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFile.FILE);
-		DataManager.storeBack(listOfTasks, DataFile.FILE_PREV);
+		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		String fileRecord = DataFileStack.requestDataFile();
+		DataManager.storeBack(listOfTasks, fileRecord);
+		DataFileStack.push(fileRecord);
 		
 		Task taskToAdd = new Task(description, deadline, startDate,
 				startTime, endDate, endTime, venue);
 		listOfTasks.add(taskToAdd);
 
-		DataManager.storeBack(listOfTasks, DataFile.FILE);
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		int taskId = listOfTasks.size();
 		GuiManager.callOutput(generateFeedbackForAdd(taskId, taskToAdd));
