@@ -1,6 +1,5 @@
 package com.taskpad.launcher;
 
-import com.taskpad.data.DataManager;
 import com.taskpad.input.InputManager;
 import com.taskpad.ui.GuiManager;
 
@@ -14,14 +13,16 @@ public class TaskPadLauncher implements Runnable {
 	
 	@Override
 	public void run() {
-		initialStorage();
+		//initialStorage(); DEPRECATED
 		setUpInputProcessor();
 		setUpGui();
 	}
 
+	/* DEPRECATED
 	private void initialStorage() {
 		DataManager.initializeXml();
 	}
+	 */
 
 
 	private void setUpGui() {
