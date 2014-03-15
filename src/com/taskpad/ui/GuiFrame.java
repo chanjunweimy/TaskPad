@@ -34,8 +34,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		addWindowListener(this);
 		
 		showWindow(true);
-		
-		focusInputBox();
+				
+		focusInputBox();		
 		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,6 +153,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	
 	private Runnable getVisibilityChanges() {
 		Runnable changeVisibility = new Runnable(){
+			@Override
 			public void run(){
 				boolean isShown = isVisible() == true;
 				boolean isHided = isVisible() == false;
@@ -178,6 +179,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 
 	private Runnable getStateChanges() {
 		Runnable changeState = new Runnable(){
+			@Override
 			public void run(){
 				boolean isMinimized = getExtendedState() == Frame.ICONIFIED;
 				boolean isRestored = getExtendedState() == Frame.NORMAL;
