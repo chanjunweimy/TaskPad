@@ -19,10 +19,6 @@ public class GuiManager {
 	public static void initialGuiManager() {
 		_inputFrame = new InputFrame();
 		_outputFrame = new FlexiFontOutputFrame();
-		
-		_inputFrame.addMouseMotionListener(new MouseDragActioner(_inputFrame));
-		
-		_outputFrame.addMouseMotionListener(new MouseDragActioner(_outputFrame));
 	}
 
 	/* deprecated

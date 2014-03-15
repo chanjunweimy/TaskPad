@@ -4,6 +4,16 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+/**
+ * 
+ * @author Jun
+ * MousePressedDetector is created to detect whether 
+ * the mouse has clicked on the boxes or not.
+ * 
+ * It is a helper class to move JFrame......
+ *
+ */
+
 public class MousePressedDetector implements MouseListener {
 	private static Point _mouseDownPoint = null;
 	
@@ -15,7 +25,6 @@ public class MousePressedDetector implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.err.println("debug!!!fff");
 		setMouseDownPoint(e.getPoint());
 	}
 
