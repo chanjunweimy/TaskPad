@@ -50,7 +50,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		setUpFrame();       
 		initializeOutputBox();
 		setUpScrollBar();
-		this.getContentPane().add(_scrollBox);
+		getContentPane().add(_scrollBox);
 	}
 
 	@Override
@@ -65,6 +65,9 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		_outputBox.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 
 		setUpBorderAndMargin();
+		
+		//the trick to make it wrap
+		_outputBox.setEditorKit(new WrapEditorKit());
 		
 		// Fix the maximum length of the line
 		
@@ -126,7 +129,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	private void append(String msg, Color c, boolean isBold){
 		StyleContext sc = StyleContext.getDefaultStyleContext();
 		AttributeSet aset = setUpAttributeSet(c, sc, isBold);
-		final StyledDocument doc = _outputBox.getStyledDocument();
+		StyledDocument doc = _outputBox.getStyledDocument();
 		int len = doc.getLength();
 		printMessage(msg, aset, doc, len);
 	}
