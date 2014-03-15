@@ -41,14 +41,6 @@ public class Task {
 		return description;
 	}
 	
-	/**
-	 * =====To Taining===============================
-	 * please implement this function
-	 * to let the comparator works! :)
-	 * The comparator can be find in
-	 * CompareDateAndTime.java
-	 * 
-	 */
 	public String getDeadline() {
 		return deadline;
 	}
