@@ -24,7 +24,11 @@ import javax.swing.text.LabelView;
 import javax.swing.text.View;
 
 public class WrapLabelView extends LabelView {
-    public WrapLabelView(Element elem) {
+	/**
+	 * to make sure it cannot be used by other package
+	 * @param elem
+	 */
+    protected WrapLabelView(Element elem) {
         super(elem);
     }
 
