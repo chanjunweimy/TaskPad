@@ -29,27 +29,27 @@ public class ExecutorManager {
 					parameters.get("END DATE"), parameters.get("END TIME"),
 					parameters.get("VENUE"));
 			
-			CommandRecord.push(command);
+			CommandRecord.pushForUndo(command);
 			break;
 		case "DELETE":
 			delete(parameters.get("TASKID"));
-			CommandRecord.push(command);
+			CommandRecord.pushForUndo(command);
 			break;
 		case "ADDINFO":
 			addInfo(parameters.get("TASKID"), parameters.get("INFO"));
-			CommandRecord.push(command);
+			CommandRecord.pushForUndo(command);
 			break;
 		case "CLEAR":
 			clear();
-			CommandRecord.push(command);
+			CommandRecord.pushForUndo(command);
 			break;
 		case "DONE":
 			markAsDone(parameters.get("TASKID"));
-			CommandRecord.push(command);
+			CommandRecord.pushForUndo(command);
 			break;
 		case "EDIT":
 			edit(parameters.get("TASKID"), parameters.get("DESC"));
-			CommandRecord.push(command);
+			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":
 			search(parameters.get("KEYWORD"));
@@ -57,6 +57,8 @@ public class ExecutorManager {
 		case "UNDO":
 			undo();
 			break;
+		case "REDO":
+			redo();
 		case "LIST":
 			list(parameters.get("KEY"));
 			break;
@@ -157,13 +159,37 @@ public class ExecutorManager {
 		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 		*/
 		try {
-			String previousFile = DataFileStack.pop();
+			String previousFile = DataFileStack.popForUndo();
 			LinkedList<Task> listOfTasks = DataManager.retrieve(previousFile);
 			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 			
-			GuiManager.callOutput("Undo of '" + CommandRecord.pop() + "' completed.");
+			String command = CommandRecord.popForUndo();
+			DataFileStack.pushForRedo(previousFile);
+			CommandRecord.pushForRedo(command);
+			
+			GuiManager.callOutput("Undo of '" + command + "' completed.");
 		} catch (NoPreviousFileException e) {
-			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
+			GuiManager.callOutput("You don't have things to undo.");
+		} catch (NoPreviousCommandException e) {
+			// should never come to this
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private static void redo() {
+		try {
+			String previousFile = DataFileStack.popForRedo();
+			LinkedList<Task> listOfTasks = DataManager.retrieve(previousFile);
+			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+			
+			String command = CommandRecord.popForRedo();
+			DataFileStack.pushForUndo(previousFile);
+			CommandRecord.pushForUndo(command);
+			
+			GuiManager.callOutput("Redo of '" + command + "' completed.");
+		} catch (NoPreviousFileException e) {
+			GuiManager.callOutput("You don't have things to redo.");
 		} catch (NoPreviousCommandException e) {
 			// should never come to this
 			// TODO Auto-generated catch block
@@ -214,7 +240,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.push(fileRecord);
+		DataFileStack.pushForUndo(fileRecord);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
 		String taskHistory = generateTitleForOneTask(taskIdString, task.getDescription());
@@ -237,7 +263,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.push(fileRecord);
+		DataFileStack.pushForUndo(fileRecord);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
 		task.setDone();
@@ -260,7 +286,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.push(fileRecord);
+		DataFileStack.pushForUndo(fileRecord);
 		
 		listOfTasks = new LinkedList<Task>();
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
@@ -273,7 +299,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.push(fileRecord);
+		DataFileStack.pushForUndo(fileRecord);
 		
 		int index = getIndexById(taskIdString);
 		Task task = listOfTasks.get(index);
@@ -298,7 +324,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.push(fileRecord);
+		DataFileStack.pushForUndo(fileRecord);
 		
 		int indexOfTask = Integer.parseInt(index);
 		
@@ -326,7 +352,7 @@ public class ExecutorManager {
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.push(fileRecord);
+		DataFileStack.pushForUndo(fileRecord);
 		
 		Task taskToAdd = new Task(description, deadline, startDate,
 				startTime, endDate, endTime, venue);
