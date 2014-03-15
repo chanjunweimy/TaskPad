@@ -55,7 +55,7 @@ public class DataManager {
 			
 			NodeList nList = doc.getElementsByTagName("Task");
 			
-			System.out.println("nList.length = " + nList.getLength());
+			// System.out.println("nList.length = " + nList.getLength());
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node taskNode = nList.item(i);
 		 
