@@ -64,12 +64,13 @@ public class FlexiFontOutputFrame extends OutputFrame {
 
 		_outputBox.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
 
+		// Fix the maximum length of the line
 		setUpBorderAndMargin();
 		
-		//the trick to make it wrap
-		_outputBox.setEditorKit(new WrapEditorKit());
-		
-		// Fix the maximum length of the line
+		//manually create an EditorKit that supports wrap
+		//to make JTextPane supports wrap.
+		//and set it to be JTextPane's editorKit
+		_outputBox.setEditorKit(new WrapEditorKit());		
 		
 		/* Testing
 		appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
