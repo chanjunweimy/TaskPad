@@ -34,9 +34,12 @@ public class DataManager {
 	}
 	
 	public static void initializeXml(){
+		// do nothing
+		/*
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		DataManager.storeBack(tasks, DataFile.FILE);
 		DataManager.storeBack(tasks, DataFile.FILE_PREV);
+		*/
 	}
 		
 	public static LinkedList<Task> retrieve(String file) {
@@ -127,7 +130,9 @@ public class DataManager {
 			
 			return listOfTasks;
 	    } catch (FileNotFoundException e) {
-	    	e.printStackTrace();
+			LinkedList<Task> tasks = new LinkedList<Task>();
+			DataManager.storeBack(tasks, file);
+			return tasks;
 	    } catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
