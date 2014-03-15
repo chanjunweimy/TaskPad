@@ -18,7 +18,7 @@ public class InputFrame extends GuiFrame{
 	private static final long serialVersionUID = 1L;  
 	
 	private final Color INPUTBOX_BACKGROUND_COLOR = 
-			new Color(219, 219, 219);
+			new Color(219, 219, 219); //this is grey color
 	
 	//inputTextBox
 	private static JTextField _input = new JTextField(15);
@@ -40,21 +40,21 @@ public class InputFrame extends GuiFrame{
 	}
 
 	private void setUpFrame() {
-		setSize(INPUTFRAME_WIDTH,INPUTFRAME_HEIGHT);
+		setSize(INPUTFRAME_WIDTH, INPUTFRAME_HEIGHT);
 		
-		setLocation((int)(COMPUTER_WIDTH/2),
-					(int)(COMPUTER_HEIGHT/2));
+		setLocation((int)(COMPUTER_WIDTH / 2 - INPUTFRAME_WIDTH / 2),
+					(int)(COMPUTER_HEIGHT / 2));
 	}
 
 	private void initializeInputBox() {
-		makeInputboxReadyForEvent();
+		//ready to receive input
+		_input.addActionListener(new TextFieldListener());
 		
-		_input.setBackground(INPUTBOX_BACKGROUND_COLOR);//grey color
-	}
-
-	private void makeInputboxReadyForEvent() {
-		TextFieldListener tfListener = new TextFieldListener();
-		_input.addActionListener(tfListener);
+		//ready to move
+		_input.addMouseListener(new MousePressedDetector());
+		_input.addMouseMotionListener(new MouseDragActioner(this));
+		
+		_input.setBackground(INPUTBOX_BACKGROUND_COLOR);
 	}
 	
 	@Override
@@ -90,5 +90,9 @@ public class InputFrame extends GuiFrame{
 	
 	protected static void reset(){
 		_input.setText("");
+	}
+	
+	protected JTextField getInputBox(){
+		return _input;
 	}
 }
