@@ -1,8 +1,8 @@
 package com.taskpad.data;
 
 public class DataFile {
-	public static final String FILE = "data.xml";
-	public static final String FILE_PREV = "data_prev.xml";
+	public static final String FILE = ".data.xml";
+	public static final String FILE_PREV = ".data_prev.xml";
 	
 	private static boolean previousIsValid = false;
 	
