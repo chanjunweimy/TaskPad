@@ -26,11 +26,17 @@ public class WrapEditorKit extends StyledEditorKit {
 	 */
 	private static final long serialVersionUID = -2439803723035686677L;
 
-	ViewFactory defaultFactory = new WrapColumnFactory();
+	private ViewFactory _defaultFactory = new WrapColumnFactory();
+	
+	/**
+	 * To make sure it cannot be used by other package
+	 */
+	protected WrapEditorKit(){
+	}
 	
 	@Override
     public ViewFactory getViewFactory() {
-        return defaultFactory;
+        return _defaultFactory;
     }
 
 }

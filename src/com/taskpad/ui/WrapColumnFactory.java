@@ -24,7 +24,11 @@ import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
 public class WrapColumnFactory implements ViewFactory {
-	
+	/**
+	 * To make sure it cannot be used by other package.
+	 */
+	protected WrapColumnFactory(){
+	}
 	
     public View create(Element elem) {
         String kind = elem.getName();

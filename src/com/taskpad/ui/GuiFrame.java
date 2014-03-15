@@ -34,8 +34,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		addWindowListener(this);
 		
 		showWindow(true);
-		
-		focusInputBox();
+				
+		focusInputBox();		
 		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
