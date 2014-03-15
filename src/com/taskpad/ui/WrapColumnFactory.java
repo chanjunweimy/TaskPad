@@ -7,6 +7,9 @@ package com.taskpad.ui;
  * the line wrap problem in JTextPane Java 1.7
  * Hope it works!
  * 
+ * WrapColumnFactory creates view on JTexTPane Doucument
+ * 
+ * 
  */
 
 import javax.swing.text.AbstractDocument;
@@ -20,13 +23,14 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 
-
 public class WrapColumnFactory implements ViewFactory {
+	
+	
     public View create(Element elem) {
         String kind = elem.getName();
         if (kind != null) {
             if (kind.equals(AbstractDocument.ContentElementName)) {
-                return new WrapLabelView(elem);
+                return new WrapLabelView(elem); //key is here, wrap the content
             } else if (kind.equals(AbstractDocument.ParagraphElementName)) {
                 return new ParagraphView(elem);
             } else if (kind.equals(AbstractDocument.SectionElementName)) {
