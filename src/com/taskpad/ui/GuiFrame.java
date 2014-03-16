@@ -45,8 +45,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		getRootPane().setBorder(BORDER_ROOTPANE);
 		
-		_resizer.registerComponent(this);
-		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);
+		setUpResizer();
 		
 		addWindowListener(this);
 		
@@ -56,6 +55,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	private void setUpResizer() {
+		_resizer.registerComponent(this);
+		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);
 	}
 
 	private void focusInputBox() {
