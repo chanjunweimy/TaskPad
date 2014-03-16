@@ -46,6 +46,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		getRootPane().setBorder(BORDER_ROOTPANE);
 		
 		_resizer.registerComponent(this);
+		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);
 		
 		addWindowListener(this);
 		
