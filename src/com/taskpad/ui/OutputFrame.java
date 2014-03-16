@@ -31,10 +31,11 @@ public abstract class OutputFrame extends GuiFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected final Color OUTPUTBOX_BORDER_COLOR = 
-			new Color(112, 48, 160);
+	//protected final Color OUTPUTBOX_BORDER_COLOR = 
+	//		new Color(112, 48, 160);//light purple?
+	protected final Color OUTPUTBOX_BORDER_COLOR = Color.white;
 	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
-			new Color(242, 242, 242);
+			new Color(242, 242, 242);//light grey I think
 	
 	private final static int OUTPUTFRAME_WIDTH = 350;
 	private final static int OUTPUTFRAME_HEIGHT = 150;
@@ -57,9 +58,9 @@ public abstract class OutputFrame extends GuiFrame{
 	}
 
 	protected void setUpFrame() {
-		setSize(OUTPUTFRAME_WIDTH,OUTPUTFRAME_HEIGHT);
-		setLocation((int)(COMPUTER_WIDTH/2),
-					(int)(COMPUTER_HEIGHT/2 - OUTPUTFRAME_HEIGHT));
+		setSize(OUTPUTFRAME_WIDTH, OUTPUTFRAME_HEIGHT);
+		setLocation((int)(COMPUTER_WIDTH / 2 - OUTPUTFRAME_WIDTH/2),
+					(int)(COMPUTER_HEIGHT / 2 - OUTPUTFRAME_HEIGHT));
 	}
 
 	private void initializeOutputFrame() {				
@@ -151,4 +152,19 @@ public abstract class OutputFrame extends GuiFrame{
 	}
 	
 	abstract protected void addSelfDefinedLine(String line, Color c, boolean isBold);
+	
+	@Override
+	protected void endProgram(){
+		super.endProgram();
+	}
+
+	@Override
+	protected int getInitialWidth(){
+		return OUTPUTFRAME_WIDTH;
+	}
+	
+	@Override
+	protected int getInitialHeight(){
+		return OUTPUTFRAME_HEIGHT;
+	}
 }
