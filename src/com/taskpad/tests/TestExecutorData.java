@@ -4,17 +4,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 //import java.util.Map;
 
-import com.taskpad.data.DataFile;
+import com.taskpad.data.DataFileStack;
 import com.taskpad.data.DataManager;
 import com.taskpad.execute.ExecutorManager;
 import com.taskpad.execute.Task;
 import com.taskpad.input.Input;
 
-public class ExecutorDataTest {
-	public static void main(String args[]) {
+public class TestExecutorData {
+	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
-		DataManager.storeBack(tasks, DataFile.FILE);
-		DataManager.storeBack(tasks, DataFile.FILE_PREV);
+		DataManager.storeBack(tasks, DataFileStack.FILE);
+		DataManager.storeBack(tasks, DataFileStack.FILE_PREV);
 		
 		String input = "add do homework";
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -53,5 +53,18 @@ public class ExecutorDataTest {
 		map1.put("KEY", "ALL");
 		Input inputObj1 = new Input("LIST", map1);
 		ExecutorManager.receiveFromInput(inputObj1,input1);
+	}
+	
+	private static void dataRetrievalTest() {
+		DataManager.retrieve("test_data.xml");
+	}
+	
+	private static void dataStoreBackTest() {
+		LinkedList<Task> tasks = new LinkedList<Task>();
+		DataManager.storeBack(tasks, "test_data.xml");
+	}
+	
+	public static void main(String args[]) {
+		dataStoreBackTest();
 	}
 }
