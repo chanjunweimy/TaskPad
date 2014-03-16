@@ -1,8 +1,18 @@
 package com.taskpad.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -13,6 +23,8 @@ import javax.swing.SwingUtilities;
  *  
  *  The ComponentResizer allows you to resize a component by dragging a border
  *  of the component.
+ *  
+ *  MouseAdapter is better because it is more OO-oriented.
  */
 public class ComponentResizer extends MouseAdapter{
 	private final static Dimension MINIMUM_SIZE = new Dimension(10, 10);
