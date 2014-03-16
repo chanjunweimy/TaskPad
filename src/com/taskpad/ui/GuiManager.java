@@ -75,6 +75,10 @@ public class GuiManager {
 			//do nothing
 		}
 	}
+	
+	protected static OutputFrame getOutputFrame() {
+		return _outputFrame;
+	}
 
 	/* deprecated
 	private static void setInputFrame(InputFrame _inputFrame) {
