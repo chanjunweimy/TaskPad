@@ -31,8 +31,9 @@ public abstract class OutputFrame extends GuiFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected final Color OUTPUTBOX_BORDER_COLOR = 
-			new Color(112, 48, 160);//light purple?
+	//protected final Color OUTPUTBOX_BORDER_COLOR = 
+	//		new Color(112, 48, 160);//light purple?
+	protected final Color OUTPUTBOX_BORDER_COLOR = Color.white;
 	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
 			new Color(242, 242, 242);//light grey I think
 	
@@ -151,4 +152,19 @@ public abstract class OutputFrame extends GuiFrame{
 	}
 	
 	abstract protected void addSelfDefinedLine(String line, Color c, boolean isBold);
+	
+	@Override
+	protected void endProgram(){
+		super.endProgram();
+	}
+
+	@Override
+	protected int getInitialWidth(){
+		return OUTPUTFRAME_WIDTH;
+	}
+	
+	@Override
+	protected int getInitialHeight(){
+		return OUTPUTFRAME_HEIGHT;
+	}
 }
