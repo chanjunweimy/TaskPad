@@ -6,21 +6,25 @@ import java.awt.event.MouseListener;
 
 /**
  * 
+ * ===================DEPRECATED==========================
+ * 
  * @author Jun
  * MousePressedDetector is created to detect whether 
  * the mouse has clicked on the boxes or not.
  * 
  * It is a helper class to move JFrame......
+ * 
+ * DEPRECATED: replaced by ComponentMover.java
  *
  */
 
 public class MousePressedDetector implements MouseListener {
 	private static Point _mouseDownPoint = null;
 	
-	/**
+	/** DEPRECATED: private constructor shows that it cannot be used anymore.
 	 * To make sure it cannot be used by other package
 	 */
-	protected MousePressedDetector(){
+	private MousePressedDetector(){
 	}
 
 	@Override

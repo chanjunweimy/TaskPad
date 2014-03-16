@@ -38,11 +38,8 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	private final String ERROR_BAD_LOCATION_EXCEPTION = "BadLocationException occurs";
 	
-	private JTextPane _outputBox = new JTextPane();
-	
-	private MousePressedDetector _pressDetect = new MousePressedDetector();
-	private MouseMover _moveMouse = new MouseMover(this);
-	
+	private JTextPane _outputBox = new JTextPane();	
+	private ComponentMover _moveOutputBox = new ComponentMover(this);
 
 	protected FlexiFontOutputFrame()
 	{
@@ -73,8 +70,10 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		_outputBox.setEditorKit(new WrapEditorKit());		
 		
 		//to make it movable
-		_outputBox.addMouseListener(_pressDetect);
-		_outputBox.addMouseMotionListener(_moveMouse);
+		_moveOutputBox.registerComponent(_outputBox);
+		
+		//_outputBox.addMouseListener(_pressDetect);       DEPRECATED
+		//_outputBox.addMouseMotionListener(_moveMouse);   DEPRECATED
 		
 		/* Testing
 		appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
@@ -218,8 +217,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		super.endProgram();
 		
 		//clear every listener before closing
-		_outputBox.removeMouseListener(_pressDetect);
-		_outputBox.removeMouseMotionListener(_moveMouse);
+		_moveOutputBox.deregisterComponent(_outputBox);
 	}
 	
 	
