@@ -27,8 +27,7 @@ public class InputFrame extends GuiFrame{
 	private final static int INPUTFRAME_HEIGHT = 30;
 	
 	private TextFieldListener _seeText = new TextFieldListener();
-	private MousePressedDetector _mousePress = new MousePressedDetector();
-	private MouseMover _mouseMove = new MouseMover(this);
+	private ComponentMover _moveInputBox = new ComponentMover(this);
 	
 	protected InputFrame(){
 		super();
@@ -54,8 +53,9 @@ public class InputFrame extends GuiFrame{
 		_input.addActionListener(_seeText);
 		
 		//ready to move
-		_input.addMouseListener(_mousePress);
-		_input.addMouseMotionListener(_mouseMove);
+		_moveInputBox.registerComponent(_input);
+		//_input.addMouseListener(_mousePress);      DEPRECATED
+		//_input.addMouseMotionListener(_mouseMove); DEPRECATED
 		
 		_input.setBackground(INPUTBOX_BACKGROUND_COLOR);
 	}
@@ -117,7 +117,8 @@ public class InputFrame extends GuiFrame{
 		//clear every listener before closing
 		_input.removeActionListener(_seeText);
 		
-		_input.removeMouseListener(_mousePress);
-		_input.removeMouseMotionListener(_mouseMove);
+		_moveInputBox.deregisterComponent(_input);
+		//_input.removeMouseListener(_mousePress);      DEPRECATED
+		//_input.removeMouseMotionListener(_mouseMove); DEPRECATED
 	}
 }
