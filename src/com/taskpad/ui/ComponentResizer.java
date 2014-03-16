@@ -103,7 +103,19 @@ public class ComponentResizer extends MouseAdapter{
 	 *
 	 *  @param  dragInsets Insets to control which borders are resizeable.
 	 */
-	private void setDragInsets(Insets dragInsets){
+	protected void setDragInsets(Insets dragInsets){
+		validateMinimumAndInsets(minimumSize, dragInsets);
+
+		this.dragInsets = dragInsets;
+	}
+	
+	/**
+	 * Set the dragInsets by using the insetSize
+	 * create an inset that has same top, left, right, bottom
+	 * @param insetSize: number that determines the inset that controls which borders are resizeable.
+	 */
+	protected void setDragInsets(int insetSize){
+		Insets dragInsets = new Insets(insetSize, insetSize, insetSize, insetSize);
 		validateMinimumAndInsets(minimumSize, dragInsets);
 
 		this.dragInsets = dragInsets;
