@@ -26,6 +26,10 @@ public class InputFrame extends GuiFrame{
 	private final static int INPUTFRAME_WIDTH = 350;
 	private final static int INPUTFRAME_HEIGHT = 30;
 	
+	private TextFieldListener _seeText = new TextFieldListener();
+	private MousePressedDetector _mousePress = new MousePressedDetector();
+	private MouseMover _mouseMove = new MouseMover(this);
+	
 	protected InputFrame(){
 		super();
 		initializeInputFrame();
@@ -41,18 +45,17 @@ public class InputFrame extends GuiFrame{
 
 	private void setUpFrame() {
 		setSize(INPUTFRAME_WIDTH, INPUTFRAME_HEIGHT);
-		
 		setLocation((int)(COMPUTER_WIDTH / 2 - INPUTFRAME_WIDTH / 2),
 					(int)(COMPUTER_HEIGHT / 2));
 	}
 
 	private void initializeInputBox() {
 		//ready to receive input
-		_input.addActionListener(new TextFieldListener());
+		_input.addActionListener(_seeText);
 		
 		//ready to move
-		_input.addMouseListener(new MousePressedDetector());
-		_input.addMouseMotionListener(new MouseDragActioner(this));
+		_input.addMouseListener(_mousePress);
+		_input.addMouseMotionListener(_mouseMove);
 		
 		_input.setBackground(INPUTBOX_BACKGROUND_COLOR);
 	}
@@ -77,6 +80,7 @@ public class InputFrame extends GuiFrame{
 	
 	private void requestFocusOnInputBox() {
 		Runnable inputBoxFocus = new Runnable(){
+			@Override
 			public void run(){
 				_input.requestFocus();
 			}
@@ -94,5 +98,26 @@ public class InputFrame extends GuiFrame{
 	
 	protected JTextField getInputBox(){
 		return _input;
+	}
+	
+	@Override
+	protected int getInitialWidth(){
+		return INPUTFRAME_WIDTH;
+	}
+	
+	@Override
+	protected int getInitialHeight(){
+		return INPUTFRAME_HEIGHT;
+	}
+	
+	@Override
+	protected void endProgram(){
+		super.endProgram();
+		
+		//clear every listener before closing
+		_input.removeActionListener(_seeText);
+		
+		_input.removeMouseListener(_mousePress);
+		_input.removeMouseMotionListener(_mouseMove);
 	}
 }

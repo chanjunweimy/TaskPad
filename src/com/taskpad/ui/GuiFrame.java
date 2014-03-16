@@ -1,5 +1,6 @@
 package com.taskpad.ui;
 
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
@@ -7,6 +8,7 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -16,12 +18,22 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
 
-	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 1179398807003068461L;
+	
+	  
 	protected final double COMPUTER_WIDTH = 
 			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
 	protected final double COMPUTER_HEIGHT = 
 			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+	protected final Color ROOTPANE_BORDER_COLOR = 
+			new Color(112, 48, 160);//light purple?
+	private final int ROOTPANE_BORDER_THICKNESS = 2;
+	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
+	private ComponentResizer _resizer = new ComponentResizer();
 	
 	protected GuiFrame(){
 		initalizeGuiFrame();
@@ -30,6 +42,10 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private void initalizeGuiFrame() {
 		//to disable the titlebar
 		setUndecorated(true);
+		
+		getRootPane().setBorder(BORDER_ROOTPANE);
+		
+		_resizer.registerComponent(this);
 		
 		addWindowListener(this);
 		
@@ -75,7 +91,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		 endProgram();
+		//end Program to disable every listeners! Exit Program to really exit it.
+		endProgram();
+	    exitProgram();
 	}
 	
 	@Override
@@ -110,6 +128,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			hideOrShow();
 		} else if (isEscapeKey){
 			endProgram();
+			exitProgram();
 		} else if (isAltAKey){
 			switchOffAlarm();
 		} else if (isAltCKey){
@@ -144,11 +163,15 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		SwingUtilities.invokeLater(changeState);
 	}
 
-	private void endProgram() {
-		//Clean up the native hook.
+	protected void endProgram() {
+		//Clean up every listener
         GlobalScreen.unregisterNativeHook();
-        System.runFinalization();
-        System.exit(0);
+        _resizer.deregisterComponent(this);
+	}
+	
+	private void exitProgram() {
+		System.runFinalization();
+	    System.exit(0);
 	}
 	
 	private Runnable getVisibilityChanges() {
@@ -200,6 +223,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		};
 		return changeState;
 	}
+	
+	abstract protected int getInitialWidth();
+	abstract protected int getInitialHeight();
 	
 	
 	//won't implement

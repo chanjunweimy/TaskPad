@@ -36,6 +36,7 @@ public class MousePressedDetector implements MouseListener {
 	protected static Point getMouseDownPoint() {
 		return _mouseDownPoint;
 	}
+	
 
 	private void setMouseDownPoint(Point _mouseDownPoint) {
 		MousePressedDetector._mouseDownPoint = _mouseDownPoint;
