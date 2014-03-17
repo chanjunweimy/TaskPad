@@ -14,7 +14,7 @@ public class TestExecutorData {
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		DataManager.storeBack(tasks, DataFileStack.FILE);
-		DataManager.storeBack(tasks, DataFileStack.FILE_PREV);
+		// DataManager.storeBack(tasks, DataFileStack.FILE_PREV);
 		
 		String input = "add do homework";
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -65,6 +65,6 @@ public class TestExecutorData {
 	}
 	
 	public static void main(String args[]) {
-		dataStoreBackTest();
+		commandTest();
 	}
 }

@@ -2,6 +2,7 @@ package com.taskpad.execute;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.taskpad.data.CommandRecord;
 import com.taskpad.data.DataFileStack;
@@ -12,6 +13,8 @@ import com.taskpad.input.Input;
 import com.taskpad.ui.GuiManager;
 
 public class ExecutorManager {
+	private static Logger logger = Logger.getLogger("InfoLogging");
+	
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
 		Map<String, String> parameters = input.getParameters();
@@ -69,12 +72,15 @@ public class ExecutorManager {
 	private static void list(String option) {
 		switch(option) {
 		case "ALL":
+			logger.info("Listing all tasks...");
 			listAll();
 			break;
 		case "DONE":
+			logger.info("Listing finished tasks...");
 			listDone();
 			break;
 		case "UNDONE":
+			logger.info("Listing undone tasks...");
 			listUndone();
 			break;
 		}	
@@ -320,7 +326,7 @@ public class ExecutorManager {
 		return Integer.parseInt(taskIdString) - 1;
 	}
 
-	private static void delete(String index) {
+	private static void delete(String index) {		
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
@@ -333,6 +339,8 @@ public class ExecutorManager {
 		 * as the TaskID = LinkedListIndex + 1
 		 */
 		indexOfTask--;
+		
+		assert(indexOfTask < listOfTasks.size());
 		
 		Task taskDeleted = listOfTasks.get(indexOfTask);
 		listOfTasks.remove(indexOfTask);
@@ -349,6 +357,7 @@ public class ExecutorManager {
 	private static void add(String description, String deadline, String startDate,
 			String startTime, String endDate,
 			String endTime, String venue) {
+		logger.info("adding task: " + description);
 		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
@@ -362,7 +371,6 @@ public class ExecutorManager {
 		
 		int taskId = listOfTasks.size();
 		GuiManager.callOutput(generateFeedbackForAdd(taskId, taskToAdd));
-		// System.out.println(generateFeedbackForAdd(taskIdString, taskToAdd.getDescription()));
 	}
 
 	private static String generateFeedbackForAdd(int taskId, Task taskAdded) {

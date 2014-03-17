@@ -75,7 +75,6 @@ public class DataManager {
 					if (task.getElementsByTagName("description").item(0) != null) {
 						description = task.getElementsByTagName("description").item(0).getTextContent();
 					} else {
-						// description = null;
 						return listOfTasks; // description cannot be null
 					}
 					
@@ -121,6 +120,7 @@ public class DataManager {
 						details = null;
 					}
 					
+					assert(task.getElementsByTagName("done") != null);
 					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
 					
 					listOfTasks.add(new Task(description, deadline, startDate,
