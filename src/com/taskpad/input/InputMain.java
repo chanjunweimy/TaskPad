@@ -147,6 +147,9 @@ public class InputMain {
 			case EXIT:
 				exitProgram();
 				break;
+			case REDO:
+				redoTask();
+				break;
 			case UNDO:
 				undoLast();
 				break;
@@ -180,6 +183,11 @@ public class InputMain {
 	private static void listTask(String input, String fullInput){
 		List list = new List(input, fullInput);
 		list.run();
+	}
+	
+	private static void redoTask(){
+		Redo redo = new Redo("", "REDO");
+		redo.run();
 	}
 	
 	private static void deleteTask(String input, String fullInput) {
