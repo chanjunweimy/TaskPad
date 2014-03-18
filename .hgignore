@@ -4,6 +4,7 @@
 temo/
 bin/
 .java.orig
-
 .*\.xml
+
+.data?
 
