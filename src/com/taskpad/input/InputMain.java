@@ -2,6 +2,7 @@ package com.taskpad.input;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.taskpad.input.CommandTypes.CommandType;
 
@@ -26,6 +27,8 @@ public class InputMain {
 	@SuppressWarnings("unused")
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
+	private static Logger logger = Logger.getLogger("Input");
+	
 	public static void receiveInput(String input){
 		hasCheckedFlexi = false;
 		if (isConfirmation){
@@ -39,10 +42,12 @@ public class InputMain {
 				return;
 			}
 			String commandTypeString = parseInput(inputCopy);
+			logger.info("CommandTypeString: " + commandTypeString);
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 	
 			if (isValidCommandType(commandType)){		
 				commandTypeString = removeFirstWord(input);
+				
 				performCommand (commandType, commandTypeString, input);
 			} else {
 				if (hasCheckedFlexi){
@@ -95,6 +100,7 @@ public class InputMain {
 	}
 
 	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
+		logger.info("Command: " + commandType.toString());
 		switch(commandType){
 			case ADD:
 				addTask(commandTypeString, input);
