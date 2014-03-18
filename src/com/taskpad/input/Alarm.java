@@ -60,8 +60,9 @@ public class Alarm{
 	}
 
 	private String successParseTime(String input, String numberString) {
+		DateAndTimeManager parser = DateAndTimeManager.getInstance();
 		try {
-			numberString = DateAndTimeManager.parseTime(input);
+			numberString = parser.parseTime(input);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 			numberString = null;

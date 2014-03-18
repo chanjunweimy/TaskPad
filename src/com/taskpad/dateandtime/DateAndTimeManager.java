@@ -10,6 +10,17 @@ import java.util.Date;
 import com.taskpad.execute.Task;
 import com.taskpad.ui.GuiManager;
 
+
+/**
+ * 
+ * @author Jun
+ *
+ * use singleton to 
+ * implement this class
+ * because a manager can do all the parsing
+ * and can return all the date and time
+ *
+ */
 public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	private static final String SPACE = " ";
 	private final static String ERROR = "ERROR!";
@@ -19,25 +30,33 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 
 	
 	private static int _multiple = 1;
-	private static DateAndTime _dateAndTimeObject;
+	private static DateAndTime _dateAndTimeObject = null;
 	
-	public DateAndTimeManager(){
-		_dateAndTimeObject = new DateAndTime();
+	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
+	
+	private DateAndTimeManager(){
 	}
 
+	@Override
 	public String getTodayTime(){
+		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentTime();
 	}
 	
+	@Override
 	public String getTodayDate(){
+		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentDate();
 	}
 	
+	@Override
 	public String getTodayDay(){
+		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentDay();
 	}
 	
 	public String getTodayDateAndTime(){
+		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentTimeAndDate();
 	}
 
@@ -65,11 +84,11 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * to do the parseDate() and parseTime() thing
 	 * @return
 	 */
-	public static String parseDate(String dateString){
+	public String parseDate(String dateString){
 		return null;
 	}
 	
-	public static String parseTime(String timeString) throws Exception{
+	public String parseTime(String timeString) throws Exception{
 		String inputString[] = timeString.split(SPACE);
 		int length = inputString.length;
 		
@@ -86,12 +105,12 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return t + EMPTY;
 	}
 	
-	public static String parseNumber(String numberString) throws NullPointerException{
+	public String parseNumber(String numberString) throws NullPointerException{
 		NumberParser parser = new NumberParser();
 		return parser.parseTheNumbers(numberString);
 	}
 	
-	private static void calculateMultiple(String unit) throws Exception {
+	private void calculateMultiple(String unit) throws Exception {
 		switch (unit.toLowerCase()){
 		case "s":
 		case "second":
@@ -123,8 +142,12 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		}
 	}
 	
-	private static void setMultiple(int multiple) {
+	private void setMultiple(int multiple) {
 		_multiple = multiple;
+	}
+
+	public static DateAndTimeManager getInstance() {
+		return _managerInstance;
 	}
 	
 	//for debug:
