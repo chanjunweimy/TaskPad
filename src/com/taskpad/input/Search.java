@@ -16,9 +16,14 @@ public class Search extends Command{
 
 	@Override
 	public void run(){
-		if (checkIfEmptyString()){
-			return; 
+		try {
+			if (checkIfEmptyString()){
+				return; 
+			}
+		} catch (EmptyStringException e) {
+
 		}
+		
 		initialiseParametersToNull();
 		commandSpecificRun();
 		putInputParameters();
