@@ -6,6 +6,7 @@ package com.taskpad.input;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public abstract class Command {
 
@@ -20,6 +21,8 @@ public abstract class Command {
 	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
+	
+	protected static Logger logger = Logger.getLogger("Command logger");
 	
 	public Command(String input, String fullInput){
 		Command.fullInput = fullInput;
@@ -85,7 +88,8 @@ public abstract class Command {
 	protected Input createInputObject() {
 		clearInputParameters();
 		putInputParameters();
-		inputObject = new Input(getCOMMAND(), inputParameters);		
+		inputObject = new Input(getCOMMAND(), inputParameters);	
+		logger.info("Input object created");
 		return inputObject;
 	}
 
@@ -108,6 +112,7 @@ public abstract class Command {
 	
 	protected void passObjectToExecutor(){
 		InputManager.passToExecutor(inputObject, fullInput);
+		logger.info("Input object passed to executor");
 	}
 	
 	protected boolean isNotInteger(String input){
