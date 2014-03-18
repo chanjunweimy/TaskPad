@@ -30,10 +30,22 @@ public abstract class Command {
 		inputParameters = new HashMap<String,String>();
 	}
 	
-	public void run(){
-		if (checkIfEmptyString() || checkIfIncorrectArguments()){
+	public void run() {
+		try {
+			checkIfEmptyString();
+		} catch (EmptyStringException e) {
 			return;
-		} 
+		}
+		
+		try {
+			checkIfIncorrectArguments();
+		} catch (TaskIDException | InvalidParameterException e) {
+			return;
+		}
+		
+//		if (checkIfEmptyString() || checkIfIncorrectArguments()){
+//			return;
+//		} 
 		clearInputParameters();
 		initialiseParametersToNull();
 		if (commandSpecificRun()){
@@ -52,34 +64,45 @@ public abstract class Command {
 	
 	protected abstract boolean commandSpecificRun();
 	
-	protected boolean checkIfEmptyString() {
+	protected boolean checkIfEmptyString() throws EmptyStringException {
+		//assert input.equals("");
+		
 		if(isEmptyString()){
-			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-			return true;
+			throw new EmptyStringException();
+//			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+//			return true;
 		}
 		return false;
 	}
 	
 	protected abstract void initialiseParametersToNull();
 	
-	protected boolean checkIfIncorrectArguments(){
+	protected boolean checkIfIncorrectArguments() throws TaskIDException, InvalidParameterException{
 		String inputString[] = input.split(" ");
 		
 		if (isNotNumberArgs(inputString)){
-			invalidParameterError();
-			return true;
+			throw new InvalidParameterException(inputString);
 		}
 		
-		if (isNotValidTaskID(inputString[0])){
-			return true;
+//		if (isNotNumberArgs(inputString)){
+//			invalidParameterError();
+//			return true;
+//		}
+		
+		if(isNotValidTaskID(inputString[0])){
+			throw new TaskIDException(inputString[0]);
 		}
+		
+//		if (isNotValidTaskID(inputString[0])){
+//			return true;
+//		}
 		
 		return false;
 	}
 	
 	protected boolean isNotValidTaskID(String taskID){
 		if(isNotInteger(taskID) || isInvalidID(taskID)){
-			outputIdError();
+			//outputIdError();
 			return true;
 		}	
 		return false;
@@ -134,6 +157,7 @@ public abstract class Command {
 	}
 	
 	protected boolean isNotNumberArgs(String[] inputString){
+		//assert inputString.length == getNUMBER_ARGUMENTS();
 		if (inputString.length != getNUMBER_ARGUMENTS()){
 			return true;
 		}

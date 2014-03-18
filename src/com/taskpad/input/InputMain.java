@@ -42,7 +42,7 @@ public class InputMain {
 				return;
 			}
 			String commandTypeString = parseInput(inputCopy);
-			logger.info("CommandTypeString: " + commandTypeString);
+			logger.info("Test");
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 	
 			if (isValidCommandType(commandType)){		
@@ -100,7 +100,6 @@ public class InputMain {
 	}
 
 	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
-		logger.info("Command: " + commandType.toString());
 		switch(commandType){
 			case ADD:
 				addTask(commandTypeString, input);
