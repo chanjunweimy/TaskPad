@@ -12,8 +12,6 @@ public class TimeParser {
 	
 	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
 
-	//this class is not designed to be an object
-	//it is just used to be a helper class
 	private TimeParser(){
 	}
 	
@@ -56,6 +54,8 @@ public class TimeParser {
 	    boolean time24Match = time24M.matches();
 	    
         String hours = "-1", minutes = "-1";
+        
+        long time = 0;
 	    
 	    if (time12Match || time24Match) {
 
@@ -84,7 +84,7 @@ public class TimeParser {
 	            hours = "0";
 	        }
 
-	        long time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
+	        time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
 	        System.out.println(time);
 
 	        if (input.contains("p") && !hours.equals("12")) {
@@ -109,7 +109,7 @@ public class TimeParser {
                 }
             }
             
-	        long time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
+	        time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
 	        
 	        if (input.contains("p") && !hours.equals("12")) {
 	            time += 12 * 60 * 60 * 1000;
