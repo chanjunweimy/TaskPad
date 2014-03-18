@@ -43,9 +43,9 @@ public class InputMain {
 				return;
 			}
 			String commandTypeString = parseInput(inputCopy);
-			logger.info("Test");
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
-	
+			logger.info("Command: " + commandType.toString());
+			
 			if (isValidCommandType(commandType)){		
 				commandTypeString = removeFirstWord(input);
 				
