@@ -4,3 +4,6 @@
 temo/
 bin/
 .java.orig
+
+.*\.xml
+
