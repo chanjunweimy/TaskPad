@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.taskpad.alarm.AlarmManager;
 import com.taskpad.input.CommandTypes.CommandType;
 
 public class InputMain {
@@ -141,6 +142,9 @@ public class InputMain {
 			case SEARCH:
 				searchTask(commandTypeString, input);
 				break;
+			case STOP:
+				stopAlarm(commandTypeString, input);
+				break;
 			case HELP:
 				help();
 				break;
@@ -226,6 +230,14 @@ public class InputMain {
 	private static void searchTask(String input, String fullInput) {
 		Search search = new Search(input, fullInput);
 		search.run();	
+	}
+	
+	private static void stopAlarm(String input, String fullInput){
+		try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			return;
+		}
 	}
 	
 	private static void help() {
