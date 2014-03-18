@@ -7,7 +7,7 @@ public class CommandTypes {
 	
 	public enum CommandType{
 		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
-		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, SEARCH, UNDO
+		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, REDO, SEARCH, UNDO
 	};
 	
 	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
@@ -73,6 +73,7 @@ public class CommandTypes {
 		putExitVariations();
 		putHelpVariations();
 		putListVariations();
+		putRedoVariations();
 		putSearchVariations();
 		putUndoVariations();
 	}
@@ -142,6 +143,11 @@ public class CommandTypes {
 	private static void putListVariations(){
 		String[] listVariations = {"LIST", "LS", "SHOW", "DISPLAY", "LST"};
 		commandVariations.put(CommandType.LIST, listVariations);
+	}
+	
+	private static void putRedoVariations(){
+		String[] redoVariations = {"REDO", "R", "RDO", "RE"};
+		commandVariations.put(CommandType.REDO, redoVariations);
 	}
 	
 	public static void putHelpVariations(){
