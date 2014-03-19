@@ -19,7 +19,7 @@ public class TimeParser {
 	 * 
 	 */
 	protected static String parseTime(String input){
-		TimeWordParser twp = new TimeWordParser();
+		TimeWordParser twp = TimeWordParser.getInstance();
 		String timeString = "";
 		long time = 0;
 		
@@ -142,7 +142,7 @@ public class TimeParser {
 		return errorMessage;
 	}
 	
-	protected static boolean isInvalidTime(String timeString){
+	private static boolean isInvalidTime(String timeString){
 		if (timeString.equals("-1:-1")){
 			return true;
 		}
