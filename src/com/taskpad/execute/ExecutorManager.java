@@ -17,6 +17,7 @@ public class ExecutorManager {
 	
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
+		logger.info("Executor: "+command);
 		Map<String, String> parameters = input.getParameters();
 		
 		switch (commandType) {
@@ -62,6 +63,7 @@ public class ExecutorManager {
 			break;
 		case "REDO":
 			redo();
+			break;
 		case "LIST":
 			list(parameters.get("KEY"));
 			break;

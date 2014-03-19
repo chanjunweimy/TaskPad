@@ -112,7 +112,7 @@ public abstract class Command {
 		clearInputParameters();
 		putInputParameters();
 		inputObject = new Input(getCOMMAND(), inputParameters);	
-		logger.info("Input object created");
+		logger.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;
 	}
 
