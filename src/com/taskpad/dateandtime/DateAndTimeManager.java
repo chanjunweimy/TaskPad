@@ -14,7 +14,9 @@ import com.taskpad.execute.Task;
  * 
  * @author Jun
  *
- * use singleton to 
+ * DateAndTimeManager is a facade class of dateandtime package.
+ * 
+ * We use singleton to 
  * implement this class
  * because a manager can do all the parsing
  * and can return all the date and time
@@ -39,35 +41,64 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	private DateAndTimeManager(){
 	}
 	
+	/**
+	 * getInstance: get the instance of DateAndTimeManager to use dateandtime api..
+	 * @return DateAndTimeManager
+	 */
 	public static DateAndTimeManager getInstance() {
 		return _managerInstance;
 	}
 
+	/**
+	 * getTodayTime: return the currect time.
+	 * @return String
+	 */
 	@Override
 	public String getTodayTime(){
 		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentTime();
 	}
 	
+	/**
+	 * getTodayDate: return today's date
+	 * @return String
+	 */
 	@Override
 	public String getTodayDate(){
 		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentDate();
 	}
 	
+	/**
+	 * getTodayDay: return today's day
+	 * @return String
+	 */
 	@Override
 	public String getTodayDay(){
 		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentDay();
 	}
 	
+	/**
+	 * getTodayDateAndTime: to get today's date and the current time
+	 * @return String
+	 */
 	public String getTodayDateAndTime(){
 		_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentTimeAndDate();
 	}
 
+	/**
+	 * ACCENDING_ORDER: a comparator used to sort Task by their dates.
+	 */
 	public static final Comparator<Task> ACCENDING_ORDER = 
 			new Comparator<Task>() {
+		/**
+		 * compare: compare two tasks' Date
+		 * @param e1: task1
+		 * @param e2: task2
+		 * @return int
+		 */
 			@Override
 		public int compare(Task e1, Task e2) {
 			SimpleDateFormat dateConverter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -101,7 +132,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	/**
 	 * convertToSecond: convert time from any unit to second
 	 * @param timeString: time value + time unit, ex: 1 min, one min, 1s
-	 * @return: return the value of seconds.
+	 * @return: String
 	 * @throws NullTimeUnitException: User did not key in time unit
 	 * @throws NullTimeValueException: User did not key in time value / not valid time value
 	 */
@@ -113,7 +144,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	/**
 	 * parseNumber: parse a languange number to a real number String, ex: one to 1
 	 * @param numberString: language number or normal number
-	 * @return the normal number String
+	 * @return String
 	 */
 	public String parseNumber(String numberString){
 		NumberParser parser = NumberParser.getInstance();
