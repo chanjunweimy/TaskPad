@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import com.taskpad.execute.Task;
-import com.taskpad.ui.GuiManager;
 
 
 /**
@@ -22,6 +21,7 @@ import com.taskpad.ui.GuiManager;
  *
  */
 public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
+	/* DEPRECATED
 	private static final String SPACE = " ";
 	private final static String ERROR = "ERROR!";
 	private final static int CONVERT = 60;
@@ -30,6 +30,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 
 	
 	private static int _multiple = 1;
+	*/
+	
 	private static DateAndTime _dateAndTimeObject = null;
 	
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
@@ -89,6 +91,11 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	
 	public String parseTime(String timeString) throws Exception{
+		TimeWordParser twp = TimeWordParser.getInstance();
+		return twp.timeWord(timeString);
+	}
+	/*
+	public String parseTime(String timeString) throws Exception{
 		String inputString[] = timeString.split(SPACE);
 		int length = inputString.length;
 		
@@ -104,12 +111,14 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		
 		return t + EMPTY;
 	}
+	 */
 	
 	public String parseNumber(String numberString) throws NullPointerException{
 		NumberParser parser = new NumberParser();
 		return parser.parseTheNumbers(numberString);
 	}
 	
+	/* DEPRECATED
 	private void calculateMultiple(String unit) throws Exception {
 		switch (unit.toLowerCase()){
 		case "s":
@@ -145,6 +154,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	private void setMultiple(int multiple) {
 		_multiple = multiple;
 	}
+	*/
 
 	public static DateAndTimeManager getInstance() {
 		return _managerInstance;
