@@ -38,6 +38,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	
 	private DateAndTimeManager(){
 	}
+	
+	public static DateAndTimeManager getInstance() {
+		return _managerInstance;
+	}
 
 	@Override
 	public String getTodayTime(){
@@ -90,11 +94,34 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return null;
 	}
 	
-	public String parseTime(String timeString) throws NullTimeUnitException, NullTimeValueException{
+	public String parseTime(String timeString){
+		return null;
+	}
+	
+	/**
+	 * convertToSecond: convert time from any unit to second
+	 * @param timeString: time value + time unit, ex: 1 min, one min, 1s
+	 * @return: return the value of seconds.
+	 * @throws NullTimeUnitException: User did not key in time unit
+	 * @throws NullTimeValueException: User did not key in time value / not valid time value
+	 */
+	public String convertToSecond(String timeString) throws NullTimeUnitException, NullTimeValueException{
 		TimeWordParser twp = TimeWordParser.getInstance();
 		return twp.parseTimeWord(timeString);
 	}
-	/*
+	
+	/**
+	 * parseNumber: parse a languange number to a real number String, ex: one to 1
+	 * @param numberString: language number or normal number
+	 * @return the normal number String
+	 */
+	public String parseNumber(String numberString){
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString);
+	}
+	
+	
+	/* DEPRECATED
 	public String parseTime(String timeString) throws Exception{
 		String inputString[] = timeString.split(SPACE);
 		int length = inputString.length;
@@ -113,10 +140,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	 */
 	
-	public String parseNumber(String numberString) throws NullPointerException{
-		NumberParser parser = new NumberParser();
-		return parser.parseTheNumbers(numberString);
-	}
+	
 	
 	/* DEPRECATED
 	private void calculateMultiple(String unit) throws Exception {
@@ -156,9 +180,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	*/
 
-	public static DateAndTimeManager getInstance() {
-		return _managerInstance;
-	}
+	
 	
 	//for debug:
 	/*
