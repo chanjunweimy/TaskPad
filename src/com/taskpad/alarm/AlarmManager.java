@@ -9,10 +9,7 @@ import com.taskpad.ui.GuiManager;
 public class AlarmManager extends JApplet{
 
 	
-	/**
-	 * random generated
-	 */
-	private static final long serialVersionUID = 4348001564533802036L;
+	private static final long serialVersionUID = 4348001564533802036L;		//Randomly generated
 	private static final Exception EXCEPTION_ERROR = new Exception();
 	private final static String SONG_DEFAULT = "katy_perry-the_one_that_got_away.mid";
 	private static Sound _alarm = null;
@@ -67,9 +64,10 @@ public class AlarmManager extends JApplet{
 	}
 	
 	protected static void turnOnAlarm() throws Exception{
-		//GuiManager.callOutput(String.format(MESSAGE_ALARM, _desc));
 		String alarmOutput = String.format(MESSAGE_ALARM, _desc);
 		GuiManager.showSelfDefinedMessage(alarmOutput, Color.RED, true);
+		
+		
 		
 		if (_alarm == null){
 			throw EXCEPTION_ERROR;

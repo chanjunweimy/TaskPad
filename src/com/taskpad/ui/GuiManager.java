@@ -93,4 +93,6 @@ public class GuiManager {
 	public static void clearOutput(){
 		_outputFrame.clearOutputBox();
 	}
+	
+	
 }

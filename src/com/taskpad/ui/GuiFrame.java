@@ -23,7 +23,6 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	 * generated
 	 */
 	private static final long serialVersionUID = 1179398807003068461L;
-	
 	  
 	protected final double COMPUTER_WIDTH = 
 			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
