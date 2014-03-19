@@ -64,10 +64,8 @@ public class AlarmManager extends JApplet{
 	}
 	
 	protected static void turnOnAlarm() throws Exception{
-		String alarmOutput = String.format(MESSAGE_ALARM, _desc);
-		GuiManager.showSelfDefinedMessage(alarmOutput, Color.RED, true);
-		
-		
+		showGuiWindow();
+		outputAlarmDesc();
 		
 		if (_alarm == null){
 			throw EXCEPTION_ERROR;
@@ -83,6 +81,15 @@ public class AlarmManager extends JApplet{
 		}
 	}
 	
+	private static void outputAlarmDesc() {
+		String alarmOutput = String.format(MESSAGE_ALARM, _desc);
+		GuiManager.showSelfDefinedMessage(alarmOutput, Color.RED, true);		
+	}
+
+	private static void showGuiWindow() {
+		GuiManager.showWindow(true);		
+	}
+
 	public static void turnOffAlarm() throws Exception{
 		if (_alarm == null){
 			throw EXCEPTION_ERROR;
