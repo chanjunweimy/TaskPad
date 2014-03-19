@@ -28,6 +28,11 @@ public class GuiManager {
 		setOutputFrame(outputFrame);
 	}
 	 */
+	
+	public static void showWindow(boolean isVisible){
+		_inputFrame.showWindow(isVisible);
+		_outputFrame.showWindow(isVisible);
+	}
 
 	public static void callExit(){
 		closeAllWindows();
