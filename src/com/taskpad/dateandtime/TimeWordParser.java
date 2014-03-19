@@ -14,10 +14,10 @@ import java.util.Map;
  * make TimeWordParser to be a singleton to increase efficiency.
  */
 
-public class TimeWordParser extends NumberParser{
+public class TimeWordParser {
 	private static Map<String, String[]> _timewordsMap = new HashMap<String, String[]>();
 	private static Map<String, Integer> _timeunitMap = new HashMap<String, Integer>();
-	private static NumberParser _numberparser = new NumberParser();
+	private static DateAndTimeManager _numberparser = DateAndTimeManager.getInstance();
 	
 	private static final String TIME_SEC = "SECOND";
 	private static final String TIME_MIN = "MIN";
@@ -81,7 +81,7 @@ public class TimeWordParser extends NumberParser{
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
 			}
 			
-			_numberword = _numberparser.parseTheNumbers(input);
+			_numberword = _numberparser.parseNumber(input);
 			
 			if (_numberword == null){
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
@@ -100,7 +100,7 @@ public class TimeWordParser extends NumberParser{
 		String time = "";
 		if (containsTimeWord(input)){
 			input = removeTimeWord(input);
-			_numberword = _numberparser.parseTheNumbers(input);
+			_numberword = _numberparser.parseNumber(input);
 			Date newTime = addTime();
 			time = formatTime(newTime);
 		}
