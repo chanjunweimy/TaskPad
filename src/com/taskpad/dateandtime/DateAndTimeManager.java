@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import com.taskpad.execute.Task;
-import com.taskpad.ui.GuiManager;
 
 
 /**
@@ -22,6 +21,7 @@ import com.taskpad.ui.GuiManager;
  *
  */
 public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
+	/* DEPRECATED
 	private static final String SPACE = " ";
 	private final static String ERROR = "ERROR!";
 	private final static int CONVERT = 60;
@@ -30,11 +30,17 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 
 	
 	private static int _multiple = 1;
+	*/
+	
 	private static DateAndTime _dateAndTimeObject = null;
 	
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
 	
 	private DateAndTimeManager(){
+	}
+	
+	public static DateAndTimeManager getInstance() {
+		return _managerInstance;
 	}
 
 	@Override
@@ -88,6 +94,34 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return null;
 	}
 	
+	public String parseTime(String timeString){
+		return null;
+	}
+	
+	/**
+	 * convertToSecond: convert time from any unit to second
+	 * @param timeString: time value + time unit, ex: 1 min, one min, 1s
+	 * @return: return the value of seconds.
+	 * @throws NullTimeUnitException: User did not key in time unit
+	 * @throws NullTimeValueException: User did not key in time value / not valid time value
+	 */
+	public String convertToSecond(String timeString) throws NullTimeUnitException, NullTimeValueException{
+		TimeWordParser twp = TimeWordParser.getInstance();
+		return twp.parseTimeWord(timeString);
+	}
+	
+	/**
+	 * parseNumber: parse a languange number to a real number String, ex: one to 1
+	 * @param numberString: language number or normal number
+	 * @return the normal number String
+	 */
+	public String parseNumber(String numberString){
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString);
+	}
+	
+	
+	/* DEPRECATED
 	public String parseTime(String timeString) throws Exception{
 		String inputString[] = timeString.split(SPACE);
 		int length = inputString.length;
@@ -104,12 +138,11 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		
 		return t + EMPTY;
 	}
+	 */
 	
-	public String parseNumber(String numberString) throws NullPointerException{
-		NumberParser parser = new NumberParser();
-		return parser.parseTheNumbers(numberString);
-	}
 	
+	
+	/* DEPRECATED
 	private void calculateMultiple(String unit) throws Exception {
 		switch (unit.toLowerCase()){
 		case "s":
@@ -145,10 +178,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	private void setMultiple(int multiple) {
 		_multiple = multiple;
 	}
+	*/
 
-	public static DateAndTimeManager getInstance() {
-		return _managerInstance;
-	}
+	
 	
 	//for debug:
 	/*

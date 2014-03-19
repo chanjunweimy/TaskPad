@@ -46,8 +46,13 @@ public class NumberParser {
 		"nineteen"
 	};
 
-	protected NumberParser(){	
+	private static NumberParser _numberParser = new NumberParser();
+	private NumberParser(){	
 		initializeNumberMap();
+	}
+	
+	protected static NumberParser getInstance(){
+		return _numberParser;
 	}
 
 	private void initializeNumberMap() {
@@ -73,6 +78,9 @@ public class NumberParser {
 
 	//this method returns null when error occurs
 	protected String parseTheNumbers(String input){
+		//cannot reach here if input is null
+		assert (input != null);
+		
 		if (isDigitString(input)){
 			return STRING_EMPTY + Integer.parseInt(input);
 		}
