@@ -2,6 +2,8 @@ package com.taskpad.input;
 
 import com.taskpad.alarm.AlarmManager;
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
 
 
 /**
@@ -29,11 +31,15 @@ public class Alarm{
 	private static final String MESSAGE_NUMBER_ERROR = "Error: Invalid time format %s";
 		
 	public Alarm(String input, String fullInput) {
+		initializeAlarm(input, fullInput);
+		
+		/*
 		try {
 			initializeAlarm(input, fullInput);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
+		*/
 	}
 
 	private void initializeAlarm(String input, String fullInput) {
@@ -63,7 +69,7 @@ public class Alarm{
 		DateAndTimeManager parser = DateAndTimeManager.getInstance();
 		try {
 			numberString = parser.parseTime(input);
-		} catch (Exception e) {
+		} catch (NullTimeUnitException | NullTimeValueException e) {
 			System.err.println(e.getMessage());
 			numberString = null;
 		}
@@ -94,7 +100,7 @@ public class Alarm{
 		return description;
 	}
 	
-	/*
+	/* DEPRECATED
 	private void initializeAlarm(String input, String fullInput) throws Exception{
 		
 		String inputString[] = fullInput.split(SPACE);

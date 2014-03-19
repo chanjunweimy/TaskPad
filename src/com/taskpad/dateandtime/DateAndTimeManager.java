@@ -90,9 +90,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return null;
 	}
 	
-	public String parseTime(String timeString) throws Exception{
+	public String parseTime(String timeString) throws NullTimeUnitException, NullTimeValueException{
 		TimeWordParser twp = TimeWordParser.getInstance();
-		return twp.timeWord(timeString);
+		return twp.parseTimeWord(timeString);
 	}
 	/*
 	public String parseTime(String timeString) throws Exception{
