@@ -69,6 +69,15 @@ public class TimeWordParser {
 	*/
 	
 	protected String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		
+		
+		StringBuffer time = parseOneTimeWord(input);
+		
+		return time.toString();
+	}
+
+	private StringBuffer parseOneTimeWord(String input)
+			throws NullTimeValueException, NullTimeUnitException {
 		StringBuffer time = new StringBuffer();
 		int exactTimeSecond = 0;
 		int secondConvertion = calculateTimeWord(input);
@@ -87,13 +96,16 @@ public class TimeWordParser {
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
 			}
 			
-			exactTimeSecond = Integer.parseInt(_numberword) * secondConvertion;
+			exactTimeSecond = convertSecond(secondConvertion);
 			time.append(exactTimeSecond);
 		} else {
 			throw new NullTimeUnitException(ERROR_NULL_UNIT);
 		}
-		
-		return time.toString();
+		return time;
+	}
+
+	private int convertSecond(int secondConvertion) {
+		return Integer.parseInt(_numberword) * secondConvertion;
 	}
 	
 	protected String timeWord(String input){	
@@ -108,7 +120,7 @@ public class TimeWordParser {
 		return time;
 	}
 	
-	protected int calculateTimeWord(String input){
+	private int calculateTimeWord(String input){
 		String variations[];
 		int multiply = 0;
 
@@ -117,7 +129,13 @@ public class TimeWordParser {
 			for (int i=0; i<variations.length; i++){
 				if (isValueFound(variations[i], input)){
 					_timeword = entry.getKey();
-					multiply = _timeunitMap.get(_timeword).intValue();
+					
+					Integer value = _timeunitMap.get(_timeword);
+					
+					if (value != null){
+						multiply = value.intValue();
+					}
+
 					return multiply;
 				}
 			}
