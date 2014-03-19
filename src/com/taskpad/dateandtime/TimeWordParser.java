@@ -167,7 +167,7 @@ public class TimeWordParser extends NumberParser{
 	
 	private Date getCurrentTime(){
 		Date date;
-		DateAndTimeManager dtm = new DateAndTimeManager();
+		DateAndTimeManager dtm = DateAndTimeManager.getInstance();
 		String todayTime = dtm.getTodayDateAndTime();
 //		String todayTime = dtm.getTodayTime();	
 		

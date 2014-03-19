@@ -5,6 +5,8 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -17,7 +19,8 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
-
+	private final static Logger LOGGER = Logger.getLogger(GuiFrame.class
+		      .getName());
 	
 	/**
 	 * generated
@@ -39,6 +42,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	}
 
 	private void initalizeGuiFrame() {
+		//setup Logger also
+		LOGGER.setLevel(Level.INFO);
+		
+		LOGGER.info("Setting up GuiFrame");
+		
 		//to disable the titlebar
 		setUndecorated(true);
 		
@@ -79,11 +87,13 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	public void windowOpened(WindowEvent arg0) {
 		//Initialize native hook.
         try {
-                GlobalScreen.registerNativeHook();
+        		LOGGER.info("Initializing native hook");
+        		
+            	GlobalScreen.registerNativeHook();
         }
         catch (NativeHookException ex) {
-                System.err.println("There was a problem registering the native hook.");
-                System.err.println(ex.getMessage());
+        		LOGGER.severe("There was a problem registering the native hook.\n");
+        		LOGGER.severe(ex.getMessage());
                 ex.printStackTrace();
 
                 System.exit(1);
@@ -142,6 +152,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 
 	private void cancelAlarms() {
 		try {
+    		LOGGER.info("Canceling Alarm...");
+			
 			GuiManager.cancelAlarms();
 		} catch (Exception e) {
 			//do nothing
@@ -150,6 +162,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 
 	private void switchOffAlarm() {
 		try {
+    		LOGGER.info("Switching off Alarm...");
+			
 			GuiManager.turnOffAlarm();
 		} catch (Exception e) {
 			//System.err.println(e.getMessage());
@@ -168,6 +182,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	}
 
 	protected void endProgram() {
+		LOGGER.info("Program HALT");
+		
 		//Clean up every listener
         GlobalScreen.unregisterNativeHook();
         _resizer.deregisterComponent(this);
