@@ -65,7 +65,6 @@ public abstract class Command {
 	protected abstract boolean commandSpecificRun();
 	
 	protected boolean checkIfEmptyString() throws EmptyStringException {
-		//assert input.equals("");
 		
 		if(isEmptyString()){
 			throw new EmptyStringException();
@@ -134,6 +133,7 @@ public abstract class Command {
 	}
 	
 	protected void passObjectToExecutor(){
+		assert inputObject.getParameters().size() != 0;
 		InputManager.passToExecutor(inputObject, fullInput);
 		logger.info("Input object passed to executor");
 	}
@@ -157,7 +157,6 @@ public abstract class Command {
 	}
 	
 	protected boolean isNotNumberArgs(String[] inputString){
-		//assert inputString.length == getNUMBER_ARGUMENTS();
 		if (inputString.length != getNUMBER_ARGUMENTS()){
 			return true;
 		}
