@@ -63,7 +63,8 @@ public class TimeParser {
         	minutes = "0";
         	time = convertToSeconds(hours, minutes);
         	return time;
-        } else if (input.toLowerCase().contains("afternoon") || input.toLowerCase().contains("aft")){
+        } else if (input.toLowerCase().contains("afternoon") || input.toLowerCase().contains("aft") ||
+        		input.toLowerCase().contains("noon")){
         	hours = "12";
         	minutes = "0";
         	time = convertToSeconds(hours, minutes);
