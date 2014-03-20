@@ -206,7 +206,6 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				} else if (isHided){
 					show();
 				}
-				focusInputBox();
 			}
  
 			private void show() {
