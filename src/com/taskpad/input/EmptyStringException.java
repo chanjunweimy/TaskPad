@@ -6,6 +6,6 @@ public class EmptyStringException extends Exception {
 	
 	public EmptyStringException(){
 		super();
-		InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+		
 	}
 }
