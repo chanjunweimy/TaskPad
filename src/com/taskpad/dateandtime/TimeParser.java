@@ -46,6 +46,7 @@ public class TimeParser {
 	private static long decodeTime(String input){
 		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
 	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[;:.]?([0-5][0-9])?)$");
+	    Pattern morn = Pattern.compile("");
 	    
 	    Matcher time12M = time12.matcher(input);
 	    boolean time12Match = time12M.matches();
@@ -56,6 +57,29 @@ public class TimeParser {
         String hours = "-1", minutes = "-1";
         
         long time = 0;
+        
+        if (input.toLowerCase().contains("morning") || input.toLowerCase().contains("morn")){
+        	hours = "0";
+        	minutes = "0";
+        	time = convertToSeconds(hours, minutes);
+        	return time;
+        } else if (input.toLowerCase().contains("afternoon") || input.toLowerCase().contains("aft")){
+        	hours = "12";
+        	minutes = "0";
+        	time = convertToSeconds(hours, minutes);
+        	return time;
+        } else if (input.toLowerCase().contains("evening") || input.toLowerCase().contains("eve")){
+        	hours = "17";
+        	minutes = "0";
+        	time = convertToSeconds(hours, minutes);
+        	return time;
+        } else if (input.toLowerCase().contains("night") || input.toLowerCase().contains("ngt")){
+        	hours = "19";
+        	minutes = "0";
+        	time = convertToSeconds(hours, minutes);
+        	return time;
+        }
+
 	    
 	    if (time12Match || time24Match) {
 
@@ -84,8 +108,7 @@ public class TimeParser {
 	            hours = "0";
 	        }
 
-	        time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
-	        System.out.println(time);
+	        time = convertToSeconds(hours, minutes);
 
 	        if (input.contains("p") && !hours.equals("12")) {
 	            // Add 12 hours for pm times
@@ -109,7 +132,7 @@ public class TimeParser {
                 }
             }
             
-	        time = (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
+	        time = convertToSeconds(hours, minutes);
 	        
 	        if (input.contains("p") && !hours.equals("12")) {
 	            time += 12 * 60 * 60 * 1000;
@@ -118,6 +141,11 @@ public class TimeParser {
 	        return time;
 	    }
 	 }
+	
+	private static long convertToSeconds(String hours, String minutes){
+		long time = 0;
+		return (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
+	}
 	
 	private static String convertMillisecondsToTime(long milliseconds){
 		int minutes = (int) ((milliseconds / (1000*60)) % 60);
