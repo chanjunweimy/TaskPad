@@ -34,12 +34,14 @@ public abstract class Command {
 		try {
 			checkIfEmptyString();
 		} catch (EmptyStringException e) {
+			showEmptyString();
 			return;
 		}
 		
 		try {
 			checkIfIncorrectArguments();
 		} catch (TaskIDException | InvalidParameterException e) {
+			showIncorrectArguments();
 			return;
 		}
 		
@@ -56,8 +58,18 @@ public abstract class Command {
 			return;
 		}
 	}
+	
+	private void showIncorrectArguments(){
+		String errorMessage = MESSAGE_INVALID_PARAMETER_NUMBER;
+		InputManager.outputToGui(errorMessage);
+	}
+	
+	private void showEmptyString(){
+		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
+		InputManager.outputToGui(errorMessage);
+	}
 
-	public void showNoDesc() {
+	private void showNoDesc() {
 		String errorMessage = String.format(MESSAGE_INVALID_INPUT, "no description!");
 		InputManager.outputToGui(errorMessage);
 	}
@@ -65,7 +77,6 @@ public abstract class Command {
 	protected abstract boolean commandSpecificRun();
 	
 	protected boolean checkIfEmptyString() throws EmptyStringException {
-		//assert input.equals("");
 		
 		if(isEmptyString()){
 			throw new EmptyStringException();
@@ -81,21 +92,25 @@ public abstract class Command {
 		String inputString[] = input.split(" ");
 		
 		if (isNotNumberArgs(inputString)){
-			throw new InvalidParameterException(inputString);
+			throw new InvalidParameterException(input);
 		}
 		
-//		if (isNotNumberArgs(inputString)){
-//			invalidParameterError();
-//			return true;
-//		}
+		/* deprecated
+		if (isNotNumberArgs(inputString)){
+			invalidParameterError();
+			return true;
+		}
+		*/
 		
 		if(isNotValidTaskID(inputString[0])){
 			throw new TaskIDException(inputString[0]);
 		}
 		
-//		if (isNotValidTaskID(inputString[0])){
-//			return true;
-//		}
+		/* deprecated
+		if (isNotValidTaskID(inputString[0])){
+			return true;
+		}
+		*/
 		
 		return false;
 	}
@@ -134,6 +149,7 @@ public abstract class Command {
 	}
 	
 	protected void passObjectToExecutor(){
+		assert inputObject.getParameters().size() != 0;
 		InputManager.passToExecutor(inputObject, fullInput);
 		logger.info("Input object passed to executor");
 	}
@@ -157,7 +173,6 @@ public abstract class Command {
 	}
 	
 	protected boolean isNotNumberArgs(String[] inputString){
-		//assert inputString.length == getNUMBER_ARGUMENTS();
 		if (inputString.length != getNUMBER_ARGUMENTS()){
 			return true;
 		}
