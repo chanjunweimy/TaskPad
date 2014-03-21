@@ -3,13 +3,13 @@ package com.taskpad.execute;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
-import com.taskpad.data.CommandRecord;
-import com.taskpad.data.DataFileStack;
-import com.taskpad.data.DataManager;
-import com.taskpad.data.NoPreviousCommandException;
-import com.taskpad.data.NoPreviousFileException;
-import com.taskpad.data.Task;
-import com.taskpad.data.TaskList;
+import com.taskpad.storage.CommandRecord;
+import com.taskpad.storage.DataFileStack;
+import com.taskpad.storage.DataManager;
+import com.taskpad.storage.NoPreviousCommandException;
+import com.taskpad.storage.NoPreviousFileException;
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
 import com.taskpad.ui.GuiManager;
 
 public class CommandFactory {
@@ -183,13 +183,6 @@ public class CommandFactory {
 		// passFeedbackToGui to be implemented
 	}
 
-	protected static Task getTaskById(TaskList listOfTasks, String taskIdString) {
-		int taskId = Integer.parseInt(taskIdString);
-		int index = taskId - 1;
-		Task task = listOfTasks.get(index);
-		return task;
-	}
-
 	protected static void clear() {
 		// TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		// DataManager.storeBack(listOfTasks, DataFileStack.FILE_PREV);
@@ -251,11 +244,7 @@ public class CommandFactory {
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
-		GuiManager.callOutput(generateFeedbackForDelete(taskDeleted));
-	}
-
-	protected static String generateFeedbackForDelete(Task taskDeleted) {
-		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
+		GuiManager.callOutput(OutputToGui.generateFeedbackForDelete(taskDeleted));
 	}
 	
 	protected static void add(String description, String deadline, String startDate,
@@ -274,11 +263,14 @@ public class CommandFactory {
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		int taskId = listOfTasks.size();
-		GuiManager.callOutput(generateFeedbackForAdd(taskId, taskToAdd));
+		GuiManager.callOutput(OutputToGui.generateFeedbackForAdd(taskId, taskToAdd));
 	}
 
-	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {
-		return OutputToGui.generateTextForOneTask(taskId, taskAdded);
+	protected static Task getTaskById(TaskList listOfTasks, String taskIdString) {
+		int taskId = Integer.parseInt(taskIdString);
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task;
 	}
-
+	// dummy
 }

@@ -2,10 +2,18 @@ package com.taskpad.execute;
 
 import java.util.LinkedList;
 
-import com.taskpad.data.Task;
-import com.taskpad.data.TaskList;
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
 
 public class OutputToGui {
+	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {
+		return OutputToGui.generateTextForOneTask(taskId, taskAdded);
+	}
+	
+	protected static String generateFeedbackForDelete(Task taskDeleted) {
+		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
+	}
+	
 	protected static String generateTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
 		String text = "";
 		for(int next: candidates) {
