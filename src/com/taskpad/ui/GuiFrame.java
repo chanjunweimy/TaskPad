@@ -60,22 +60,23 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				
 		focusInputBox();		
 		
-		//to clear the memory
+		//to    clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private void setUpResizer() {
 		_resizer.registerComponent(this);
-		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);
+		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
 	}
 
 	private void focusInputBox() {
 		//to make it focus to input box
-		minimizeOrRestore();
-		minimizeOrRestore();
+		setAlwaysOnTop(true);
+		
+		//thinking a better way to solve this issue.
 	}
-	
-	protected void close(){
+	     
+	protected void close(){ 
 		dispose();
 	}
 	
