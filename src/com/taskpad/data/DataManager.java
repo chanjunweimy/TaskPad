@@ -20,7 +20,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 //import org.xml.sax.SAXException;
 
-import com.taskpad.execute.Task;
 
 public class DataManager {
 
@@ -42,8 +41,8 @@ public class DataManager {
 		*/
 	}
 		
-	public static LinkedList<Task> retrieve(String file) {
-		LinkedList<Task> listOfTasks = new LinkedList<Task>();
+	public static TaskList retrieve(String file) {
+		TaskList listOfTasks = new TaskList();
 		
 		try {
 			File fXmlFile = new File(file);
@@ -130,7 +129,7 @@ public class DataManager {
 			
 			return listOfTasks;
 	    } catch (FileNotFoundException e) {
-			LinkedList<Task> tasks = new LinkedList<Task>();
+			TaskList tasks = new TaskList();
 			DataManager.storeBack(tasks, file);
 			return tasks;
 	    } catch (Exception e) {
@@ -141,7 +140,7 @@ public class DataManager {
 		
 	}
 	
-	public static void storeBack(LinkedList<Task> taskList, String file) {
+	public static void storeBack(TaskList taskList, String file) {
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			docFactory.setNamespaceAware(true);
@@ -152,9 +151,9 @@ public class DataManager {
 			Element rootElement = doc.createElement("TaskPad");
 			doc.appendChild(rootElement);
 	 
-			int id = 0;
-			for(Task taskInList: taskList) {
-				id++;
+			for(int i = 0; i < taskList.size(); i++) {
+				Task taskInList = taskList.get(i);
+				int id = i + 1;
 				Element task = doc.createElement("Task");
 				rootElement.appendChild(task);
 				task.setAttribute("id", Integer.toString(id));
