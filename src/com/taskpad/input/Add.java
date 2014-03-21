@@ -16,7 +16,7 @@ public class Add extends Command{
 	private static String PARAMETER_START_TIME = "START TIME";
 	private static String PARAMETER_END_DATE = "END DATE";
 	private static String PARAMETER_END_TIME = "END TIME";
-	private static String PARAMETER_CATEGORY = "CATEGORY";
+	//private static String PARAMETER_CATEGORY = "CATEGORY";	//Will not be implemented
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_VENUE = "VENUE";
 	
@@ -98,7 +98,7 @@ public class Add extends Command{
 
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_CATEGORY, "");
+		//putOneParameter(PARAMETER_CATEGORY, "");
 		putOneParameter(PARAMETER_DEADLINE, "");
 		putOneParameter(PARAMETER_DESCRIPTION, ""); 
 		putOneParameter(PARAMETER_START_DATE, "");
@@ -205,7 +205,7 @@ public class Add extends Command{
 	}
 
 	private void inputCategory(String param){
-		putOneParameter(PARAMETER_CATEGORY, param);
+		//putOneParameter(PARAMETER_CATEGORY, param);
 	}
 	
 	private void invalidParam() {
