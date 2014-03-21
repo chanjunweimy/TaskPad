@@ -9,22 +9,21 @@ import com.taskpad.data.DataManager;
 import com.taskpad.data.NoPreviousCommandException;
 import com.taskpad.data.NoPreviousFileException;
 import com.taskpad.data.Task;
+import com.taskpad.data.TaskList;
 import com.taskpad.ui.GuiManager;
 
 public class CommandFactory {
 	private static Logger logger = Logger.getLogger("InfoLogging");
 	
 	protected static void listUndone() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
-		int index = 0;
-		for (Task task : listOfTasks) {
+		for (int index = 0; index < listOfTasks.size(); index++) {
+			Task task = listOfTasks.get(index);
 			if (task.getDone() == 1) {
-				index++;
 				continue;
 			}
-			index++;
 			tasks.add(index);
 		}
 		
@@ -38,17 +37,15 @@ public class CommandFactory {
 	}
 
 	protected static void listDone() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
-		int index = 0;
-		for (Task task : listOfTasks) {
+		for (int index = 0; index < listOfTasks.size(); index++) {
+			Task task = listOfTasks.get(index);
 			if (task.getDone() == 0) {
-				index++;
 				continue;
 			}
 			tasks.add(index);
-			index++;
 		}
 		
 		if (tasks.size() == 0) {
@@ -60,21 +57,17 @@ public class CommandFactory {
 	}
 
 	protected static void listAll() {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
 		LinkedList<Integer> tasks = new LinkedList<Integer>();
-		int index = 0;
-		for (@SuppressWarnings("unused") Task task : listOfTasks) {
+		for (int index = 0; index < listOfTasks.size(); index++) {
 			tasks.add(index);
-			index++;
 		}
 		
 		if (tasks.size() == 0) {
 			GuiManager.callOutput("No task found.");
 		} else {
 			String text = generateTextForTasks(tasks, listOfTasks);
-			// debug
-			// System.out.println(text);
 			GuiManager.callOutput(text);
 		}
 	}
@@ -87,14 +80,14 @@ public class CommandFactory {
 		}
 
 		DataFileStack.setPreviousIsValid(false);
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE_PREV);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE_PREV);
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
 		*/
 		try {
 			String previousFile = DataFileStack.popForUndo();
-			LinkedList<Task> listOfTasks = DataManager.retrieve(previousFile);
+			TaskList listOfTasks = DataManager.retrieve(previousFile);
 			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 			
 			String command = CommandRecord.popForUndo();
@@ -114,7 +107,7 @@ public class CommandFactory {
 	protected static void redo() {
 		try {
 			String previousFile = DataFileStack.popForRedo();
-			LinkedList<Task> listOfTasks = DataManager.retrieve(previousFile);
+			TaskList listOfTasks = DataManager.retrieve(previousFile);
 			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 			
 			String command = CommandRecord.popForRedo();
@@ -132,13 +125,13 @@ public class CommandFactory {
 	}
 
 	protected static void search(String keywordsString) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
 		String[] keywords = keywordsString.split(" ");
 		LinkedList<Integer> results = new LinkedList<Integer>();
 		
-		int index = 0;
-		for(Task task: listOfTasks) {
+		for(int index = 0; index < listOfTasks.size(); index++) {
+			Task task = listOfTasks.get(index);
 			String description = task.getDescription();
 			
 			boolean isCandidate = true;
@@ -151,8 +144,6 @@ public class CommandFactory {
 			if(isCandidate) {
 				results.add(index);
 			}
-				
-			index++;
 		}
 		
 		// pass feedback to GUI
@@ -160,7 +151,7 @@ public class CommandFactory {
 		GuiManager.callOutput(feedback);
 	}
 
-	protected static String generateTextForTasks(LinkedList<Integer> candidates, LinkedList<Task> listOfTasks) {
+	protected static String generateTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
 		String text = "";
 		for(int next: candidates) {
 			int taskId = next + 1;
@@ -171,7 +162,7 @@ public class CommandFactory {
 	}
 
 	protected static void edit(String taskIdString, String description) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
 		DataFileStack.pushForUndo(fileRecord);
@@ -194,7 +185,7 @@ public class CommandFactory {
 	}
 
 	protected static void markAsDone(String taskIdString) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
 		DataFileStack.pushForUndo(fileRecord);
@@ -207,7 +198,7 @@ public class CommandFactory {
 		// passFeedbackToGui to be implemented
 	}
 
-	protected static Task getTaskById(LinkedList<Task> listOfTasks, String taskIdString) {
+	protected static Task getTaskById(TaskList listOfTasks, String taskIdString) {
 		int taskId = Integer.parseInt(taskIdString);
 		int index = taskId - 1;
 		Task task = listOfTasks.get(index);
@@ -215,14 +206,14 @@ public class CommandFactory {
 	}
 
 	protected static void clear() {
-		// LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		// TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		// DataManager.storeBack(listOfTasks, DataFileStack.FILE_PREV);
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
 		DataFileStack.pushForUndo(fileRecord);
 		
-		listOfTasks = new LinkedList<Task>();
+		listOfTasks = new TaskList();
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		// pass feedback to gui
@@ -230,7 +221,7 @@ public class CommandFactory {
 	}
 
 	protected static void addInfo(String taskIdString, String info) {
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
 		DataFileStack.pushForUndo(fileRecord);
@@ -255,7 +246,7 @@ public class CommandFactory {
 	}
 
 	protected static void delete(String index) {		
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
 		DataFileStack.pushForUndo(fileRecord);
@@ -286,7 +277,7 @@ public class CommandFactory {
 			String startTime, String endDate,
 			String endTime, String venue) {
 		logger.info("adding task: " + description);
-		LinkedList<Task> listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
 		DataFileStack.pushForUndo(fileRecord);
