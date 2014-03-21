@@ -183,13 +183,6 @@ public class CommandFactory {
 		// passFeedbackToGui to be implemented
 	}
 
-	protected static Task getTaskById(TaskList listOfTasks, String taskIdString) {
-		int taskId = Integer.parseInt(taskIdString);
-		int index = taskId - 1;
-		Task task = listOfTasks.get(index);
-		return task;
-	}
-
 	protected static void clear() {
 		// TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		// DataManager.storeBack(listOfTasks, DataFileStack.FILE_PREV);
@@ -251,11 +244,7 @@ public class CommandFactory {
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
-		GuiManager.callOutput(generateFeedbackForDelete(taskDeleted));
-	}
-
-	protected static String generateFeedbackForDelete(Task taskDeleted) {
-		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
+		GuiManager.callOutput(OutputToGui.generateFeedbackForDelete(taskDeleted));
 	}
 	
 	protected static void add(String description, String deadline, String startDate,
@@ -274,11 +263,13 @@ public class CommandFactory {
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
 		int taskId = listOfTasks.size();
-		GuiManager.callOutput(generateFeedbackForAdd(taskId, taskToAdd));
+		GuiManager.callOutput(OutputToGui.generateFeedbackForAdd(taskId, taskToAdd));
 	}
 
-	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {
-		return OutputToGui.generateTextForOneTask(taskId, taskAdded);
+	protected static Task getTaskById(TaskList listOfTasks, String taskIdString) {
+		int taskId = Integer.parseInt(taskIdString);
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task;
 	}
-
 }
