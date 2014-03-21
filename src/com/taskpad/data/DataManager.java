@@ -21,6 +21,10 @@ import org.w3c.dom.NodeList;
 //import org.xml.sax.SAXException;
 
 
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
+
+
 public class DataManager {
 
 	public DataManager(){
