@@ -15,7 +15,7 @@ import java.util.Scanner;
  * make TimeWordParser to be a singleton to increase efficiency.
  */
 
-public class TimeWordParser {
+public class TimeWordParser{
 	
 	private static Map<String, String[]> _timewordsMap = new HashMap<String, String[]>();
 	private static Map<String, Integer> _timeunitMap = new HashMap<String, Integer>();
@@ -64,12 +64,37 @@ public class TimeWordParser {
 	}
 	
 	/*
-	protected static void main(String[] args){
+	public static void main(String[] args){
 		String input = "20 hours";
-		TimeWordParser twp = new TimeWordParser();
-		System.out.println(twp.timeWord(input));
+		TimeWordParser twp = TimeWordParser.getInstance();
+		try {
+			System.out.println(twp.timeWord(input));
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	*/
+	
+	protected String timeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		String time = parseTimeWord(input);
+		Date futureDate = addTime(time, TIME_SEC);
+		return formatTime(futureDate);
+	}
+	
+	/*
+	protected String timeWord(String input){	
+		String time = TimeWordParser.BLANK;
+		if (hasTimeWord(input)){
+			input = removeTimeWord(input);
+			_numberword = _numberparser.parseNumber(input);
+			Date newTime = addTime();
+			time = formatTime(newTime);
+		}
+		
+		return time;
+	}
+	 */
 	
 	protected String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
 		if (input == null || input.equals(SPACE)){
@@ -143,18 +168,6 @@ public class TimeWordParser {
 		return Integer.parseInt(_numberword) * secondConvertion;
 	}
 	
-	protected String timeWord(String input){	
-		String time = TimeWordParser.BLANK;
-		if (hasTimeWord(input)){
-			input = removeTimeWord(input);
-			_numberword = _numberparser.parseNumber(input);
-			Date newTime = addTime();
-			time = formatTime(newTime);
-		}
-		
-		return time;
-	}
-	
 	private int calculateTimeWord(String input){
 		String variations[];
 		int multiply = 0;
@@ -179,6 +192,7 @@ public class TimeWordParser {
 		return multiply;
 	}
 	
+	/*
 	private boolean hasTimeWord(String input){
 		String variations[];
 
@@ -193,7 +207,7 @@ public class TimeWordParser {
 		}
 		
 		return false;
-	}
+	}*/
 
 	private void initialiseTimewords() {
 		initialiseSecString();
@@ -342,6 +356,40 @@ public class TimeWordParser {
 		return sdf.format(time);
 	}
 	
+	private Date addTime(String value, String unit){
+		Date date = getCurrentTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		
+		int increment = Integer.parseInt(value);
+		
+		switch (unit){
+		case TIME_SEC:
+			cal.add(Calendar.SECOND, increment);
+			break;
+		case TIME_MIN:
+			cal.add(Calendar.MINUTE, increment);
+			break;
+		case TIME_HOURS:
+			cal.add(Calendar.HOUR, increment);
+			break;
+		case TIME_WEEKS:
+			cal.add(Calendar.WEEK_OF_MONTH, increment);
+			break;
+		case TIME_MONTH:
+			cal.add(Calendar.MONTH, increment);
+			break;
+		case TIME_YEAR:
+			cal.add(Calendar.YEAR, increment);
+			break;
+		default:
+			break;
+	}
+	
+	return cal.getTime();
+	}
+	
+	/*
 	private Date addTime(){
 		Date date = getCurrentTime();
 		Calendar cal = Calendar.getInstance();
@@ -350,6 +398,9 @@ public class TimeWordParser {
 		int increment = Integer.parseInt(_numberword);
 		
 		switch (_timeword){
+			case TIME_SEC:
+				cal.add(Calendar.SECOND, increment);
+				break;
 			case TIME_MIN:
 				cal.add(Calendar.MINUTE, increment);
 				break;
@@ -371,6 +422,7 @@ public class TimeWordParser {
 		
 		return cal.getTime();
 	}
+	*/
 	
 	private Date getCurrentTime(){
 		Date date;

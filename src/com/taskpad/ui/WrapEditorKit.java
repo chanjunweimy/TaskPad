@@ -1,8 +1,12 @@
 package com.taskpad.ui;
 
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.ViewFactory;
+
 /**
  * 
  * @author Jun
+ * @category
  * This class is created to fix
  * the line wrap problem in JTextPane Java 1.7
  * Hope it works!
@@ -16,10 +20,6 @@ package com.taskpad.ui;
  * in order to connect it to JTextPane
  * 
  */
-
-import javax.swing.text.StyledEditorKit;
-import javax.swing.text.ViewFactory;
-
 public class WrapEditorKit extends StyledEditorKit {
     /**
 	 * generated

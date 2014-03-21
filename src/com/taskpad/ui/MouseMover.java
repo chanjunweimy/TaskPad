@@ -12,9 +12,11 @@ import javax.swing.JFrame;
  * 
  * @author Jun
  *
+ * @category
  * MouseDragActioner is the actual class to do the moving
  * with the help of MousePressedDetector.
  * 
+ * @deprecated
  * DEPRECATED: replaced by ComponentMover.java
  *
  */
@@ -26,6 +28,7 @@ public class MouseMover implements MouseMotionListener{
 	private JFrame _movingFrame = null;
 	
 	/**
+	 * @deprecated
 	 *  DEPRECATED: private constructor shows that it cannot be used anymore.
 	 * @param ListenFrame
 	 */
