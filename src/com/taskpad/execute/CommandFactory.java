@@ -30,7 +30,7 @@ public class CommandFactory {
 		if (tasks.size() == 0) {
 			GuiManager.callOutput("No undone task found.");
 		} else {
-			String text = generateTextForTasks(tasks, listOfTasks);
+			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
 			GuiManager.callOutput(text);
 		}
 		
@@ -51,7 +51,7 @@ public class CommandFactory {
 		if (tasks.size() == 0) {
 			GuiManager.callOutput("No finished task found.");
 		} else {
-			String text = generateTextForTasks(tasks, listOfTasks);
+			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
 			GuiManager.callOutput(text);
 		}
 	}
@@ -67,7 +67,7 @@ public class CommandFactory {
 		if (tasks.size() == 0) {
 			GuiManager.callOutput("No task found.");
 		} else {
-			String text = generateTextForTasks(tasks, listOfTasks);
+			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
 			GuiManager.callOutput(text);
 		}
 	}
@@ -147,18 +147,8 @@ public class CommandFactory {
 		}
 		
 		// pass feedback to GUI
-		String feedback = generateTextForTasks(results, listOfTasks);
+		String feedback = OutputToGui.generateTextForTasks(results, listOfTasks);
 		GuiManager.callOutput(feedback);
-	}
-
-	protected static String generateTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
-		String text = "";
-		for(int next: candidates) {
-			int taskId = next + 1;
-			text += generateTextForOneTask(taskId, listOfTasks.get(next));
-			text += "\n";
-		}
-		return text;
 	}
 
 	protected static void edit(String taskIdString, String description) {
@@ -168,7 +158,7 @@ public class CommandFactory {
 		DataFileStack.pushForUndo(fileRecord);
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
-		String taskHistory = generateTitleForOneTask(taskIdString, task.getDescription());
+		String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
 		
 		task.setDescription(description);
 		
@@ -176,12 +166,7 @@ public class CommandFactory {
 		
 		// pass feedback to gui
 		GuiManager.callOutput("'" + taskHistory + "' changed to '" 
-				+ generateTitleForOneTask(taskIdString, description) + "'");
-	}
-
-	protected static String generateTitleForOneTask(String taskIdString,
-			String description) {
-		return taskIdString + ". " + description;
+				+ OutputToGui.generateTitleForOneTask(taskIdString, description) + "'");
 	}
 
 	protected static void markAsDone(String taskIdString) {
@@ -238,7 +223,7 @@ public class CommandFactory {
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		
-		GuiManager.callOutput(generateTextForOneTask(index + 1, task));
+		GuiManager.callOutput(OutputToGui.generateTextForOneTask(index + 1, task));
 	}
 
 	protected static int getIndexById(String taskIdString) {
@@ -293,56 +278,7 @@ public class CommandFactory {
 	}
 
 	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {
-		return generateTextForOneTask(taskId, taskAdded);
-	}
-
-	protected static String generateTextForOneTask(int taskId, Task task) {
-		String text = "";
-		
-		text += "Task ID: " + taskId + "\n";
-		text += "Description: " + task.getDescription() + "\n";
-		
-		if (task.getDeadline() != null) {
-			text += "Deadline: " + task.getDeadline() + "\n";
-		}
-		
-		String start = "";
-		if (task.getStartTime() != null) {
-			start += task.getStartTime();
-		}
-		if (task.getStartDate() != null) {
-			start += (" " + task.getStartDate());
-		}
-		if (!start.equals("")) {
-			text += "Start: " + start + "\n";
-		}
-		
-		String end = "";
-		if (task.getEndTime() != null) {
-			end += task.getEndTime();
-		}
-		if (task.getEndDate() != null) {
-			end += (" " + task.getEndDate());
-		}
-		if (!end.equals("")) {
-			text += "end: " + end + "\n";
-		}
-		
-		if (task.getVenue() != null) {
-			text += "Venue: " + task.getVenue() + "\n";
-		}
-		
-		if (task.getDetails() != null) {
-			text += "Details: " + task.getDetails() + "\n";
-		}
-		
-		if (task.getDone() == 0) {
-			text += "Not done yet.";
-		} else {
-			text += "Task has been done.";
-		}
-		
-		return text;
+		return OutputToGui.generateTextForOneTask(taskId, taskAdded);
 	}
 
 }
