@@ -101,17 +101,17 @@ public class List extends Command{
 	}
 	
 	private void initialiseAllVariations(){
-		String[] allVariations = {"ALL", "EVERYTHING", "WHOLE"};
+		String[] allVariations = {"ALL", "EVERYTHING", "WHOLE", "-A", "-AL"};
 		parametersMap.put(PARAMETER_VALID_LIST[0], allVariations);
 	}
 	
 	private void initialiseDoneVariations(){
-		String[] doneVariations = {"DONE", "COMPLETED", "FINISHED", "FINISH"};
+		String[] doneVariations = {"DONE", "COMPLETED", "FINISHED", "FINISH", "-D"};
 		parametersMap.put(PARAMETER_VALID_LIST[1], doneVariations);
 	}
 	
 	private void initialiseUndoneVariations(){
-		String[] undoneVariations = {"UNDONE", "INCOMPLETE", "UNFINISH", "UNFINISHED"};
+		String[] undoneVariations = {"UNDONE", "INCOMPLETE", "UNFINISH", "UNFINISHED", "-UD"};
 		parametersMap.put(PARAMETER_VALID_LIST[2], undoneVariations);
 	}
 	
