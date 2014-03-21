@@ -8,6 +8,13 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.NullTimeUnitException;
 import com.taskpad.dateandtime.NullTimeValueException;
 
+/**
+ * 
+ * @author Jun
+ *
+ * @category
+ * TestTimeWordParser: a Junit test case written to test TimeWordParser
+ */
 public class TestTimeWordParser {
 
 	DateAndTimeManager parser = DateAndTimeManager.getInstance();
