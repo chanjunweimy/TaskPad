@@ -5,16 +5,18 @@ import java.util.LinkedList;
 import com.taskpad.data.DataFileStack;
 import com.taskpad.data.DataManager;
 import com.taskpad.data.Task;
+import com.taskpad.data.TaskList;
 
 public class Reminder {
 	public static void showReminder() {
-		LinkedList<Task> tasks = getTasksDueToday();
+		TaskList tasks = getTasksDueToday();
 	}
 
-	private static LinkedList<Task> getTasksDueToday() {
-		LinkedList<Task> allTasks = DataManager.retrieve(DataFileStack.FILE);
+	private static TaskList getTasksDueToday() {
+		TaskList allTasks = DataManager.retrieve(DataFileStack.FILE);
 		
-		for (Task task: allTasks) {
+		for (int i = 0; i < allTasks.size(); i++) {
+			Task task = allTasks.get(i);
 			String deadline = task.getDeadline();
 			
 		}
