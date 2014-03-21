@@ -87,10 +87,7 @@ public class TestTimeWordParser {
 			assertTrue(e.getMessage().equals("Does not contain time unit!"));
 		}
 	}
-	
-	/**
-	 * we only can support 1 unit in a time now
-	 */
+
 	@Test
 	public void test9() {
 		try {
@@ -142,6 +139,15 @@ public class TestTimeWordParser {
 			parser.convertToSecond("1 1 1 s");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
 			assertTrue(e.getMessage().equals("Please key in time value!"));
+		}
+	}
+	
+	@Test
+	public void test15() {
+		try {
+			assertEquals(parser.convertToSecond("one one s 1 m"), "71");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			fail();
 		}
 	}
 }
