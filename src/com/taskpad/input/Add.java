@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 public class Add extends Command{
 	
+	private static final String QUOTE = "\"";
+	private static final String BLANK = "";
 	private static final String DASH = "-";
 	private static final String SPACE = " ";
 	private static final String COMMAND_ADD = "ADD";
@@ -62,50 +64,53 @@ public class Add extends Command{
 		return true;		
 	}
 
-	@SuppressWarnings("resource")
 	public String putDescToFirst() {
 		//scanner that omits all white space character
-		_sc = new Scanner(input).useDelimiter("\\s");
+		_sc = new Scanner(input);
 		
-		String tempDesc = null;
-		String normalString = "";
-		boolean isPrevDash = false;
+		StringBuffer tempDesc = null;
+		StringBuffer normalString = new StringBuffer(BLANK);
+		boolean isStarted = false;
 		boolean isFinish = false;
 		
 		while (_sc.hasNext()){
 			String buildString = _sc.next();
 			if (!isFinish){
-				if (!isPrevDash){
-					if (buildString.startsWith(DASH)){
-						isPrevDash = true;
+				if (!isStarted){
+					if (buildString.startsWith(QUOTE)){
+						isStarted = true;
+						tempDesc = new StringBuffer(buildString);
 					} else {
-						tempDesc = buildString;
-						isFinish = true;
-						continue;
+						normalString.append(SPACE + buildString);
 					}
 				} else {
-					isPrevDash = false;
+					tempDesc.append(SPACE + buildString);
+					if (buildString.endsWith(QUOTE)){
+						isFinish = true;
+					}
 				}
+			} else {
+				normalString.append(SPACE + buildString);
 			}
-			normalString = normalString + SPACE + buildString;
 		}
 		if (tempDesc == null){
 			invalidParam();
-			tempDesc = "";
+			tempDesc = new StringBuffer(BLANK);
 		}
-		return tempDesc + normalString;
+		_sc.close();
+		return tempDesc.append(normalString.toString()).toString();
 	}
 
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_CATEGORY, "");
-		putOneParameter(PARAMETER_DEADLINE, "");
-		putOneParameter(PARAMETER_DESCRIPTION, ""); 
-		putOneParameter(PARAMETER_START_DATE, "");
-		putOneParameter(PARAMETER_END_DATE, "");
-		putOneParameter(PARAMETER_END_TIME, "");
-		putOneParameter(PARAMETER_START_TIME, "");
-		putOneParameter(PARAMETER_VENUE, "");
+		putOneParameter(PARAMETER_CATEGORY, Add.BLANK);
+		putOneParameter(PARAMETER_DEADLINE, Add.BLANK);
+		putOneParameter(PARAMETER_DESCRIPTION, Add.BLANK); 
+		putOneParameter(PARAMETER_START_DATE, Add.BLANK);
+		putOneParameter(PARAMETER_END_DATE, Add.BLANK);
+		putOneParameter(PARAMETER_END_TIME, Add.BLANK);
+		putOneParameter(PARAMETER_START_TIME, Add.BLANK);
+		putOneParameter(PARAMETER_VENUE, Add.BLANK);
 	}
 
 	@Override
@@ -221,7 +226,7 @@ public class Add extends Command{
 	}
 	
 	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), "").trim();
+		return input.replaceFirst(getFirstChar(input), Add.BLANK).trim();
 	}
 	
 	private String getFirstChar(String input) {
@@ -246,7 +251,7 @@ public class Add extends Command{
 	
 	@SuppressWarnings("unused")
 	private void removeDesc(){
-		input.replace(_desc, "");
+		input.replace(_desc, Add.BLANK);
 	}
 	
 	//To be completed: PARSE The rest for date & time
@@ -256,7 +261,7 @@ public class Add extends Command{
 	}
 	
 	private String stripWhiteSpaces(String input){
-		return input.replaceAll(Add.SPACE, "");
+		return input.replaceAll(Add.SPACE, Add.BLANK);
 	}
 
 }
