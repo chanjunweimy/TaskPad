@@ -2,8 +2,8 @@ package com.taskpad.execute;
 
 import java.util.LinkedList;
 
-import com.taskpad.data.Task;
-import com.taskpad.data.TaskList;
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
 
 public class OutputToGui {
 	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {

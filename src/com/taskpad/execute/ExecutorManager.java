@@ -3,7 +3,7 @@ package com.taskpad.execute;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.taskpad.data.CommandRecord;
+import com.taskpad.storage.CommandRecord;
 import com.taskpad.input.Input;
 
 public class ExecutorManager {
