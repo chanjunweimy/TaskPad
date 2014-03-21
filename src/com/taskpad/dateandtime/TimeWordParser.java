@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * 
@@ -15,6 +16,7 @@ import java.util.Map;
  */
 
 public class TimeWordParser {
+	
 	private static Map<String, String[]> _timewordsMap = new HashMap<String, String[]>();
 	private static Map<String, Integer> _timeunitMap = new HashMap<String, Integer>();
 	private static DateAndTimeManager _numberparser = DateAndTimeManager.getInstance();
@@ -29,6 +31,7 @@ public class TimeWordParser {
 	private static final String ERROR_NULL_UNIT = "Does not contain time unit!";
 	private static final String ERROR_NULL_VALUE = "Please key in time value!";
 	private static final String SPACE = " ";
+	private static final String BLANK = "";
 	
 	private final int CONSTANT_SECOND = 1;
 	private final int CONSTANT_MINUTE = CONSTANT_SECOND * 60;
@@ -36,9 +39,9 @@ public class TimeWordParser {
 	private final int CONSTANT_DAY = CONSTANT_HOURS * 24;
 	private final int CONSTANT_WEEK = CONSTANT_DAY * 7;
 	
-	private static String _timeword = "";
-	private static String _numberword = "";
-	private String _userTimeword = "";
+	private static String _timeword = TimeWordParser.BLANK;
+	private static String _numberword = TimeWordParser.BLANK;
+	private String _userTimeword = TimeWordParser.BLANK;
 	//private static int _index = -2;
 	
 	private static TimeWordParser _timewordParser = new TimeWordParser();
@@ -69,11 +72,43 @@ public class TimeWordParser {
 	*/
 	
 	protected String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		if (input == null || input.equals(SPACE)){
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		
+		int realTime = 0;
+		Scanner sc = new Scanner(input);
+		
+		realTime = calculateEachTimeValues(realTime, sc);
 		
 		
-		StringBuffer time = parseOneTimeWord(input);
+		return BLANK + realTime;
+	}
+
+	private int calculateEachTimeValues(int realTime,
+			Scanner sc) throws NullTimeValueException, NullTimeUnitException {
+		StringBuffer tempTime = new StringBuffer(BLANK);
+		while (sc.hasNext()){
+			String oneSubstring = sc.next();
+			tempTime.append(oneSubstring);
+			
+			int secondConvertion = calculateTimeWord(oneSubstring);
+			boolean hasTimeUnit = secondConvertion > 0;
+			if (hasTimeUnit){
+				StringBuffer oneSubStringAns = parseOneTimeWord(tempTime.toString());
+				realTime += Integer.parseInt(oneSubStringAns.toString());
+				tempTime = new StringBuffer(BLANK);
+			} else {
+				tempTime.append(SPACE);
+			}
+		}
+		sc.close();
 		
-		return time.toString();
+		boolean isTempTimeEmpty = tempTime.toString().equals(BLANK);
+		if (!isTempTimeEmpty){
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		return realTime;
 	}
 
 	private StringBuffer parseOneTimeWord(String input)
@@ -86,7 +121,7 @@ public class TimeWordParser {
 			input = removeTimeWord(input);
 			input = input.trim();
 			
-			if (input == "") {
+			if (input == BLANK) {
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
 			}
 			
@@ -109,8 +144,8 @@ public class TimeWordParser {
 	}
 	
 	protected String timeWord(String input){	
-		String time = "";
-		if (containsTimeWord(input)){
+		String time = TimeWordParser.BLANK;
+		if (hasTimeWord(input)){
 			input = removeTimeWord(input);
 			_numberword = _numberparser.parseNumber(input);
 			Date newTime = addTime();
@@ -144,7 +179,7 @@ public class TimeWordParser {
 		return multiply;
 	}
 	
-	private boolean containsTimeWord(String input){
+	private boolean hasTimeWord(String input){
 		String variations[];
 
 		for (Map.Entry<String, String[]> entry : _timewordsMap.entrySet()){
@@ -218,7 +253,7 @@ public class TimeWordParser {
 	}
 	
 	private  boolean isValueFound(String value, String input) {
-		if (input == "" || input == null){
+		if (input == TimeWordParser.BLANK || input == null){
 			return false;
 		}
 		
@@ -235,7 +270,7 @@ public class TimeWordParser {
 		 */
 		for (int i = numArr.length - 1; i >= 0; i--){
 			
-			if (numArr[i].equals("")){
+			if (numArr[i].equals(TimeWordParser.BLANK)){
 				continue;
 			} else {
 				if (numArr[i].equals(value)){
