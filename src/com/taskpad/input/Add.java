@@ -64,6 +64,13 @@ public class Add extends Command{
 		return true;		
 	}
 
+	
+	/**
+	 * putDescToFirst: move the description that is with
+	 * " " to the first place in order to perform the
+	 * following methods.
+	 * @return
+	 */
 	public String putDescToFirst() {
 		//scanner that omits all white space character
 		_sc = new Scanner(input);
@@ -103,14 +110,14 @@ public class Add extends Command{
 
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_CATEGORY, Add.BLANK);
-		putOneParameter(PARAMETER_DEADLINE, Add.BLANK);
-		putOneParameter(PARAMETER_DESCRIPTION, Add.BLANK); 
-		putOneParameter(PARAMETER_START_DATE, Add.BLANK);
-		putOneParameter(PARAMETER_END_DATE, Add.BLANK);
-		putOneParameter(PARAMETER_END_TIME, Add.BLANK);
-		putOneParameter(PARAMETER_START_TIME, Add.BLANK);
-		putOneParameter(PARAMETER_VENUE, Add.BLANK);
+		putOneParameter(PARAMETER_CATEGORY, BLANK);
+		putOneParameter(PARAMETER_DEADLINE, BLANK);
+		putOneParameter(PARAMETER_DESCRIPTION, BLANK); 
+		putOneParameter(PARAMETER_START_DATE, BLANK);
+		putOneParameter(PARAMETER_END_DATE, BLANK);
+		putOneParameter(PARAMETER_END_TIME, BLANK);
+		putOneParameter(PARAMETER_START_TIME, BLANK);
+		putOneParameter(PARAMETER_VENUE, BLANK);
 	}
 
 	@Override
@@ -123,6 +130,15 @@ public class Add extends Command{
 		return false;
 	}
 	
+	
+	/**
+	 * Lynnette, bug here:
+	 * if user keys in "11-11-2014" then this method will be failed.
+	 * Delete these comments when u see it.
+	 * Change it if possible. :) 
+	 * 
+	 * Jun Wei
+	 */
 	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		_sc = new Scanner(input).useDelimiter("\\s-");
@@ -135,6 +151,7 @@ public class Add extends Command{
 			}
 			_count++;
 		}
+		_sc.close();
 	}
 	
 	private void parseNextParam(String param){
