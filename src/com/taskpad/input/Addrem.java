@@ -6,6 +6,7 @@ public class Addrem extends Command{
 	
 	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final int NUMBER_ARGUMENTS = 2;
+	private static final String SPACE = " ";
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_REM_DATE = "DATE";
@@ -28,7 +29,11 @@ public class Addrem extends Command{
 	//TODO: check for correct date and time format
 	@Override
 	protected boolean commandSpecificRun() {
-		splitInputParameters();
+		if (checkIfContainsDelimiters()){
+			splitInputParameters();
+		} else {
+			splitInputNoDelimiters();
+		}
 		
 		if (_invalidParameters){
 			return false;
@@ -91,6 +96,19 @@ public class Addrem extends Command{
 		default:
 			invalidParam();
 		}
+	}
+	
+	private void splitInputNoDelimiters() {
+		String[] splitInput = input.split(SPACE);
+		_taskID = splitInput[0];
+		_remDate = splitInput[1];
+		if (splitInput.length == 3){
+			_remTime = splitInput[2];
+		}
+	}
+
+	private boolean checkIfContainsDelimiters() {
+		return input.contains("-d")||input.contains("-t");
 	}
 	
 	private void getDeadline(String param) {
