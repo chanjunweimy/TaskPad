@@ -54,7 +54,6 @@ public abstract class Command {
 			createInputObject();
 			passObjectToExecutor();
 		} else {
-			showNoDesc();
 			return;
 		}
 	}

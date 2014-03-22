@@ -45,8 +45,10 @@ public class Add extends Command{
 	protected boolean commandSpecificRun() {
 		String inputDesc = putDescToFirst();
 		
-		if (inputDesc == null){
+		if (inputDesc.equals("")){
 			checkIfExistDesc();
+		} else {
+			input = inputDesc;
 		}
 		
 		if(!_invalidParameters){
@@ -70,16 +72,23 @@ public class Add extends Command{
 
 	
 	private void checkIfExistDesc() {
-		int indexFirstDash = fullInput.indexOf("-");
-		int indexFirstWhite = fullInput.indexOf(" ");
-		if (fullInput.substring(indexFirstWhite, indexFirstDash).equals("")){
+		if (!isFirstBitDesc()){
 			_invalidParameters = true;
 			try {
 				throw new EmptyDescException();
 			} catch (EmptyDescException e) {
-				showNoDesc();
+				InputManager.outputToGui("No description specified");
 			}
 		}
+	}
+	
+	private boolean isFirstBitDesc(){
+		int indexFirstDash = fullInput.indexOf("-");
+		int indexFirstWhite = fullInput.indexOf(" ");
+		if(fullInput.substring(indexFirstWhite+1, indexFirstDash).equals("")){
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -121,9 +130,9 @@ public class Add extends Command{
 		if (tempDesc == null){
 			//invalidParam();
 			tempDesc = new StringBuffer(BLANK);
+			return tempDesc.toString();
 		}
-		
-		
+	
 		_sc.close();
 		return tempDesc.append(normalString.toString()).toString();
 	}
