@@ -10,6 +10,7 @@ public class Add extends Command{
 	private static final String BLANK = "";
 	private static final String DASH = "-";
 	private static final String SPACE = " ";
+	private static final String EMPTY = "";
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
 		
@@ -45,8 +46,13 @@ public class Add extends Command{
 	protected boolean commandSpecificRun() {
 		String inputDesc = putDescToFirst();
 		
-		if (inputDesc.equals("")){
-			checkIfExistDesc();
+		if (inputDesc.equals(EMPTY)){
+			try {
+				checkIfExistDesc();
+			} catch (EmptyDescException e) {
+				InputManager.outputToGui("No description specified");
+				return false;
+			}
 		} else {
 			input = inputDesc;
 		}
@@ -71,23 +77,22 @@ public class Add extends Command{
 	}
 
 	
-	private void checkIfExistDesc() {
+	private void checkIfExistDesc() throws EmptyDescException {
 		if (!isFirstBitDesc()){
 			_invalidParameters = true;
-			try {
-				throw new EmptyDescException();
-			} catch (EmptyDescException e) {
-				InputManager.outputToGui("No description specified");
-			}
+			throw new EmptyDescException();
 		}
 	}
 	
 	private boolean isFirstBitDesc(){
-		int indexFirstDash = fullInput.indexOf("-");
-		int indexFirstWhite = fullInput.indexOf(" ");
-		if(fullInput.substring(indexFirstWhite+1, indexFirstDash).equals("")){
+		int indexFirstDash = fullInput.indexOf(DASH);
+		int indexFirstWhite = fullInput.indexOf(SPACE);
+		if (indexFirstDash == -1){
+			return true;
+		} else if(fullInput.substring(indexFirstWhite+1, indexFirstDash).equals("")){
 			return false;
 		}
+		
 		return true;
 	}
 
