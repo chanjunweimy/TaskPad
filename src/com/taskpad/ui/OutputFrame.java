@@ -1,14 +1,3 @@
-/**
- * ===============DEPRECATED================
- * 
- * This class is deprecated as this class can only 
- * show text font with only one color.
- * 
- * But we need different font color for reminder...
- * JTextArea doesn't support this functionality 
- * so we have to implement a new class......
- * 
- */
 
 package com.taskpad.ui;
 
@@ -23,6 +12,26 @@ import javax.swing.border.Border;
 
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
+
+
+/**
+ * 
+ * ===============DEPRECATED================
+ * 
+ * This class is deprecated as this class can only 
+ * show text font with only one color.
+ * 
+ * But we need different font color for reminder...
+ * JTextArea doesn't support this functionality 
+ * so we have to implement a new class......
+ * 
+ * @category
+ * Change to become a parent class
+ * 
+ * @see
+ * FlexiFontOutputFrame
+ * 
+ */
 
 public abstract class OutputFrame extends GuiFrame{
 

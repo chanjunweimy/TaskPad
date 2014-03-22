@@ -7,7 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
-import com.taskpad.data.Task;
+import com.taskpad.storage.Task;
+
 
 
 /**

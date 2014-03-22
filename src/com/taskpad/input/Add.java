@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 public class Add extends Command{
 	
+	private static final String QUOTE = "\"";
+	private static final String BLANK = "";
 	private static final String DASH = "-";
 	private static final String SPACE = " ";
 	private static final String COMMAND_ADD = "ADD";
@@ -16,7 +18,7 @@ public class Add extends Command{
 	private static String PARAMETER_START_TIME = "START TIME";
 	private static String PARAMETER_END_DATE = "END DATE";
 	private static String PARAMETER_END_TIME = "END TIME";
-	//private static String PARAMETER_CATEGORY = "CATEGORY";	//Will not be implemented
+	private static String PARAMETER_CATEGORY = "CATEGORY";
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_VENUE = "VENUE";
 	
@@ -62,50 +64,60 @@ public class Add extends Command{
 		return true;		
 	}
 
-	@SuppressWarnings("resource")
+	
+	/**
+	 * putDescToFirst: move the description that is with
+	 * " " to the first place in order to perform the
+	 * following methods.
+	 * @return
+	 */
 	public String putDescToFirst() {
 		//scanner that omits all white space character
-		_sc = new Scanner(input).useDelimiter("\\s");
+		_sc = new Scanner(input);
 		
-		String tempDesc = null;
-		String normalString = "";
-		boolean isPrevDash = false;
+		StringBuffer tempDesc = null;
+		StringBuffer normalString = new StringBuffer(BLANK);
+		boolean isStarted = false;
 		boolean isFinish = false;
 		
 		while (_sc.hasNext()){
 			String buildString = _sc.next();
 			if (!isFinish){
-				if (!isPrevDash){
-					if (buildString.startsWith(DASH)){
-						isPrevDash = true;
+				if (!isStarted){
+					if (buildString.startsWith(QUOTE)){
+						isStarted = true;
+						tempDesc = new StringBuffer(buildString);
 					} else {
-						tempDesc = buildString;
-						isFinish = true;
-						continue;
+						normalString.append(SPACE + buildString);
 					}
 				} else {
-					isPrevDash = false;
+					tempDesc.append(SPACE + buildString);
+					if (buildString.endsWith(QUOTE)){
+						isFinish = true;
+					}
 				}
+			} else {
+				normalString.append(SPACE + buildString);
 			}
-			normalString = normalString + SPACE + buildString;
 		}
 		if (tempDesc == null){
 			invalidParam();
-			tempDesc = "";
+			tempDesc = new StringBuffer(BLANK);
 		}
-		return tempDesc + normalString;
+		_sc.close();
+		return tempDesc.append(normalString.toString()).toString();
 	}
 
 	@Override
 	protected void initialiseParametersToNull() {
-		//putOneParameter(PARAMETER_CATEGORY, "");
-		putOneParameter(PARAMETER_DEADLINE, "");
-		putOneParameter(PARAMETER_DESCRIPTION, ""); 
-		putOneParameter(PARAMETER_START_DATE, "");
-		putOneParameter(PARAMETER_END_DATE, "");
-		putOneParameter(PARAMETER_END_TIME, "");
-		putOneParameter(PARAMETER_START_TIME, "");
-		putOneParameter(PARAMETER_VENUE, "");
+		putOneParameter(PARAMETER_CATEGORY, BLANK);
+		putOneParameter(PARAMETER_DEADLINE, BLANK);
+		putOneParameter(PARAMETER_DESCRIPTION, BLANK); 
+		putOneParameter(PARAMETER_START_DATE, BLANK);
+		putOneParameter(PARAMETER_END_DATE, BLANK);
+		putOneParameter(PARAMETER_END_TIME, BLANK);
+		putOneParameter(PARAMETER_START_TIME, BLANK);
+		putOneParameter(PARAMETER_VENUE, BLANK);
 	}
 
 	@Override
@@ -118,6 +130,15 @@ public class Add extends Command{
 		return false;
 	}
 	
+	
+	/**
+	 * Lynnette, bug here:
+	 * if user keys in "11-11-2014" then this method will be failed.
+	 * Delete these comments when u see it.
+	 * Change it if possible. :) 
+	 * 
+	 * Jun Wei
+	 */
 	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		_sc = new Scanner(input).useDelimiter("\\s-");
@@ -130,6 +151,7 @@ public class Add extends Command{
 			}
 			_count++;
 		}
+		_sc.close();
 	}
 	
 	private void parseNextParam(String param){
@@ -205,7 +227,7 @@ public class Add extends Command{
 	}
 
 	private void inputCategory(String param){
-		//putOneParameter(PARAMETER_CATEGORY, param);
+		putOneParameter(PARAMETER_CATEGORY, param);
 	}
 	
 	private void invalidParam() {
@@ -221,7 +243,7 @@ public class Add extends Command{
 	}
 	
 	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), "").trim();
+		return input.replaceFirst(getFirstChar(input), Add.BLANK).trim();
 	}
 	
 	private String getFirstChar(String input) {
@@ -246,7 +268,7 @@ public class Add extends Command{
 	
 	@SuppressWarnings("unused")
 	private void removeDesc(){
-		input.replace(_desc, "");
+		input.replace(_desc, Add.BLANK);
 	}
 	
 	//To be completed: PARSE The rest for date & time
@@ -256,7 +278,7 @@ public class Add extends Command{
 	}
 	
 	private String stripWhiteSpaces(String input){
-		return input.replaceAll(Add.SPACE, "");
+		return input.replaceAll(Add.SPACE, Add.BLANK);
 	}
 
 }

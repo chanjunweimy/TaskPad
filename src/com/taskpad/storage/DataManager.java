@@ -1,4 +1,4 @@
-package com.taskpad.data;
+package com.taskpad.storage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,10 +19,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 //import org.xml.sax.SAXException;
-
-
-import com.taskpad.storage.Task;
-import com.taskpad.storage.TaskList;
 
 
 public class DataManager {
