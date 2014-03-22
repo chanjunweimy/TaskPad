@@ -44,7 +44,7 @@ public class ExecutorManager {
 			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":
-			System.out.println(parameters.get("KEYWORD"));
+			logger.info("Search keyword: " + parameters.get("KEYWORD"));
 			CommandFactory.search(parameters.get("KEYWORD"));
 			break;
 		case "UNDO":

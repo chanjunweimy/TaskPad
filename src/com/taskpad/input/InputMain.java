@@ -31,6 +31,7 @@ public class InputMain {
 	private static Logger logger = Logger.getLogger("Input");
 	
 	public static void receiveInput(String input){
+		input = input.trim();
 		hasCheckedFlexi = false;
 		if (isConfirmation){
 			if (isConfirmClear(input)){
@@ -266,21 +267,19 @@ public class InputMain {
 		//return input.replaceFirst("(?i)"+command.toString()+" ", "");  //deprecated
 		String desc = "";
 		String[] splitInput = input.split(" ");
-		int index = 0;
 		
 		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].equals(command.toString())){
-				index = i;
-			}
-		}
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (i != index){
+			if (isNotCommandString(command, splitInput, i)){
 				desc += splitInput[i] + " ";
 			}
 		}
-				
+			
 		return desc;
+	}
+
+	private static boolean isNotCommandString(CommandType command,
+			String[] splitInput, int i) {
+		return !splitInput[i].toUpperCase().equals(command.toString());
 	}
 	
 	private static void invalidCommand(String input) {
