@@ -57,7 +57,6 @@ public class ExecutorManager {
 			list(parameters.get("KEY"));
 			break;
 		}
-		
 	}
 
 	private static void list(String option) {
