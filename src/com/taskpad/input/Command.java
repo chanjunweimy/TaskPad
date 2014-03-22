@@ -123,10 +123,33 @@ public abstract class Command {
 		return false;
 	}
 	
+	/**
+	 * Lynnette: clearInputParameters() cannot be put
+	 * in here.
+	 * For example, inside Add.java,
+	 * you putParametes before you createInputObject
+	 * in that case, your input parameters will be wrong!
+	 * so I help you move it, in that place I will comment also.
+	 * 
+	 * You see, whether the place I move is suitable or not la :) 
+	 * @return
+	 */
 	protected Input createInputObject() {
-		clearInputParameters();
+		//clearInputParameters();
 		putInputParameters();
 		inputObject = new Input(getCOMMAND(), inputParameters);	
+		
+		/**
+		 * for debugging!
+		 */
+		/*
+		InputManager.outputToGui(getCOMMAND());
+		ArrayList<String> arr = new ArrayList<String>(inputParameters.values());
+		for (String str : arr){
+			InputManager.outputToGui(str);
+		}
+		 */
+		
 		logger.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;
 	}
@@ -148,9 +171,15 @@ public abstract class Command {
 		inputParameters.put(parameter, input);
 	}
 	
+	/**
+	 * Lynnette, I think you should clear after passing. :D
+	 */
 	protected void passObjectToExecutor(){
-		assert inputObject.getParameters().size() != 0;
+		assert (inputObject.getParameters().size() != 0);
 		InputManager.passToExecutor(inputObject, fullInput);
+		
+		clearInputParameters();
+		
 		logger.info("Input object passed to executor");
 	}
 	

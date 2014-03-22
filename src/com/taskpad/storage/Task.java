@@ -1,4 +1,4 @@
-package com.taskpad.execute;
+package com.taskpad.storage;
 
 public class Task {
 	private String description;
@@ -84,9 +84,5 @@ public class Task {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-
-
-	
 	
 }

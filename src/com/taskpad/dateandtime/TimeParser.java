@@ -18,7 +18,7 @@ public class TimeParser {
 	/* This method takes in a time and parses it
 	 * 
 	 */
-	protected static String parseTime(String input){
+	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException{
 		TimeWordParser twp = TimeWordParser.getInstance();
 		String timeString = "";
 		long time = 0;
