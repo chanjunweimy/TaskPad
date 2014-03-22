@@ -36,7 +36,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private final int ROOTPANE_BORDER_THICKNESS = 2;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
-	
+		
 	protected GuiFrame(){
 		initalizeGuiFrame();
 	}
@@ -53,14 +53,14 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		getRootPane().setBorder(BORDER_ROOTPANE);
 		
 		setUpResizer();
-		
+				
 		addWindowListener(this);
 		
 		showWindow(true);
 				
 		focusInputBox();		
 		
-		//to    clear the memory
+		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
@@ -73,8 +73,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		//to make it focus to input box
 		setAlwaysOnTop(true);
 		
-		//thinking a better way to solve this issue.
-	}
+	}		//thinking a better way to solve this issue.
+
 	     
 	protected void close(){ 
 		dispose();

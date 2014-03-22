@@ -11,7 +11,7 @@ public class ExecutorManager {
 	
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
-		logger.info("Executor: "+command);
+		logger.info("Executor: "+ command);
 		Map<String, String> parameters = input.getParameters();
 		
 		switch (commandType) {
@@ -44,6 +44,7 @@ public class ExecutorManager {
 			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":
+			System.out.println(parameters.get("KEYWORD"));
 			CommandFactory.search(parameters.get("KEYWORD"));
 			break;
 		case "UNDO":

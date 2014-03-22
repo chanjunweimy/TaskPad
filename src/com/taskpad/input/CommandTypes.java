@@ -2,8 +2,12 @@ package com.taskpad.input;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class CommandTypes {
+	
+	private static final String SPACE = " ";
+	protected static Logger logger = Logger.getLogger("Command logger");
 	
 	public enum CommandType{
 		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
@@ -33,11 +37,11 @@ public class CommandTypes {
 	
 	public static CommandType findFlexi(String input){
 		String variations[];
-		
+
 		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
 			variations = entry.getValue();
 			for (int i=0; i<variations.length; i++){
-				if (isContainsInput(variations[i], input)){
+				if (isInputSubstring(variations[i], input)){
 					return (CommandType) entry.getKey();
 				}
 			}
@@ -46,9 +50,22 @@ public class CommandTypes {
 		return CommandType.INVALID;
 	}
 	
+	private static boolean isInputSubstring(String value, String input){
+		String[] splitInput = input.split(SPACE);
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toUpperCase().equals(value)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/* deprecated
 	private static boolean isContainsInput(String value, String input){
 		return input.toUpperCase().contains(value);
 	}
+	*/
 	
 	private static boolean isValueInputCommand(String value, String inputCommand) {
 		inputCommand = inputCommand.trim();
@@ -137,7 +154,7 @@ public class CommandTypes {
 	}
 	
 	private static void putSearchVariations(){
-		String[] searchVariations = {"SEARCH", "FIND", "S"};
+		String[] searchVariations = {"SEARCH", "FIND"};
 		commandVariations.put(CommandType.SEARCH, searchVariations);
 	}
 	
@@ -152,7 +169,7 @@ public class CommandTypes {
 	}
 	
 	private static void putRedoVariations(){
-		String[] redoVariations = {"REDO", "R", "RDO", "RE"};
+		String[] redoVariations = {"REDO", "RDO", "RE"};
 		commandVariations.put(CommandType.REDO, redoVariations);
 	}
 	
