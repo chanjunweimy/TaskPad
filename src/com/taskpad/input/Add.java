@@ -43,7 +43,11 @@ public class Add extends Command{
 	
 	@Override
 	protected boolean commandSpecificRun() {
-		input = putDescToFirst();
+		String inputDesc = putDescToFirst();
+		
+		if (inputDesc == null){
+			checkIfExistDesc();
+		}
 		
 		if(!_invalidParameters){
 			splitInputParameters();
@@ -65,6 +69,19 @@ public class Add extends Command{
 	}
 
 	
+	private void checkIfExistDesc() {
+		int indexFirstDash = fullInput.indexOf("-");
+		int indexFirstWhite = fullInput.indexOf(" ");
+		if (fullInput.substring(indexFirstWhite, indexFirstDash).equals("")){
+			_invalidParameters = true;
+			try {
+				throw new EmptyDescException();
+			} catch (EmptyDescException e) {
+				showNoDesc();
+			}
+		}
+	}
+
 	/**
 	 * putDescToFirst: move the description that is with
 	 * " " to the first place in order to perform the
@@ -100,10 +117,13 @@ public class Add extends Command{
 				normalString.append(SPACE + buildString);
 			}
 		}
+		
 		if (tempDesc == null){
-			invalidParam();
+			//invalidParam();
 			tempDesc = new StringBuffer(BLANK);
 		}
+		
+		
 		_sc.close();
 		return tempDesc.append(normalString.toString()).toString();
 	}

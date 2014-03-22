@@ -69,8 +69,8 @@ public abstract class Command {
 		InputManager.outputToGui(errorMessage);
 	}
 
-	private void showNoDesc() {
-		String errorMessage = String.format(MESSAGE_INVALID_INPUT, "no description!");
+	protected void showNoDesc() {
+		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
 		InputManager.outputToGui(errorMessage);
 	}
 	
