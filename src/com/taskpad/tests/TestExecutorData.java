@@ -15,7 +15,7 @@ import com.taskpad.storage.Task;
 public class TestExecutorData {
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
-		DataManager.storeBack(tasks, DataFileStack.FILE);
+		//DataManager.storeBack(tasks, DataFileStack.FILE);
 		// DataManager.storeBack(tasks, DataFileStack.FILE_PREV);
 		
 		String input = "add do homework";
@@ -63,7 +63,7 @@ public class TestExecutorData {
 	
 	private static void dataStoreBackTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
-		DataManager.storeBack(tasks, "test_data.xml");
+		//DataManager.storeBack(tasks, "test_data.xml");
 	}
 	
 	public static void main(String args[]) {
