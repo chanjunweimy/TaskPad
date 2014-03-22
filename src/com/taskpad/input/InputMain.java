@@ -257,7 +257,7 @@ public class InputMain {
 	
 	private static void flexiCommand(String input){
 		hasCheckedFlexi = true;
-		CommandType command = CommandTypes.findFlexi(input);
+		CommandType command = CommandQueue.findFlexi(input);
 		logger.info("Flexicommands: " + command.toString());
 		String commandTypeString = replaceCommandWord(input, command);
 		performCommand(command, commandTypeString, input);
@@ -288,7 +288,7 @@ public class InputMain {
 
 	private static CommandTypes.CommandType determineCommandType(String commandTypeString) {
 		String commandToFind = getFirstWord(commandTypeString);
-		CommandTypes.CommandType commandType = CommandTypes.find(commandToFind);
+		CommandTypes.CommandType commandType = CommandQueue.find(commandToFind);
 		
 		return commandType;
 	}

@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 public class CommandTypes {
 	
-	private static final String SPACE = " ";
 	protected static Logger logger = Logger.getLogger("Command logger");
 	
 	public enum CommandType{
@@ -14,66 +13,10 @@ public class CommandTypes {
 		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, REDO, SEARCH, STOP, UNDO
 	};
 	
-	private static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
+	protected static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
 
 	public CommandTypes(){
 		createHashMap();
-	}
-	
-	public static CommandType find(String inputCommand){
-		String variations[];
-
-		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
-			variations = entry.getValue();
-			for (int i=0; i<variations.length; i++){
-				if (isValueInputCommand(variations[i], inputCommand)){
-					return (CommandType) entry.getKey();
-				}
-			}
-		}
-		
-		return CommandType.INVALID;
-	}
-	
-	public static CommandType findFlexi(String input){
-		String variations[];
-
-		for (Map.Entry<CommandType, String[]> entry : commandVariations.entrySet()){
-			variations = entry.getValue();
-			for (int i=0; i<variations.length; i++){
-				if (isInputSubstring(variations[i], input)){
-					return (CommandType) entry.getKey();
-				}
-			}
-		}
-		
-		return CommandType.INVALID;
-	}
-	
-	private static boolean isInputSubstring(String value, String input){
-		String[] splitInput = input.split(SPACE);
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].toUpperCase().equals(value)){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/* deprecated
-	private static boolean isContainsInput(String value, String input){
-		return input.toUpperCase().contains(value);
-	}
-	*/
-	
-	private static boolean isValueInputCommand(String value, String inputCommand) {
-		inputCommand = inputCommand.trim();
-		if (value.equalsIgnoreCase(inputCommand)){
-			return true;
-		}
-		
-		return false;
 	}
 
 	private static void createHashMap(){

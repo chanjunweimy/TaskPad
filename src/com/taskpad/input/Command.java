@@ -170,9 +170,6 @@ public abstract class Command {
 		inputParameters.put(parameter, input);
 	}
 	
-	/**
-	 * Lynnette, I think you should clear after passing. :D
-	 */
 	protected void passObjectToExecutor(){
 		assert (inputObject.getParameters().size() != 0);
 		InputManager.passToExecutor(inputObject, fullInput);
