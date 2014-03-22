@@ -35,15 +35,15 @@ public class OutputToGui {
 		text += "Task ID: " + taskId + "\n";
 		text += "Description: " + task.getDescription() + "\n";
 		
-		if (task.getDeadline() != null) {
+		if (task.getDeadline() != null && !task.getDeadline().equals("")) {
 			text += "Deadline: " + task.getDeadline() + "\n";
 		}
 		
 		String start = "";
-		if (task.getStartTime() != null) {
+		if (task.getStartTime() != null && !task.getStartTime().equals("")) {
 			start += task.getStartTime();
 		}
-		if (task.getStartDate() != null) {
+		if (task.getStartDate() != null && !task.getStartDate().equals("")) {
 			start += (" " + task.getStartDate());
 		}
 		if (!start.equals("")) {
@@ -51,21 +51,21 @@ public class OutputToGui {
 		}
 		
 		String end = "";
-		if (task.getEndTime() != null) {
+		if (task.getEndTime() != null && !task.getEndTime().equals("")) {
 			end += task.getEndTime();
 		}
-		if (task.getEndDate() != null) {
+		if (task.getEndDate() != null && !task.getEndDate().equals("")) {
 			end += (" " + task.getEndDate());
 		}
 		if (!end.equals("")) {
-			text += "end: " + end + "\n";
+			text += "End: " + end + "\n";
 		}
 		
-		if (task.getVenue() != null) {
+		if (task.getVenue() != null && !task.getVenue().equals("")) {
 			text += "Venue: " + task.getVenue() + "\n";
 		}
 		
-		if (task.getDetails() != null) {
+		if (task.getDetails() != null && !task.getDetails().equals("")) {
 			text += "Details: " + task.getDetails() + "\n";
 		}
 		
