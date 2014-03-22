@@ -21,7 +21,7 @@ public abstract class Command {
 	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
-	
+	    
 	protected static Logger logger = Logger.getLogger("Command logger");
 	
 	public Command(String input, String fullInput){

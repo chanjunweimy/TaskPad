@@ -159,6 +159,7 @@ public class InputMain {
 				break;
 			default:
 				invalidCommand(commandTypeString);
+				break;
 		}
 	}
 
@@ -256,14 +257,30 @@ public class InputMain {
 	private static void flexiCommand(String input){
 		hasCheckedFlexi = true;
 		CommandType command = CommandTypes.findFlexi(input);
-	
+		logger.info("Flexicommands: " + command.toString());
 		String commandTypeString = replaceCommandWord(input, command);
-		System.out.println(commandTypeString);
 		performCommand(command, commandTypeString, input);
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
-		return input.replaceFirst("(?i)"+command.toString()+" ", "");
+		//return input.replaceFirst("(?i)"+command.toString()+" ", "");  //deprecated
+		String desc = "";
+		String[] splitInput = input.split(" ");
+		int index = 0;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].equals(command.toString())){
+				index = i;
+			}
+		}
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (i != index){
+				desc += splitInput[i] + " ";
+			}
+		}
+				
+		return desc;
 	}
 	
 	private static void invalidCommand(String input) {
