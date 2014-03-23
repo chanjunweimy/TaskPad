@@ -24,6 +24,7 @@ public class TimeParser {
 	private static final String COLON = ":";
 	private static final String SEMICOLON = ";";
 	private static final String DOT = ".";
+	private static final String EMPTY = "";
 
 	private TimeParser(){
 	}
@@ -31,7 +32,7 @@ public class TimeParser {
 	/* This method takes in a time and parses it
 	 * 
 	 */
-	public static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException{
+	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException{
 		TimeWordParser twp = TimeWordParser.getInstance();
 		String timeString = "";
 		long time = 0;
@@ -49,8 +50,24 @@ public class TimeParser {
 		return timeString;
 	}
 	
+	protected static String parseTimeInput(String input){
+		String timeString = "";
+		long time = 0;
+		
+		if(!inputContainsTimeWords(timeString)){
+			time = decodeTime(input);
+			timeString = convertMillisecondsToTime(time);
+		}
+				
+		if (isInvalidTime(timeString)){
+			return timeErrorMessage(input);
+		}
+		
+		return timeString;
+	}
+	
 	private static boolean inputContainsTimeWords(String input) {
-		if (input.equals("")){
+		if (input.equals(EMPTY)){
 			return true;
 		}
 		return false;
@@ -64,6 +81,7 @@ public class TimeParser {
         time = checkMornAftEvenWords(input);
         
         if (time != TIME_NEG){
+        	System.out.println("HI");
         	return time;
         }
         	    
@@ -76,6 +94,7 @@ public class TimeParser {
 	        } else {
 	            // Process strings like "8", "8p", "8pm", "2300"
 	            if (input.contains(TIME_AM)) {
+	            	System.out.println("AM");
 	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
 
 	            } else if (input.contains(TIME_PM)) {
@@ -172,6 +191,8 @@ public class TimeParser {
         } else if (containsNightWords(input)){
         	hours = TIME_NIGHT;
         	minutes = TIME_ZERO;
+        } else {
+        	return time;
         }
         
     	time = convertToSeconds(hours, minutes);
@@ -196,7 +217,6 @@ public class TimeParser {
 	}
 
 	private static long convertToSeconds(String hours, String minutes){
-		long time = 0;
 		return (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
 	}
 	
@@ -231,7 +251,7 @@ public class TimeParser {
 	}
 	
 	public static void main(String[] args){
-		String input = "13am";
+		String input = "8am";
 		long time = decodeTime(input);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
