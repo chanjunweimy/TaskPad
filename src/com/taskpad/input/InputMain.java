@@ -28,7 +28,7 @@ public class InputMain {
 	@SuppressWarnings("unused")
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
-	private static Logger logger = Logger.getLogger("Input");
+	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	protected static String receiveInput(String input) throws EmptyStringException{
 		input = input.trim();

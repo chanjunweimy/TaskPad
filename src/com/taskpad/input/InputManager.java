@@ -20,7 +20,6 @@ public class InputManager {
 	private static final String STATUS_EXIT = "Exit program";
 	private static final String STATUS_GUI_OUTPUT = "Output to GUI: %s";
 	
-	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
 	private static final String STRING_NULL = "";
 	
 	public static void startInputProcessor(){

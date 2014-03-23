@@ -4,9 +4,14 @@
 
 package com.taskpad.input;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
 
 public abstract class Command {
 
@@ -22,7 +27,7 @@ public abstract class Command {
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 	    
-	protected static Logger logger = Logger.getLogger("Command logger");
+	protected static Logger logger = Logger.getLogger("TaskPad");
 	
 	public Command(String input, String fullInput){
 		Command.fullInput = fullInput;
