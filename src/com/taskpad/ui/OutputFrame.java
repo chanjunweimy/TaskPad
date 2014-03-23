@@ -44,7 +44,8 @@ public abstract class OutputFrame extends GuiFrame{
 	//		new Color(112, 48, 160);//light purple?
 	protected final Color OUTPUTBOX_BORDER_COLOR = Color.white;
 	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
-			new Color(242, 242, 242);//light grey I think
+			//new Color(242, 242, 242);//light grey I think
+			new Color(240,248,255);		//Baby blue
 	
 	private final static int OUTPUTFRAME_WIDTH = 350;
 	private final static int OUTPUTFRAME_HEIGHT = 150;
