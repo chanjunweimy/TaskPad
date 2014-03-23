@@ -7,20 +7,22 @@
 package com.taskpad.launcher;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import javax.swing.SwingUtilities;
 
-import com.taskpad.dateandtime.DateAndTimeManager;
-
 public class TaskPadMain{
 	
-	private static String TASK_PAD_LOG = "TaskPad";
-	private static Logger logger = Logger.getLogger("TaskPad");
-	private static FileHandler fh;
-
+	private static String _taskpad = "TaskPad";
+	
+	//Lynnette: try using Logger.GLOBAL_LOGGER_NAME instead of our hard coded name. :) 
+	private static Logger _logger = Logger.getLogger(_taskpad);
+	private static FileHandler _fh;
+	
 	private TaskPadMain(){
 	}
 	
@@ -31,22 +33,31 @@ public class TaskPadMain{
 
 	private static void setUpLogging() {
 		//Set up logging to file 
-		String todayDateAndTime = DateAndTimeManager.getInstance().getTodayDate() + "_" +
-				DateAndTimeManager.getInstance().getTodayTime();
-		TASK_PAD_LOG = TASK_PAD_LOG + "_" + todayDateAndTime;
+		//String todayDateAndTime = DateAndTimeManager.getInstance().getTodayDate() + "_" +
+		//		DateAndTimeManager.getInstance().getTodayTime();
+		//TASKPAD= TASKPAD + "_" + todayDateAndTime;
 		//String pattern = String.format("TaskPad_" + todayDateAndTime + ".log");
 
-		/** Note to Jun Wei
-		 * If I pass pattern (see above^^) into addHandlertoLogger, it gives an error. 
-		 * Also I tried passing pattern to the FileOutputStream below...
-		 * To not get error, I must do new FileHandler("test.log"); i.e. put the full filename inside
-		 * or new FileOutputStream("test.log"); which is very strange, because it's not suppose to be that way?
+		_taskpad = _taskpad + "_" + getCurrentDate();
+		//Date today = new Date();
+		//_taskpad = String.format(_taskpad + "_%1$te-%1$tm-%1$tY", today);
+		
+		/** 
+		 * NoteToLynnette: 
+		 * It's because file cannot be created with 
+		 * the sign "/".
+		 * This piece of code should be refactored.
+		 * Suggest using LogManager to do it. 
+		 * I think this can be done in a new package: common.
+		 * and create a new class call MyLogger or something like that,
+		 * according to http://www.vogella.com/tutorials/Logging/article.html
+		 * Is this ok? :) 
 		 */
 		
 		try{
 			createFileHandler();
-			addHandlerToLogger();
 			createAndSetFormatter();
+			initializeLogger();
 		} catch (SecurityException e){
 			e.printStackTrace();
 		} catch (IOException e){
@@ -69,21 +80,27 @@ public class TaskPadMain{
 		*/
 	}
 
-	private static void addHandlerToLogger() {
-		logger.addHandler(fh);
+	private static void initializeLogger() {
+		_logger.addHandler(_fh);
 	}
 
 	private static void createAndSetFormatter() {
 		SimpleFormatter simpleFormatter = new SimpleFormatter();
-		fh.setFormatter(simpleFormatter);
+		_fh.setFormatter(simpleFormatter);
 	}
 
 	private static void createFileHandler() throws IOException {
-		fh = new FileHandler(TASK_PAD_LOG + ".log");
+		_fh = new FileHandler(_taskpad + ".log");
 	}
 
 	private static void runProgram() {		
 		Runnable runTaskPad = new TaskPadLauncher();
 		SwingUtilities.invokeLater(runTaskPad);
+	}
+	
+	private static String getCurrentDate(){
+		SimpleDateFormat formater = new SimpleDateFormat("dd.MM.yyyy");
+		Date today = new Date();
+		return formater.format(today);
 	}
 }
