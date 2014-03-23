@@ -6,22 +6,16 @@
 
 package com.taskpad.launcher;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import javax.swing.SwingUtilities;
 
-import com.taskpad.dateandtime.DateAndTimeManager;
-
 public class TaskPadMain{
 	
+	private static final String TASK_PAD_LOG = "TaskPad";
 	private static Logger logger = Logger.getLogger("TaskPad");
 	private static FileHandler fh;
 
@@ -83,7 +77,7 @@ public class TaskPadMain{
 	}
 
 	private static void createFileHandler() throws IOException {
-		fh = new FileHandler("TaskPad.%u.%g.log");
+		fh = new FileHandler(TASK_PAD_LOG + ".log");
 	}
 
 	private static void runProgram() {		
