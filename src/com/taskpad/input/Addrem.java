@@ -3,8 +3,6 @@ package com.taskpad.input;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.NullTimeUnitException;
-import com.taskpad.dateandtime.NullTimeValueException;
 import com.taskpad.dateandtime.TimeErrorException;
 
 public class Addrem extends Command{
@@ -12,9 +10,7 @@ public class Addrem extends Command{
 	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final int NUMBER_ARGUMENTS = 2;
 	private static final String SPACE = " ";
-	
-	private static final String MESSAGE_INVALID_TIME = "Invalid time parameter";
-	
+		
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_REM_DATE = "DATE";
 	private static final String PARAMETER_REM_TIME = "TIME";
@@ -113,9 +109,9 @@ public class Addrem extends Command{
 		if (splitInput.length == 3){
 			_remTime = splitInput[2];		//deprecated for flexi commands
 			try {
-				_remTime = DateAndTimeManager.getInstance().parseTime(splitInput[2].trim());
-			} catch (NullTimeUnitException | NullTimeValueException e) {
-				InputManager.outputToGui(MESSAGE_INVALID_TIME);
+				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
+			} catch (TimeErrorException e) {
+				ErrorMessages.invalidTimeMessage();
 				_invalidParameters = true;
 				return;
 			}

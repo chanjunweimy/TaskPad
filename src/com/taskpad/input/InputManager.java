@@ -28,11 +28,7 @@ public class InputManager {
 	
 	public static String receiveFromGui(String inputString){
 		String outputString = STRING_NULL;
-		try {
-			outputString = InputMain.receiveInput(inputString);
-		} catch (EmptyStringException e) {
-			//InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
-		}
+		outputString = InputMain.receiveInput(inputString);
 		return outputString;
 	}
 

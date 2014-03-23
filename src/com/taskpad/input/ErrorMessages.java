@@ -8,11 +8,30 @@ package com.taskpad.input;
 
 public class ErrorMessages {
 	
+	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
+	private static final String MESSAGE_INVALID_CONFIRM_INPUT = "Error: Invalid confirmation. Please enter Y or N";
+	private static final String MESSAGE_INVALID_TIME = "Invalid time parameter";
 	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
-
-	protected static String timeErrorMessage(String input){
-		String errorMessage = String.format(MESSAGE_TIME_ERROR, input);
-		return errorMessage;
+	
+	private ErrorMessages(){
 	}
+
+	protected static void timeErrorMessage(String input){
+		String errorMessage = String.format(MESSAGE_TIME_ERROR, input);
+		InputManager.outputToGui(errorMessage);
+	}
+	
+	protected static void invalidTimeMessage(){
+		InputManager.outputToGui(MESSAGE_INVALID_TIME);
+	}
+	
+	protected static void emptyInputMessage(){
+		InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+	}
+	
+	protected static void invalidConfirmationInput(){
+		InputManager.outputToGui(MESSAGE_INVALID_CONFIRM_INPUT);
+	}
+
 	
 }
