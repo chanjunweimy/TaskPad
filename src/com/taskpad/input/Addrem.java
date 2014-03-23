@@ -2,11 +2,18 @@ package com.taskpad.input;
 
 import java.util.Scanner;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
+import com.taskpad.dateandtime.TimeParser;
+
 public class Addrem extends Command{
 	
 	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final int NUMBER_ARGUMENTS = 2;
 	private static final String SPACE = " ";
+	
+	private static final String MESSAGE_INVALID_TIME = "Invalid time parameter";
 	
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_REM_DATE = "DATE";
@@ -18,12 +25,15 @@ public class Addrem extends Command{
 	
 	private static Scanner sc;
 	private static boolean _invalidParameters = false;
+	private static DateAndTimeManager dateAndTimeManager;
 
 	public Addrem(String input, String fullInput) {
 		super(input, fullInput);
 		setCOMMAND(COMMAND_ADD_REM);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		
 		sc = new Scanner(System.in);
+		dateAndTimeManager.getInstance();
 	}
 
 	//TODO: check for correct date and time format
@@ -103,7 +113,14 @@ public class Addrem extends Command{
 		_taskID = splitInput[0];
 		_remDate = splitInput[1];
 		if (splitInput.length == 3){
-			_remTime = splitInput[2];
+			//_remTime = splitInput[2];		//deprecated for flexi commands
+			try {
+				_remTime = dateAndTimeManager.parseTime(splitInput[2].trim());
+			} catch (NullTimeUnitException | NullTimeValueException e) {
+				InputManager.outputToGui(MESSAGE_INVALID_TIME);
+				_invalidParameters = true;
+				return;
+			}
 		}
 	}
 
@@ -118,7 +135,12 @@ public class Addrem extends Command{
 	
 	private void inputTime(String param) {
 		param = stripWhiteSpaces(param);
-		_remTime = param;
+		//_remTime = param;		//deprecated for flexi commands
+		try {
+			_remTime = TimeParser.parseTime(param);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			InputManager.outputToGui(MESSAGE_INVALID_TIME);
+		}
 	}
 	
 	private String removeFirstChar(String input) {

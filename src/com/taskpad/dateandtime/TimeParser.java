@@ -20,6 +20,10 @@ public class TimeParser {
 	private static final String TIME_ZERO = "0";
 	private static final String TIME_AM = "a";
 	private static final String TIME_PM = "p";
+	
+	private static final String COLON = ":";
+	private static final String SEMICOLON = ";";
+	private static final String DOT = ".";
 
 	private TimeParser(){
 	}
@@ -27,7 +31,7 @@ public class TimeParser {
 	/* This method takes in a time and parses it
 	 * 
 	 */
-	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException{
+	public static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException{
 		TimeWordParser twp = TimeWordParser.getInstance();
 		String timeString = "";
 		long time = 0;
@@ -65,7 +69,7 @@ public class TimeParser {
         	    
 	    if (timePatternMatch(input)) {
 
-	        if (input.contains(":") || input.contains(".") || input.contains(";")) {
+	        if (input.contains(COLON) || input.contains(DOT) || input.contains(SEMICOLON)) {
 	            String[] inputs = input.split("[:.;]");
 	            hours =  inputs[0];
 	            minutes = inputs[1].substring(0, 2);
@@ -104,6 +108,10 @@ public class TimeParser {
                 hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
                 if (hours.length() > 4){		//Assume the first four numbers are valid
                 	hours = hours.substring(0, 4);
+                } 
+               
+                if (Integer.parseInt(hours) >= 12){
+                	//throw new InvalidMorningTimeException(MESSAGE_INVALID_MORNING);
                 }
 
             } else if (input.contains(TIME_PM)) {
@@ -222,14 +230,11 @@ public class TimeParser {
 		return false;
 	}
 	
-	/* Testing
 	public static void main(String[] args){
-		String input = "2008";
+		String input = "13am";
 		long time = decodeTime(input);
-		System.out.println("Time " + time);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
 	}
-	*/
 	
 }
