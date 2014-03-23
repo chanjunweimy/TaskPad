@@ -165,29 +165,38 @@ public class Add extends Command{
 	}
 	
 	
-	/**
-	 * Lynnette, bug here:
-	 * if user keys in "11-11-2014" then this method will be failed.
-	 * Delete these comments when u see it.
-	 * Change it if possible. :) 
-	 * 
-	 * Jun Wei
-	 */
 	@SuppressWarnings("resource")
 	private void splitInputParameters(){
+		checkAndRemoveDate();
+		
 		_sc = new Scanner(input).useDelimiter("\\s-");
 		while(_sc.hasNext()){
 			String nextParam = _sc.next();
 			if (_count == 0){
-				_desc = nextParam;
+				_desc = nextParam.trim();
 			} else {
-				parseNextParam(nextParam);
+				parseNextParam(nextParam.trim());
 			}
 			_count++;
 		}
 		_sc.close();
 	}
 	
+	private void checkAndRemoveDate() {
+		String[] splitInput = input.split(SPACE);
+		String newInput = EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-d")){
+				getDeadline(splitInput[i+1]);
+				splitInput[i+1] = EMPTY;
+			} else {
+				newInput += splitInput[i] + " ";
+			}
+		}
+		input = newInput;
+	}
+
 	private void parseNextParam(String param){
 		String firstChar = getFirstChar(param);
 		param = removeFirstChar(param);
