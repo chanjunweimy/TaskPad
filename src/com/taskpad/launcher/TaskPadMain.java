@@ -13,9 +13,11 @@ import java.util.logging.SimpleFormatter;
 
 import javax.swing.SwingUtilities;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+
 public class TaskPadMain{
 	
-	private static final String TASK_PAD_LOG = "TaskPad";
+	private static String TASK_PAD_LOG = "TaskPad";
 	private static Logger logger = Logger.getLogger("TaskPad");
 	private static FileHandler fh;
 
@@ -29,11 +31,11 @@ public class TaskPadMain{
 
 	private static void setUpLogging() {
 		//Set up logging to file 
-		/*
 		String todayDateAndTime = DateAndTimeManager.getInstance().getTodayDate() + "_" +
 				DateAndTimeManager.getInstance().getTodayTime();
-		String pattern = String.format("TaskPad_" + todayDateAndTime + ".log");
-		*/
+		TASK_PAD_LOG = TASK_PAD_LOG + "_" + todayDateAndTime;
+		//String pattern = String.format("TaskPad_" + todayDateAndTime + ".log");
+
 		/** Note to Jun Wei
 		 * If I pass pattern (see above^^) into addHandlertoLogger, it gives an error. 
 		 * Also I tried passing pattern to the FileOutputStream below...
