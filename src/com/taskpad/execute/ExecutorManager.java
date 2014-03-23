@@ -7,7 +7,7 @@ import com.taskpad.storage.CommandRecord;
 import com.taskpad.input.Input;
 
 public class ExecutorManager {
-	private static Logger logger = Logger.getLogger("InfoLogging");
+	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();

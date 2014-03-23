@@ -13,7 +13,7 @@ import com.taskpad.storage.TaskList;
 import com.taskpad.ui.GuiManager;
 
 public class CommandFactory {
-	private static Logger logger = Logger.getLogger("InfoLogging");
+	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	protected static void listUndone() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);

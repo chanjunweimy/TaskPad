@@ -19,8 +19,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
-	private final static Logger LOGGER = Logger.getLogger(GuiFrame.class
-		      .getName());
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	/**
 	 * generated

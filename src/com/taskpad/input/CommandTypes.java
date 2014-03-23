@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class CommandTypes {
 	
-	protected static Logger logger = Logger.getLogger("Command logger");
+	protected static Logger logger = Logger.getLogger("TaskPad");
 	
 	public enum CommandType{
 		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
