@@ -5,7 +5,7 @@ import java.util.Scanner;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.NullTimeUnitException;
 import com.taskpad.dateandtime.NullTimeValueException;
-import com.taskpad.dateandtime.TimeParser;
+import com.taskpad.dateandtime.TimeErrorException;
 
 public class Addrem extends Command{
 	
@@ -136,7 +136,12 @@ public class Addrem extends Command{
 		//_remTime = param;		//deprecated for flexi commands
 		System.out.println(param);
 		//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
-		_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
+		try {
+			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
+		} catch (TimeErrorException e) {
+			ErrorMessages.timeErrorMessage(_remTime);
+			return;
+		}
 	}
 	
 	private String removeFirstChar(String input) {

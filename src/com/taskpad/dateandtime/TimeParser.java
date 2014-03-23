@@ -9,9 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeParser {
-	
-	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
-	
+		
 	private static final String TIME_TWELVE = "12";
 	private static final String TIME_EVE = "17";
 	private static final String TIME_NIGHT = "19";
@@ -32,9 +30,9 @@ public class TimeParser {
 	/* This method takes in a time and parses it
 	 * 
 	 */
-	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException{
+	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException, TimeErrorException{
 		TimeWordParser twp = TimeWordParser.getInstance();
-		String timeString = "";
+		String timeString = EMPTY;
 		long time = 0;
 		
 		timeString = twp.timeWord(input);
@@ -44,28 +42,34 @@ public class TimeParser {
 		}
 				
 		if (isInvalidTime(timeString)){
-			return timeErrorMessage(input);
+			throw new TimeErrorException();
+			//return timeErrorMessage(input);
 		}
 		
 		return timeString;
 	}
 	
-	protected static String parseTimeInput(String input){
-		String timeString = "";
+	protected static String parseTimeInput(String input) throws TimeErrorException{
+		String timeString = EMPTY;
 		long time = 0;
 		
-		if(!inputContainsTimeWords(timeString)){
+		if(isNotEmptyString(timeString)){
 			time = decodeTime(input);
 			timeString = convertMillisecondsToTime(time);
 		}
 				
 		if (isInvalidTime(timeString)){
-			return timeErrorMessage(input);
+			throw new TimeErrorException();
+			//return timeErrorMessage(input);
 		}
 		
 		return timeString;
 	}
 	
+	private static boolean isNotEmptyString(String timeString) {
+		return !timeString.equals(EMPTY);
+	}
+
 	private static boolean inputContainsTimeWords(String input) {
 		if (input.equals(EMPTY)){
 			return true;
@@ -236,11 +240,6 @@ public class TimeParser {
 		String timeString = hourString + ":" + minuteString;
 		
 		return timeString;
-	}
-	
-	private static String timeErrorMessage(String input){
-		String errorMessage = String.format(MESSAGE_TIME_ERROR);
-		return errorMessage;
 	}
 	
 	private static boolean isInvalidTime(String timeString){

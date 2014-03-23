@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.TimeErrorException;
 
 public class Add extends Command{
 	
@@ -28,7 +29,6 @@ public class Add extends Command{
 	private static String PARAMETER_VENUE = "VENUE";
 	
 	private static String MESSAGE_ERROR_TIME = "Error: Invalid variables for time: %d";
-	private static String MESSAGE_INVALID_TIME = "Error: Invalid time";
 	
 	private static int LENGTH_TIME = 2;
 	
@@ -250,7 +250,12 @@ public class Add extends Command{
 			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
 			
 			String startTime = EMPTY;
-			startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			try {
+				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException e) {
+				outputErrorTimeMessage(startTime);
+				return;
+			}
 
 			putOneParameter(PARAMETER_START_TIME, startTime);
 			
@@ -260,6 +265,10 @@ public class Add extends Command{
 		}
 	}
 	
+	private void outputErrorTimeMessage(String input) {
+		ErrorMessages.timeErrorMessage(input);
+	}
+
 	@SuppressWarnings("unused")
 	private void getDescInQuotes(){
 		Pattern pattern = Pattern.compile(".*(\\\"|\\\')(.*)(\\\"|\\\').*"); 
@@ -279,7 +288,12 @@ public class Add extends Command{
 			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
 			String endTime = EMPTY;
 			
-			endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			try {
+				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException e) {
+				outputErrorTimeMessage(endTime);
+				return;
+			}
 			
 			putOneParameter(PARAMETER_END_TIME, endTime);
 			

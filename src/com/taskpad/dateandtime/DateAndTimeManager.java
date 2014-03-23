@@ -130,7 +130,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return TimeParser.parseTime(timeString);
 	}
 	
-	public String parseTimeInput(String timeString){
+	public String parseTimeInput(String timeString) throws TimeErrorException{
 		return TimeParser.parseTimeInput(timeString);
 	}
 	
