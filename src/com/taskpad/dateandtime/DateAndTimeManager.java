@@ -13,7 +13,7 @@ import com.taskpad.storage.Task;
 
 /**
  * 
- * @author Jun
+ * @author Jun & Lynnette
  *
  * DateAndTimeManager is a facade class of dateandtime package.
  * 
@@ -120,7 +120,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	/**
 	 * These 2 methods are going to implement
 	 * to do the parseDate() and parseTime() thing
-	 * @return
+	 * @return timeString, nicely formatted
 	 */
 	public String parseDate(String dateString){
 		return null;
@@ -128,6 +128,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	
 	public String parseTime(String timeString) throws NullTimeUnitException, NullTimeValueException{
 		return TimeParser.parseTime(timeString);
+	}
+	
+	public String parseTimeInput(String timeString){
+		return TimeParser.parseTimeInput(timeString);
 	}
 	
 	/**

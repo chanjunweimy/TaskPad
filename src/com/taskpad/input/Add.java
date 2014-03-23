@@ -5,9 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.NullTimeUnitException;
-import com.taskpad.dateandtime.NullTimeValueException;
-import com.taskpad.dateandtime.TimeParser;
 
 public class Add extends Command{
 	
@@ -40,7 +37,6 @@ public class Add extends Command{
 	private static String _desc;
 	
 	private static Scanner _sc;
-	private static DateAndTimeManager dateAndTimeManager;
 
 	public Add(String input, String fullInput) {
 		super(input, fullInput);
@@ -48,7 +44,6 @@ public class Add extends Command{
 		setCOMMAND(COMMAND_ADD);
 		
 		_sc = new Scanner(System.in);
-		dateAndTimeManager.getInstance();
 		_count = 0;
 		_invalidParameters = false;
 	}
@@ -255,13 +250,8 @@ public class Add extends Command{
 			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
 			
 			String startTime = EMPTY;
-			try {
-				startTime = dateAndTimeManager.parseTime(stripWhiteSpaces(splitParam[0]));
-			} catch (NullTimeUnitException | NullTimeValueException e) {
-				InputManager.outputToGui(MESSAGE_INVALID_TIME);
-				_invalidParameters = true;
-				return;
-			}
+			startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+
 			putOneParameter(PARAMETER_START_TIME, startTime);
 			
 			if (splitParam.length == LENGTH_TIME){
@@ -289,13 +279,7 @@ public class Add extends Command{
 			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
 			String endTime = EMPTY;
 			
-			try {
-				endTime = dateAndTimeManager.parseTime(stripWhiteSpaces(splitParam[0]));
-			} catch (NullTimeUnitException | NullTimeValueException e) {
-				InputManager.outputToGui(MESSAGE_INVALID_TIME);
-				_invalidParameters = true;
-				return;
-			}
+			endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
 			
 			putOneParameter(PARAMETER_END_TIME, endTime);
 			

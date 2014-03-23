@@ -25,7 +25,6 @@ public class Addrem extends Command{
 	
 	private static Scanner sc;
 	private static boolean _invalidParameters = false;
-	private static DateAndTimeManager dateAndTimeManager;
 
 	public Addrem(String input, String fullInput) {
 		super(input, fullInput);
@@ -33,7 +32,6 @@ public class Addrem extends Command{
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		
 		sc = new Scanner(System.in);
-		dateAndTimeManager.getInstance();
 	}
 
 	//TODO: check for correct date and time format
@@ -113,9 +111,9 @@ public class Addrem extends Command{
 		_taskID = splitInput[0];
 		_remDate = splitInput[1];
 		if (splitInput.length == 3){
-			//_remTime = splitInput[2];		//deprecated for flexi commands
+			_remTime = splitInput[2];		//deprecated for flexi commands
 			try {
-				_remTime = dateAndTimeManager.parseTime(splitInput[2].trim());
+				_remTime = DateAndTimeManager.getInstance().parseTime(splitInput[2].trim());
 			} catch (NullTimeUnitException | NullTimeValueException e) {
 				InputManager.outputToGui(MESSAGE_INVALID_TIME);
 				_invalidParameters = true;
@@ -136,11 +134,9 @@ public class Addrem extends Command{
 	private void inputTime(String param) {
 		param = stripWhiteSpaces(param);
 		//_remTime = param;		//deprecated for flexi commands
-		try {
-			_remTime = TimeParser.parseTime(param);
-		} catch (NullTimeUnitException | NullTimeValueException e) {
-			InputManager.outputToGui(MESSAGE_INVALID_TIME);
-		}
+		System.out.println(param);
+		//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
+		_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
 	}
 	
 	private String removeFirstChar(String input) {
