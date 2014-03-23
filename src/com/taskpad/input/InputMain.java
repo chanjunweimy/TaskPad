@@ -39,20 +39,11 @@ public class InputMain {
 		hasCheckedFlexi = false;
 		
 		if (isConfirmation){
-			if (isConfirmClear(input)){
-				processConfirmation();
-			} else if (isNotClearing(input)){
-				processNoClear();
-			} else {
-				ErrorMessages.invalidConfirmationInput();
-				return outputString;
-			}
-			resetConfirmationVariable();
+			processConfirmation(input);
 		} else {
 			String inputCopy = input;
 			if (errorIfNoInput(input)){
 				ErrorMessages.emptyInputMessage();
-				return outputString;
 			}
 				
 			String commandTypeString = parseInput(inputCopy);
@@ -74,6 +65,17 @@ public class InputMain {
 		return outputString;
 	}
 	
+	private static void processConfirmation(String input) {
+		if (isConfirmClear(input)){
+			executeConfirmation();
+		} else if (isNotClearing(input)){
+			processNoClear();
+		} else {
+			ErrorMessages.invalidConfirmationInput();
+		}
+		resetConfirmationVariable();		
+	}
+
 	private static boolean isConfirmClear(String input){
 		return input.equalsIgnoreCase("Y");
 	}
@@ -82,7 +84,7 @@ public class InputMain {
 		return input.equalsIgnoreCase("N");
 	}
 	
-	private static void processConfirmation(){
+	private static void executeConfirmation(){
 		if (currentCommand.equals(COMMAND_CLEAR)){
 			clearAllTasks();
 		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
