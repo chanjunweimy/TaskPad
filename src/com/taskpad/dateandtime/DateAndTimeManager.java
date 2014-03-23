@@ -126,7 +126,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return null;
 	}
 	
-	public String parseTime(String timeString) throws NullTimeUnitException, NullTimeValueException{
+	public String parseTime(String timeString) throws NullTimeUnitException, NullTimeValueException, TimeErrorException{
 		return TimeParser.parseTime(timeString);
 	}
 	

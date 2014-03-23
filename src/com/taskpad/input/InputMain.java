@@ -11,11 +11,14 @@ public class InputMain {
 
 	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "Confirm clear screen? (Y/N)";
 	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "Confirm clear data? (Y/N)";
-	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
+	private static final String MESSAGE_NOT_CLEAR_DATA = "Not clearing data";
+	private static final String MESSAGE_NOT_CLEAR_SCREEN = "Not clearing Screen";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
 	
 	private static final String COMMAND_CLEAR = "CLEAR";
 	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
+	
+	private static final String STRING_EMPTY = "";
 			
 	@SuppressWarnings("unused")
 	private static CommandTypes commandTypes = new CommandTypes();
@@ -23,27 +26,35 @@ public class InputMain {
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
 	protected static boolean hasCheckedFlexi = false;
-	private static String currentCommand = "";
+	private static String currentCommand = STRING_EMPTY;
 	
 	@SuppressWarnings("unused")
 	private static Map<String, String> inputParameters = new HashMap<String, String>();
 	
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
-	protected static String receiveInput(String input) throws EmptyStringException{
+	protected static String receiveInput(String input){
 		input = input.trim();
-		String outputString = "";
+		String outputString = STRING_EMPTY;
 		hasCheckedFlexi = false;
+		
 		if (isConfirmation){
 			if (isConfirmClear(input)){
 				processConfirmation();
+			} else if (isNotClearing(input)){
+				processNoClear();
+			} else {
+				ErrorMessages.invalidConfirmationInput();
+				return outputString;
 			}
 			resetConfirmationVariable();
 		} else {
 			String inputCopy = input;
 			if (errorIfNoInput(input)){
-				throw new EmptyStringException();
+				ErrorMessages.emptyInputMessage();
+				return outputString;
 			}
+				
 			String commandTypeString = parseInput(inputCopy);
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 			logger.info("Command: " + commandType.toString());
@@ -61,36 +72,39 @@ public class InputMain {
 			}
 		}
 		return outputString;
-		}
+	}
 	
 	private static boolean isConfirmClear(String input){
-		if (input.equalsIgnoreCase("Y")){
-			return true;
-		} else {
-			return false;
-		}
+		return input.equalsIgnoreCase("Y");
+	}
+	
+	private static boolean isNotClearing(String input){
+		return input.equalsIgnoreCase("N");
 	}
 	
 	private static void processConfirmation(){
 		if (currentCommand.equals(COMMAND_CLEAR)){
 			clearAllTasks();
-			
 		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
 			InputManager.clearScreen();
 		}
 	}
 	
+	private static void processNoClear(){
+		if (currentCommand.equals(COMMAND_CLEAR)){
+			InputManager.outputToGui(MESSAGE_NOT_CLEAR_DATA);
+		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
+			InputManager.outputToGui(MESSAGE_NOT_CLEAR_SCREEN);
+		}
+	}
+	
 	private static void resetConfirmationVariable(){
 		isConfirmation = false;
-		currentCommand = "";
+		currentCommand = STRING_EMPTY;
 	}
 	
 	private static boolean errorIfNoInput(String input) {
-		if (input.equals("")){
-			InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
-			return true;
-		}
-		return false;
+		return input.equals(STRING_EMPTY);
 	}
 
 	@SuppressWarnings("static-access")
@@ -192,7 +206,7 @@ public class InputMain {
 	}
 	
 	private static void redoTask(){
-		Redo redo = new Redo("", "REDO");
+		Redo redo = new Redo(STRING_EMPTY, "REDO");
 		redo.run();
 	}
 	
@@ -211,7 +225,7 @@ public class InputMain {
 	}
 	
 	private static void clearAllTasks() {
-		ClearTasks clearTask = new ClearTasks("", "CLEAR");
+		ClearTasks clearTask = new ClearTasks(STRING_EMPTY, "CLEAR");
 		clearTask.run();
 	}
 	
@@ -220,7 +234,7 @@ public class InputMain {
 	}
 	
 	private static void undoLast() {
-		Undo undo = new Undo("", "UNDO");
+		Undo undo = new Undo(STRING_EMPTY, "UNDO");
 		undo.run();
 	}
 	
@@ -267,7 +281,7 @@ public class InputMain {
 	
 	private static String replaceCommandWord (String input, CommandType command){
 		//return input.replaceFirst("(?i)"+command.toString()+" ", "");  //deprecated
-		String desc = "";
+		String desc = STRING_EMPTY;
 		String[] splitInput = input.split(" ");
 		
 		for (int i=0; i<splitInput.length; i++){
@@ -306,7 +320,7 @@ public class InputMain {
 	
 	/* Helper methods for parsing commands */ 
 	private static boolean isInvalidCommand(String userCommand) {
-		if (userCommand.trim().equals("")){
+		if (userCommand.trim().equals(STRING_EMPTY)){
 			return true;
 		}
 		return false;
@@ -317,7 +331,7 @@ public class InputMain {
 	}
 	
 	private static String removeFirstWord(String input) {
-		return input.replaceFirst(getFirstWord(input), "").trim();
+		return input.replaceFirst(getFirstWord(input), STRING_EMPTY).trim();
 	}
 	
 	private static String getFirstWord(String input) {

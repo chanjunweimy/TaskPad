@@ -2,7 +2,10 @@ package com.taskpad.input;
 
 public class EmptyStringException extends Exception {
 	
-	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 1091219745520768583L;
 	
 	public EmptyStringException(){
 		super();
