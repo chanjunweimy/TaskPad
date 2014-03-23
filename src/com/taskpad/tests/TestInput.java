@@ -4,8 +4,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.taskpad.input.CommandQueue;
 import com.taskpad.input.CommandTypes;
 import com.taskpad.input.CommandTypes.CommandType;
+import com.taskpad.input.EmptyStringException;
+import com.taskpad.input.InputMain;
+import com.taskpad.input.InputManager;
 
 
 public class TestInput {
@@ -49,8 +53,25 @@ public class TestInput {
 		testFindValueCommand("Find quit", CommandType.EXIT, "quIT");
 	}
 	
+	@Test
+	public void testAdd(){
+		new CommandTypes();
+		
+		testFindValueCommand("Add1", CommandType.ADD, "Add");
+		
+		testInputString("Add2", "" , "add homework to complete -d 23/03/2014");
+		
+		//testFindValueCommand("Add2", CommandType.ADD, "hello add");
+		//testFindValueCommand("Add3", CommandType.ADD, "add homework to complete -d 23/03/2014");
+		//testFindValueCommand("Add4", CommandType.ADD, "add -d 23/03/2014 \"complete homework\"");
+	}
+	
 	private void testFindValueCommand (String description, CommandTypes.CommandType expected, String input){
-		assertEquals(description, expected, CommandTypes.find(input));
+		assertEquals(description, expected, CommandQueue.find(input));
+	}
+	
+	private void testInputString(String description, String expected, String input){
+		assertEquals(description, expected, InputManager.receiveFromGui(input));
 	}
 
 }
