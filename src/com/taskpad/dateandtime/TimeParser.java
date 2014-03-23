@@ -11,6 +11,15 @@ import java.util.regex.Pattern;
 public class TimeParser {
 	
 	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
+	
+	private static final String TIME_TWELVE = "12";
+	private static final String TIME_EVE = "17";
+	private static final String TIME_NIGHT = "19";
+	private static final int TIME_NEG = -1;
+	private static final String TIME_DEF = "-1";
+	private static final String TIME_ZERO = "0";
+	private static final String TIME_AM = "a";
+	private static final String TIME_PM = "p";
 
 	private TimeParser(){
 	}
@@ -43,46 +52,18 @@ public class TimeParser {
 		return false;
 	}
 
-	private static long decodeTime(String input){
-		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
-	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[;:.]?([0-5][0-9])?)$");
-	    Pattern morn = Pattern.compile("");
-	    
-	    Matcher time12M = time12.matcher(input);
-	    boolean time12Match = time12M.matches();
-	    
-	    Matcher time24M = time24.matcher(input);
-	    boolean time24Match = time24M.matches();
-	    
-        String hours = "-1", minutes = "-1";
+	private static long decodeTime(String input){	    
+        String hours = TIME_DEF, minutes = TIME_DEF;
         
-        long time = 0;
+        long time = TIME_NEG;
         
-        if (input.toLowerCase().contains("morning") || input.toLowerCase().contains("morn")){
-        	hours = "0";
-        	minutes = "0";
-        	time = convertToSeconds(hours, minutes);
-        	return time;
-        } else if (input.toLowerCase().contains("afternoon") || input.toLowerCase().contains("aft") ||
-        		input.toLowerCase().contains("noon")){
-        	hours = "12";
-        	minutes = "0";
-        	time = convertToSeconds(hours, minutes);
-        	return time;
-        } else if (input.toLowerCase().contains("evening") || input.toLowerCase().contains("eve")){
-        	hours = "17";
-        	minutes = "0";
-        	time = convertToSeconds(hours, minutes);
-        	return time;
-        } else if (input.toLowerCase().contains("night") || input.toLowerCase().contains("ngt")){
-        	hours = "19";
-        	minutes = "0";
-        	time = convertToSeconds(hours, minutes);
+        time = checkMornAftEvenWords(input);
+        
+        if (time != TIME_NEG){
         	return time;
         }
-
-	    
-	    if (time12Match || time24Match) {
+        	    
+	    if (timePatternMatch(input)) {
 
 	        if (input.contains(":") || input.contains(".") || input.contains(";")) {
 	            String[] inputs = input.split("[:.;]");
@@ -90,11 +71,11 @@ public class TimeParser {
 	            minutes = inputs[1].substring(0, 2);
 	        } else {
 	            // Process strings like "8", "8p", "8pm", "2300"
-	            if (input.contains("a")) {
-	                hours = input.substring(0, input.indexOf("a")).trim();	//am strings
+	            if (input.contains(TIME_AM)) {
+	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
 
-	            } else if (input.contains("p")) {
-	                hours = input.substring(0, input.indexOf("p")).trim();	//pm strings
+	            } else if (input.contains(TIME_PM)) {
+	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
 
 	            } else if (input.length() < 3) {
 	                hours = input;
@@ -105,29 +86,28 @@ public class TimeParser {
 	            }
 	        }
 	        
-	        if (input.contains("a") && hours.equals("12")) {
-	            hours = "0";
+	        if (input.contains(TIME_AM) && hours.equals(TIME_TWELVE)) {
+	            hours = TIME_ZERO;
 	        }
 
 	        time = convertToSeconds(hours, minutes);
 
-	        if (input.contains("p") && !hours.equals("12")) {
-	            // Add 12 hours for pm times
-	            time += 12 * 60 * 60 * 1000;
+	        if (input.contains(TIME_PM) && !hours.equals(TIME_TWELVE)) {
+	            time = addPM(time);
 	        }
 
 	        return time;
 	    } 
 	    else {
 	    	//To take care of strings like 800 am
-            if (input.contains("a")) {
-                hours = input.substring(0, input.indexOf("a")).trim();	//am strings
+            if (input.contains(TIME_AM)) {
+                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
                 if (hours.length() > 4){		//Assume the first four numbers are valid
                 	hours = hours.substring(0, 4);
                 }
 
-            } else if (input.contains("p")) {
-                hours = input.substring(0, input.indexOf("p")).trim();	//pm strings
+            } else if (input.contains(TIME_PM)) {
+                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
                 if (hours.length() > 4){
                 	hours = hours.substring(0, 4);
                 }
@@ -135,14 +115,78 @@ public class TimeParser {
             
 	        time = convertToSeconds(hours, minutes);
 	        
-	        if (input.contains("p") && !hours.equals("12")) {
-	            time += 12 * 60 * 60 * 1000;
+	        if (input.contains("p") && !hours.equals(TIME_TWELVE)) {
+	            time = addPM(time);
 	        }
 	        
 	        return time;
 	    }
 	 }
+
+	private static boolean timePatternMatch(String input) {
+		return time12Matches(input) || time24Matches(input);
+	}
 	
+	private static boolean time12Matches(String input){
+		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
+	    Matcher time12M = time12.matcher(input);
+	    
+	    return time12M.matches();
+	}
+	
+	private static boolean time24Matches(String input){
+	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[;:.]?([0-5][0-9])?)$");
+	    Matcher time24M = time24.matcher(input);
+	    boolean time24Match = time24M.matches();
+	    
+	    return time24Match;
+	}
+
+	private static long addPM(long time) {
+		time += 12 * 60 * 60 * 1000;
+		return time;
+	}
+	
+	private static long checkMornAftEvenWords(String input) {
+		long time = TIME_NEG;
+		String hours = TIME_ZERO;
+		String minutes = TIME_ZERO;
+		
+        if (containsMornWords(input)){
+        	hours = TIME_ZERO;
+        	minutes = TIME_ZERO;
+        } else if (containsAftWords(input)){
+        	hours = TIME_TWELVE;
+        	minutes = TIME_ZERO;
+        } else if (containsEveWords(input)){
+        	hours = TIME_EVE;
+        	minutes = TIME_ZERO;
+        } else if (containsNightWords(input)){
+        	hours = TIME_NIGHT;
+        	minutes = TIME_ZERO;
+        }
+        
+    	time = convertToSeconds(hours, minutes);
+		return time;
+	}
+
+	private static boolean containsNightWords(String input) {
+		return input.toLowerCase().contains("night") || input.toLowerCase().contains("ngt");
+	}
+
+	private static boolean containsEveWords(String input) {
+		return input.toLowerCase().contains("evening") || input.toLowerCase().contains("eve");
+	}
+
+	private static boolean containsAftWords(String input) {
+		return input.toLowerCase().contains("afternoon") || input.toLowerCase().contains("aft") ||
+        		input.toLowerCase().contains("noon");
+	}
+
+	private static boolean containsMornWords(String input) {
+		return input.toLowerCase().contains("morning") || input.toLowerCase().contains("morn");
+	}
+
 	private static long convertToSeconds(String hours, String minutes){
 		long time = 0;
 		return (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
