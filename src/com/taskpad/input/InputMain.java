@@ -30,8 +30,9 @@ public class InputMain {
 	
 	private static Logger logger = Logger.getLogger("Input");
 	
-	public static void receiveInput(String input){
+	protected static String receiveInput(String input) throws EmptyStringException{
 		input = input.trim();
+		String outputString = "";
 		hasCheckedFlexi = false;
 		if (isConfirmation){
 			if (isConfirmClear(input)){
@@ -41,7 +42,7 @@ public class InputMain {
 		} else {
 			String inputCopy = input;
 			if (errorIfNoInput(input)){
-				return;
+				throw new EmptyStringException();
 			}
 			String commandTypeString = parseInput(inputCopy);
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
@@ -49,19 +50,18 @@ public class InputMain {
 			
 			if (isValidCommandType(commandType)){		
 				commandTypeString = removeFirstWord(input);
-				
+				outputString = commandType.toString() + " " + commandTypeString;
 				performCommand (commandType, commandTypeString, input);
+			} else if (hasCheckedFlexi){
+				invalidCommand(input);
+				outputString += commandType.toString();
 			} else {
-				if (hasCheckedFlexi){
-					invalidCommand(input);
-				} else {
-					hasCheckedFlexi = true;
-					flexiCommand(input);
-				}
+				hasCheckedFlexi = true;
+				outputString = flexiCommand(input);
 			}
 		}
-
-	}
+		return outputString;
+		}
 	
 	private static boolean isConfirmClear(String input){
 		if (input.equalsIgnoreCase("Y")){
@@ -255,12 +255,14 @@ public class InputMain {
 		new Alarm(input, fullInput);
 	}
 	
-	private static void flexiCommand(String input){
+	private static String flexiCommand(String input){
 		hasCheckedFlexi = true;
 		CommandType command = CommandQueue.findFlexi(input);
 		logger.info("Flexicommands: " + command.toString());
 		String commandTypeString = replaceCommandWord(input, command);
 		performCommand(command, commandTypeString, input);
+		
+		return command.toString() + " " + commandTypeString;
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){

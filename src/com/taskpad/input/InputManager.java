@@ -15,17 +15,26 @@ import com.taskpad.ui.GuiManager;
 
 public class InputManager {
 	
-	private static String STATUS_CLEAR = "Clear GUI Screen";
-	private static String STATUS_EXECUTOR = "Passed to Executor";
-	private static String STATUS_EXIT = "Exit program";
-	private static String STATUS_GUI_OUTPUT = "Output to GUI: %s";
+	private static final String STATUS_CLEAR = "Clear GUI Screen";
+	private static final String STATUS_EXECUTOR = "Passed to Executor";
+	private static final String STATUS_EXIT = "Exit program";
+	private static final String STATUS_GUI_OUTPUT = "Output to GUI: %s";
+	
+	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
+	private static final String STRING_NULL = "";
 	
 	public static void startInputProcessor(){
 		new InputMain();
 	}
 	
-	public static void receiveFromGui(String inputString){
-		InputMain.receiveInput(inputString);
+	public static String receiveFromGui(String inputString){
+		String outputString = STRING_NULL;
+		try {
+			outputString = InputMain.receiveInput(inputString);
+		} catch (EmptyStringException e) {
+			//InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+		}
+		return outputString;
 	}
 
 	public static String outputToGui(String outputString){
