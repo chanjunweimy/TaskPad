@@ -101,8 +101,16 @@ public class InputMain {
 	}
 	
 	private static void resetConfirmationVariable(){
-		isConfirmation = false;
+		setConfirmationFalse();
+		setCurrCommandEmpty();
+	}
+
+	private static void setCurrCommandEmpty() {
 		currentCommand = STRING_EMPTY;
+	}
+
+	private static void setConfirmationFalse() {
+		isConfirmation = false;
 	}
 	
 	private static boolean errorIfNoInput(String input) {
@@ -111,10 +119,7 @@ public class InputMain {
 
 	@SuppressWarnings("static-access")
 	private static boolean isValidCommandType(CommandType commandType) {
-		if (commandType.equals(commandType.INVALID)){
-			return false;
-		}
-		return true;
+		return !commandType.equals(commandType.INVALID);
 	}
 
 	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
