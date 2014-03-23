@@ -18,7 +18,8 @@ public class InputFrame extends GuiFrame{
 	private static final long serialVersionUID = 1L;  
 	
 	private final Color INPUTBOX_BACKGROUND_COLOR = 
-			new Color(219, 219, 219); //this is grey color
+			//new Color(219, 219, 219); //this is grey color
+			new Color(255,248,220);		//Cornsilk
 	
 	//inputTextBox
 	private static JTextField _input = new JTextField(15);

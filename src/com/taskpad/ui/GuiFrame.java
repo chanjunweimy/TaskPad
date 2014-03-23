@@ -31,8 +31,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	protected final double COMPUTER_HEIGHT = 
 			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 	protected final Color ROOTPANE_BORDER_COLOR = 
-			new Color(112, 48, 160);//light purple?
-	private final int ROOTPANE_BORDER_THICKNESS = 2;
+			//new Color(120, 48, 160);//light purple?
+			new Color(41,36,33);	//Black
+	private final int ROOTPANE_BORDER_THICKNESS = 1;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
 		
