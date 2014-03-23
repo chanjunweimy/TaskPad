@@ -4,6 +4,11 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
+import com.taskpad.dateandtime.TimeParser;
+
 public class Add extends Command{
 	
 	private static final String QUOTE = "\"";
@@ -11,6 +16,8 @@ public class Add extends Command{
 	private static final String DASH = "-";
 	private static final String SPACE = " ";
 	private static final String EMPTY = "";
+	private static final String COMMA = ",";
+	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
 		
@@ -24,6 +31,7 @@ public class Add extends Command{
 	private static String PARAMETER_VENUE = "VENUE";
 	
 	private static String MESSAGE_ERROR_TIME = "Error: Invalid variables for time: %d";
+	private static String MESSAGE_INVALID_TIME = "Error: Invalid time";
 	
 	private static int LENGTH_TIME = 2;
 	
@@ -32,12 +40,15 @@ public class Add extends Command{
 	private static String _desc;
 	
 	private static Scanner _sc;
+	private static DateAndTimeManager dateAndTimeManager;
 
 	public Add(String input, String fullInput) {
 		super(input, fullInput);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_ADD);
+		
 		_sc = new Scanner(System.in);
+		dateAndTimeManager.getInstance();
 		_count = 0;
 		_invalidParameters = false;
 	}
@@ -237,10 +248,22 @@ public class Add extends Command{
 
 	//TODO: Check if splitParam[0] is valid time and splitParam[1] is valid Date
 	private void inputStartTime(String param) {
-		String[] splitParam = param.split(",");
+		String[] splitParam = param.split(COMMA);
 		
 		if (isValidTimeArgs(splitParam)){
-			putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
+			//deprecated for flexi commands 
+			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
+			
+			String startTime = EMPTY;
+			try {
+				startTime = dateAndTimeManager.parseTime(stripWhiteSpaces(splitParam[0]));
+			} catch (NullTimeUnitException | NullTimeValueException e) {
+				InputManager.outputToGui(MESSAGE_INVALID_TIME);
+				_invalidParameters = true;
+				return;
+			}
+			putOneParameter(PARAMETER_START_TIME, startTime);
+			
 			if (splitParam.length == LENGTH_TIME){
 				putOneParameter(PARAMETER_START_DATE, stripWhiteSpaces(splitParam[1]));
 			}
@@ -262,7 +285,20 @@ public class Add extends Command{
 		String[] splitParam = param.split(",");
 		
 		if (isValidTimeArgs(splitParam)){
-			putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0]));
+			//deprecated for flexi commands
+			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
+			String endTime = EMPTY;
+			
+			try {
+				endTime = dateAndTimeManager.parseTime(stripWhiteSpaces(splitParam[0]));
+			} catch (NullTimeUnitException | NullTimeValueException e) {
+				InputManager.outputToGui(MESSAGE_INVALID_TIME);
+				_invalidParameters = true;
+				return;
+			}
+			
+			putOneParameter(PARAMETER_END_TIME, endTime);
+			
 			if (splitParam.length == LENGTH_TIME){
 				putOneParameter(PARAMETER_END_DATE, stripWhiteSpaces(splitParam[1]));
 			}
