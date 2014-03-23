@@ -7,8 +7,6 @@ import org.junit.Test;
 import com.taskpad.input.CommandQueue;
 import com.taskpad.input.CommandTypes;
 import com.taskpad.input.CommandTypes.CommandType;
-import com.taskpad.input.EmptyStringException;
-import com.taskpad.input.InputMain;
 import com.taskpad.input.InputManager;
 
 

@@ -4,14 +4,9 @@
 
 package com.taskpad.input;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-
-import com.taskpad.dateandtime.DateAndTimeManager;
 
 public abstract class Command {
 
