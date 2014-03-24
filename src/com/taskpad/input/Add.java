@@ -260,9 +260,6 @@ public class Add extends Command{
 				outputErrorTimeMessage(startTime);
 				return;
 			}
-			System.out.println(param);
-			System.out.println(splitParam[0]);
-			System.out.println(startTime);
 			putOneParameter(PARAMETER_START_TIME, startTime);
 			
 			if (splitParam.length == LENGTH_TIME){
