@@ -124,9 +124,22 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * parseTime() thing
 	 * 
 	 * @return timeString, nicely formatted
+	 * @throws InvalidDateException 
 	 */
-	public String parseDate(String dateString) {
-		return null;
+	public String parseDate(String dateString) throws InvalidDateException {
+		SimpleDateTimeParser dateParser = SimpleDateTimeParser.getInstance();
+		return dateParser.parseDate(dateString);
+	}
+	
+	protected boolean isDate(String dateString){
+		SimpleDateTimeParser dateParser = SimpleDateTimeParser.getInstance();
+		
+		try {
+			dateParser.parseDate(dateString);
+		} catch (InvalidDateException e) {
+			return false;
+		}
+		return true;
 	}
 
 	public String parseTime(String timeString) throws NullTimeUnitException,
