@@ -23,7 +23,6 @@ public class InputMain {
 	@SuppressWarnings("unused")
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
-	protected static boolean hasCheckedFlexi = false;
 	private static String currentCommand = STRING_EMPTY;
 	
 	@SuppressWarnings("unused")
@@ -34,16 +33,21 @@ public class InputMain {
 	protected static String receiveInput(String input){
 		input = input.trim();
 		String outputString = STRING_EMPTY;
-		hasCheckedFlexi = false;
 		
 		if (isConfirmation){
 			processConfirmation(input);
 		} else {
-			String inputCopy = input;
 			if (errorIfNoInput(input)){
 				ErrorMessages.emptyInputMessage();
 			}
-				
+			
+			try {
+				outputString = flexiCommand(input);
+			} catch (EmptyStringException e) {
+				InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));
+			}
+			
+			/** deprecated
 			String commandTypeString = parseInput(inputCopy);
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 			logger.info("Command: " + commandType.toString());
@@ -52,6 +56,7 @@ public class InputMain {
 				commandTypeString = removeFirstWord(input);
 				outputString = commandType.toString() + " " + commandTypeString;
 				performCommand (commandType, commandTypeString, input);
+				
 			} else if (hasCheckedFlexi){
 				invalidCommand(input);
 				outputString += commandType.toString();
@@ -59,6 +64,7 @@ public class InputMain {
 				hasCheckedFlexi = true;
 				outputString = flexiCommand(input);
 			}
+			*/
 		}
 		return outputString;
 	}
@@ -201,14 +207,19 @@ public class InputMain {
 		}
 	}
 
-	private static String flexiCommand(String input){
-		hasCheckedFlexi = true;
+	private static String flexiCommand(String input) throws EmptyStringException{
 		CommandType command = CommandQueue.findFlexi(input);
 		logger.info("Flexicommands: " + command.toString());
-		String commandTypeString = replaceCommandWord(input, command);
-		performCommand(command, commandTypeString, input);
 		
-		return command.toString() + " " + commandTypeString;
+		if (isValidCommandType(command)){
+			String commandTypeString = replaceCommandWord(input, command);
+			performCommand(command, commandTypeString, input);
+			
+			return command.toString() + " " + commandTypeString;
+		} else {
+			throw new EmptyStringException();
+		}
+
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
