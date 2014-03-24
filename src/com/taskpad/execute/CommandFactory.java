@@ -73,22 +73,12 @@ public class CommandFactory {
 	}
 
 	protected static void undo() {
-		/*
-		if (!DataFileStack.isValidPrevious()) {
-			GuiManager.callOutput("You don't have things to undo, or you just performed an undo operation.");
-			return;
-		}
-
-		DataFileStack.setPreviousIsValid(false);
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE_PREV);
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		
-		GuiManager.callOutput("Undo of '" + CommandRecord.getPreviousCommand() + "' completed.");
-		*/
 		try {
+			TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
 			String previousFile = DataFileStack.popForUndo();
 			TaskList listOfTasks = DataManager.retrieve(previousFile);
 			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+			DataManager.storeBack(currentListOfTasks, previousFile);
 			
 			String command = CommandRecord.popForUndo();
 			DataFileStack.pushForRedo(previousFile);

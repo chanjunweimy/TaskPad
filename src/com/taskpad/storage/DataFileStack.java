@@ -21,7 +21,7 @@ public class DataFileStack {
 	*/
 	
 	public static String requestDataFile() {
-		return ".data" + undoStack.size() + ".xml";
+		return ".data" + (undoStack.size()+redoStack.size()) + ".xml";
 	}
 	
 	public static void pushForUndo(String file) {
