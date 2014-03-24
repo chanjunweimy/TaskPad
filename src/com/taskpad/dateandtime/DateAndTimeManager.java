@@ -112,7 +112,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 				d1 = dateConverter.parse(e1.getDeadline() + e1.getEndTime());
 				d2 = dateConverter.parse(e2.getDeadline() + e2.getEndTime());
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				System.err.println(e.getMessage());
 				return 0;
 			}
