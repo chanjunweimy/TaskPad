@@ -18,6 +18,10 @@ public class AddPri extends Command{
 
 	public AddPri(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_ADDPRI);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		

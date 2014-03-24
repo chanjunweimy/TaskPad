@@ -13,10 +13,14 @@ public class Addinfo extends Command{
 
 	public Addinfo(String input, String fullInput) {
 		super(input, fullInput);
+	}
+
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_ADD_INFO);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 	}
-
+	
 	@Override
 	protected boolean commandSpecificRun() {
 		String splitInput[] = input.split(" ");

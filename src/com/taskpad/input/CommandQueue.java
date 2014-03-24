@@ -30,8 +30,7 @@ public class CommandQueue {
 	/* Methods to perform commands */
 	
 	protected void Add(String input, String fullInput){
-		Add add = new Add(input, fullInput);
-		add.run();
+		new Add(input, fullInput);
 	}
 	
 	protected void Alarm(String input, String fullInput){
@@ -47,8 +46,7 @@ public class CommandQueue {
 	}
 	
 	protected void Help(){
-		Help help = new Help();
-		help.outputHelp();
+		new Help();
 	}
 	
 	protected void Exit(){
@@ -56,38 +54,31 @@ public class CommandQueue {
 	}
 	
 	protected void addPriTask(String input, String fullInput){
-		AddPri addPri = new AddPri(input, fullInput);
-		addPri.run();
+		new AddPri(input, fullInput);
 	}
 
 	protected void addInfoTask(String input, String fullInput) {
-		Addinfo addinfo = new Addinfo(input, fullInput);
-		addinfo.run();
+		new Addinfo(input, fullInput);
 	}
 	
 	protected void addRemTask(String input, String fullInput){
-		Addrem addRem = new Addrem(input, fullInput);
-		addRem.run();
+		new Addrem(input, fullInput);
 	}
 	
 	protected void listTask(String input, String fullInput){
-		List list = new List(input, fullInput);
-		list.run();
+		new List(input, fullInput);
 	}
 	
 	protected void redoTask(){
-		Redo redo = new Redo(STRING_EMPTY, "REDO");
-		redo.run();
+		new Redo(STRING_EMPTY, "REDO");
 	}
 	
 	protected void deleteTask(String input, String fullInput) {
-		Delete delete = new Delete(input, fullInput);
-		delete.run();
+		new Delete(input, fullInput);
 	}
 
 	protected void doneTask(String input, String fullInput) {
-		Done done = new Done(input, fullInput);
-		done.run();
+		new Done(input, fullInput);
 	}
 
 	protected void clearAllTasksConfirmation(){
@@ -95,8 +86,7 @@ public class CommandQueue {
 	}
 	
 	protected void clearAllTasks() {
-		ClearTasks clearTask = new ClearTasks(STRING_EMPTY, "CLEAR");
-		clearTask.run();
+		new ClearTasks(STRING_EMPTY, "CLEAR");
 	}
 	
 	protected void clearScreen(){
@@ -104,18 +94,15 @@ public class CommandQueue {
 	}
 	
 	protected void undoLast() {
-		Undo undo = new Undo(STRING_EMPTY, "UNDO");
-		undo.run();
+		new Undo(STRING_EMPTY, "UNDO");
 	}
 	
 	protected void editTask(String input, String fullInput) {
-		Edit edit = new Edit(input, fullInput);
-		edit.run();
+		new Edit(input, fullInput);
 	}
 
 	protected void searchTask(String input, String fullInput) {
-		Search search = new Search(input, fullInput);
-		search.run();	
+		new Search(input, fullInput);
 	}
 	
 	/* Helper methods to find Command Types */

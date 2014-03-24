@@ -26,6 +26,10 @@ public class List extends Command{
 	
 	public List(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_LIST);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		
