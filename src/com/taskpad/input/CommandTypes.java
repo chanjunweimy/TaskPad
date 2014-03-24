@@ -1,0 +1,129 @@
+package com.taskpad.input;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+public class CommandTypes {
+	
+	protected static Logger logger = Logger.getLogger("TaskPad");
+	
+	public enum CommandType{
+		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
+		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, REDO, SEARCH, STOP, UNDO
+	};
+	
+	protected static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
+
+	public CommandTypes(){
+		createHashMap();
+	}
+
+	private static void createHashMap(){
+		putAddVariations();
+		putAddInfoVariations();
+		putAddRemVariations();
+		putAddPriVariations();
+		putAlarmVariations();
+		putClearVariations();
+		putClearScreenVariations();
+		putDeleteVariations();
+		putDoneVariations();
+		putEditVariations();
+		putExitVariations();
+		putHelpVariations();
+		putListVariations();
+		putRedoVariations();
+		putSearchVariations();
+		putStopVariations();
+		putUndoVariations();
+	}
+	
+	/* Helper methods for creating the hashmap */
+	
+	private static void putAddVariations(){
+		String[] addVariations = {"ADD", "NEW", "CREATE", "INSERT"};
+		commandVariations.put(CommandType.ADD, addVariations);
+	}
+	
+	private static void putAddInfoVariations(){
+		String[] addInfoVariations = {"ADDINFO", "INFO", "INFORMATION", "CREATEDESC"};
+		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
+	}
+	
+	private static void putAddRemVariations(){
+		String[] addRemVariations = {"ADDR", "REM", "REMINDER", "REMIND", "REMAINDER"};
+		commandVariations.put(CommandType.ADD_REM, addRemVariations);
+	}
+	
+	private static void putAddPriVariations(){
+		String[] addPriVariations = {"ADDPRI", "ADDPRIORITY", "PRI", "PRIORITY"};
+		commandVariations.put(CommandType.ADD_PRI, addPriVariations);
+	}
+	
+	private static void putAlarmVariations() {
+		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER", "RING"};
+		commandVariations.put(CommandType.ALARM, exitVariations);
+	}
+	
+	private static void putDeleteVariations(){
+		String[] deleteVariations = {"DELETE", "DEL", "REMOVE", "REM"};
+		commandVariations.put(CommandType.DELETE, deleteVariations);
+	}
+	
+	private static void putDoneVariations(){
+		String[] doneVariations = {"DONE", "FINISHED", "COMPLETED", "FINISH", "COMPLETE"};
+		commandVariations.put(CommandType.DONE, doneVariations);
+	}
+	
+	private static void putClearVariations(){
+		String[] clearVariations = {"CLEAR", "CLR", "CLEAN", "CLC"};
+		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
+	}
+	
+	private static void putClearScreenVariations(){
+		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "SCREEN"};
+		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
+	}
+	
+	private static void putEditVariations(){
+		String[] editVariations = {"EDIT", "CHANGE"};
+		commandVariations.put(CommandType.EDIT, editVariations);
+	}
+	
+	private static void putUndoVariations(){
+		String[] undoVariations = {"UNDO", "U"};
+		commandVariations.put(CommandType.UNDO, undoVariations);
+	}
+	
+	private static void putSearchVariations(){
+		String[] searchVariations = {"SEARCH", "FIND"};
+		commandVariations.put(CommandType.SEARCH, searchVariations);
+	}
+	
+	private static void putStopVariations(){
+		String[] stopVariations = {"STOP", "STOPP", "STO"};
+		commandVariations.put(CommandType.STOP, stopVariations);
+	}
+	
+	private static void putListVariations(){
+		String[] listVariations = {"LIST", "LS", "SHOW", "DISPLAY", "LST"};
+		commandVariations.put(CommandType.LIST, listVariations);
+	}
+	
+	private static void putRedoVariations(){
+		String[] redoVariations = {"REDO", "RDO", "RE"};
+		commandVariations.put(CommandType.REDO, redoVariations);
+	}
+	
+	public static void putHelpVariations(){
+		String[] helpVariations = {"HELP", "HLP", "MAN"};
+		commandVariations.put(CommandType.HELP, helpVariations);
+	}
+	
+	private static void putExitVariations(){
+		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN"};
+		commandVariations.put(CommandType.EXIT, exitVariations);
+	}
+
+}
