@@ -120,8 +120,28 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	};
 
 	/**
-	 * These 2 methods are going to implement to do the parseDate() and
-	 * parseTime() thing
+	 * parse a day (such as Monday to int)
+	 * @param dayString
+	 * @return int
+	 * @throws InvalidDayException
+	 */
+	public int parseDay(String dayString) throws InvalidDayException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDay(dayString);
+	}
+	
+	protected boolean isDay(String dayString){
+		DayParser dayParser = DayParser.getInstance();
+		try {
+			dayParser.parseDay(dayString);
+		} catch (InvalidDayException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * parseDate: parse different format of Date
 	 * 
 	 * @return timeString, nicely formatted
 	 * @throws InvalidDateException 
@@ -142,6 +162,15 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return true;
 	}
 
+	
+	/**
+	 * parseTime: parse different format of time
+	 * @param timeString
+	 * @return String
+	 * @throws NullTimeUnitException
+	 * @throws NullTimeValueException
+	 * @throws TimeErrorException
+	 */
 	public String parseTime(String timeString) throws NullTimeUnitException,
 			NullTimeValueException, TimeErrorException {
 		return TimeParser.parseTime(timeString);
