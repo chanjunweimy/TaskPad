@@ -14,7 +14,7 @@ import java.util.Date;
 public class SimpleDateTimeParser {
 
 	//private static final String STRING_EMPTY = "";
-	
+	private static final String DATE_INVALID = "Not a valid date";
 	private static SimpleDateFormat _formatter = new SimpleDateFormat("dd/MM/yyyy");
 	private static SimpleDateTimeParser _dateParser = new SimpleDateTimeParser();
 	
@@ -47,10 +47,16 @@ public class SimpleDateTimeParser {
 	}
 	
 	protected String parseDate(String input) throws InvalidDateException{
+		if (input == null){
+			throw new InvalidDateException(DATE_INVALID);
+		}
+		
+		input = input.trim();
+		
 		String dateString = formatDate(input);
 		
 		if (dateString == null){
-			throw new InvalidDateException("Not a valid date");
+			throw new InvalidDateException(DATE_INVALID);
 		} 
 		
 		return dateString;
