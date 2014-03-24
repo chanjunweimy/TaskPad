@@ -13,12 +13,10 @@ import java.util.Date;
 
 public class SimpleDateTimeParser {
 
-	private static final String STRING_EMPTY = "";
+	//private static final String STRING_EMPTY = "";
 	
-	private static String _dateString = STRING_EMPTY;
 	private static SimpleDateFormat _formatter = new SimpleDateFormat("dd/MM/yyyy");
-	private static SimpleDateFormat _sdf;
-	private static Date _date;
+	private static SimpleDateTimeParser _dateParser = new SimpleDateTimeParser();
 	
 	private static final String[] _dateFormats = {
 		"dd/MM/yyyy", "dd/MM/yy", "dd-MM-yyyy", "dd-MM-yy", "dd.MM.yyyy", "dd.MM.yy", "dd MM yyyy", "dd MM yy",
@@ -28,36 +26,50 @@ public class SimpleDateTimeParser {
 		"yyyy/dd/MM", "yy/dd/MM", "yyyy-dd-MM", "yy-dd-MM", "yyyy.dd.MM", "yy.dd.MM", "yyyy dd MM", "yy dd MM",
 		"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yy-dd-MMM", "yyyy/dd/MMM", "yy/dd/MMM",
 		"d/M/yyyy", "d/M/yy", "d-M-yyyy", "d-M-yy", "d.M.yyyy", "d.M.yy", "d M yyyy", "d M yy",
-		"yyyy/d/M", "yy/d/M", "yyyy-d-M", "yy-d-M", "yyyy.d.M", "yy.d.M", "yyyy d M", "yy d M"
+		"yyyy/d/M", "yy/d/M", "yyyy-d-M", "yy-d-M", "yyyy.d.M", "yy.d.M", "yyyy d M", "yy d M", 
+		"ddMMyyyy", "ddMMMyyyy", "MMMddyyyy", "MMddyyyy", "yyyyMMMdd"
 	};
 	
 	private SimpleDateTimeParser(){
 	}
 	
-	protected String SimpleDateTime(String input){
-		tryParseDate(input);
-		
-		return _dateString;
+	protected static SimpleDateTimeParser getInstance(){
+		return _dateParser;
 	}
 	
-	private static String tryParseDate(String input){
+	protected String parseDate(String input) throws InvalidDateException{
+		String dateString = formatDate(input);
+		
+		if (dateString == null){
+			throw new InvalidDateException("Not a valid date");
+		} 
+		
+		return dateString;
+	}
+	
+	private static String formatDate(String input){
+		String dateString = null;
 		for (int i=0; i<_dateFormats.length; i++){
-			_sdf = new SimpleDateFormat(_dateFormats[i]);
+			SimpleDateFormat sdf = new SimpleDateFormat(_dateFormats[i]);
 			try {
-				_date = _sdf.parse(input);
-				_dateString = _formatter.format(_date);
+				Date date = sdf.parse(input);
+				dateString = _formatter.format(date);
+				break;
 			} catch (ParseException e){
 				//do nothing
 			}
 		}
-		return _dateString;
+		return dateString;
 	}
 		
+	/* TESTING.....
 	public static void main (String[] args){
-		System.out.println(tryParseDate("13-12-14"));
-		System.out.println(tryParseDate("13 12 2014"));
-		System.out.println(tryParseDate("1 Feb 14"));
-		System.out.println(tryParseDate("2014 1 December"));
+		System.out.println(formatDate("13-12-14"));
+		System.out.println(formatDate("13 12 2014"));
+		System.out.println(formatDate("1 Feb 14"));
+		System.out.println(formatDate("2014 1 December"));
+		System.out.println(formatDate("1December2014"));
+		System.out.println(formatDate("011214"));
 	}
-	
+	//*/
 }

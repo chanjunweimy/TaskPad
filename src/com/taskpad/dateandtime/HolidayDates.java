@@ -1,13 +1,12 @@
 package com.taskpad.dateandtime;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** For special holiday dates
  * 
  * @author Lynnette 
  */
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class HolidayDates {
 	
 	private static Map<String, String> _holidays = new HashMap<String, String>();
