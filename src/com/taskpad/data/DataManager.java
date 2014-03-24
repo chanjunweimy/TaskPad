@@ -28,7 +28,6 @@ import com.taskpad.storage.TaskList;
 public class DataManager {
 
 	public DataManager(){
-		
 	}
 	
 	public static int retrieveNumberOfTasks(){

@@ -71,7 +71,7 @@ public class Add extends Command{
 			splitInputParameters();
 		}
 		
-		/* Not ready
+		/* Deprecated
 		if (isNotDelimitedString()){
 			getDescInQuotes();
 			removeDesc();
@@ -280,8 +280,6 @@ public class Add extends Command{
 		while (m.find()){
 			_desc = m.group(2);
 		}
-
-//		System.out.println(input.split("\"")[1]);
 	}
 
 	private void inputEndTime(String param) {
@@ -345,17 +343,6 @@ public class Add extends Command{
 		String errorMessage = String.format(MESSAGE_ERROR_TIME, length);
 		InputManager.outputToGui(errorMessage);
 		return errorMessage;
-	}
-	
-	@SuppressWarnings("unused")
-	private void removeDesc(){
-		input.replace(_desc, Add.BLANK);
-	}
-	
-	//To be completed: PARSE The rest for date & time
-	@SuppressWarnings("unused")
-	private void parseTheRest(){
-		
 	}
 	
 	private String stripWhiteSpaces(String input){

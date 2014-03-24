@@ -232,7 +232,6 @@ public class InputMain {
 				desc += splitInput[i] + " ";
 			}
 		}
-			
 		return desc;
 	}
 

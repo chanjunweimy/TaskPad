@@ -40,7 +40,12 @@ public class Addrem extends Command{
 		if (checkIfContainsDelimiters()){
 			splitInputParameters();
 		} else {
-			splitInputNoDelimiters();
+			try {
+				splitInputNoDelimiters();
+			} catch (TaskIDException e) {
+				ErrorMessages.invalidTaskIDMessage();
+				_invalidParameters = true;
+			}
 		}
 		
 		if (_invalidParameters){
@@ -106,12 +111,19 @@ public class Addrem extends Command{
 		}
 	}
 	
-	private void splitInputNoDelimiters() {
+	/**Note To do: Can identify if its a date or time string. 
+	*Time will return "-1:-1" if it's not a time string
+	*Should make similar for date string 
+	*/
+	private void splitInputNoDelimiters() throws TaskIDException {		
 		String[] splitInput = input.split(SPACE);
 		_taskID = splitInput[0];
+		if (Integer.parseInt(_taskID) > InputManager.retrieveNumberOfTasks()+1){
+			throw new TaskIDException(_taskID);
+		}
 		_remDate = splitInput[1];
 		if (splitInput.length == 3){
-			_remTime = splitInput[2];		//deprecated for flexi commands
+			//_remTime = splitInput[2];		//deprecated for flexi commands
 			try {
 				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
 			} catch (TimeErrorException e) {
