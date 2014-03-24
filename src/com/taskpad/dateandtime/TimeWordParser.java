@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 /**
  * 
- * @author Jun
+ * @author Jun and Lynnette
  *
  * make TimeWordParser to be a singleton to increase efficiency.
  */

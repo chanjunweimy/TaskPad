@@ -9,8 +9,6 @@ import java.util.Date;
 
 import com.taskpad.storage.Task;
 
-
-
 /**
  * 
  * @author Jun & Lynnette
