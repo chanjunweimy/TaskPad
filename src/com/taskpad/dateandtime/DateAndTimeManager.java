@@ -48,7 +48,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 
 	/**
-	 * getTodayTime: return the currect time.
+	 * getTodayTime: return the current time.
 	 * 
 	 * @return String
 	 */
