@@ -8,6 +8,10 @@ public class Undo extends Command{
 	
 	public Undo(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_UNDO);
 	}
 

@@ -7,6 +7,10 @@ public class Redo extends Command{
 
 	public Redo(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_REDO);
 	}
 	

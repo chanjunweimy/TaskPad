@@ -24,6 +24,10 @@ public class Addrem extends Command{
 
 	public Addrem(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_ADD_REM);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		

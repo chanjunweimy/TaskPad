@@ -18,11 +18,13 @@ public class Delete extends Command{
 	private static String TEST = "TESTING CONFLICTS";
 
 	public Delete(String input, String fullInput) {
-		super(input, fullInput);
+		super(input, fullInput);	
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
-		setCOMMAND(COMMAND_DELETE);
-		
-		//System.err.println(fullInput);
+		setCOMMAND(COMMAND_DELETE);	
 	}
 
 	@Override
