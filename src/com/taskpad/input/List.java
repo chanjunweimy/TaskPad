@@ -72,6 +72,7 @@ public class List extends Command{
 	protected boolean checkIfEmptyString(){
 		if(isEmptyString()){
 			input = PARAMETER_VALID_LIST[0];
+			System.out.println("Empty parameter");
 		}
 		return false;
 	}
