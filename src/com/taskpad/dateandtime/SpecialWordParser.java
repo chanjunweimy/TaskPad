@@ -10,11 +10,11 @@ public class SpecialWordParser {
 	private static SpecialWordParser _specialWordParser = new SpecialWordParser();
 	
 	private static final String[] _nextMap ={
-		"NEXT", "NXT", "FOLLOWING"
+		"NEXT", "NXT", "FOLLOWING", "COMING"
 	};
 	
 	private static final String[] _prevMap ={
-		"PREVIOUS", "PREV", "PAST"
+		"PREVIOUS", "PREV", "PAST", "LAST"
 	};
 	
 	private SpecialWordParser(){
