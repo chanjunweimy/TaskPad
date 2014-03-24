@@ -23,6 +23,7 @@ public class InputMain {
 	@SuppressWarnings("unused")
 	private static Input inputObject;
 	private static boolean isConfirmation = false;
+	private static boolean hasCheckedFlexi = false;
 	private static String currentCommand = STRING_EMPTY;
 	
 	@SuppressWarnings("unused")
@@ -41,13 +42,15 @@ public class InputMain {
 				ErrorMessages.emptyInputMessage();
 			}
 			
+			/*
 			try {
 				outputString = flexiCommand(input);
 			} catch (EmptyStringException e) {
 				InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));
 			}
+			*/
 			
-			/** deprecated
+			String inputCopy = input;
 			String commandTypeString = parseInput(inputCopy);
 			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
 			logger.info("Command: " + commandType.toString());
@@ -62,9 +65,12 @@ public class InputMain {
 				outputString += commandType.toString();
 			} else {
 				hasCheckedFlexi = true;
-				outputString = flexiCommand(input);
+				try {
+					outputString = flexiCommand(input);
+				} catch (EmptyStringException e) {
+					ErrorMessages.emptyInputMessage();
+				}
 			}
-			*/
 		}
 		return outputString;
 	}
@@ -208,6 +214,7 @@ public class InputMain {
 	}
 
 	private static String flexiCommand(String input) throws EmptyStringException{
+		hasCheckedFlexi = true;
 		CommandType command = CommandQueue.findFlexi(input);
 		logger.info("Flexicommands: " + command.toString());
 		
