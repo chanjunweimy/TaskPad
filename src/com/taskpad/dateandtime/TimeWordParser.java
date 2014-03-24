@@ -267,7 +267,7 @@ public class TimeWordParser{
 	}
 	
 	private  boolean isValueFound(String value, String input) {
-		if (input == TimeWordParser.BLANK || input == null){
+		if (input == BLANK || input == null){
 			return false;
 		}
 		
@@ -372,6 +372,9 @@ public class TimeWordParser{
 			break;
 		case TIME_HOURS:
 			cal.add(Calendar.HOUR, increment);
+			break;
+		case TIME_DAY:
+			cal.add(Calendar.DAY_OF_YEAR, increment);
 			break;
 		case TIME_WEEKS:
 			cal.add(Calendar.WEEK_OF_MONTH, increment);
