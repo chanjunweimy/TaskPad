@@ -53,7 +53,7 @@ public class TimeParser {
 		String timeString = EMPTY;
 		long time = 0;
 		
-		if(isNotEmptyString(timeString)){
+		if(isNotEmptyString(input)){
 			time = decodeTime(input);
 			timeString = convertMillisecondsToTime(time);
 		}
