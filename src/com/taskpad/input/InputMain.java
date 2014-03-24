@@ -9,8 +9,6 @@ import com.taskpad.input.CommandTypes.CommandType;
 
 public class InputMain {
 
-	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "Confirm clear screen? (Y/N)";
-	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "Confirm clear data? (Y/N)";
 	private static final String MESSAGE_NOT_CLEAR_DATA = "Not clearing data";
 	private static final String MESSAGE_NOT_CLEAR_SCREEN = "Not clearing Screen";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
@@ -86,7 +84,8 @@ public class InputMain {
 	
 	private static void executeConfirmation(){
 		if (currentCommand.equals(COMMAND_CLEAR)){
-			clearAllTasks();
+			//clearAllTasks();		//deprecated
+			CommandQueue.getInstance().clearAllTasks();
 		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
 			InputManager.clearScreen();
 		}
@@ -125,59 +124,76 @@ public class InputMain {
 	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
 		switch(commandType){
 			case ADD:
-				addTask(commandTypeString, input);
+				//addTask(commandTypeString, input);
+				CommandQueue.getInstance().Add(commandTypeString, input);
 				break;
 			case ALARM:
-				setUpAlarm(commandTypeString, input);
+				//setUpAlarm(commandTypeString, input);
+				CommandQueue.getInstance().Alarm(commandTypeString, input);
 				break;
 			case ADD_INFO:
-				addInfoTask(commandTypeString, input);
+				//addInfoTask(commandTypeString, input);
+				CommandQueue.getInstance().addInfoTask(commandTypeString, input);
 				break;
 			case ADD_REM:
-				addRemTask(commandTypeString, input);
+				//addRemTask(commandTypeString, input);
+				CommandQueue.getInstance().addRemTask(commandTypeString, input);
 				break;
 			case ADD_PRI:
-				addPriTask(commandTypeString, input);
+				//addPriTask(commandTypeString, input);
+				CommandQueue.getInstance().addPriTask(commandTypeString, input);
 				break;
 			case LIST:
-				listTask(commandTypeString, input);
+				//listTask(commandTypeString, input);
+				CommandQueue.getInstance().listTask(commandTypeString, input);
 				break;
 			case CLEAR_ALL:
 				isConfirmation = true;
 				currentCommand = COMMAND_CLEAR;
-				clearAllTasksConfirmation();
+				//clearAllTasksConfirmation();
+				CommandQueue.getInstance().clearAllTasksConfirmation();
 				break;
 			case CLEAR_SCREEN:
 				isConfirmation = true;
 				currentCommand = COMMAND_CLEAR_SCREEN;
-				clearScreen();
+				//clearScreen();
+				CommandQueue.getInstance().clearScreen();
 				break;
 			case DELETE:
-				deleteTask(commandTypeString, input);
+				//deleteTask(commandTypeString, input);
+				CommandQueue.getInstance().deleteTask(commandTypeString, input);
 				break;
 			case DONE:
-				doneTask(commandTypeString, input);
+				//doneTask(commandTypeString, input);
+				CommandQueue.getInstance().doneTask(commandTypeString, input);
 				break;
 			case EDIT:
-				editTask(commandTypeString, input);
+				//editTask(commandTypeString, input);
+				CommandQueue.getInstance().editTask(commandTypeString, input);
 				break;
 			case SEARCH:
-				searchTask(commandTypeString, input);
+				//searchTask(commandTypeString, input);
+				CommandQueue.getInstance().searchTask(commandTypeString, input);
 				break;
 			case STOP:
-				stopAlarm(commandTypeString, input);
+				//stopAlarm(commandTypeString, input);
+				CommandQueue.getInstance().stopAlarm(commandTypeString, input);
 				break;
 			case HELP:
-				help();
+				//help();
+				CommandQueue.getInstance().Help();
 				break;
 			case EXIT:
-				exitProgram();
+				//exitProgram();
+				CommandQueue.getInstance().Exit();
 				break;
 			case REDO:
-				redoTask();
+				//redoTask();
+				CommandQueue.getInstance().redoTask();
 				break;
 			case UNDO:
-				undoLast();
+				//undoLast();
+				CommandQueue.getInstance().undoLast();
 				break;
 			default:
 				invalidCommand(commandTypeString);
@@ -185,97 +201,6 @@ public class InputMain {
 		}
 	}
 
-	/* Methods to perform commands */
-
-	private static void addTask(String input, String fullInput) {
-		Add add = new Add(input, fullInput);
-		add.run();
-	}
-	
-	private static void addPriTask(String input, String fullInput){
-		AddPri addPri = new AddPri(input, fullInput);
-		addPri.run();
-	}
-
-	private static void addInfoTask(String input, String fullInput) {
-		Addinfo addinfo = new Addinfo(input, fullInput);
-		addinfo.run();
-	}
-	
-	private static void addRemTask(String input, String fullInput){
-		Addrem addRem = new Addrem(input, fullInput);
-		addRem.run();
-	}
-	
-	private static void listTask(String input, String fullInput){
-		List list = new List(input, fullInput);
-		list.run();
-	}
-	
-	private static void redoTask(){
-		Redo redo = new Redo(STRING_EMPTY, "REDO");
-		redo.run();
-	}
-	
-	private static void deleteTask(String input, String fullInput) {
-		Delete delete = new Delete(input, fullInput);
-		delete.run();
-	}
-
-	private static void doneTask(String input, String fullInput) {
-		Done done = new Done(input, fullInput);
-		done.run();
-	}
-
-	private static void clearAllTasksConfirmation(){
-		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_DATA);
-	}
-	
-	private static void clearAllTasks() {
-		ClearTasks clearTask = new ClearTasks(STRING_EMPTY, "CLEAR");
-		clearTask.run();
-	}
-	
-	private static void clearScreen(){
-		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_SCREEN);
-	}
-	
-	private static void undoLast() {
-		Undo undo = new Undo(STRING_EMPTY, "UNDO");
-		undo.run();
-	}
-	
-	private static void editTask(String input, String fullInput) {
-		Edit edit = new Edit(input, fullInput);
-		edit.run();
-	}
-
-	private static void searchTask(String input, String fullInput) {
-		Search search = new Search(input, fullInput);
-		search.run();	
-	}
-	
-	private static void stopAlarm(String input, String fullInput){
-		try {
-			AlarmManager.turnOffAlarm();
-		} catch (Exception e) {
-			return;
-		}
-	}
-	
-	private static void help() {
-		Help help = new Help();
-		help.outputHelp();
-	}
-
-	private static void exitProgram() {
-		InputManager.callGuiExit();
-	}
-	
-	private static void setUpAlarm(String input, String fullInput) {
-		new Alarm(input, fullInput);
-	}
-	
 	private static String flexiCommand(String input){
 		hasCheckedFlexi = true;
 		CommandType command = CommandQueue.findFlexi(input);

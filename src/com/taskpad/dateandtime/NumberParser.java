@@ -47,6 +47,7 @@ public class NumberParser {
 	};
 
 	private static NumberParser _numberParser = new NumberParser();
+	
 	private NumberParser(){	
 		initializeNumberMap();
 	}
