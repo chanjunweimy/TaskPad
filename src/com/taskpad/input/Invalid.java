@@ -29,4 +29,10 @@ public class Invalid extends Command {
 		
 	}
 
+	@Override
+	protected void initialiseOthers() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

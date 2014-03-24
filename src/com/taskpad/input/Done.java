@@ -11,6 +11,10 @@ public class Done extends Command{
 
 	public Done(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_DONE);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 	}

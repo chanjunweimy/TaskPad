@@ -9,6 +9,10 @@ public class ClearTasks extends Command{
 	
 	public ClearTasks(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setCOMMAND(COMMAND_CLEAR);
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 	}
