@@ -84,6 +84,7 @@ public class NumberParser {
 		
 		if (isDigitString(input)){
 			return STRING_EMPTY + Integer.parseInt(input);
+			//return STRING_EMPTY + Double.parseDouble(input);
 		}
 		
 		String[] numWords = input.split(" ");
@@ -127,6 +128,7 @@ public class NumberParser {
 	private boolean isDigitString(String input) {
 		try{
 			Integer.parseInt(input);
+			//Double.parseDouble(input);
 			return true;
 		} catch (NumberFormatException e){
 			return false;

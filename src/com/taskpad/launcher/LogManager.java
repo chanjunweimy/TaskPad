@@ -1,9 +1,5 @@
 package com.taskpad.launcher;
 
-/** This class is to set up global logging to a file
- * @author Lynnette
- */
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +7,10 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+
+/** This class is to set up global logging to a file
+ * @author Lynnette
+ */
 public class LogManager {
 
 	private static String _taskpad = "TaskPad";
