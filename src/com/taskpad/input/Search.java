@@ -10,6 +10,10 @@ public class Search extends Command{
 
 	public Search(String input, String fullInput) {
 		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_SEARCH);
 	}
@@ -34,7 +38,6 @@ public class Search extends Command{
 	@Override
 	protected boolean commandSpecificRun() {
 		_keyword = input;
-		System.out.println(_keyword);
 		return true;
 	}
 

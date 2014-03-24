@@ -28,8 +28,12 @@ public abstract class Command {
 		Command.fullInput = fullInput;
 		Command.input = input;
 		inputParameters = new HashMap<String,String>();
+		initialiseOthers();
+		run();
 	}
 	
+	protected abstract void initialiseOthers();
+
 	public void run() {
 		try {
 			checkIfEmptyString();

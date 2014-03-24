@@ -19,7 +19,7 @@ public class OutputToGui {
 		for(int next: candidates) {
 			int taskId = next + 1;
 			text += generateTextForOneTask(taskId, listOfTasks.get(next));
-			text += "\n";
+			text += "\n\n";
 		}
 		return text;
 	}
