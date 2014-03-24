@@ -1,5 +1,11 @@
 package com.taskpad.input;
 
+/**
+ * Exception for when TaskID larger than number of tasks in storage
+ * @author Lynnette
+ *
+ */
+
 public class TaskIDException extends Exception {
 	
 	/**

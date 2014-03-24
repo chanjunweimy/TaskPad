@@ -19,6 +19,8 @@ public class AlarmManager extends JApplet{
 	
 	private static String _desc = "";
 	private static final String MESSAGE_ALARM = "ALARM!! %s";
+	private static final String MESSAGE_CANCEL_ALARM = "Cancelling Alarm";
+	private static final String MESSAGE_STOP_ALARM = "Stopping Alarm";
 	
 	private AlarmManager(){
 		/* deprecated, we no longer wants it to be an object
@@ -101,6 +103,7 @@ public class AlarmManager extends JApplet{
 		} else{
 			throw EXCEPTION_ERROR;
 		}
+		GuiManager.callOutput(MESSAGE_STOP_ALARM);
 	}
 	
 	public static void cancelAlarms() throws Exception{
@@ -115,6 +118,8 @@ public class AlarmManager extends JApplet{
 		} else{
 			TimerObject.cancelAlarms();
 		}
+		GuiManager.callOutput(MESSAGE_CANCEL_ALARM);
+
 	}
 	
 	protected static void runAlarm() throws Exception{

@@ -14,8 +14,6 @@ import com.taskpad.dateandtime.NullTimeValueException;
  * 
  * Syntax: alarm <desc> <time count> <time unit>
  * 
- * Let Alarm not to be implemented with other commands 1st
- * Implement Alarm to Executor later.
  * 
  */
 public class Alarm{	
@@ -33,7 +31,7 @@ public class Alarm{
 	public Alarm(String input, String fullInput) {
 		initializeAlarm(input, fullInput);
 		
-		/*
+		/* deprecated 
 		try {
 			initializeAlarm(input, fullInput);
 		} catch (Exception e) {
@@ -46,8 +44,8 @@ public class Alarm{
 		String numberString = null;
 		int time = -1;
 		
-		numberString = successParseTime(input, numberString);
-		
+		numberString = findTimeUnit(input);
+		//numberString = successParseTime(input, numberString);
 		if (numberString == null){
 			return;
 		}
@@ -63,6 +61,18 @@ public class Alarm{
 		InputManager.outputToGui("Creating alarm... " + fullInput);
 		
 		AlarmManager.initializeAlarm(desc, time);		
+	}
+
+	private String findTimeUnit(String input) {
+		String numberString = "";
+		String[] splitInput = input.split(SPACE);
+		numberString = successParseTime(splitInput[splitInput.length-1], numberString);
+		
+		if (numberString == null){
+			String newNumberString = splitInput[splitInput.length-2] + " " + splitInput[splitInput.length-1];
+			numberString = successParseTime(newNumberString, numberString);
+		} 
+		return numberString;
 	}
 
 	private String successParseTime(String input, String numberString) {
@@ -93,9 +103,16 @@ public class Alarm{
 		int length = inputString.length;
 		
 		String description = "";
-		for (int i = 1; i < length - 2; i++){
-			description = description + inputString[i] + SPACE;
-		}
+		if (length == 4){
+			for (int i = 1; i < length - 2; i++){
+				description = description + inputString[i] + SPACE;
+			}
+		} else if (length == 3){
+			for (int i = 1; i < length - 1; i++){
+				description = description + inputString[i] + SPACE;
+			}
+		} 
+
 		description = description.trim(); 
 		return description;
 	}

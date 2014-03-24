@@ -230,14 +230,14 @@ public class TimeParser {
 		
 		String hourString = "" + hours;
 		if (hourString.length() == 1){
-			hourString = "0" + hourString;
+			hourString = TIME_ZERO + hourString;
 		}
 		
-		String minuteString = "" + minutes;
+		String minuteString = EMPTY + minutes;
 		if (minuteString.length() == 1){
-			minuteString = "0" + minuteString;
+			minuteString = TIME_ZERO + minuteString;
 		}
-		String timeString = hourString + ":" + minuteString;
+		String timeString = hourString + COLON + minuteString;
 		
 		return timeString;
 	}
@@ -249,11 +249,13 @@ public class TimeParser {
 		return false;
 	}
 	
+	/* For testing
 	public static void main(String[] args){
-		String input = "8am";
+		String input = "31/03/2014";
 		long time = decodeTime(input);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
 	}
+	*/
 	
 }
