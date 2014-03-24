@@ -4,6 +4,7 @@
 
 package com.taskpad.input;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -138,7 +139,7 @@ public abstract class Command {
 	 * @return
 	 */
 	protected Input createInputObject() {
-		//clearInputParameters();
+		//clearInputParameters();	
 		putInputParameters();
 		inputObject = new Input(getCOMMAND(), inputParameters);	
 		

@@ -19,14 +19,23 @@ public class SimpleDateTimeParser {
 	private static SimpleDateTimeParser _dateParser = new SimpleDateTimeParser();
 	
 	private static final String[] _dateFormats = {
-		"dd/MM/yyyy", "dd/MM/yy", "dd-MM-yyyy", "dd-MM-yy", "dd.MM.yyyy", "dd.MM.yy", "dd MM yyyy", "dd MM yy",
-		"MMM dd yyyy", "MMM dd yy", "MMM dd,yyyy", "MMM dd , yyyy", "MMM dd,yy", "MMM dd , yy", "MMM dd, yyyy", "MMM dd, yy", 
-		"dd MMM yyyy", "dd MMM yy", "dd MMM,yyyy", "dd MMM , yyyy", "dd MMM, yy", "dd MMM, yyyy",
-		"dd-MMM-yyyy", "dd-MMM-yy", "dd MM,yyyy", "dd MM, yyyy", "dd MM , yyyy", "dd MM,yy", "dd MM , yy", "dd MM, yy",
-		"yyyy/dd/MM", "yy/dd/MM", "yyyy-dd-MM", "yy-dd-MM", "yyyy.dd.MM", "yy.dd.MM", "yyyy dd MM", "yy dd MM",
-		"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yy-dd-MMM", "yyyy/dd/MMM", "yy/dd/MMM",
-		"d/M/yyyy", "d/M/yy", "d-M-yyyy", "d-M-yy", "d.M.yyyy", "d.M.yy", "d M yyyy", "d M yy",
-		"yyyy/d/M", "yy/d/M", "yyyy-d-M", "yy-d-M", "yyyy.d.M", "yy.d.M", "yyyy d M", "yy d M", 
+		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", "dd MM yy",  
+		"MMM dd yy", "MMM dd,yy", "MMM dd , yy", "MMM dd, yy",  
+		"dd MMM yy", "dd MMM, yy", "dd-MMM-yy", "dd MM,yy", 
+		"dd MM , yy", "dd MM, yy", "yy/dd/MM", "yy-dd-MM", 
+		"yy.dd.MM", "yy dd MM", "yy-dd-MMM",  "yy/dd/MMM",
+		"d/M/yy", "d-M-yy", "d.M.yy", "d M yy",
+		"yy/d/M", "yy-d-M", "yy.d.M", "yy d M", 
+		"ddMMyy", "ddMMMyy", "MMMddyy", "MMddyy", "yyMMMdd", 
+		
+		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "dd MM yyyy",
+		"MMM dd yyyy", "MMM dd,yyyy", "MMM dd , yyyy", "MMM dd, yyyy",
+		"dd MMM yyyy", "dd MMM,yyyy", "dd MMM , yyyy", "dd MMM, yyyy",
+		"dd-MMM-yyyy", "dd MM,yyyy", "dd MM, yyyy", "dd MM , yyyy", 
+		"yyyy/dd/MM", "yyyy-dd-MM", "yyyy.dd.MM", "yyyy dd MM", 
+		"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yyyy/dd/MMM",
+		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", "d M yyyy", 
+		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
 		"ddMMyyyy", "ddMMMyyyy", "MMMddyyyy", "MMddyyyy", "yyyyMMMdd"
 	};
 	
