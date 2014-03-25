@@ -47,12 +47,12 @@ public class CommandTypes {
 	}
 	
 	private static void putAddInfoVariations(){
-		String[] addInfoVariations = {"ADDINFO", "INFO", "INFORMATION", "CREATEDESC"};
+		String[] addInfoVariations = {"ADDINFO", "INFO", "INFORMATION", "CREATEDESC", "ADDDESC", "CREATEINFO"};
 		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
 	}
 	
 	private static void putAddRemVariations(){
-		String[] addRemVariations = {"ADDR", "REM", "REMINDER", "REMIND", "REMAINDER"};
+		String[] addRemVariations = {"ADDR", "REMINDER", "REMIND", "REMAINDER"};
 		commandVariations.put(CommandType.ADD_REM, addRemVariations);
 	}
 	
@@ -62,7 +62,7 @@ public class CommandTypes {
 	}
 	
 	private static void putAlarmVariations() {
-		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER", "RING"};
+		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER", "RING", "CREATEALARM"};
 		commandVariations.put(CommandType.ALARM, exitVariations);
 	}
 	
@@ -77,22 +77,22 @@ public class CommandTypes {
 	}
 	
 	private static void putClearVariations(){
-		String[] clearVariations = {"CLEAR", "CLR", "CLEAN", "CLC"};
+		String[] clearVariations = {"CLEAR", "CLR", "CLEAN", "CLC", "CLEARALL"};
 		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
 	}
 	
 	private static void putClearScreenVariations(){
-		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "SCREEN"};
+		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "CLCSCR", "SCREEN"};
 		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
 	}
 	
 	private static void putEditVariations(){
-		String[] editVariations = {"EDIT", "CHANGE"};
+		String[] editVariations = {"EDIT", "CHANGE", "ED"};
 		commandVariations.put(CommandType.EDIT, editVariations);
 	}
 	
 	private static void putUndoVariations(){
-		String[] undoVariations = {"UNDO", "U"};
+		String[] undoVariations = {"UNDO", "UN", "UDO"};
 		commandVariations.put(CommandType.UNDO, undoVariations);
 	}
 	
