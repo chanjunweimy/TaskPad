@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.taskpad.alarm.AlarmManager;
 import com.taskpad.input.CommandTypes.CommandType;
 
 public class InputMain {

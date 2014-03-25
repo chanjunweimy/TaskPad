@@ -7,7 +7,7 @@
 package com.taskpad.launcher;
 
 import javax.swing.SwingUtilities;
-
+ 
 public class TaskPadMain{
 	
 	private TaskPadMain(){
@@ -17,7 +17,7 @@ public class TaskPadMain{
 		setUpLogging();
 		runProgram();
 	}
-	
+	  
 	private static void runProgram() {		
 		Runnable runTaskPad = new TaskPadLauncher();
 		SwingUtilities.invokeLater(runTaskPad);

@@ -85,7 +85,7 @@ public class TimeParser {
         time = checkMornAftEvenWords(input);
         
         if (time != TIME_NEG){
-        	System.out.println("HI");
+        	//System.out.println("HI");
         	return time;
         }
         	    
@@ -98,14 +98,19 @@ public class TimeParser {
 	        } else {
 	            // Process strings like "8", "8p", "8pm", "2300"
 	            if (input.contains(TIME_AM)) {
-	            	System.out.println("AM");
 	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
+	                minutes = TIME_ZERO;
+	                //System.out.println(hours);
 
 	            } else if (input.contains(TIME_PM)) {
 	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
+	                minutes = TIME_ZERO;
+	                
+	                //System.out.println(hours);
 
 	            } else if (input.length() < 3) {
 	                hours = input;
+	                minutes = TIME_ZERO;
 	                
 	            } else {
 	                hours =  input.substring(0, input.length() - 2);
@@ -115,9 +120,12 @@ public class TimeParser {
 	        
 	        if (input.contains(TIME_AM) && hours.equals(TIME_TWELVE)) {
 	            hours = TIME_ZERO;
+	            minutes = TIME_ZERO;
 	        }
 
+	        //System.out.println(hours + " " + minutes);
 	        time = convertToSeconds(hours, minutes);
+	       // System.out.println(time);
 
 	        if (input.contains(TIME_PM) && !hours.equals(TIME_TWELVE)) {
 	            time = addPM(time);
@@ -131,6 +139,7 @@ public class TimeParser {
                 hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
                 if (hours.length() > 4){		//Assume the first four numbers are valid
                 	hours = hours.substring(0, 4);
+                	minutes = TIME_ZERO;
                 } 
                
                 if (Integer.parseInt(hours) >= 12){
@@ -139,12 +148,25 @@ public class TimeParser {
 
             } else if (input.contains(TIME_PM)) {
                 hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
+                
+                /**
+                 * Lynnette, delete this later.
+                 * You can't have 815 all as hours, it will be wrong.
+                 * I believe AM also wrong. :) 
+                 */
                 if (hours.length() > 4){
+                	minutes = hours.substring(2, 4);
                 	hours = hours.substring(0, 4);
+                } else {
+                	minutes = hours.substring(1, 3);
+                	hours = hours.substring(0, 1);
                 }
+                //System.out.println(hours);
+                //System.out.println(minutes);
             }
             
 	        time = convertToSeconds(hours, minutes);
+	        //System.out.println(time);
 	        
 	        if (input.contains("p") && !hours.equals(TIME_TWELVE)) {
 	            time = addPM(time);
@@ -228,6 +250,10 @@ public class TimeParser {
 		int minutes = (int) ((milliseconds / (1000*60)) % 60);
 		int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
 		
+		//System.err.println(milliseconds);
+		//System.err.println(minutes);
+		//System.err.println(hours);
+		
 		String hourString = "" + hours;
 		if (hourString.length() == 1){
 			hourString = TIME_ZERO + hourString;
@@ -249,13 +275,13 @@ public class TimeParser {
 		return false;
 	}
 	
-	/* For testing
+	/*
 	public static void main(String[] args){
-		String input = "31/03/2014";
+		String input = "815 pm";
 		long time = decodeTime(input);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
 	}
-	*/
+	//*/
 	
 }

@@ -24,6 +24,10 @@ public class SpecialWordParser {
 		"PREVIOUS", "PREV", "PAST", "LAST"
 	};
 	
+	private static final String[] _thisMap = {
+		"THIS"
+	};
+	
 	private SpecialWordParser(){
 		initialiseSpecialWordMap();
 	}
@@ -59,6 +63,14 @@ public class SpecialWordParser {
 	private void initialiseSpecialWordMap() {
 		initializeNextMap();
 		initializePrevMap();
+		initializeThisMap();
+	}
+
+	private void initializeThisMap() {
+		for (String myThis : _thisMap){
+			_specialWordMap.put(myThis, 0);
+		}
+		
 	}
 
 	private void initializePrevMap() {

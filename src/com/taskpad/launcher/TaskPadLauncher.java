@@ -1,6 +1,5 @@
 package com.taskpad.launcher;
 
-import com.taskpad.input.InputManager;
 import com.taskpad.ui.GuiManager;
 
 public class TaskPadLauncher implements Runnable {
@@ -14,7 +13,6 @@ public class TaskPadLauncher implements Runnable {
 	@Override
 	public void run() {
 		//initialStorage(); DEPRECATED
-		setUpInputProcessor();
 		setUpGui();
 	}
 
@@ -31,7 +29,4 @@ public class TaskPadLauncher implements Runnable {
 		GuiManager.startRemindingUser();
 	}
 	
-	private void setUpInputProcessor() {
-		InputManager.startInputProcessor();
-	}
 }
