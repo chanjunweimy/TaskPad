@@ -9,3 +9,5 @@ bin/
 .data?
 .log
 
+syntax: glob
+.project
