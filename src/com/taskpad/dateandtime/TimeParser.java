@@ -52,15 +52,16 @@ public class TimeParser {
 	protected static String parseTimeInput(String input) throws TimeErrorException, InvalidTimeException{
 		String timeString = EMPTY;
 		long time = 0;
-		
+
 		if(isNotEmptyString(input)){
 			time = decodeTime(input);
 			timeString = convertMillisecondsToTime(time);
+		} else {
+			throw new TimeErrorException();
 		}
 				
 		if (isInvalidTime(timeString)){
 			throw new TimeErrorException();
-			//return timeErrorMessage(input);
 		}
 		
 		return timeString;
