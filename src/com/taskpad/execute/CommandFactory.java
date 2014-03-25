@@ -138,7 +138,7 @@ public class CommandFactory {
 		
 		// pass feedback to GUI
 		String feedback = OutputToGui.generateTextForTasks(results, listOfTasks);
-		GuiManager.callOutput(feedback);
+		GuiManager.callOutput("Number of tasks found: " + results.size() + "\n\n" + feedback);
 	}
 
 	protected static void edit(String taskIdString, String description) {
