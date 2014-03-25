@@ -25,4 +25,10 @@ public class Input {
 		Input.parameters.put(parameter, value);
 	}
 	
+	protected void showAll(){
+		for (Map.Entry<String, String> entry : parameters.entrySet()){
+			System.out.println(entry.getKey() + " " + entry.getValue());
+		}
+	}
+	
 }

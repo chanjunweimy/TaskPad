@@ -3,12 +3,10 @@ package com.taskpad.tests;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.taskpad.input.InputManager;
 import com.taskpad.ui.GuiManager;
 
 public class TestGuiManager {
 	public static void main(String[] args){
-		InputManager.startInputProcessor();
 		GuiManager.initialGuiManager();
 		
 		GuiManager.callOutput("a");

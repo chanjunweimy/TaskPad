@@ -98,7 +98,6 @@ public class TimeParser {
 	        } else {
 	            // Process strings like "8", "8p", "8pm", "2300"
 	            if (input.contains(TIME_AM)) {
-	            	//System.out.println("AM");
 	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
 	                minutes = TIME_ZERO;
 	                //System.out.println(hours);
@@ -262,9 +261,9 @@ public class TimeParser {
 		return false;
 	}
 	
-	/* For testing
+	/*
 	public static void main(String[] args){
-		String input = "8am";
+		String input = "800 am";
 		long time = decodeTime(input);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
