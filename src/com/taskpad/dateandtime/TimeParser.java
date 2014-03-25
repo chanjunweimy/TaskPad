@@ -85,7 +85,6 @@ public class TimeParser {
         time = checkMornAftEvenWords(input);
         
         if (time != TIME_NEG){
-        	//System.out.println("HI");
         	return time;
         }
         	    
@@ -100,8 +99,6 @@ public class TimeParser {
 	            if (input.contains(TIME_AM)) {
 	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
 	                minutes = TIME_ZERO;
-	                //System.out.println(hours);
-
 	            } else if (input.contains(TIME_PM)) {
 	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
 	                minutes = TIME_ZERO;
@@ -233,29 +230,44 @@ public class TimeParser {
 	}
 	
 	private static String convertMillisecondsToTime(long milliseconds){
-		int minutes = (int) ((milliseconds / (1000*60)) % 60);
-		int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+		int minutes = getMinutes(milliseconds);
+		int hours = getHours(milliseconds);
 		
-		//System.err.println(milliseconds);
-		//System.err.println(minutes);
-		//System.err.println(hours);
-		
-		String hourString = "" + hours;
-		if (hourString.length() == 1){
-			hourString = TIME_ZERO + hourString;
-		}
-		
-		String minuteString = EMPTY + minutes;
-		if (minuteString.length() == 1){
-			minuteString = TIME_ZERO + minuteString;
-		}
+		String hourString = hoursToString(hours);
+		String minuteString = minutesToString(minutes);
 		String timeString = hourString + COLON + minuteString;
 		
 		return timeString;
 	}
+
+	private static String minutesToString(int minutes) {
+		String minuteString = EMPTY + minutes;
+		if (minuteString.length() == 1){
+			minuteString = TIME_ZERO + minuteString;
+		}
+		return minuteString;
+	}
+
+	private static String hoursToString(int hours) {
+		String hourString = EMPTY + hours;
+		if (hourString.length() == 1){
+			hourString = TIME_ZERO + hourString;
+		}
+		return hourString;
+	}
+
+	private static int getHours(long milliseconds) {
+		int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+		return hours;
+	}
+
+	private static int getMinutes(long milliseconds) {
+		int minutes = (int) ((milliseconds / (1000*60)) % 60);
+		return minutes;
+	}
 	
 	private static boolean isInvalidTime(String timeString){
-		if (timeString.equals("-1:-1")){
+		if (timeString.equals("TIME_DEF"+":"+"TIME_DEF")){
 			return true;
 		}
 		return false;
