@@ -65,7 +65,12 @@ public class TestCommands {
 		testFindValueCommand(CommandType.ADD_INFO, "addINFO");
 
 		testFindValueCommand(CommandType.ADD_INFO, "INFO");
+		testFindValueCommand(CommandType.ADD_INFO, "info");
+		testFindValueCommand(CommandType.ADD_INFO, "INfo");
+
 		testFindValueCommand(CommandType.ADD_INFO, "INFORMATION");
+		testFindValueCommand(CommandType.ADD_INFO, "INFORMATIN");
+		testFindValueCommand(CommandType.ADD_INFO, "INFORMATN");
 
 		testFindValueCommand(CommandType.ADD_INFO, "ADDDESC");
 		
