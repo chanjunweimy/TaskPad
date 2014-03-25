@@ -60,28 +60,30 @@ public class CommandFactoryBackend {
 		TaskList listOfTasks = DataManager.retrieve(previousFile);
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		DataManager.storeBack(currentListOfTasks, previousFile);
+		DataFileStack.pushForRedo(previousFile);
 		return previousFile;
 	}
 	
 	protected static String updateCommandRecordForUndo(String previousFile)
 			throws NoPreviousCommandException {
 		String command = CommandRecord.popForUndo();
-		DataFileStack.pushForRedo(previousFile);
 		CommandRecord.pushForRedo(command);
 		return command;
 	}
 	
 	protected static String updateDataForRedo() throws NoPreviousFileException {
+		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		String previousFile = DataFileStack.popForRedo();
 		TaskList listOfTasks = DataManager.retrieve(previousFile);
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		DataManager.storeBack(currentListOfTasks, previousFile);
+		DataFileStack.pushForUndo(previousFile);
 		return previousFile;
 	}
 	
 	protected static String updateCommandRecordForRedo(String previousFile)
 			throws NoPreviousCommandException {
 		String command = CommandRecord.popForRedo();
-		DataFileStack.pushForUndo(previousFile);
 		CommandRecord.pushForUndo(command);
 		return command;
 	}
