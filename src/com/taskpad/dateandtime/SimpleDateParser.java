@@ -8,7 +8,7 @@ import java.util.Date;
 /** This class takes in a date and checks if it fits any of the SimpleDateFormat
  * Returns null string if otherwise
  * 
- * @author Lynnette
+ * @author Lynnette, Jun
  *
  */
 
@@ -20,21 +20,31 @@ public class SimpleDateParser {
 	private static SimpleDateParser _dateParser = new SimpleDateParser();
 	
 	private static final String[] _dateWithoutYear = {
+		"d MMM", "MMM d", "dMMM", "MMMd",
+		"d/MM", "d-MM",  "d.MM", "d MM",
+		"d/M", "d-M",  "d.M", "d M",
+		
+		
+		"dd/M", "dd-M", "dd.M", "dd M", 
 		"dd/MM", "dd-MM", "dd.MM", "dd MM",  
-		"MMM dd",  
-		"dd MMM",
-		"dd MM",
-		"d/M", "d-M",  "d.M", "d M", 
-		"ddMMM", "MMMdd"
+		"MMM dd", "dd MMM", "ddMMM", "MMMdd"
+
 	};
 	
 	private static final String[] _dateFormats = {
-		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", "dd MM yy",  
+		"d/MM/yy", "d-MM-yy", "d.MM.yy", "d MM yy", 
+		"d/M/yy", "d-M-yy", "d.M.yy", "d M yy",
+		"MMM d yy", "MMM d , yy", "MMM d, yy", "MMM d,yy",  
+		"d MMM yy", "d MMM , yy", "d MMM, yy", "d MMM,yy", 
+		"d-MMM-yy", "d MM , yy", "d MM, yy", "d MM,yy", 
+		"d M , yy", "d M, yy", "d M,yy", "dMMMyy", 
+		
+		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", "dd MM yy", 
+		"dd/M/yy", "dd-M-yy", "dd.M.yy", "dd M yy",
 		"MMM dd yy", "MMM dd , yy", "MMM dd, yy", "MMM dd,yy",  
 		"dd MMM yy", "dd MMM , yy", "dd MMM, yy", "dd MMM,yy", 
 		"dd-MMM-yy", "dd MM , yy", "dd MM, yy", "dd MM,yy", 
-		"d/M/yy", "d-M-yy",  "d.M.yy", "d M yy", 
-		"ddMMMyy", 
+		"dd M , yy", "dd M, yy", "dd M,yy", "ddMMMyy", 
 		
 		/*
 		 * deprecated - we will only support d-m-y  
@@ -45,12 +55,19 @@ public class SimpleDateParser {
 		*/
 		//"MMMddyy",
 		
-		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "dd MM yyyy",
-		"MMM dd yyyy", "MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy", 
+		"d/MM/yyyy", "d-MM-yyyy", "d.MM.yyyy", "d MM yyyy", 
+		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", "d M yyyy",
+		"MMM d yyyy", "MMM d , yyyy", "MMM d, yyyy", "MMM d,yyyy",  
+		"d MMM yyyy", "d MMM , yyyy", "d MMM, yyyy", "d MMM,yyyy", 
+		"d-MMM-yyyy", "d MM , yyyy", "d MM, yyyy", "d MM,yyyy", 
+		"d M , yyyy", "d M, yyyy", "d M,yyyy", "dMMMyyyy", 
+		
+		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "dd MM yyyy", 
+		"dd/M/yyyy", "dd-M-yyyy", "dd.M.yyyy", "dd M yyyy",
+		"MMM dd yyyy", "MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy",  
 		"dd MMM yyyy", "dd MMM , yyyy", "dd MMM, yyyy", "dd MMM,yyyy", 
-		"dd-MMM-yyyy", "dd MM, yyyy", "dd MM , yyyy",  "dd MM,yyyy", 
-		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", "d M yyyy", 
-		"ddMMMyyyy", 
+		"dd-MMM-yyyy", "dd MM , yyyy", "dd MM, yyyy", "dd MM,yyyy", 
+		"dd M , yyyy", "dd M, yyyy", "dd M,yyyy", "ddMMMyyyy", 
 		
 		/*
 		 * Deprecated for the reason above
@@ -78,12 +95,7 @@ public class SimpleDateParser {
 		
 		input = input.trim();
 		
-		String dateString = null;
-		
-		dateString = formatDateWithoutYear(input);
-		if (dateString == null){
-			dateString = formatDate(input);
-		}
+		String dateString = getActualDate(input);
 		
 		if (dateString == null){
 			throw new InvalidDateException(DATE_INVALID);
@@ -91,20 +103,45 @@ public class SimpleDateParser {
 		
 		return dateString;
 	}
+
+	
+	/**
+	 * getActualDate: as formatDateWithoutYear() might parses
+	 * a String with "dd mm yy" also, so, we have to consider cases:
+	 * if we can parse it without year, but not with year, then is without year ; 
+	 * if we can parse it without year and also with year, then is with year;
+	 * if we can parse it with year only, then of course is with year;
+	 * then if both also can't parse, then is null.
+	 * @param input
+	 * 				: String
+	 * @return String
+	 */
+	private String getActualDate(String input) {
+		String dateStringWithoutYear = null;
+		String dateString = null;
+		
+		dateStringWithoutYear = formatDateWithoutYear(input);
+		dateString = formatDate(input);
+		
+		if (dateString == null){
+			dateString = dateStringWithoutYear;
+		}
+		return dateString;
+	}
 	
 	private static String formatDateWithoutYear(String input){
-		assert (input == null);
+		assert (input != null);
 		
 		String dateString = null;
-		for (int i=0; i<_dateWithoutYear.length; i++){
+		for (String dwy: _dateWithoutYear){
 			
-			SimpleDateFormat sdf = new SimpleDateFormat(_dateWithoutYear[i]);
+			SimpleDateFormat sdf = new SimpleDateFormat(dwy);
 			try {
 				//System.out.println(_dateFormats[i]);
 				
 				Date date = sdf.parse(input);
 				
-				boolean isWrongFormat = !input.equals(sdf.format(date));
+				boolean isWrongFormat = !input.equals(sdf.format(date)) && !dwy.contains("MMM");
 				if (isWrongFormat){
 					continue;
 				}
@@ -141,18 +178,18 @@ public class SimpleDateParser {
 	}
 
 	private static String formatDate(String input){
-		assert (input == null);
+		assert (input != null);
 		
 		String dateString = null;
-		for (int i=0; i<_dateFormats.length; i++){
+		for (String df : _dateFormats){
 			
-			SimpleDateFormat sdf = new SimpleDateFormat(_dateFormats[i]);
+			SimpleDateFormat sdf = new SimpleDateFormat(df);
 			try {
 				//System.out.println(_dateFormats[i]);
 				
 				Date date = sdf.parse(input);
 				
-				boolean isWrongFormat = !input.equals(sdf.format(date));
+				boolean isWrongFormat = !input.equals(sdf.format(date)) && !df.contains("MMM");
 				if (isWrongFormat){
 					continue;
 				}

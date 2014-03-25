@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 
@@ -176,6 +177,7 @@ public class Add extends Command{
 	}
 	
 	
+	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		checkAndRemoveDate();
 		
@@ -263,6 +265,12 @@ public class Add extends Command{
 			putOneParameter(PARAMETER_START_TIME, startTime);
 			
 			if (splitParam.length == LENGTH_TIME){
+				try {
+					DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(stripWhiteSpaces(splitParam[1])));
+				} catch (InvalidDateException e) {
+					InputManager.outputToGui(e.getMessage());
+					return;
+				}
 				putOneParameter(PARAMETER_START_DATE, stripWhiteSpaces(splitParam[1]));
 			}
 		}
@@ -299,6 +307,12 @@ public class Add extends Command{
 			putOneParameter(PARAMETER_END_TIME, endTime);
 			
 			if (splitParam.length == LENGTH_TIME){
+				try {
+					DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (InvalidDateException e) {
+					InputManager.outputToGui(e.getMessage());
+					return;
+				}
 				putOneParameter(PARAMETER_END_DATE, stripWhiteSpaces(splitParam[1]));
 			}
 		}
