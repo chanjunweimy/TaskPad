@@ -7,6 +7,7 @@
 package com.taskpad.input;
 
 import java.awt.Color;
+import java.util.logging.Logger;
 
 import com.taskpad.storage.DataManager;
 import com.taskpad.execute.ExecutorManager;
@@ -22,9 +23,10 @@ public class InputManager {
 	
 	private static final String STRING_NULL = "";
 	
-	public static void startInputProcessor(){
-		new InputMain();
-	}
+	private static boolean debug = false;
+	
+	protected static Logger logger = Logger.getLogger("TaskPad");
+
 	
 	public static String receiveFromGui(String inputString){
 		String outputString = STRING_NULL;
@@ -52,13 +54,25 @@ public class InputManager {
 		return STATUS_CLEAR;
 	}
 	
-	public static String passToExecutor(Input input, String fullInput){
-		ExecutorManager.receiveFromInput(input, fullInput);
-		return STATUS_EXECUTOR;
+	public static void passToExecutor(Input input, String fullInput){
+		if (!debug){
+			ExecutorManager.receiveFromInput(input, fullInput);
+			logger.info(STATUS_EXECUTOR);
+		} else {
+			formatInputForTest(input);
+		}
+	}
+	
+	private static void formatInputForTest(Input input){
+		input.showAll();
 	}
 	
 	public static int retrieveNumberOfTasks(){
 		return DataManager.retrieveNumberOfTasks();
+	}
+	
+	public static void setDebug(boolean debug){
+		InputManager.debug = debug;
 	}
 	
 }
