@@ -105,6 +105,8 @@ public class TimeParser {
 	            } else if (input.contains(TIME_PM)) {
 	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
 	                minutes = TIME_ZERO;
+	                
+	                //System.out.println(hours);
 
 	            } else if (input.length() < 3) {
 	                hours = input;
@@ -146,13 +148,25 @@ public class TimeParser {
 
             } else if (input.contains(TIME_PM)) {
                 hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
+                
+                /**
+                 * Lynnette, delete this later.
+                 * You can't have 815 all as hours, it will be wrong.
+                 * I believe AM also wrong. :) 
+                 */
                 if (hours.length() > 4){
+                	minutes = hours.substring(2, 4);
                 	hours = hours.substring(0, 4);
-                	minutes = TIME_ZERO;
+                } else {
+                	minutes = hours.substring(1, 3);
+                	hours = hours.substring(0, 1);
                 }
+                //System.out.println(hours);
+                //System.out.println(minutes);
             }
             
 	        time = convertToSeconds(hours, minutes);
+	        //System.out.println(time);
 	        
 	        if (input.contains("p") && !hours.equals(TIME_TWELVE)) {
 	            time = addPM(time);
@@ -263,7 +277,7 @@ public class TimeParser {
 	
 	/*
 	public static void main(String[] args){
-		String input = "800 am";
+		String input = "815 pm";
 		long time = decodeTime(input);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
