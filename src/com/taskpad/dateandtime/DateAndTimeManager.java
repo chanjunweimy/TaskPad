@@ -147,12 +147,12 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws InvalidDateException 
 	 */
 	public String parseDate(String dateString) throws InvalidDateException {
-		SimpleDateTimeParser dateParser = SimpleDateTimeParser.getInstance();
+		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
 	
 	protected boolean isDate(String dateString){
-		SimpleDateTimeParser dateParser = SimpleDateTimeParser.getInstance();
+		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		
 		try {
 			dateParser.parseDate(dateString);

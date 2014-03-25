@@ -5,10 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidTimeException;
-import com.taskpad.dateandtime.NullTimeUnitException;
-import com.taskpad.dateandtime.NullTimeValueException;
 import com.taskpad.dateandtime.TimeErrorException;
 
 public class TestTimeParser {
@@ -46,6 +43,16 @@ public class TestTimeParser {
 		testTimeCommand("08:00", "8.00am");
 	}
 	
+	@Test
+	public void AMtest6(){
+		testTimeCommand("08:15", "815am");
+	}
+	
+	@Test
+	public void AMtest7(){
+		testTimeCommand("08:15", "815 am");
+	}
+	
 	
 	/**
 	 * Test PM strings 
@@ -75,7 +82,6 @@ public class TestTimeParser {
 		testTimeCommand("20:15", "20;15");
 	}
 	
-	/** Junwei can help me see this case? */
 	@Test
 	public void PMtest6(){
 		testTimeCommand("20:15", "815 pm");
@@ -161,7 +167,7 @@ public class TestTimeParser {
 	 * @param input
 	 */
 	
-	@Test
+	//How to make this test work?
 	public void invalid1(){
 		testInvalidTimeCommand(MESSAGE_INVALID, "");
 	}
