@@ -67,6 +67,6 @@ public class TestExecutorData {
 	}
 	
 	public static void main(String args[]) {
-		commandTest();
+		DataManager.retrieve("");
 	}
 }
