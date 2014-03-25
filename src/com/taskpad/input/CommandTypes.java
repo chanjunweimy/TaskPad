@@ -47,7 +47,7 @@ public class CommandTypes {
 	}
 	
 	private static void putAddInfoVariations(){
-		String[] addInfoVariations = {"ADDINFO", "INFO", "INFORMATION", "CREATEDESC", "ADDDESC", "CREATEINFO"};
+		String[] addInfoVariations = {"ADDINFO", "INFO", "INFORMATION", "CREATEDESC", "ADDDESC", "CREATEINFO", "INFORMATIN", "INFORMATN"};
 		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
 	}
 	
