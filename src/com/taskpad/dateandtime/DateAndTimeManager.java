@@ -147,12 +147,12 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws InvalidDateException 
 	 */
 	public String parseDate(String dateString) throws InvalidDateException {
-		SimpleDateTimeParser dateParser = SimpleDateTimeParser.getInstance();
+		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
 	
 	protected boolean isDate(String dateString){
-		SimpleDateTimeParser dateParser = SimpleDateTimeParser.getInstance();
+		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		
 		try {
 			dateParser.parseDate(dateString);
@@ -170,13 +170,14 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws NullTimeUnitException
 	 * @throws NullTimeValueException
 	 * @throws TimeErrorException
+	 * @throws InvalidTimeException 
 	 */
 	public String parseTime(String timeString) throws NullTimeUnitException,
-			NullTimeValueException, TimeErrorException {
+			NullTimeValueException, TimeErrorException, InvalidTimeException {
 		return TimeParser.parseTime(timeString);
 	}
 
-	public String parseTimeInput(String timeString) throws TimeErrorException {
+	public String parseTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
 		return TimeParser.parseTimeInput(timeString);
 	}
 
@@ -191,10 +192,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		try {
 			TimeParser.parseTime(timeString);
 		} catch (NullTimeUnitException | NullTimeValueException
-				| TimeErrorException e1) {
+				| TimeErrorException | InvalidTimeException e1) {
 			try {
 				TimeParser.parseTimeInput(timeString);
-			} catch (TimeErrorException e) {
+			} catch (TimeErrorException | InvalidTimeException e) {
 				return false;
 			}
 		}

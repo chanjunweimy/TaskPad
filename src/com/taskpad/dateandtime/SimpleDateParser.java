@@ -12,12 +12,12 @@ import java.util.Date;
  *
  */
 
-public class SimpleDateTimeParser {
+public class SimpleDateParser {
 
 	//private static final String STRING_EMPTY = "";
 	private static final String DATE_INVALID = "Not a valid date";
 	private static SimpleDateFormat _formatter = new SimpleDateFormat("dd/MM/yyyy");
-	private static SimpleDateTimeParser _dateParser = new SimpleDateTimeParser();
+	private static SimpleDateParser _dateParser = new SimpleDateParser();
 	
 	private static final String[] _dateWithoutYear = {
 		"dd/MM", "dd-MM", "dd.MM", "dd MM",  
@@ -37,12 +37,12 @@ public class SimpleDateTimeParser {
 		"ddMMMyy", 
 		
 		/*
-		 * we only support d-m-y in the momment 
-		 */
-		//"yy/dd/MM", "yy-dd-MM", 
-		//"yy.dd.MM", "yy dd MM", "yy-dd-MMM",  "yy/dd/MMM",
-		//"yy/d/M", "yy-d-M", "yy.d.M", "yy d M", 
-		//, "MMddyy", "yyMMMdd", "ddMMyy", 	
+		 * deprecated - we will only support d-m-y  
+		"yy/dd/MM", "yy-dd-MM", 
+		"yy.dd.MM", "yy dd MM", "yy-dd-MMM",  "yy/dd/MMM",
+		"yy/d/M", "yy-d-M", "yy.d.M", "yy d M", 
+		, "MMddyy", "yyMMMdd", "ddMMyy", 	
+		*/
 		//"MMMddyy",
 		
 		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "dd MM yyyy",
@@ -51,17 +51,23 @@ public class SimpleDateTimeParser {
 		"dd-MMM-yyyy", "dd MM, yyyy", "dd MM , yyyy",  "dd MM,yyyy", 
 		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", "d M yyyy", 
 		"ddMMMyyyy", 
+		
+		/*
+		 * Deprecated for the reason above
 		//"yyyy/dd/MM", "yyyy-dd-MM", "yyyy.dd.MM", "yyyy dd MM", 
 		//"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yyyy/dd/MMM",
 		//"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
 		 //"MMddyyyy", "yyyyMMMdd"， "ddMMyyyy", 
 		//"MMMddyyyy",
+		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
+		 "MMddyyyy", "yyyyMMMdd"
+		 */
 	};
 	
-	private SimpleDateTimeParser(){
+	private SimpleDateParser(){
 	}
 	
-	protected static SimpleDateTimeParser getInstance(){
+	protected static SimpleDateParser getInstance(){
 		return _dateParser;
 	}
 	
