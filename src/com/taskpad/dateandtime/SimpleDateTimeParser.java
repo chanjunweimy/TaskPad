@@ -76,8 +76,8 @@ public class SimpleDateTimeParser {
 		}
 		return dateString;
 	}
-		
-	/* TESTING.....
+	
+	/* Testing
 	public static void main (String[] args){
 		System.out.println(formatDate("13-12-14"));
 		System.out.println(formatDate("13 12 2014"));
@@ -85,6 +85,7 @@ public class SimpleDateTimeParser {
 		System.out.println(formatDate("2014 1 December"));
 		System.out.println(formatDate("1December2014"));
 		System.out.println(formatDate("011214"));
+		//System.out.println(formatDate("03 02"));  //Will use system year at 1970
 	}
-	//*/
+	*/
 }
