@@ -2,17 +2,17 @@ package com.taskpad.tests;
 
 import static org.junit.Assert.*;
 
-/** 
- * This unit test is to parse a time string through the TimeParser class
- * @author Lynnette
- */
-
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 
 public class TestTimeParser {
+	
+	private DateAndTimeManager _timeParser = DateAndTimeManager.getInstance();
+	
+	private static final String MESSAGE_INVALID = "Not a valid time";
 
 	/**
 	 * Test AM strings 
@@ -41,6 +41,16 @@ public class TestTimeParser {
 	@Test
 	public void AMtest5(){
 		testTimeCommand("08:00", "8.00am");
+	}
+	
+	@Test
+	public void AMtest6(){
+		testTimeCommand("08:15", "815am");
+	}
+	
+	@Test
+	public void AMtest7(){
+		testTimeCommand("08:15", "815 am");
 	}
 	
 	
@@ -72,7 +82,6 @@ public class TestTimeParser {
 		testTimeCommand("20:15", "20;15");
 	}
 	
-	/** Junwei can help me see this case? */
 	@Test
 	public void PMtest6(){
 		testTimeCommand("20:15", "815 pm");
@@ -152,12 +161,34 @@ public class TestTimeParser {
 		testTimeCommand("19:00", "NiGHt");
 	}
 	
+	/**
+	 * Test unsupported cases
+	 * @param expected
+	 * @param input
+	 */
+	
+	//How to make this test work?
+	public void invalid1(){
+		testInvalidTimeCommand(MESSAGE_INVALID, "");
+	}
+	
 	private void testTimeCommand (String expected, String input){
 		try {
 			assertEquals(expected, DateAndTimeManager.getInstance().parseTimeInput(input));
-		} catch (TimeErrorException e) {
+		} catch (TimeErrorException | InvalidTimeException e) {
 			fail();
 		}
+	}
+	
+	private void testInvalidTimeCommand(String input, String expected){
+		try {
+			_timeParser.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			assertEquals(e.getMessage(), MESSAGE_INVALID);
+			e.printStackTrace();
+		}
+
+
 	}
 
 }
