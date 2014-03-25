@@ -120,30 +120,133 @@ public class TestDateParser {
 		testDateCommand("18 10, 93", "18/10/1993");
 	}
 	
-	/* Not support y - d - m in the moment
 	@Test
-	public void test23(){
-		testDateCommand("93/18/10", "18/10/1993");
+	public void test32(){
+		testDateCommand("18/10/2015", "18/10/2015");
 	}
 	
 	@Test
-	public void test24(){
-		testDateCommand("93-18-10", "18/10/1993");
+	public void test33(){
+		testDateCommand("18-10-2015", "18/10/2015");
 	}
 	
 	@Test
-	public void test25(){
-		testDateCommand("93.18.10", "18/10/1993");
+	public void test34(){
+		testDateCommand("18.10.2015", "18/10/2015");
 	}
 	
 	@Test
-	public void test26(){
-		testDateCommand("93 18 10", "18/10/1993");
+	public void test36(){
+		testDateCommand("18Oct15", "18/10/2015");
 	}
 	
 	@Test
-	public void test27(){
-		testDateCommand("93-18-Oct", "18/10/1993");
+	public void test38(){
+		testDateCommand("1 6 15", "01/06/2015");
+	}
+	
+	@Test
+	public void test39(){
+		testDateCommand("1 Jun 15", "01/06/2015");
+	}
+	
+	@Test 
+	public void test40(){
+		testDateCommand("1.6.15", "01/06/2015");
+	}
+	
+	@Test
+	public void test41(){
+		testDateCommand("1.6.2015", "01/06/2015");
+	}
+	
+	@Test
+	public void invalid1(){
+		testInvalidDateCommand("1993.1.6", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid2(){
+		testInvalidDateCommand("1993 1 6", "Not a valid date");
+	}
+	
+	
+	/**
+	 * we no longer support this 2 special cases
+	 */
+	@Test
+	public void invalid3(){
+		testInvalidDateCommand("30/02/15", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid4() {
+		testInvalidDateCommand("000000", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid5() {
+		testInvalidDateCommand("", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid6() {
+		testInvalidDateCommand(" ", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid7(){
+		testInvalidDateCommand(",", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid8(){
+		testInvalidDateCommand("Wed", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid9(){
+		testInvalidDateCommand("Today", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid10(){
+		testInvalidDateCommand("Oct1815", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid11(){
+		testInvalidDateCommand("18102015", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid12(){
+		testInvalidDateCommand("15/18/10", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid13(){
+		testInvalidDateCommand("20/03/14", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid14(){
+		testInvalidDateCommand("40-18-10", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid15(){
+		testInvalidDateCommand("40.18.10", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid16(){
+		testInvalidDateCommand("40 18 10", "Not a valid date");
+	}
+	
+	@Test
+	public void invalid27(){
+		testInvalidDateCommand("40-18-Oct", "Not a valid date");
 	}
 	
 	@Test
@@ -165,104 +268,7 @@ public class TestDateParser {
 	public void test31(){
 		testDateCommand("93 18 10", "18/10/1993");
 	}
-	*/
 	
-	@Test
-	public void test32(){
-		testDateCommand("18/10/1993", "18/10/1993");
-	}
-	
-	@Test
-	public void test33(){
-		testDateCommand("18-10-1993", "18/10/1993");
-	}
-	
-	@Test
-	public void test34(){
-		testDateCommand("18.10.1993", "18/10/1993");
-	}
-	
-	@Test
-	public void test35(){
-		testDateCommand("18101993", "18/10/1993");
-	}
-	
-	@Test
-	public void test36(){
-		testDateCommand("18Oct93", "18/10/1993");
-	}
-	
-	@Test
-	public void test37(){
-		testDateCommand("Oct1893", "18/10/1993");
-	}
-	
-	@Test
-	public void test38(){
-		testDateCommand("1 6 93", "01/06/1993");
-	}
-	
-	@Test
-	public void test39(){
-		testDateCommand("1 Jun 93", "01/06/1993");
-	}
-	
-	@Test 
-	public void test40(){
-		testDateCommand("1.6.93", "01/06/1993");
-	}
-	
-	@Test
-	public void test41(){
-		testDateCommand("1.6.1993", "01/06/1993");
-	}
-	
-	/* not supporting year comes first
-	@Test
-	public void test42(){
-		testDateCommand("1993.1.6", "01/06/1993");
-	}
-	
-	@Test
-	public void test43(){
-		testDateCommand("1993 1 6", "01/06/1993");
-	}
-	*/
-	
-	@Test
-	public void special1(){
-		testDateCommand("30/02/93", "02/03/1993");
-	}
-	
-	@Test
-	public void special2() {
-		testDateCommand("000000", "30/11/1999");
-	}
-	
-	@Test
-	public void invalid1() {
-		testInvalidDateCommand("", "Not a valid date");
-	}
-	
-	@Test
-	public void invalid2() {
-		testInvalidDateCommand(" ", "Not a valid date");
-	}
-	
-	@Test
-	public void invalid3(){
-		testInvalidDateCommand(",", "Not a valid date");
-	}
-	
-	@Test
-	public void invalid4(){
-		testInvalidDateCommand("Wed", "Not a valid date");
-	}
-	
-	@Test
-	public void invalid5(){
-		testInvalidDateCommand("Today", "Not a valid date");
-	}
 	
 	private void testDateCommand(String input, String expected){
 		try {
@@ -276,7 +282,7 @@ public class TestDateParser {
 		try{
 			_dateParser.parseDate(input);
 		} catch (InvalidDateException e){
-			assertEquals(e.getMessage(), "Not a valid date");
+			assertEquals(e.getMessage(), expected);
 		}
 	}
 }
