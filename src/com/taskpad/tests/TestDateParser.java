@@ -217,7 +217,7 @@ public class TestDateParser {
 		testDateCommand("1.6.1993", "01/06/1993");
 	}
 	
-	/* not support year comes first
+	/* not supporting year comes first
 	@Test
 	public void test42(){
 		testDateCommand("1993.1.6", "01/06/1993");
