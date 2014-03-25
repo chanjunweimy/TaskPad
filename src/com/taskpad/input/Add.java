@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 
 public class Add extends Command{
@@ -255,7 +256,7 @@ public class Add extends Command{
 			String startTime = EMPTY;
 			try {
 				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
-			} catch (TimeErrorException e) {
+			} catch (TimeErrorException | InvalidTimeException e) {
 				outputErrorTimeMessage(startTime);
 				return;
 			}
@@ -290,7 +291,7 @@ public class Add extends Command{
 			
 			try {
 				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
-			} catch (TimeErrorException e) {
+			} catch (TimeErrorException | InvalidTimeException e) {
 				outputErrorTimeMessage(endTime);
 				return;
 			}

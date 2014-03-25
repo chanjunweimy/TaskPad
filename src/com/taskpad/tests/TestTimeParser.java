@@ -2,14 +2,10 @@ package com.taskpad.tests;
 
 import static org.junit.Assert.*;
 
-/** 
- * This unit test is to parse a time string through the TimeParser class
- * @author Lynnette
- */
-
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 
 public class TestTimeParser {
@@ -155,7 +151,7 @@ public class TestTimeParser {
 	private void testTimeCommand (String expected, String input){
 		try {
 			assertEquals(expected, DateAndTimeManager.getInstance().parseTimeInput(input));
-		} catch (TimeErrorException e) {
+		} catch (TimeErrorException | InvalidTimeException e) {
 			fail();
 		}
 	}

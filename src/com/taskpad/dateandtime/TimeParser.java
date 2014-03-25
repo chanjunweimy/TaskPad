@@ -30,7 +30,7 @@ public class TimeParser {
 	/* This method takes in a time and parses it
 	 * 
 	 */
-	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException, TimeErrorException{
+	protected static String parseTime(String input) throws NullTimeUnitException, NullTimeValueException, TimeErrorException, InvalidTimeException{
 		TimeWordParser twp = TimeWordParser.getInstance();
 		String timeString = EMPTY;
 		long time = 0;
@@ -49,7 +49,7 @@ public class TimeParser {
 		return timeString;
 	}
 	
-	protected static String parseTimeInput(String input) throws TimeErrorException{
+	protected static String parseTimeInput(String input) throws TimeErrorException, InvalidTimeException{
 		String timeString = EMPTY;
 		long time = 0;
 		
@@ -77,7 +77,7 @@ public class TimeParser {
 		return false;
 	}
 
-	private static long decodeTime(String input){	    
+	private static long decodeTime(String input) throws InvalidTimeException{	    
         String hours = TIME_DEF, minutes = TIME_DEF;
         
         long time = TIME_NEG;
@@ -99,17 +99,26 @@ public class TimeParser {
 	            if (input.contains(TIME_AM)) {
 	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
 	                minutes = TIME_ZERO;
+	                checkIfInvalidTimeString(hours, minutes, input);
+	                
 	            } else if (input.contains(TIME_PM)) {
 	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
 	                minutes = TIME_ZERO;
-
+	                
+	                checkIfInvalidTimeString(hours, minutes, input);
+	                
 	            } else if (input.length() < 3) {
 	                hours = input;
 	                minutes = TIME_ZERO;
 	                
+	                checkIfInvalidTimeString(hours, minutes, input);
+	                
 	            } else {
 	                hours =  input.substring(0, input.length() - 2);
 	                minutes = input.substring(input.length() - 2);
+	                
+	                checkIfInvalidTimeString(hours, minutes, input);
+
 	            }
 	        }
 	        
@@ -136,10 +145,8 @@ public class TimeParser {
                 	hours = hours.substring(0, 4);
                 	minutes = TIME_ZERO;
                 } 
-               
-                if (Integer.parseInt(hours) >= 12){
-                	//throw new InvalidMorningTimeException(MESSAGE_INVALID_MORNING);
-                }
+
+                checkIfInvalidTimeString(hours, minutes, input);
 
             } else if (input.contains(TIME_PM)) {
                 hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
@@ -147,6 +154,8 @@ public class TimeParser {
                 	hours = hours.substring(0, 4);
                 	minutes = TIME_ZERO;
                 }
+                
+                checkIfInvalidTimeString(hours, minutes, input);
             }
             
 	        time = convertToSeconds(hours, minutes);
@@ -158,6 +167,12 @@ public class TimeParser {
 	        return time;
 	    }
 	 }
+
+	private static void checkIfInvalidTimeString(String hours, String minutes, String input) throws InvalidTimeException {
+        if (Integer.parseInt(hours) >= 12 || Integer.parseInt(minutes) > 60){
+        	throw new InvalidTimeException(input);
+        }		
+	}
 
 	private static boolean timePatternMatch(String input) {
 		return time12Matches(input) || time24Matches(input);
@@ -273,13 +288,13 @@ public class TimeParser {
 		return false;
 	}
 	
-	/*
+	/** Testing
 	public static void main(String[] args){
-		String input = "800 am";
+		String input = "25pm";
 		long time = decodeTime(input);
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
 	}
-	//*/
+	*/
 	
 }
