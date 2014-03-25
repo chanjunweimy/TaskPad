@@ -141,9 +141,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	
 	/**
-	 * parseDate: parse different format of Date
+	 * parseDate: parse different formats of Date
 	 * 
-	 * @return timeString, nicely formatted
+	 * @return timeString, in dd/mm/yyyy 
 	 * @throws InvalidDateException 
 	 */
 	public String parseDate(String dateString) throws InvalidDateException {

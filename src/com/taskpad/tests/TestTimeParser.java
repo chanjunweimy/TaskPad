@@ -43,7 +43,7 @@ public class TestTimeParser {
 		try {
 			assertEquals(expected, DateAndTimeManager.getInstance().parseTimeInput(input));
 		} catch (TimeErrorException e) {
-			e.printStackTrace();
+			fail();
 		}
 	}
 
