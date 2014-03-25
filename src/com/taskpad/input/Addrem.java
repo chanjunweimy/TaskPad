@@ -3,6 +3,7 @@ package com.taskpad.input;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 
 public class Addrem extends Command{
@@ -126,7 +127,7 @@ public class Addrem extends Command{
 			//_remTime = splitInput[2];		//deprecated for flexi commands
 			try {
 				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
-			} catch (TimeErrorException e) {
+			} catch (TimeErrorException | InvalidTimeException e) {
 				ErrorMessages.invalidTimeMessage();
 				_invalidParameters = true;
 				return;
@@ -150,7 +151,7 @@ public class Addrem extends Command{
 		//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
 		try {
 			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
-		} catch (TimeErrorException e) {
+		} catch (TimeErrorException | InvalidTimeException e) {
 			ErrorMessages.timeErrorMessage(_remTime);
 			return;
 		}
