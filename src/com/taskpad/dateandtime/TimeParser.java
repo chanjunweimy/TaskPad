@@ -108,8 +108,11 @@ public class TimeParser {
 	                checkIfInvalidTimeString(hours, minutes, input);
 
 	            } else if (input.length() < 3) {
+	            	/* Deprecated - not supportting single date values
 	                hours = input;
 	                minutes = TIME_ZERO;
+	                */
+	            	throw new InvalidTimeException(input);
 	                
 	            } else {
 	                hours =  input.substring(0, input.length() - 2);
@@ -279,9 +282,8 @@ public class TimeParser {
 		return false;
 	}
 	
-	/*
 	public static void main(String[] args){
-		String input = "2000";
+		String input = "8";
 		long time = 0;
 		try {
 			time = decodeTime(input);
@@ -292,6 +294,5 @@ public class TimeParser {
 		String timeString = convertMillisecondsToTime(time);
 		System.out.println(input + " " + timeString);
 	}
-	//*/
 	
 }

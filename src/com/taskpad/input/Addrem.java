@@ -27,6 +27,7 @@ public class Addrem extends Command{
 	
 	private static Scanner sc;
 	private static boolean _invalidParameters = false;
+	private static boolean _isFlexiString = false;
 	
 	boolean _gotTaskID = false;
 	boolean _gotDate = false;
@@ -46,7 +47,7 @@ public class Addrem extends Command{
 
 	@Override
 	protected boolean commandSpecificRun() {
-		if (checkIfContainsDelimiters()){
+		if (!_isFlexiString){
 			splitInputParameters();
 		} else {
 			splitInputNoDelimiters();
@@ -55,10 +56,6 @@ public class Addrem extends Command{
 		if (_invalidParameters){
 			return false;
 		}
-		
-		System.out.println("Rem date" + _remDate);
-		System.out.println("Rem time" + _remTime);
-		System.out.println("TaskID " + _taskID);
 
 		return true;
 	}
@@ -89,8 +86,20 @@ public class Addrem extends Command{
 	}
 	
 	@Override
-	protected boolean checkIfIncorrectArguments(){
-		
+	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
+		if(checkIfContainsDelimiters()){
+			String inputString[] = input.split(" ");
+			
+			if (isNotNumberArgs(inputString)){
+				throw new InvalidParameterException();
+			}
+			
+			if(isNotValidTaskID(inputString[0])){
+				throw new TaskIDException(inputString[0]);
+			}
+		}
+		_isFlexiString = true;
+		return false;
 	}
 	
 	private void splitInputParameters(){
@@ -130,6 +139,7 @@ public class Addrem extends Command{
 			_invalidParameters = true;
 			return;
 		};
+		
 		extractTimeAndDate(splitInput);
 		
 		invalidIfNoTaskID();
@@ -150,21 +160,19 @@ public class Addrem extends Command{
 		}
 	}
 	
-	private void extractTimeAndDate(String[] splitInput){
-		System.out.println("No delimiters");
-		
+	private void extractTimeAndDate(String[] splitInput){	
 		for (int i=0; i<splitInput.length; i++){
-			
-			if(isDateObject(splitInput[i]) && !_gotDate){
+			if(!_gotDate && isDateObject(splitInput[i])){
 				_remDate = _dateObject.getParsedDate();
-			} else if (isTimeObject(splitInput[i]) && !_gotTime){
+				_gotDate = true;
+			} else if (!_gotTime && isTimeObject(splitInput[i])){
 				_remTime = _timeObject.getParsedTime();
+				_gotTime = true;
 				
 			} else if (!_gotTaskID){
 				try {
 					enterTaskID(splitInput[i]);
 				} catch (TaskIDException e) {
-					System.out.println("TaskID Exception");
 					continue;
 				}
 			}
@@ -174,8 +182,6 @@ public class Addrem extends Command{
 	private boolean isTimeObject(String input) {
 		_timeObject = DateAndTimeManager.getInstance().findTime(input);
 		if (_timeObject != null){
-			_remTime = _timeObject.getParsedTime();
-			_gotTime = true;
 			return true;
 		}
 		return false;
@@ -184,15 +190,13 @@ public class Addrem extends Command{
 	private boolean isDateObject(String input) {
 		_dateObject = DateAndTimeManager.getInstance().findDate(input);
 		if (_dateObject != null){
-			System.out.println(_dateObject.getParsedDate());
-			_remDate = _dateObject.getParsedDate();
-			_gotDate = true;
 			return true;
 		}
 		return false;
 	}
 
 	private void enterTaskID(String taskID) throws TaskIDException{
+		taskID = taskID.trim();
 		if (isNotValidTaskID(taskID)){
 			_invalidParameters = true;
 			throw new TaskIDException(taskID);
