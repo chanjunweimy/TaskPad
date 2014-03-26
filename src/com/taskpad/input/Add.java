@@ -238,7 +238,7 @@ public class Add extends Command{
 		try {
 			param = DateAndTimeManager.getInstance().parseDate(param);
 		} catch (InvalidDateException e) {
-			InputManager.outputToGui(e.getMessage()); 
+			//InputManager.outputToGui(e.getMessage()); 
 			return;
 		}
 		inputDeadline(param);
