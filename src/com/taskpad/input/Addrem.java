@@ -3,8 +3,10 @@ package com.taskpad.input;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
+import com.taskpad.dateandtime.TimeObject;
 
 public class Addrem extends Command{
 	
@@ -20,8 +22,15 @@ public class Addrem extends Command{
 	private static String _remDate = "";
 	private static String _remTime = "";
 	
+	private static DateObject _dateObject;
+	private static TimeObject _timeObject;
+	
 	private static Scanner sc;
 	private static boolean _invalidParameters = false;
+	
+	boolean _gotTaskID = false;
+	boolean _gotDate = false;
+	boolean _gotTime = false;
 
 	public Addrem(String input, String fullInput) {
 		super(input, fullInput);
@@ -35,24 +44,21 @@ public class Addrem extends Command{
 		sc = new Scanner(System.in);
 	}
 
-	//TODO: check for correct date and time format
 	@Override
 	protected boolean commandSpecificRun() {
 		if (checkIfContainsDelimiters()){
 			splitInputParameters();
 		} else {
-			try {
-				splitInputNoDelimiters();
-			} catch (TaskIDException e) {
-				InputManager.outputToGui(e.getMessage());
-				//ErrorMessages.invalidTaskIDMessage();
-				_invalidParameters = true;
-			}
+			splitInputNoDelimiters();
 		}
 		
 		if (_invalidParameters){
 			return false;
 		}
+		
+		System.out.println("Rem date" + _remDate);
+		System.out.println("Rem time" + _remTime);
+		System.out.println("TaskID " + _taskID);
 
 		return true;
 	}
@@ -112,10 +118,91 @@ public class Addrem extends Command{
 		}
 	}
 	
-	/**Note To do: Can identify if its a date or time string. 
-	*Time will return "-1:-1" if it's not a time string
-	*Should make similar for date string 
-	*/
+	private void splitInputNoDelimiters(){
+		String[] splitInput = input.split(SPACE);
+		
+		if(isInvalidParameters(splitInput.length)){
+			_invalidParameters = true;
+			return;
+		};
+		extractTimeAndDate(splitInput);
+		
+		invalidIfNoTaskID();
+		invalidIfNoDateOrTime();
+	}
+	
+	private void invalidIfNoTaskID(){
+		if (_taskID.equals("")){
+			_invalidParameters = true;
+			InputManager.outputToGui("Invalid Task ID");
+		}
+	}
+	
+	private void invalidIfNoDateOrTime(){
+		if(_remDate.equals("") || _remTime.equals("")){
+			_invalidParameters = true;
+			InputManager.outputToGui("No date or time input");
+		}
+	}
+	
+	private void extractTimeAndDate(String[] splitInput){
+		
+		for (int i=0; i<splitInput.length; i++){
+			
+			if(isDateObject(splitInput[i]) && !_gotDate){
+				_remDate = _dateObject.getParsedDate();
+			} else if (isTimeObject(splitInput[i]) && !_gotTime){
+				_remTime = _timeObject.getParsedTime();
+				
+			} else if (!_gotTaskID){
+				try {
+					enterTaskID(splitInput[i]);
+				} catch (TaskIDException e) {
+					continue;
+				}
+			}
+		}
+	}
+	
+	private boolean isTimeObject(String input) {
+		_timeObject = DateAndTimeManager.getInstance().findTime(input);
+		if (_timeObject != null){
+			_remTime = _timeObject.getParsedTime();
+			_gotTime = true;
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isDateObject(String input) {
+		_dateObject = DateAndTimeManager.getInstance().findDate(input);
+		if (_dateObject != null){
+			System.out.println(_dateObject.getParsedDate());
+			_remDate = _dateObject.getParsedDate();
+			_gotDate = true;
+			return true;
+		}
+		return false;
+	}
+
+	private void enterTaskID(String taskID) throws TaskIDException{
+		if (isNotValidTaskID(taskID)){
+			_invalidParameters = true;
+			throw new TaskIDException(taskID);
+		} else{
+			_taskID = taskID;
+			_gotTaskID = true;
+		}
+	}
+	
+	private boolean isInvalidParameters(int length){
+		if (length == NUMBER_ARGUMENTS || length == NUMBER_ARGUMENTS + 1){
+			return false;
+		}
+		return true;
+	}
+	
+	/* deprecated for flexiCommands without delimiters
 	private void splitInputNoDelimiters() throws TaskIDException {		
 		String[] splitInput = input.split(SPACE);
 		_taskID = splitInput[0];
@@ -136,6 +223,7 @@ public class Addrem extends Command{
 			}
 		}
 	}
+	*/
 
 	private boolean checkIfContainsDelimiters() {
 		return input.contains("-d")||input.contains("-t");
@@ -149,7 +237,6 @@ public class Addrem extends Command{
 	private void inputTime(String param) {
 		param = stripWhiteSpaces(param);
 		//_remTime = param;		//deprecated for flexi commands
-		System.out.println(param);
 		//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
 		try {
 			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());

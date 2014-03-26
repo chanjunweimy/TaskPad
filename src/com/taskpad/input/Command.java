@@ -126,35 +126,13 @@ public abstract class Command {
 			//outputIdError();
 			return true;
 		}	
-		return false;
+		return false; 
 	}
 	
-	/**
-	 * Lynnette: clearInputParameters() cannot be put
-	 * in here.
-	 * For example, inside Add.java,
-	 * you putParametes before you createInputObject
-	 * in that case, your input parameters will be wrong!
-	 * so I help you move it, in that place I will comment also.
-	 * 
-	 * You see, whether the place I move is suitable or not la :) 
-	 * @return
-	 */
 	protected Input createInputObject() {
 		//clearInputParameters();	
 		putInputParameters();
 		inputObject = new Input(getCOMMAND(), inputParameters);	
-		
-		/**
-		 * for debugging!
-		 */
-		/*
-		InputManager.outputToGui(getCOMMAND());
-		ArrayList<String> arr = new ArrayList<String>(inputParameters.values());
-		for (String str : arr){
-			InputManager.outputToGui(str);
-		}
-		 */
 		
 		logger.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;
