@@ -8,8 +8,11 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidDateException;
 
 public class TestDateParser {
+	private static final String DATE_INVALID = "Not a valid date";
 	private DateAndTimeManager _dateParser = DateAndTimeManager.getInstance();
 	
+	/*We do equivalence partitioning*/
+	/*We test dates with years*/
 	@Test
 	public void test1() {
 		testDateCommand("11/11/14", "11/11/2014");
@@ -160,6 +163,7 @@ public class TestDateParser {
 		testDateCommand("1.6.2015", "01/06/2015");
 	}
 	
+	/*We test dates without year*/
 	@Test
 	public void test31(){
 		testDateCommand("1/6", "01/06/2014");
@@ -285,119 +289,130 @@ public class TestDateParser {
 		testDateCommand("01 06", "01/06/2014");
 	}
 	
+	/*We test invalid dates*/
+	
+	/*We only support date-month-year*/
 	@Test
 	public void invalid1(){
-		testInvalidDateCommand("1993.1.6", "Not a valid date");
+		testInvalidDateCommand("1993.1.6", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid2(){
-		testInvalidDateCommand("1993 1 6", "Not a valid date");
+		testInvalidDateCommand("1993 1 6", DATE_INVALID);
 	}
 	
-	
-	/**
-	 * we no longer support this 2 special cases
-	 */
+	/*Boundary case: February have no date "30"*/
 	@Test
 	public void invalid3(){
-		testInvalidDateCommand("30/02/15", "Not a valid date");
+		testInvalidDateCommand("30/02/15", DATE_INVALID);
 	}
 	
+	/*We cannot support 6 digits stick together*/
 	@Test
 	public void invalid4() {
-		testInvalidDateCommand("000000", "Not a valid date");
+		testInvalidDateCommand("000000", DATE_INVALID);
 	}
 	
+	/*And also we can't parse anything if user doesn't key in anything*/
 	@Test
 	public void invalid5() {
-		testInvalidDateCommand("", "Not a valid date");
+		testInvalidDateCommand("", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid6() {
-		testInvalidDateCommand(" ", "Not a valid date");
+		testInvalidDateCommand(" ", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid7(){
-		testInvalidDateCommand(",", "Not a valid date");
+		testInvalidDateCommand(",", DATE_INVALID);
 	}
 	
+	/*We can't parse "day" in dateparser*/
 	@Test
 	public void invalid8(){
-		testInvalidDateCommand("Wed", "Not a valid date");
+		testInvalidDateCommand("Wed", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid9(){
-		testInvalidDateCommand("Today", "Not a valid date");
+		testInvalidDateCommand("Today", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid10(){
-		testInvalidDateCommand("Oct1815", "Not a valid date");
+		testInvalidDateCommand("Oct1815", DATE_INVALID);
 	}
 	
+	/*We cannot support 6 digits stick together*/
 	@Test
 	public void invalid11(){
-		testInvalidDateCommand("18102015", "Not a valid date");
+		testInvalidDateCommand("18102015", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid12(){
-		testInvalidDateCommand("15/18/10", "Not a valid date");
+		testInvalidDateCommand("15/18/10", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid13(){
-		testInvalidDateCommand("20/03/14", "Not a valid date");
+		testInvalidDateCommand("20/03/14", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid14(){
-		testInvalidDateCommand("40-18-10", "Not a valid date");
+		testInvalidDateCommand("40-18-10", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid15(){
-		testInvalidDateCommand("40.18.10", "Not a valid date");
+		testInvalidDateCommand("40.18.10", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid16(){
-		testInvalidDateCommand("40 18 10", "Not a valid date");
+		testInvalidDateCommand("40 18 10", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid27(){
-		testInvalidDateCommand("40-18-Oct", "Not a valid date");
+		testInvalidDateCommand("40-18-Oct", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid28(){
-		testInvalidDateCommand("16/10/Oct", "Not a valid date");
+		testInvalidDateCommand("16/10/Oct", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid29(){
-		testInvalidDateCommand("15/10/oct", "Not a valid date");
+		testInvalidDateCommand("15/10/oct", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid30(){
-		testInvalidDateCommand("35.18.10", "Not a valid date");
+		testInvalidDateCommand("35.18.10", DATE_INVALID);
 	}
 	
 	@Test
 	public void invalid31(){
-		testInvalidDateCommand("49 18 10", "Not a valid date");
+		testInvalidDateCommand("49 18 10", DATE_INVALID);
+	}
+
+	/*boundary case: when it is null*/
+	@Test
+	public void invalid32(){
+		testInvalidDateCommand(null, DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid32(){
-		testInvalidDateCommand(null, "Not a valid date");
+	public void invalid33(){
+		testInvalidDateCommand("100 October,14", DATE_INVALID);
 	}
+	
 	
 	
 	private void testDateCommand(String input, String expected){

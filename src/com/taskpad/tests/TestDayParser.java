@@ -11,6 +11,7 @@ import com.taskpad.dateandtime.InvalidDayException;
 public class TestDayParser {
 	private static final String DAY_INVALID = "Not a valid day";
 
+	/*We test all cases at least once to ensure full path coverage*/
 	@Test
 	public void test1() {
 		testValidDay("Monday", 1);
@@ -57,32 +58,33 @@ public class TestDayParser {
 	}
 	
 	@Test
-	public void test11() {
+	public void test10() {
 		testValidDay("FriDay", 5);
 	}
 	
 	@Test
-	public void test12() {
+	public void test11() {
 		testValidDay("Saturday", 6);
 	}
 	
 	@Test
-	public void test13() {
+	public void test12() {
 		testValidDay("SAT", 6);
 	}
 	
 	@Test
-	public void test14() {
+	public void test13() {
 		testValidDay("Sunday", 0);
 	}
 	
 	@Test
-	public void test15() {
+	public void test14() {
 		testValidDay("Sun", 0);
 	}
 	
+	/*boundary case: when it is null*/
 	@Test
-	public void test16() {
+	public void test15() {
 		testInvalidDay(null);
 	}
 	
