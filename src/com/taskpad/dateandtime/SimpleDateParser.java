@@ -67,7 +67,7 @@ public class SimpleDateParser {
 		"MMM dd yyyy", "MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy",  
 		"dd MMM yyyy", "dd MMM , yyyy", "dd MMM, yyyy", "dd MMM,yyyy", 
 		"dd-MMM-yyyy", "dd MM , yyyy", "dd MM, yyyy", "dd MM,yyyy", 
-		"dd M , yyyy", "dd M, yyyy", "dd M,yyyy", "ddMMMyyyy", 
+		"dd M , yyyy", "dd M, yyyy", "dd M,yyyy", "ddMMMyyyy"
 		
 		/*
 		 * Deprecated for the reason above
