@@ -96,22 +96,57 @@ public class TimeWordParser{
 	}
 	 */
 	
+	protected String parseTimeWordWithSpecialWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		if (input == null || input.equals(SPACE)){
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		
+		String timeWord = null;
+		String specialWord = null;
+		
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		
+		String splitWord = swp.getTimeWordWithoutSpecialWords(input);
+		int splitPlace = input.lastIndexOf(splitWord) + splitWord.length() + 1;
+		int num = 0;
+		
+		specialWord = input.substring(splitPlace).trim();
+		timeWord = input.substring(splitPlace, input.length()).trim();
+		
+		try {
+			timeWord = parseTimeWord(timeWord);
+			num = Integer.parseInt(timeWord);
+			timeWord = swp.parseSpecialWord(specialWord, num);
+			
+		} catch (NullTimeValueException e) {
+			if (input.split(SPACE).length > 1){
+				throw e;
+			} else {
+				num = calculateTimeWord(input);
+				timeWord = swp.parseSpecialWord(specialWord, num);
+			}
+		}
+		timeWord = timeWord + TIME_SEC;
+		
+		return timeWord(timeWord);
+	}
+	
 	protected String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
 		if (input == null || input.equals(SPACE)){
 			throw new NullTimeUnitException(ERROR_NULL_UNIT);
 		}
 		
 		int realTime = 0;
-		Scanner sc = new Scanner(input);
 		
-		realTime = calculateEachTimeValues(realTime, sc);
+		realTime = calculateEachTimeValues(realTime, input);
 		
 		
 		return BLANK + realTime;
 	}
 
 	private int calculateEachTimeValues(int realTime,
-			Scanner sc) throws NullTimeValueException, NullTimeUnitException {
+			String input) throws NullTimeValueException, NullTimeUnitException {
+		Scanner sc = new Scanner(input);
 		StringBuffer tempTime = new StringBuffer(BLANK);
 		while (sc.hasNext()){
 			String oneSubstring = sc.next();
