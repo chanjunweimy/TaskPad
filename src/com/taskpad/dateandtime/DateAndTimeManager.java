@@ -144,8 +144,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * 
 	 * @return timeString, in dd/mm/yyyy 
 	 * @throws InvalidDateException 
+	 * @throws DatePassedException 
 	 */
-	public String parseDate(String dateString) throws InvalidDateException {
+	public String parseDate(String dateString) throws DatePassedException, InvalidDateException{
 		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
