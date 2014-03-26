@@ -1,7 +1,5 @@
 package com.taskpad.dateandtime;
 
-import com.taskpad.ui.GuiManager;
-
 /**
  * This class is for us to find the existence of Date and Time in an input String
  * 
@@ -23,14 +21,11 @@ public class DateAndTimeRetriever {
 	 */
 	
 	protected static TimeObject findTime(String inputString){
-		String[] splitInput = inputString.split(STRING_SPACE);
 		TimeObject timeObject = null;
 		
-		for (int i=0; i<splitInput.length; i++){
-			String parsedTime = isValidTime(splitInput[i]);
-			if (isNotEmptyParsedString(parsedTime)){
-				timeObject = createNewTimeObject(parsedTime, splitInput[i]);
-			}
+		String parsedTime = isValidTime(inputString);
+		if (isNotEmptyParsedString(parsedTime)){
+			timeObject = createNewTimeObject(parsedTime, inputString);
 		}
 		return timeObject;
 	}
@@ -41,7 +36,6 @@ public class DateAndTimeRetriever {
 		try {
 			return TimeParser.parseTimeInput(input);
 		} catch (TimeErrorException | InvalidTimeException e) {
-			GuiManager.callOutput(e.getMessage());
 			return STRING_EMPTY;
 		}
 	}
@@ -56,15 +50,12 @@ public class DateAndTimeRetriever {
 	 * @return date 
 	 */
 	protected static DateObject findDate(String inputString){
-		String[] splitInput = inputString.split(STRING_SPACE);
 		DateObject dateObject = null;
 		
-		for (int i=0; i<splitInput.length; i++){
-			String parsedDate = isValidDate(splitInput[i]);
-			if (isNotEmptyParsedString(parsedDate)){
-				dateObject = createDateObject(parsedDate, splitInput[i]);
-			}
-		}	
+		String parsedDate = isValidDate(inputString);
+		if (isNotEmptyParsedString(parsedDate)){
+			dateObject = createDateObject(parsedDate, inputString);
+		}
 		return dateObject;
 	}
 	
