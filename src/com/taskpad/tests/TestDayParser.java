@@ -90,7 +90,7 @@ public class TestDayParser {
 	
 	private void testValidDay(String input, int expected){
 		try {
-			assertEquals(DateAndTimeManager.getInstance().parseDay(input), expected);
+			assertEquals(DateAndTimeManager.getInstance().parseDayToInt(input), expected);
 		} catch (InvalidDayException e) {
 			fail();
 		}
@@ -98,7 +98,7 @@ public class TestDayParser {
 	
 	private void testInvalidDay(String input){
 		try {
-			DateAndTimeManager.getInstance().parseDay(input);
+			DateAndTimeManager.getInstance().parseDayToInt(input);
 		} catch (InvalidDayException e) {
 			assertEquals(e.getMessage(), DAY_INVALID);
 		}

@@ -147,7 +147,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	
 	/* Helper methods for checking valid time in a String */
-	private String isValidTime(String input){
+	protected String isValidTime(String input){
 		input = trimInput(input);
 		try {
 			return TimeParser.parseTimeInput(input);
@@ -179,7 +179,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	
 	/* Helper method for checking valid date in a String */
-	private String isValidDate(String input){
+	protected String isValidDate(String input){
 		input = trimInput(input);
 		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		try {
@@ -208,15 +208,15 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @return int
 	 * @throws InvalidDayException
 	 */
-	public int parseDay(String dayString) throws InvalidDayException{
+	public int parseDayToInt(String dayString) throws InvalidDayException{
 		DayParser dayParser = DayParser.getInstance();
-		return dayParser.parseDay(dayString);
+		return dayParser.parseDayToInt(dayString);
 	}
 	
 	protected boolean isDay(String dayString){
 		DayParser dayParser = DayParser.getInstance();
 		try {
-			dayParser.parseDay(dayString);
+			dayParser.parseDayToInt(dayString);
 		} catch (InvalidDayException e) {
 			return false;
 		}
@@ -232,17 +232,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public String parseDate(String dateString) throws InvalidDateException {
 		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		return dateParser.parseDate(dateString);
-	}
-	
-	protected boolean isDate(String dateString){
-		SimpleDateParser dateParser = SimpleDateParser.getInstance();
-		
-		try {
-			dateParser.parseDate(dateString);
-		} catch (InvalidDateException e) {
-			return false;
-		}
-		return true;
 	}
 
 	
@@ -264,27 +253,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return TimeParser.parseTimeInput(timeString);
 	}
 
-	/**
-	 * isRealTime check whether timeString is a timeInstance like hh:mm
-	 * 
-	 * @param timeString String
-	 * @return boolean
-	 */
-	protected boolean isRealTime(String timeString) {
-
-		try {
-			TimeParser.parseTime(timeString);
-		} catch (NullTimeUnitException | NullTimeValueException
-				| TimeErrorException | InvalidTimeException e1) {
-			try {
-				TimeParser.parseTimeInput(timeString);
-			} catch (TimeErrorException | InvalidTimeException e) {
-				return false;
-			}
-		}
-
-		return true;
-	}
 
 	/**
 	 * convertToSecond: convert time from any unit to second

@@ -51,13 +51,22 @@ public class DayParser {
 	
 	
 	/**
+	 * parseDayToDate: to get the date of the day
+	 * @param input String
+	 * @return String
+	 */
+	protected String parseDayToDate(String input){
+		return null;
+	}
+	
+	/**
 	 * should pass in String like Sunday, Monday
-	 * Mon, Monday
+	 * Mon, Monday and parses them to int
 	 * @param input
 	 * @return int
 	 * @throws InvalidDayException 
 	 */
-	protected int parseDay(String input) throws InvalidDayException{
+	protected int parseDayToInt(String input) throws InvalidDayException{
 		//initializeMapWeek();
 		
 		if (input == null){
@@ -73,13 +82,15 @@ public class DayParser {
 		return value.intValue();
 	}
 	
+	/*
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
 		try {
-			System.out.println(a.parseDay("MON"));
+			System.out.println(a.parseDayToInt("MON"));
 		} catch (InvalidDayException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	//*/
 }
