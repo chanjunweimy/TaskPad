@@ -9,7 +9,8 @@ import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
 
 public class TestDateParser {
-	private static final String DATE_INVALID = "Not a valid date";
+	private static final String DATE_PASSED = "Date has passed. Please enter a date in the future";
+	private static final String DATE_INVALID = "Error: Invalid Date Entered";
 	private DateAndTimeManager _dateParser = DateAndTimeManager.getInstance();
 	
 	/*We do equivalence partitioning*/
@@ -360,7 +361,7 @@ public class TestDateParser {
 	
 	@Test
 	public void invalid13(){
-		testInvalidDateCommand("20/03/14", DATE_INVALID);
+		testInvalidDateCommand("20/03/14", DATE_PASSED);
 	}
 	
 	@Test

@@ -88,6 +88,11 @@ public class Addrem extends Command{
 		return true;
 	}
 	
+	@Override
+	protected boolean checkIfIncorrectArguments(){
+		
+	}
+	
 	private void splitInputParameters(){
 		int count = 0;
 		sc = new Scanner(input).useDelimiter("\\s-");
@@ -146,6 +151,7 @@ public class Addrem extends Command{
 	}
 	
 	private void extractTimeAndDate(String[] splitInput){
+		System.out.println("No delimiters");
 		
 		for (int i=0; i<splitInput.length; i++){
 			
@@ -158,6 +164,7 @@ public class Addrem extends Command{
 				try {
 					enterTaskID(splitInput[i]);
 				} catch (TaskIDException e) {
+					System.out.println("TaskID Exception");
 					continue;
 				}
 			}

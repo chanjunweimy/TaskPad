@@ -15,7 +15,7 @@ import java.util.Date;
 public class SimpleDateParser {
 
 	//private static final String STRING_EMPTY = "";
-	private static final String DATE_INVALID = "Not a valid date";
+	//private static final String DATE_INVALID = "Not a valid date";
 	private static SimpleDateFormat _formatter = new SimpleDateFormat("dd/MM/yyyy");
 	private static SimpleDateParser _dateParser = new SimpleDateParser();
 	
@@ -90,7 +90,7 @@ public class SimpleDateParser {
 	
 	protected String parseDate(String input) throws InvalidDateException, DatePassedException{
 		if (input == null){
-			throw new InvalidDateException(DATE_INVALID);
+			throw new InvalidDateException();
 		}
 		
 		input = input.trim();
@@ -98,7 +98,7 @@ public class SimpleDateParser {
 		String dateString = getActualDate(input);
 		
 		if (dateString == null){
-			throw new InvalidDateException(DATE_INVALID);
+			throw new InvalidDateException();
 		} 
 		
 		return dateString;
@@ -118,13 +118,26 @@ public class SimpleDateParser {
 	 * @throws InvalidDateException 
 	 * @throws DatePassedException 
 	 */
-	private String getActualDate(String input) throws InvalidDateException, DatePassedException {
+	private String getActualDate(String input) throws DatePassedException {
 		String dateStringWithoutYear = null;
 		String dateString = null;
 		
-		dateStringWithoutYear = formatDateWithoutYear(input);
-		dateString = formatDate(input);
+		try {
+			dateStringWithoutYear = formatDateWithoutYear(input);
+		} catch (DatePassedException e) {
+			try {
+				dateString = formatDate(input);
+			} catch (DatePassedException e1) {
+				throw e1;
+			}
+		}
 		
+		try {
+			dateString = formatDate(input);
+		} catch (DatePassedException e) {
+			throw e;
+		}
+
 		if (dateString == null){
 			dateString = dateStringWithoutYear;
 		}
@@ -182,7 +195,7 @@ public class SimpleDateParser {
 		return date;
 	}
 
-	private static String formatDate(String input){
+	private static String formatDate(String input) throws DatePassedException{
 		assert (input != null);
 		
 		String dateString = null;
@@ -204,7 +217,7 @@ public class SimpleDateParser {
 				}*/
 				
 				if (isPassed(date) ){
-					continue;
+					throw new DatePassedException();
 				}
 				
 				dateString = _formatter.format(date);

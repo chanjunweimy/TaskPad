@@ -52,6 +52,7 @@ public class DateAndTimeRetriever {
 		DateObject dateObject = null;
 		
 		String parsedDate = isValidDate(inputString);
+		System.out.println(inputString + " " + parsedDate);
 		if (isNotEmptyParsedString(parsedDate)){
 			dateObject = createDateObject(parsedDate, inputString);
 		}
