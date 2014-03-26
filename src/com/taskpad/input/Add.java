@@ -177,7 +177,6 @@ public class Add extends Command{
 	}
 	
 	
-	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		checkAndRemoveDate();
 		
@@ -236,6 +235,12 @@ public class Add extends Command{
 	
 	private void getDeadline(String param) {
 		param = stripWhiteSpaces(param);
+		try {
+			param = DateAndTimeManager.getInstance().parseDate(param);
+		} catch (InvalidDateException e) {
+			InputManager.outputToGui(e.getMessage()); 
+			return;
+		}
 		inputDeadline(param);
 	}
 	
