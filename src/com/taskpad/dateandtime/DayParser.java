@@ -12,8 +12,6 @@ import java.util.Map;
 public class DayParser {
 
 	private static final String DAY_INVALID = "Not a valid day";
-
-	private static DayParser _parseDay = new DayParser();
 	
 	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
 	
@@ -35,7 +33,7 @@ public class DayParser {
 		"sat"
 	};
 	
-	
+	private static DayParser _parseDay = new DayParser();
 	
 	private DayParser(){
 		initializeMapWeek();
@@ -61,6 +59,10 @@ public class DayParser {
 	 */
 	protected int parseDay(String input) throws InvalidDayException{
 		//initializeMapWeek();
+		
+		if (input == null){
+			throw new InvalidDayException(DayParser.DAY_INVALID);
+		}
 		
 		Integer value = _mapWeek.get(input.toLowerCase());
 		

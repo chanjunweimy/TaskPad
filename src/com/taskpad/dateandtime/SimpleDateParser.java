@@ -139,13 +139,16 @@ public class SimpleDateParser {
 			try {
 				//System.out.println(_dateFormats[i]);
 				
+				//to strictly follow the format
+				sdf.setLenient(false);
+				
 				Date date = sdf.parse(input);
 				
+				/*
 				boolean isWrongFormat = !input.equals(sdf.format(date)) && !dwy.contains("MMM");
 				if (isWrongFormat){
 					continue;
-				}
-				
+				}*/
 				
 				date = setYear(date);
 				
@@ -187,12 +190,16 @@ public class SimpleDateParser {
 			try {
 				//System.out.println(_dateFormats[i]);
 				
+				//to strictly follow the format
+				sdf.setLenient(false);
+				
 				Date date = sdf.parse(input);
 				
+				/*
 				boolean isWrongFormat = !input.equals(sdf.format(date)) && !df.contains("MMM");
 				if (isWrongFormat){
 					continue;
-				}
+				}*/
 				
 				if (isPassed(date) ){
 					continue;
