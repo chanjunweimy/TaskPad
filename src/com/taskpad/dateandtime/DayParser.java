@@ -11,17 +11,22 @@ import java.util.Map;
  */
 public class DayParser {
 
+	private static final String SPACE = " ";
+
 	private static final String DAY_INVALID = "Not a valid day";
 	
 	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
 	
-	//private static final String DAY_TODAY = "today";
+	
 	//private static final String DAY_YESTERDAY = "yesterday";
-	//private static final String DAY_TOMORROW = "tomorrow";
-	//private static final String DAY_NOW = "now";
+	//private static final String DAY_TOMORROW = "tomorrow"; 
+	private static final String[] DAY_TODAY = {
+		"today", 
+		"tdy",
+		"now"
+	};
 	
-	
-	private static final String[] _dayInWeek = {
+	private static final String[] DAY_IN_WEEK = {
 		"sunday", 
 		"monday",
 		"tuesday",
@@ -46,8 +51,8 @@ public class DayParser {
 	}
 	
 	private void initializeMapWeek() {		
-		for (int i = 0; i < _dayInWeek.length; i++){
-			_mapWeek.put(_dayInWeek[i], i % 7);
+		for (int i = 0; i < DAY_IN_WEEK.length; i++){
+			_mapWeek.put(DAY_IN_WEEK[i], i % 7);
 		}
 	}
 
@@ -60,9 +65,32 @@ public class DayParser {
 	 * parseDayToDate: to get the date of the day
 	 * @param input String
 	 * @return String
+	 * @throws InvalidDayException 
 	 */
-	protected String parseDayToDate(String input){
-		return null;
+	protected String parseDayToDate(String input) throws InvalidDayException{
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		
+		for (String todayVariation : DAY_TODAY){
+			if (todayVariation.equals(input)){
+				return datm.getTodayDateAndTime();
+			}
+		}
+		
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		String specialDay = null;
+
+		String[] analyzes = input.split(SPACE);
+		int len = analyzes.length;
+
+		int userDay = parseDayToInt(analyzes[len - 1]);
+
+		boolean isDay = userDay >= 0 && userDay < 7;
+		if (isDay){
+			specialDay = input.substring(input.lastIndexOf(analyzes[len - 1])).trim();
+			specialDay = swp.parseSpecialDay(specialDay, userDay);
+		}
+		
+		return specialDay;
 	}
 	
 	/**
