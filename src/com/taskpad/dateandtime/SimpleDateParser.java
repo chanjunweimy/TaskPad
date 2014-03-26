@@ -74,7 +74,7 @@ public class SimpleDateParser {
 		//"yyyy/dd/MM", "yyyy-dd-MM", "yyyy.dd.MM", "yyyy dd MM", 
 		//"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yyyy/dd/MMM",
 		//"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
-		 //"MMddyyyy", "yyyyMMMdd"， "ddMMyyyy", 
+		 //"MMddyyyy", "yyyyMMMdd"锛�"ddMMyyyy", 
 		//"MMMddyyyy",
 		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
 		 "MMddyyyy", "yyyyMMMdd"
@@ -153,12 +153,12 @@ public class SimpleDateParser {
 				date = setYear(date);
 				
 				if (isPassed(date) ){
-					continue;
+					dateString = _formatter.format(date);
+				}else {
+					throw new DatePassedException();
 				}
 				
-				dateString = _formatter.format(date);
-				break;
-			} catch (ParseException e){
+			} catch (ParseException | DatePassedException e){
 				//do nothing
 			}
 		}
