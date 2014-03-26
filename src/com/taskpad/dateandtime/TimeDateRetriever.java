@@ -9,6 +9,6 @@ package com.taskpad.dateandtime;
  *
  */
 
-public class FindDateOrTime {
+public class TimeDateRetriever {
 
 }

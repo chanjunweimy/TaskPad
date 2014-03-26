@@ -11,7 +11,7 @@ public class AlarmManager extends JApplet{
 	
 	private static final long serialVersionUID = 4348001564533802036L;		//Randomly generated
 	private static final Exception EXCEPTION_ERROR = new Exception();
-	private final static String SONG_DEFAULT = "katy_perry-the_one_that_got_away.mid";
+	private final static String SONG_DEFAULT = "Thats_All_Folks.mid";
 	private static Sound _alarm = null;
 	private final static int ALARM_DURATION = 60;
 	private static boolean _isPlaying = false;

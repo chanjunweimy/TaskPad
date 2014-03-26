@@ -31,9 +31,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	private static DateAndTime _dateAndTimeObject = null;
 
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
-	
-	private static final String STRING_EMPTY= "";
-	private static final String STRING_SPACE= " ";
 
 	private DateAndTimeManager() {
 	}
@@ -120,87 +117,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		}
 	};
 	
-	/**
-	 * For JUNWEI: THese two findTime and findDate can only return the first time and first date 
-	 * that is found in the string
-	 * Means it wont work for like user keys in -s date, time -e date, time
-	 * So we can get what's after -s and we split into time and date? 
-	 */
-	
-	/**
-	 * In an input string, check if there is valid time
-	 * @param inputString
-	 * @return time
-	 */
-	
-	public TimeObject findTime(String inputString){
-		String[] splitInput = inputString.split(STRING_SPACE);
-		TimeObject timeObject = null;
-		
-		for (int i=0; i<splitInput.length; i++){
-			String parsedTime = isValidTime(splitInput[i]);
-			if (isNotEmptyParsedString(parsedTime)){
-				timeObject = createNewTimeObject(parsedTime, splitInput[i]);
-			}
-		}
-		return timeObject;
-	}
-	
-	/* Helper methods for checking valid time in a String */
-	protected String isValidTime(String input){
-		input = trimInput(input);
-		try {
-			return TimeParser.parseTimeInput(input);
-		} catch (TimeErrorException | InvalidTimeException e) {
-			return STRING_EMPTY;
-		}
-	}
-	
-	private TimeObject createNewTimeObject(String parsedTime, String inputTime){
-		return new TimeObject(parsedTime.trim(), inputTime.trim());
-	}
-	
-	/**
-	 * In an input string, check if there is valid date 
-	 * @param inputString
-	 * @return date 
-	 */
-	public DateObject findDate(String inputString){
-		String[] splitInput = inputString.split(STRING_SPACE);
-		DateObject dateObject = null;
-		
-		for (int i=0; i<splitInput.length; i++){
-			String parsedDate = isValidDate(splitInput[i]);
-			if (isNotEmptyParsedString(parsedDate)){
-				dateObject = createDateObject(parsedDate, splitInput[i]);
-			}
-		}	
-		return dateObject;
-	}
-	
-	/* Helper method for checking valid date in a String */
-	protected String isValidDate(String input){
-		input = trimInput(input);
-		SimpleDateParser dateParser = SimpleDateParser.getInstance();
-		try {
-			return dateParser.parseDate(input);
-		} catch (InvalidDateException e) {
-			return STRING_EMPTY;
-		}
-	}
-
-	private String trimInput(String input) {
-		input = input.trim();
-		return input;
-	}
-	
-	private DateObject createDateObject(String parsedDate, String input){
-		return new DateObject(parsedDate, input.trim());
-	}
-	
-	private boolean isNotEmptyParsedString(String parsedString) {
-		return !parsedString.equals(STRING_EMPTY);
-	}
 
 	/**
 	 * parse a day (such as Monday to int)
@@ -234,6 +150,24 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return dateParser.parseDate(dateString);
 	}
 
+	/**
+	 * Check if there is a valid date in the string
+	 * @param String
+	 * @returns DateObject
+	 */
+	
+	public DateObject findDate(String input){
+		return DateAndTimeRetriever.findDate(input);
+	}
+	
+	/**
+	 * Check if there is a valid time in the string
+	 * @param String
+	 * @returns TimeObject
+	 */
+	public TimeObject findTime(String input){
+		return DateAndTimeRetriever.findTime(input);
+	}
 	
 	/**
 	 * parseTime: parse different format of time
