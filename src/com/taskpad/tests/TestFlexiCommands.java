@@ -197,7 +197,8 @@ public class TestFlexiCommands {
 	}
 	
 	private void testFindValueCommand (CommandTypes.CommandType expected, String input){
-		new CommandTypes();
+		//new CommandTypes();
+		CommandTypes.getInstance();
 		assertEquals(expected, CommandQueue.findFlexi(input));
 	}
 

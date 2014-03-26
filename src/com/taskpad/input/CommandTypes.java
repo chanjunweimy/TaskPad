@@ -1,5 +1,9 @@
 package com.taskpad.input;
 
+/**
+ * CommandTypes has been changed to a Singleton class
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -14,9 +18,14 @@ public class CommandTypes {
 	};
 	
 	protected static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
-
-	public CommandTypes(){
+	private static final CommandTypes _commandTypes = new CommandTypes();
+	
+	private CommandTypes(){
 		createHashMap();
+	}
+	
+	public static CommandTypes getInstance(){
+		return _commandTypes;
 	}
 
 	private static void createHashMap(){
