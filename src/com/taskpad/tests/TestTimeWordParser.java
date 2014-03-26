@@ -10,7 +10,7 @@ import com.taskpad.dateandtime.NullTimeValueException;
 
 /**
  * 
- * @author Jun
+ * @author Jun & Lynnette
  *
  * @category
  * TestTimeWordParser: a Junit test case written to test TimeWordParser
@@ -35,7 +35,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time value"));
 		}
 	}
 	
@@ -44,7 +44,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("s");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Please key in time value!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time value"));
 		}
 	}
 	
@@ -64,7 +64,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond(null);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("a");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 	
@@ -82,7 +82,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("1");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("1                m");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 
@@ -109,7 +109,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("1                m 2");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 	
@@ -118,7 +118,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("1  month");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("one one ones");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Does not contain time unit!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
 		}
 	}
 	
@@ -145,7 +145,7 @@ public class TestTimeWordParser {
 		try {
 			parser.convertToSecond("1 1 1 s");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			assertTrue(e.getMessage().equals("Please key in time value!"));
+			assertTrue(e.getMessage().equals("Error: Please enter a time value"));
 		}
 	}
 	

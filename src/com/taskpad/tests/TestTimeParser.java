@@ -1,5 +1,11 @@
 package com.taskpad.tests;
 
+/**
+ * This unit test class tests the Time Parser
+ * 
+ * @author Lynnette
+ */
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -12,7 +18,7 @@ public class TestTimeParser {
 	
 	private DateAndTimeManager _timeParser = DateAndTimeManager.getInstance();
 	
-	private static final String MESSAGE_INVALID = "Not a valid time";
+	private static final String MESSAGE_INVALID = "Error: Invalid Time supplied";
 
 	/**
 	 * Test AM strings 

@@ -1,5 +1,7 @@
 package com.taskpad.dateandtime;
 
+import java.util.logging.Logger;
+
 public class DatePassedException extends Exception {
 
 	/**
@@ -9,8 +11,11 @@ public class DatePassedException extends Exception {
 
 	private static final String MESSAGE = "Date has passed. Please enter a date in the future";
 	
+	protected static Logger _logger = Logger.getLogger("TaskPad");
+	
 	public DatePassedException(){
 		super(MESSAGE);
+		_logger.info(MESSAGE);
 	}
 	
 }

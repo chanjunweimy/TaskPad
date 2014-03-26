@@ -129,7 +129,8 @@ public class Addrem extends Command{
 			try {
 				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
 			} catch (TimeErrorException | InvalidTimeException e) {
-				ErrorMessages.invalidTimeMessage();
+				//ErrorMessages.invalidTimeMessage();
+				InputManager.outputToGui(e.getMessage());
 				_invalidParameters = true;
 				return;
 			}
@@ -153,7 +154,8 @@ public class Addrem extends Command{
 		try {
 			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
 		} catch (TimeErrorException | InvalidTimeException e) {
-			ErrorMessages.timeErrorMessage(_remTime);
+			//ErrorMessages.timeErrorMessage(_remTime);
+			InputManager.outputToGui(e.getMessage());
 			return;
 		}
 	}

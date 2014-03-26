@@ -42,7 +42,7 @@ public class TimeParser {
 		}
 				
 		if (isInvalidTime(timeString)){
-			throw new TimeErrorException();
+			throw new TimeErrorException(input);
 		}
 		
 		return timeString;
@@ -56,11 +56,11 @@ public class TimeParser {
 			time = decodeTime(input);
 			timeString = convertMillisecondsToTime(time);
 		} else {
-			throw new TimeErrorException();
+			throw new TimeErrorException(input);
 		}
 				
 		if (isInvalidTime(timeString)){
-			throw new TimeErrorException();
+			throw new TimeErrorException(input);
 		}
 		
 		return timeString;

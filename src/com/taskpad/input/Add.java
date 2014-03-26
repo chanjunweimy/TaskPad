@@ -265,7 +265,8 @@ public class Add extends Command{
 			try {
 				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
 			} catch (TimeErrorException | InvalidTimeException e) {
-				outputErrorTimeMessage(startTime);
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(startTime);
 				_invalidParameters = true;
 				return;
 			}
@@ -309,7 +310,8 @@ public class Add extends Command{
 			try {
 				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
 			} catch (TimeErrorException | InvalidTimeException e) {
-				outputErrorTimeMessage(endTime);
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(endTime);
 				_invalidParameters = true;
 				return;
 			}

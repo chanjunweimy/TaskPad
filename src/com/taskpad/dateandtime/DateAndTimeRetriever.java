@@ -1,5 +1,7 @@
 package com.taskpad.dateandtime;
 
+import com.taskpad.ui.GuiManager;
+
 /**
  * This class is for us to find the existence of Date and Time in an input String
  * 
@@ -39,6 +41,7 @@ public class DateAndTimeRetriever {
 		try {
 			return TimeParser.parseTimeInput(input);
 		} catch (TimeErrorException | InvalidTimeException e) {
+			GuiManager.callOutput(e.getMessage());
 			return STRING_EMPTY;
 		}
 	}
