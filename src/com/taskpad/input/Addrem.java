@@ -139,7 +139,7 @@ public class Addrem extends Command{
 	}
 	
 	private void invalidIfNoDateOrTime(){
-		if(_remDate.equals("") || _remTime.equals("")){
+		if(_remDate.equals("") && _remTime.equals("")){
 			_invalidParameters = true;
 			InputManager.outputToGui("No date or time input");
 		}
