@@ -71,7 +71,7 @@ public abstract class Command {
 	}
 	*/
 	
-	private void showEmptyString(){
+	protected void showEmptyString(){
 		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
 		InputManager.outputToGui(errorMessage);
 	}
