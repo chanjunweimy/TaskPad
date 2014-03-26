@@ -135,6 +135,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		try {
 			dayParser.parseDayToInt(dayString);
 		} catch (InvalidDayException e) {
+			GuiManager.callOutput(e.getMessage());
 			return false;
 		}
 		return true;
