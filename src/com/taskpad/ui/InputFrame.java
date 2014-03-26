@@ -24,7 +24,7 @@ public class InputFrame extends GuiFrame{
 	//inputTextBox
 	private static JTextField _input = new JTextField(15);
 	
-	private final static int INPUTFRAME_WIDTH = 350;
+	private final static int INPUTFRAME_WIDTH = 480;
 	private final static int INPUTFRAME_HEIGHT = 30;
 	
 	private TextFieldListener _seeText = new TextFieldListener();
