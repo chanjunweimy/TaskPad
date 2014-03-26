@@ -66,8 +66,9 @@ public class DayParser {
 	 * @param input String
 	 * @return String
 	 * @throws InvalidDayException 
+	 * @throws DatePassedException 
 	 */
-	protected String parseDayToDate(String input) throws InvalidDayException{
+	protected String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		
 		for (String todayVariation : DAY_TODAY){
@@ -88,6 +89,9 @@ public class DayParser {
 		if (isDay){
 			specialDay = input.substring(input.lastIndexOf(analyzes[len - 1])).trim();
 			specialDay = swp.parseSpecialDay(specialDay, userDay);
+		} else {
+			specialDay = input.substring(input.lastIndexOf(analyzes[len - 1])).trim();
+			specialDay = swp.parseSpecialDay(specialDay, analyzes[len - 1]);
 		}
 		
 		return specialDay;
