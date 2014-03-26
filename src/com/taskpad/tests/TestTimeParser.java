@@ -18,7 +18,7 @@ public class TestTimeParser {
 	
 	private DateAndTimeManager _timeParser = DateAndTimeManager.getInstance();
 	
-	private static final String MESSAGE_INVALID = "Error: Invalid Time supplied";
+	private static final String MESSAGE_INVALID = "Error: Invalid time entered";
 
 	/**
 	 * Test AM strings 

@@ -24,7 +24,7 @@ public class TaskIDException extends Exception {
 	}
 	
 	public TaskIDException(String message){
-		super(MESSAGE);
+		super(MESSAGE + ": " + message);
 		logger.info(MESSAGE);
 	}
 	
