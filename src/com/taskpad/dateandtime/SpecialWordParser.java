@@ -12,14 +12,16 @@ import java.util.Scanner;
  */
 public class SpecialWordParser {
 	
+	private static final String SPACE = " ";
+
 	private static final String DAY_INVALID = "Not a valid day!";
 
 	private static final int DAY_WEEK = 7;
 
 	private static final String EMPTY = "";
 
-	//private static Map<Integer, String[]> _specialWordMap = new HashMap<Integer, String[]>();
-	private static Map<String, Integer> _specialWordMap = new HashMap<String, Integer>();
+	//private static Map<Integer, String[]> MAP_SPECIAL_WORD = new HashMap<Integer, String[]>();
+	private static Map<String, Integer> MAP_SPECIAL_WORD = new HashMap<String, Integer>();
 	
 	private static SpecialWordParser _specialWordParser = new SpecialWordParser();
 	
@@ -93,17 +95,32 @@ public class SpecialWordParser {
 		int nxt = 1;
 		
 		if (specialDay == SpecialWordParser.EMPTY){
-			return getNextDay(userDay, twp, todayDayStat, nxt);
+			return getNextDay(userDay, twp, todayDayStat, nxt, "d");
 		}
 		
 		specialDay = specialDay.toUpperCase();
 		
-		Scanner sc = new Scanner(specialDay);
+		nxt = calculateNext(specialDay, nxt);
+		
+		if (nxt <= 0){
+			throw new DatePassedException();
+		}
+		
+		return getNextDay(userDay, twp, todayDayStat, nxt, "d");
+	}
+
+	/**
+	 * @param specialDay
+	 * @param nxt
+	 * @return
+	 */
+	private int calculateNext(String input, int nxt) {
+		Scanner sc = new Scanner(input);
 		
 		while (sc.hasNext()){
 			String specialToken = sc.next();
 			
-			Integer ans = _specialWordMap.get(specialToken);
+			Integer ans = MAP_SPECIAL_WORD.get(specialToken);
 			
 			if (ans == null){
 				break;
@@ -112,31 +129,27 @@ public class SpecialWordParser {
 			nxt += ans.intValue();
 		}
 		sc.close();
-		
-		if (nxt <= 0){
-			throw new DatePassedException();
-		}
-		
-		return getNextDay(userDay, twp, todayDayStat, nxt);
+		return nxt;
 	}
 
 	/**
-	 * @param userDay
+	 * @param userNum
 	 * @param twp
-	 * @param todayDayStat
+	 * @param systemNum
+	 * @param nxt
 	 */
-	private String getNextDay(int userDay, TimeWordParser twp, int todayDayStat, int nxt) {
-		todayDayStat -= userDay;
+	private String getNextDay(int userNum, TimeWordParser twp, int systemNum, int nxt, String unit) {
+		systemNum -= userNum;
 		
-		if (todayDayStat <= 0){
-			todayDayStat += DAY_WEEK;
+		if (systemNum <= 0){
+			systemNum += DAY_WEEK;
 		}
 		
 		nxt--;
-		todayDayStat += DAY_WEEK * nxt;
+		systemNum += DAY_WEEK * nxt;
 		
 		try {
-			return twp.timeWord(todayDayStat + "d");
+			return twp.timeWord(systemNum + unit);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
 			assert (false);
 		}
@@ -173,7 +186,30 @@ public class SpecialWordParser {
 	 * @param specialWord String
 	 * @return int
 	 */
-	protected String parseSpecialWord(String specialWord, boolean multiply, int num){
+	protected String parseSpecialWord(String specialWord, int seconds){
+		int nxt = 0;
+		nxt = calculateNext(specialWord, nxt);
+		
+		seconds *= nxt;
+		
+		return seconds + EMPTY;
+	}
+	
+	/**
+	 * getTimeWordWithoutNext split special words
+	 * with TimeWord
+	 * @param input
+	 * @return
+	 */
+	protected String getTimeWordWithoutSpecialWords(String input){
+		String[] inputs = input.split(SPACE);
+		
+		for (int i = inputs.length - 1; i >= 0 ; i--){
+			if (MAP_SPECIAL_WORD.containsKey(inputs[i])){
+				return inputs[i];
+			}
+		}
+		
 		return null;
 	}
 	
@@ -187,37 +223,37 @@ public class SpecialWordParser {
 
 	private void initializeTmrMap() {
 		for (String myTmr : MAP_TMR){
-			_specialWordMap.put(myTmr, +1);
+			MAP_SPECIAL_WORD.put(myTmr, +1);
 		}
 	}
 
 	private void initializeYtdMap() {
 		for (String myYtd : MAP_YTD){
-			_specialWordMap.put(myYtd, -1);
+			MAP_SPECIAL_WORD.put(myYtd, -1);
 		}
 	}
 
 	private void initializeThisMap() {
 		for (String myThis : MAP_THIS){
-			_specialWordMap.put(myThis, 0);
+			MAP_SPECIAL_WORD.put(myThis, 0);
 		}
 		
 	}
 
 	private void initializePrevMap() {
-		//_specialWordMap.put(+1, MAP_NXT);
+		//MAP_SPECIAL_WORD.put(+1, MAP_NXT);
 		
 		for (String next : MAP_NXT){
-			_specialWordMap.put(next, +1);
+			MAP_SPECIAL_WORD.put(next, +1);
 		}
 		
 	}
 
 	private void initializeNextMap() {
-		//_specialWordMap.put(-1, MAP_PREV);		
+		//MAP_SPECIAL_WORD.put(-1, MAP_PREV);		
 		
 		for (String prev : MAP_PREV){
-			_specialWordMap.put(prev, -1);
+			MAP_SPECIAL_WORD.put(prev, -1);
 		}
 	}
 	
