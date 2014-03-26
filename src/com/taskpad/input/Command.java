@@ -49,12 +49,13 @@ public abstract class Command {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
-		
+				
 //		if (checkIfEmptyString() || checkIfIncorrectArguments()){
 //			return;
 //		} 
 		clearInputParameters();
 		initialiseParametersToNull();
+	
 		if (commandSpecificRun()){
 			createInputObject();
 			passObjectToExecutor();
