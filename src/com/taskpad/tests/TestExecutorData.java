@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 //import java.util.Map;
 
-
-
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
 import com.taskpad.execute.ExecutorManager;
@@ -67,6 +65,6 @@ public class TestExecutorData {
 	}
 	
 	public static void main(String args[]) {
-		commandTest();
+		DataManager.retrieve("");
 	}
 }
