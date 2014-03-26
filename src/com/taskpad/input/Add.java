@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
@@ -62,7 +63,7 @@ public class Add extends Command{
 			try {
 				checkIfExistDesc();
 			} catch (EmptyDescException e) {
-				InputManager.outputToGui("No description specified");
+				InputManager.outputToGui(e.getMessage());
 				return false;
 			}
 		} else {
@@ -237,7 +238,7 @@ public class Add extends Command{
 		param = stripWhiteSpaces(param);
 		try {
 			param = DateAndTimeManager.getInstance().parseDate(param);
-		} catch (InvalidDateException e) {
+		} catch (InvalidDateException | DatePassedException e) {
 			InputManager.outputToGui(e.getMessage());
 			_invalidParameters = true;
 		}
@@ -265,6 +266,7 @@ public class Add extends Command{
 				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
 			} catch (TimeErrorException | InvalidTimeException e) {
 				outputErrorTimeMessage(startTime);
+				_invalidParameters = true;
 				return;
 			}
 			putOneParameter(PARAMETER_START_TIME, startTime);
@@ -273,8 +275,9 @@ public class Add extends Command{
 			if (splitParam.length == LENGTH_TIME){
 				try {
 					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException e) {
+				} catch (InvalidDateException | DatePassedException e) {
 					InputManager.outputToGui(e.getMessage()); 
+					_invalidParameters = true;
 					return;
 				}
 				putOneParameter(PARAMETER_START_DATE, startDate);
@@ -307,6 +310,7 @@ public class Add extends Command{
 				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
 			} catch (TimeErrorException | InvalidTimeException e) {
 				outputErrorTimeMessage(endTime);
+				_invalidParameters = true;
 				return;
 			}
 			
@@ -316,8 +320,9 @@ public class Add extends Command{
 			if (splitParam.length == LENGTH_TIME){
 				try {
 					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException e) {
+				} catch (DatePassedException | InvalidDateException e) {
 					InputManager.outputToGui(e.getMessage());
+					_invalidParameters = true;
 					return;
 				}
 				putOneParameter(PARAMETER_END_DATE, endDate);

@@ -71,7 +71,7 @@ public class DateAndTimeRetriever {
 		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		try {
 			return dateParser.parseDate(input);
-		} catch (InvalidDateException e) {
+		} catch (DatePassedException | InvalidDateException e) {
 			return STRING_EMPTY;
 		}
 	}
