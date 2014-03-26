@@ -114,8 +114,9 @@ public class CommandQueue {
 	 * @return CommandType
 	 */
 	public static CommandType find(String inputCommand){
+		new CommandTypes();
 		String variations[];
-
+		
 		for (Map.Entry<CommandType, String[]> entry : CommandTypes.commandVariations.entrySet()){
 			variations = entry.getValue();
 			for (int i=0; i<variations.length; i++){
