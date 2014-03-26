@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
 
 public class TestDateParser {
@@ -418,7 +419,7 @@ public class TestDateParser {
 	private void testDateCommand(String input, String expected){
 		try {
 			assertEquals(_dateParser.parseDate(input), expected);
-		} catch (InvalidDateException e) {
+		} catch (InvalidDateException | DatePassedException e) {
 			fail();
 		}
 	}
@@ -426,7 +427,7 @@ public class TestDateParser {
 	private void testInvalidDateCommand(String input, String expected){
 		try{
 			_dateParser.parseDate(input);
-		} catch (InvalidDateException e){
+		} catch (InvalidDateException | DatePassedException e){
 			assertEquals(e.getMessage(), expected);
 		}
 	}

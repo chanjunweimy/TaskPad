@@ -44,7 +44,8 @@ public class Addrem extends Command{
 			try {
 				splitInputNoDelimiters();
 			} catch (TaskIDException e) {
-				ErrorMessages.invalidTaskIDMessage();
+				InputManager.outputToGui(e.getMessage());
+				//ErrorMessages.invalidTaskIDMessage();
 				_invalidParameters = true;
 			}
 		}
@@ -118,6 +119,7 @@ public class Addrem extends Command{
 	private void splitInputNoDelimiters() throws TaskIDException {		
 		String[] splitInput = input.split(SPACE);
 		_taskID = splitInput[0];
+		
 		if (Integer.parseInt(_taskID) > InputManager.retrieveNumberOfTasks()+1){
 			throw new TaskIDException(_taskID);
 		}
