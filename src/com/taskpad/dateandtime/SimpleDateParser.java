@@ -74,7 +74,7 @@ public class SimpleDateParser {
 		//"yyyy/dd/MM", "yyyy-dd-MM", "yyyy.dd.MM", "yyyy dd MM", 
 		//"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yyyy/dd/MMM",
 		//"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
-		 //"MMddyyyy", "yyyyMMMdd"， "ddMMyyyy", 
+		 //"MMddyyyy", "yyyyMMMdd"锛�"ddMMyyyy", 
 		//"MMMddyyyy",
 		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
 		 "MMddyyyy", "yyyyMMMdd"
@@ -88,7 +88,7 @@ public class SimpleDateParser {
 		return _dateParser;
 	}
 	
-	protected String parseDate(String input) throws InvalidDateException{
+	protected String parseDate(String input) throws InvalidDateException, DatePassedException{
 		if (input == null){
 			throw new InvalidDateException(DATE_INVALID);
 		}
@@ -115,8 +115,10 @@ public class SimpleDateParser {
 	 * @param input
 	 * 				: String
 	 * @return String
+	 * @throws InvalidDateException 
+	 * @throws DatePassedException 
 	 */
-	private String getActualDate(String input) {
+	private String getActualDate(String input) throws InvalidDateException, DatePassedException {
 		String dateStringWithoutYear = null;
 		String dateString = null;
 		
@@ -129,7 +131,7 @@ public class SimpleDateParser {
 		return dateString;
 	}
 	
-	private static String formatDateWithoutYear(String input){
+	private static String formatDateWithoutYear(String input) throws DatePassedException{
 		assert (input != null);
 		
 		String dateString = null;
@@ -153,7 +155,7 @@ public class SimpleDateParser {
 				date = setYear(date);
 				
 				if (isPassed(date) ){
-					continue;
+					throw new DatePassedException();
 				}
 				
 				dateString = _formatter.format(date);

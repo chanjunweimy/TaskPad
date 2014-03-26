@@ -25,7 +25,8 @@ public class Search extends Command{
 				return; 
 			}
 		} catch (EmptyStringException e) {
-
+			InputManager.outputToGui(e.getMessage());
+			return;
 		}
 		
 		initialiseParametersToNull();

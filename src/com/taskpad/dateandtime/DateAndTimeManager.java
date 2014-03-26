@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 import com.taskpad.storage.Task;
+import com.taskpad.ui.GuiManager;
 
 /**
  * 
@@ -144,8 +145,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * 
 	 * @return timeString, in dd/mm/yyyy 
 	 * @throws InvalidDateException 
+	 * @throws DatePassedException 
 	 */
-	public String parseDate(String dateString) throws InvalidDateException {
+	public String parseDate(String dateString) throws DatePassedException, InvalidDateException{
 		SimpleDateParser dateParser = SimpleDateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
@@ -211,6 +213,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		try {
 			twp.parseTimeWord(timeString);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
+			GuiManager.callOutput(e.getMessage());
 			return false;
 		}
 
