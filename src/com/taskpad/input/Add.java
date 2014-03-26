@@ -177,7 +177,6 @@ public class Add extends Command{
 	}
 	
 	
-	@SuppressWarnings("resource")
 	private void splitInputParameters(){
 		checkAndRemoveDate();
 		
