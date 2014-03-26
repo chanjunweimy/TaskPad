@@ -49,12 +49,13 @@ public abstract class Command {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
-		
+				
 //		if (checkIfEmptyString() || checkIfIncorrectArguments()){
 //			return;
 //		} 
 		clearInputParameters();
 		initialiseParametersToNull();
+	
 		if (commandSpecificRun()){
 			createInputObject();
 			passObjectToExecutor();
@@ -70,7 +71,7 @@ public abstract class Command {
 	}
 	*/
 	
-	private void showEmptyString(){
+	protected void showEmptyString(){
 		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
 		InputManager.outputToGui(errorMessage);
 	}

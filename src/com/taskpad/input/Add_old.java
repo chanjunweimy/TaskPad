@@ -10,7 +10,7 @@ import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 
-public class Add extends Command{
+public class Add_old extends Command{
 	
 	private static final String QUOTE = "\"";
 	private static final String BLANK = "";
@@ -37,11 +37,12 @@ public class Add extends Command{
 	
 	private static boolean _invalidParameters = false;
 	private static int _count;
+	
 	private static String _desc;
 	
 	private static Scanner _sc;
 
-	public Add(String input, String fullInput) {
+	public Add_old(String input, String fullInput) {
 		super(input, fullInput);
 	}
 	
@@ -285,10 +286,6 @@ public class Add extends Command{
 			}
 		}
 	}
-	
-	private void outputErrorTimeMessage(String input) {
-		ErrorMessages.timeErrorMessage(input);
-	}
 
 	@SuppressWarnings("unused")
 	private void getDescInQuotes(){
@@ -349,7 +346,7 @@ public class Add extends Command{
 	}
 	
 	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), Add.BLANK).trim();
+		return input.replaceFirst(getFirstChar(input), Add_old.BLANK).trim();
 	}
 	
 	private String getFirstChar(String input) {
@@ -373,7 +370,7 @@ public class Add extends Command{
 	}
 	
 	private String stripWhiteSpaces(String input){
-		return input.replaceAll(Add.SPACE, Add.BLANK);
+		return input.replaceAll(Add_old.SPACE, Add_old.BLANK);
 	}
 
 }
