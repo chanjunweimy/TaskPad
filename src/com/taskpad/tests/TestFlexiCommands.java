@@ -170,7 +170,6 @@ public class TestFlexiCommands {
 		testFindValueCommand(CommandType.SEARCH, "homework SEARCH");
 		testFindValueCommand(CommandType.SEARCH, "homework FIND");
 		testFindValueCommand(CommandType.SEARCH, "i cant FIND my homework");
-		testFindValueCommand(CommandType.SEARCH, "help me FIND my homework");
 	}
 	
 	/**
