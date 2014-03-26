@@ -4,8 +4,13 @@ import java.util.LinkedList;
 
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
+import com.taskpad.ui.GuiManager;
 
 public class OutputToGui {
+	protected static void output(String feedback) {
+		GuiManager.callOutput(feedback);
+	}
+	
 	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {
 		return OutputToGui.generateTextForOneTask(taskId, taskAdded);
 	}

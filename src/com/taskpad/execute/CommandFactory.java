@@ -10,28 +10,35 @@ import com.taskpad.storage.NoPreviousCommandException;
 import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
-import com.taskpad.ui.GuiManager;
 
 public class CommandFactory {
+	private static final String FEEDBACK_CLEAR = "All tasks have been deleted. You can use undo to get them back.";
+	private static final String FEEDBACK_CANNOT_UNDO = "You don't have things to undo.";
 	private static Logger logger = Logger.getLogger("TaskPad");
+	
+	protected static void add(String description, String deadline, String startDate,
+			String startTime, String endDate,
+			String endTime, String venue) {
+		logger.info("adding task: " + description);
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
+		
+		Task taskAdded = CommandFactoryBackend.addTask(description, deadline, startDate, startTime,
+				endDate, endTime, venue, listOfTasks);
+		
+		int taskId = listOfTasks.size();
+		OutputToGui.output(OutputToGui.generateFeedbackForAdd(taskId, taskAdded));
+	}
 	
 	protected static void listUndone() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-
-		LinkedList<Integer> tasks = new LinkedList<Integer>();
-		for (int index = 0; index < listOfTasks.size(); index++) {
-			Task task = listOfTasks.get(index);
-			if (task.getDone() == 1) {
-				continue;
-			}
-			tasks.add(index);
-		}
+		
+		LinkedList<Integer> tasks = CommandFactoryBackend.getUndoneTasks(listOfTasks);
 		
 		if (tasks.size() == 0) {
-			GuiManager.callOutput("No undone task found.");
+			OutputToGui.output("No undone task found.");
 		} else {
 			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
-			GuiManager.callOutput(text);
+			OutputToGui.output(text);
 		}
 		
 	}
@@ -39,74 +46,50 @@ public class CommandFactory {
 	protected static void listDone() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
-		LinkedList<Integer> tasks = new LinkedList<Integer>();
-		for (int index = 0; index < listOfTasks.size(); index++) {
-			Task task = listOfTasks.get(index);
-			if (task.getDone() == 0) {
-				continue;
-			}
-			tasks.add(index);
-		}
+		LinkedList<Integer> tasks = CommandFactoryBackend.getFinishedTasks(listOfTasks);
 		
 		if (tasks.size() == 0) {
-			GuiManager.callOutput("No finished task found.");
+			OutputToGui.output("No finished task found.");
 		} else {
 			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
-			GuiManager.callOutput(text);
+			OutputToGui.output(text);
 		}
 	}
 
 	protected static void listAll() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 
-		LinkedList<Integer> tasks = new LinkedList<Integer>();
-		for (int index = 0; index < listOfTasks.size(); index++) {
-			tasks.add(index);
-		}
+		LinkedList<Integer> tasks = CommandFactoryBackend.getAllTasks(listOfTasks);
 		
 		if (tasks.size() == 0) {
-			GuiManager.callOutput("No task found.");
+			OutputToGui.output("No task found.");
 		} else {
 			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
-			GuiManager.callOutput(text);
+			OutputToGui.output(text);
 		}
 	}
 
 	protected static void undo() {
 		try {
-			TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
-			String previousFile = DataFileStack.popForUndo();
-			TaskList listOfTasks = DataManager.retrieve(previousFile);
-			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-			DataManager.storeBack(currentListOfTasks, previousFile);
+			String previousFile = CommandFactoryBackend.updateDataForUndo();		
+			String command = CommandFactoryBackend.updateCommandRecordForUndo(previousFile);
 			
-			String command = CommandRecord.popForUndo();
-			DataFileStack.pushForRedo(previousFile);
-			CommandRecord.pushForRedo(command);
-			
-			GuiManager.callOutput("Undo of '" + command + "' completed.");
+			OutputToGui.output("Undo of '" + command + "' completed.");
 		} catch (NoPreviousFileException e) {
-			GuiManager.callOutput("You don't have things to undo.");
+			OutputToGui.output(FEEDBACK_CANNOT_UNDO);
 		} catch (NoPreviousCommandException e) {
 			// should never come to this
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
 	protected static void redo() {
 		try {
-			String previousFile = DataFileStack.popForRedo();
-			TaskList listOfTasks = DataManager.retrieve(previousFile);
-			DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+			String previousFile = CommandFactoryBackend.updateDataForRedo();
+			String command = CommandFactoryBackend.updateCommandRecordForRedo(previousFile);
 			
-			String command = CommandRecord.popForRedo();
-			DataFileStack.pushForUndo(previousFile);
-			CommandRecord.pushForUndo(command);
-			
-			GuiManager.callOutput("Redo of '" + command + "' completed.");
+			OutputToGui.output("Redo of '" + command + "' completed.");
 		} catch (NoPreviousFileException e) {
-			GuiManager.callOutput("You don't have things to redo.");
+			OutputToGui.output("You don't have things to redo.");
 		} catch (NoPreviousCommandException e) {
 			// should never come to this
 			// TODO Auto-generated catch block
@@ -118,149 +101,64 @@ public class CommandFactory {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
 		String[] keywords = keywordsString.split(" ");
-		LinkedList<Integer> results = new LinkedList<Integer>();
-		
-		for(int index = 0; index < listOfTasks.size(); index++) {
-			Task task = listOfTasks.get(index);
-			String description = task.getDescription();
-			
-			boolean isCandidate = true;
-			for(String keyword: keywords) {
-				if(!description.contains(keyword)) {
-					isCandidate = false;
-				}
-			}
-			
-			if(isCandidate) {
-				results.add(index);
-			}
-		}
+		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(listOfTasks, keywords);
 		
 		// pass feedback to GUI
 		String feedback = OutputToGui.generateTextForTasks(results, listOfTasks);
-		GuiManager.callOutput("Number of tasks found: " + results.size() + "\n\n" + feedback);
+		OutputToGui.output("Number of tasks found: " + results.size() + "\n\n" + feedback);
 	}
 
 	protected static void edit(String taskIdString, String description) {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		String fileRecord = DataFileStack.requestDataFile();
-		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.pushForUndo(fileRecord);
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		
-		Task task = getTaskById(listOfTasks, taskIdString);
-		String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
-		
-		task.setDescription(description);
-		
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		String taskHistory = CommandFactoryBackend.editTaskDescription(taskIdString, description,
+				listOfTasks);
 		
 		// pass feedback to gui
-		GuiManager.callOutput("'" + taskHistory + "' changed to '" 
+		OutputToGui.output("'" + taskHistory + "' changed to '" 
 				+ OutputToGui.generateTitleForOneTask(taskIdString, description) + "'");
 	}
 
 	protected static void markAsDone(String taskIdString) {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		String fileRecord = DataFileStack.requestDataFile();
-		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.pushForUndo(fileRecord);
-		
-		Task task = getTaskById(listOfTasks, taskIdString);
-		task.setDone();
-		
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		
-		// passFeedbackToGui to be implemented
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
+
+		Task task = CommandFactoryBackend.markTaskAsDone(taskIdString, listOfTasks);
+
+		OutputToGui.output(OutputToGui.generateTextForOneTask(
+				Integer.parseInt(taskIdString), task));
 	}
 
 	protected static void clear() {
-		// TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		// DataManager.storeBack(listOfTasks, DataFileStack.FILE_PREV);
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		String fileRecord = DataFileStack.requestDataFile();
-		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.pushForUndo(fileRecord);
-		
-		listOfTasks = new TaskList();
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		CommandFactoryBackend.archiveForUndo();	
+		CommandFactoryBackend.clearTasks();
 		
 		// pass feedback to gui
-		GuiManager.callOutput("All tasks have been deleted. You can use undo to get them back.");
+		OutputToGui.output(FEEDBACK_CLEAR);
 	}
 
 	protected static void addInfo(String taskIdString, String info) {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		String fileRecord = DataFileStack.requestDataFile();
-		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.pushForUndo(fileRecord);
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		
 		int index = getIndexById(taskIdString);
-		Task task = listOfTasks.get(index);
-		if(task.getDetails() == null) {
-			task.setDetails(info);
-		} else {
-			String details = task.getDetails();
-			details += ("\n" + info);
-			task.setDetails(details);
-		}
+		Task task = CommandFactoryBackend.addInfoToTask(info, listOfTasks, index);
 		
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		
-		GuiManager.callOutput(OutputToGui.generateTextForOneTask(index + 1, task));
+		OutputToGui.output(OutputToGui.generateTextForOneTask(index + 1, task));
 	}
 
 	protected static int getIndexById(String taskIdString) {
 		return Integer.parseInt(taskIdString) - 1;
 	}
 
-	protected static void delete(String index) {		
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		String fileRecord = DataFileStack.requestDataFile();
-		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.pushForUndo(fileRecord);
+	protected static void delete(String taskIdString) {		
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		
-		int indexOfTask = Integer.parseInt(index);
-		
-		/**
-		 * indexOfTask should minus 1,
-		 * as the TaskID = LinkedListIndex + 1
-		 */
-		indexOfTask--;
-		
+		int indexOfTask = Integer.parseInt(taskIdString) - 1;	
 		assert(indexOfTask < listOfTasks.size());
 		
-		Task taskDeleted = listOfTasks.get(indexOfTask);
-		listOfTasks.remove(indexOfTask);
+		Task taskDeleted = CommandFactoryBackend.deleteTask(listOfTasks, indexOfTask);
 		
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		
-		GuiManager.callOutput(OutputToGui.generateFeedbackForDelete(taskDeleted));
-	}
-	
-	protected static void add(String description, String deadline, String startDate,
-			String startTime, String endDate,
-			String endTime, String venue) {
-		logger.info("adding task: " + description);
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		String fileRecord = DataFileStack.requestDataFile();
-		DataManager.storeBack(listOfTasks, fileRecord);
-		DataFileStack.pushForUndo(fileRecord);
-		
-		Task taskToAdd = new Task(description, deadline, startDate,
-				startTime, endDate, endTime, venue);
-		listOfTasks.add(taskToAdd);
-
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		
-		int taskId = listOfTasks.size();
-		GuiManager.callOutput(OutputToGui.generateFeedbackForAdd(taskId, taskToAdd));
+		OutputToGui.output(OutputToGui.generateFeedbackForDelete(taskDeleted));
 	}
 
-	protected static Task getTaskById(TaskList listOfTasks, String taskIdString) {
-		int taskId = Integer.parseInt(taskIdString);
-		int index = taskId - 1;
-		Task task = listOfTasks.get(index);
-		return task;
-	}
-	// dummy
+
 }
