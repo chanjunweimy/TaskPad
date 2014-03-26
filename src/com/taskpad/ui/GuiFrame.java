@@ -246,8 +246,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		return changeState;
 	}
 	
-	abstract protected int getInitialWidth();
-	abstract protected int getInitialHeight();
+	//abstract protected int getInitialWidth();
+	//abstract protected int getInitialHeight();
 	
 	
 	//won't implement

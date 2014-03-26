@@ -69,8 +69,8 @@ public abstract class OutputFrame extends GuiFrame{
 
 	protected void setUpFrame() {
 		setSize(OUTPUTFRAME_WIDTH, OUTPUTFRAME_HEIGHT);
-		setLocation((int)(COMPUTER_WIDTH / 2 - OUTPUTFRAME_WIDTH/2),
-					(int)(COMPUTER_HEIGHT / 2 - OUTPUTFRAME_HEIGHT));
+		setLocation((int)(COMPUTER_WIDTH / 2 - OUTPUTFRAME_WIDTH / 2),
+					(int)(COMPUTER_HEIGHT / 2 - OUTPUTFRAME_HEIGHT / 2 - InputFrame.getInitialHeight() / 2));
 	}
 
 	private void initializeOutputFrame() {				
@@ -168,13 +168,13 @@ public abstract class OutputFrame extends GuiFrame{
 		super.endProgram();
 	}
 
-	@Override
-	protected int getInitialWidth(){
+	//@Override
+	protected static int getInitialWidth(){
 		return OUTPUTFRAME_WIDTH;
 	}
 	
-	@Override
-	protected int getInitialHeight(){
+	//@Override
+	protected static int getInitialHeight(){
 		return OUTPUTFRAME_HEIGHT;
 	}
 }

@@ -46,7 +46,7 @@ public class InputFrame extends GuiFrame{
 	private void setUpFrame() {
 		setSize(INPUTFRAME_WIDTH, INPUTFRAME_HEIGHT);
 		setLocation((int)(COMPUTER_WIDTH / 2 - INPUTFRAME_WIDTH / 2),
-					(int)(COMPUTER_HEIGHT / 2));
+					(int)(COMPUTER_HEIGHT / 2 + OutputFrame.getInitialHeight() / 2 - INPUTFRAME_HEIGHT / 2));
 	}
 
 	private void initializeInputBox() {
@@ -101,13 +101,13 @@ public class InputFrame extends GuiFrame{
 		return _input;
 	}
 	
-	@Override
-	protected int getInitialWidth(){
+	//@Override
+	protected static int getInitialWidth(){
 		return INPUTFRAME_WIDTH;
 	}
 	
-	@Override
-	protected int getInitialHeight(){
+	//@Override
+	protected static int getInitialHeight(){
 		return INPUTFRAME_HEIGHT;
 	}
 	
