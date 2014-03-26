@@ -92,6 +92,8 @@ public class TestCommands {
 		testFindValueCommand(CommandType.ADD_REM, "REMINDER");
 
 		testFindValueCommand(CommandType.ADD_REM, "REMAINDER");
+		testFindValueCommand(CommandType.ADD_REM, "ADDREM");
+
 	}
 	
 	/**

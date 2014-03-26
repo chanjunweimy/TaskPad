@@ -45,7 +45,8 @@ public abstract class Command {
 		try {
 			checkIfIncorrectArguments();
 		} catch (TaskIDException | InvalidParameterException e) {
-			showIncorrectArguments();
+			//showIncorrectArguments();
+			InputManager.outputToGui(e.getMessage());
 			return;
 		}
 		
@@ -62,10 +63,12 @@ public abstract class Command {
 		}
 	}
 	
+	/* deprecated for Exceptions
 	private void showIncorrectArguments(){
 		String errorMessage = MESSAGE_INVALID_PARAMETER_NUMBER;
 		InputManager.outputToGui(errorMessage);
 	}
+	*/
 	
 	private void showEmptyString(){
 		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
@@ -95,7 +98,7 @@ public abstract class Command {
 		String inputString[] = input.split(" ");
 		
 		if (isNotNumberArgs(inputString)){
-			throw new InvalidParameterException(input);
+			throw new InvalidParameterException();
 		}
 		
 		/* deprecated

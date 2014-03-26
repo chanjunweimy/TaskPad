@@ -61,7 +61,7 @@ public class CommandTypes {
 	}
 	
 	private static void putAddRemVariations(){
-		String[] addRemVariations = {"ADDR", "REMINDER", "REMIND", "REMAINDER"};
+		String[] addRemVariations = {"ADDR", "REMINDER", "REMIND", "REMAINDER", "ADDREM"};
 		commandVariations.put(CommandType.ADD_REM, addRemVariations);
 	}
 	
