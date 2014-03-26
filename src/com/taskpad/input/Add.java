@@ -263,15 +263,16 @@ public class Add extends Command{
 				return;
 			}
 			putOneParameter(PARAMETER_START_TIME, startTime);
-			
+		
+			String startDate = EMPTY;
 			if (splitParam.length == LENGTH_TIME){
 				try {
-					DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(stripWhiteSpaces(splitParam[1])));
+					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
 				} catch (InvalidDateException e) {
-					InputManager.outputToGui(e.getMessage());
+					InputManager.outputToGui(e.getMessage()); 
 					return;
 				}
-				putOneParameter(PARAMETER_START_DATE, stripWhiteSpaces(splitParam[1]));
+				putOneParameter(PARAMETER_START_DATE, startDate);
 			}
 		}
 	}
@@ -306,14 +307,15 @@ public class Add extends Command{
 			
 			putOneParameter(PARAMETER_END_TIME, endTime);
 			
+			String endDate = EMPTY;
 			if (splitParam.length == LENGTH_TIME){
 				try {
-					DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
 				} catch (InvalidDateException e) {
 					InputManager.outputToGui(e.getMessage());
 					return;
 				}
-				putOneParameter(PARAMETER_END_DATE, stripWhiteSpaces(splitParam[1]));
+				putOneParameter(PARAMETER_END_DATE, endDate);
 			}
 		}
 	}

@@ -15,6 +15,12 @@ public class DayParser {
 	
 	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
 	
+	//private static final String DAY_TODAY = "today";
+	//private static final String DAY_YESTERDAY = "yesterday";
+	//private static final String DAY_TOMORROW = "tomorrow";
+	//private static final String DAY_NOW = "now";
+	
+	
 	private static final String[] _dayInWeek = {
 		"sunday", 
 		"monday",

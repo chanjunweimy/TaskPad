@@ -21,7 +21,7 @@ public class TaskPadMain{
 	private static void runProgram() {		
 		Runnable runTaskPad = new TaskPadLauncher();
 		SwingUtilities.invokeLater(runTaskPad);
-	}
+	} 
 
 	private static void setUpLogging() {
 		LogManager.getInstance().setUpGlobalLogger();
