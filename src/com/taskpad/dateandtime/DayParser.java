@@ -12,13 +12,11 @@ import java.util.Map;
 public class DayParser {
 
 	private static final String DAY_INVALID = "Not a valid day";
-
-	private static DayParser _parseDay = new DayParser();
 	
 	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
 	
 	private static final String[] _dayInWeek = {
-		"sunday",
+		"sunday", 
 		"monday",
 		"tuesday",
 		"wednesday",
@@ -32,16 +30,16 @@ public class DayParser {
 		"wed",
 		"thurs",
 		"fri",
-		"sat",
+		"sat"
 	};
 	
-	
+	private static DayParser _parseDay = new DayParser();
 	
 	private DayParser(){
 		initializeMapWeek();
 	}
 	
-	private void initializeMapWeek() {
+	private void initializeMapWeek() {		
 		for (int i = 0; i < _dayInWeek.length; i++){
 			_mapWeek.put(_dayInWeek[i], i % 7);
 		}
@@ -60,6 +58,12 @@ public class DayParser {
 	 * @throws InvalidDayException 
 	 */
 	protected int parseDay(String input) throws InvalidDayException{
+		//initializeMapWeek();
+		
+		if (input == null){
+			throw new InvalidDayException(DayParser.DAY_INVALID);
+		}
+		
 		Integer value = _mapWeek.get(input.toLowerCase());
 		
 		if (value == null){
@@ -67,5 +71,15 @@ public class DayParser {
 		}
 		
 		return value.intValue();
+	}
+	
+	public static void main(String[] args){
+		DayParser a = DayParser.getInstance();
+		try {
+			System.out.println(a.parseDay("MON"));
+		} catch (InvalidDayException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
