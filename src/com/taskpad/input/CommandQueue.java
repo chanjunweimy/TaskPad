@@ -30,7 +30,7 @@ public class CommandQueue {
 	/* Methods to perform commands */
 	
 	protected void Add(String input, String fullInput){
-		new Add(input, fullInput);
+		new Add_old(input, fullInput);
 	}
 	
 	protected void Alarm(String input, String fullInput){
