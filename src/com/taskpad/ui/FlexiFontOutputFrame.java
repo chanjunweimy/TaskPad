@@ -27,7 +27,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 
 	private final int DEFAULT_ALIGNMENT = StyleConstants.ALIGN_JUSTIFIED;
 	private final String DEFAULT_FONT_TYPE = "Lucida Console";
-	private final int DEFAULT_FONT_SIZE = 10;
+	private final int DEFAULT_FONT_SIZE = 12;
 	private final Color DEFAULT_COLOR_NORMAL = Color.BLACK;
 	private final Color DEFAULT_COLOR_REMINDER = Color.RED;
 
