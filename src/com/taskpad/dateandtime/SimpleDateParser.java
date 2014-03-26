@@ -115,8 +115,9 @@ public class SimpleDateParser {
 	 * @param input
 	 * 				: String
 	 * @return String
+	 * @throws InvalidDateException 
 	 */
-	private String getActualDate(String input) {
+	private String getActualDate(String input) throws InvalidDateException {
 		String dateStringWithoutYear = null;
 		String dateString = null;
 		
@@ -129,7 +130,7 @@ public class SimpleDateParser {
 		return dateString;
 	}
 	
-	private static String formatDateWithoutYear(String input){
+	private static String formatDateWithoutYear(String input) throws InvalidDateException{
 		assert (input != null);
 		
 		String dateString = null;
@@ -153,12 +154,12 @@ public class SimpleDateParser {
 				date = setYear(date);
 				
 				if (isPassed(date) ){
-					dateString = _formatter.format(date);
-				}else {
-					throw new DatePassedException();
+					throw new InvalidDateException("Date has passed.");
 				}
 				
-			} catch (ParseException | DatePassedException e){
+				dateString = _formatter.format(date);
+				break;
+			} catch (ParseException e){
 				//do nothing
 			}
 		}
