@@ -12,7 +12,6 @@ package com.taskpad.dateandtime;
 public class DateAndTimeRetriever {
 	
 	private static final String STRING_EMPTY = "";
-	private static final String STRING_SPACE = " ";
 
 	/**
 	 * In an input string, check if there is valid time
