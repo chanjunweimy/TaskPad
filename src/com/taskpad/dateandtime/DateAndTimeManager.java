@@ -238,6 +238,16 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		NumberParser parser = NumberParser.getInstance();
 		return parser.parseTheNumbers(numberString) != null;
 	}
+	
+	/**
+	 * To parse day to date
+	 * @throws DatePassedException 
+	 * @throws InvalidDayException 
+	 */
+	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToDate(input);
+	}
 
 	/*
 	 * DEPRECATED public String parseTime(String timeString) throws Exception{
