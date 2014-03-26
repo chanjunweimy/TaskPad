@@ -80,7 +80,8 @@ public class Alarm{
 		try {
 			numberString = parser.convertToSecond(input);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
-			System.err.println(e.getMessage());
+			InputManager.outputToGui(e.getMessage());
+			//System.err.println(e.getMessage());
 			numberString = null;
 		}
 		return numberString;

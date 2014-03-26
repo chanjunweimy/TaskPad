@@ -50,7 +50,9 @@ public class InputMain {
 				try {
 					outputString = flexiCommand(input);
 				} catch (EmptyStringException e) {
-					ErrorMessages.emptyInputMessage();
+					//ErrorMessages.emptyInputMessage();
+					InputManager.outputToGui(e.getMessage());
+					return STRING_EMPTY;
 				}
 			}
 		}

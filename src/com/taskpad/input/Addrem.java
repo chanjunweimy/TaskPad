@@ -44,7 +44,8 @@ public class Addrem extends Command{
 			try {
 				splitInputNoDelimiters();
 			} catch (TaskIDException e) {
-				ErrorMessages.invalidTaskIDMessage();
+				InputManager.outputToGui(e.getMessage());
+				//ErrorMessages.invalidTaskIDMessage();
 				_invalidParameters = true;
 			}
 		}
@@ -118,6 +119,7 @@ public class Addrem extends Command{
 	private void splitInputNoDelimiters() throws TaskIDException {		
 		String[] splitInput = input.split(SPACE);
 		_taskID = splitInput[0];
+		
 		if (Integer.parseInt(_taskID) > InputManager.retrieveNumberOfTasks()+1){
 			throw new TaskIDException(_taskID);
 		}
@@ -127,7 +129,8 @@ public class Addrem extends Command{
 			try {
 				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
 			} catch (TimeErrorException | InvalidTimeException e) {
-				ErrorMessages.invalidTimeMessage();
+				//ErrorMessages.invalidTimeMessage();
+				InputManager.outputToGui(e.getMessage());
 				_invalidParameters = true;
 				return;
 			}
@@ -151,7 +154,8 @@ public class Addrem extends Command{
 		try {
 			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
 		} catch (TimeErrorException | InvalidTimeException e) {
-			ErrorMessages.timeErrorMessage(_remTime);
+			//ErrorMessages.timeErrorMessage(_remTime);
+			InputManager.outputToGui(e.getMessage());
 			return;
 		}
 	}

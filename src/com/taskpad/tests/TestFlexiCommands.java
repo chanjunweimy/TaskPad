@@ -74,6 +74,9 @@ public class TestFlexiCommands {
 
 		testFindValueCommand(CommandType.ADD_REM, "today wash laundry remainder");
 		testFindValueCommand(CommandType.ADD_REM, "today remainder wash laundry");
+		
+		testFindValueCommand(CommandType.ADD_REM, "today addrem wash laundry");
+		testFindValueCommand(CommandType.ADD_REM, "today wash laundry addrem");
 	}
 	
 	/**
