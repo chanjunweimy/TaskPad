@@ -162,6 +162,13 @@ public class Add extends Command {
 	}
 
 	private void parseNonDelimitedString() {
+		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		String[] splitInput = input.split(STRING_SPACE);
+		extractTimeAndDate(splitInput);
+
+	}
+
+	private void extractTimeAndDate(String[] splitInput) {
 		// TODO Auto-generated method stub
 		
 	}
