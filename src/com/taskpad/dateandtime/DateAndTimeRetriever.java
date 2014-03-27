@@ -81,6 +81,24 @@ public class DateAndTimeRetriever {
 	private static boolean isNotEmptyParsedString(String parsedString) {
 		return !parsedString.equals(STRING_EMPTY);
 	}
+	
+	/**
+	 * FOR JUNWEI: 
+	 * formatDateAndTimeInString
+	 * This method takes in an input string and returns the string 
+	 * with all the number words converted to numbers, special words converted to date
+	 * and time words converted to time
+	 */
+
+	protected static String formatDateAndTimeInString(String input) {
+		//step one: convert all number words to numbers using number parser
+		//step two: find holiday words and replace with date
+		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
+		//step four: find PM or AM words and find time unit before and replace with time
+		//return that string to parse in respective Add/Addrem/Alarm classes
+		
+		return null;
+	}
 
 	
 }

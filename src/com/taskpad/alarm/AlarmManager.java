@@ -110,12 +110,12 @@ public class AlarmManager extends JApplet{
 		if (_alarm == null){
 			throw EXCEPTION_ERROR;
 		}
-		
+				
 		if (_isPlaying){
 			_alarm.stopSound();
 			TimerObject.cancelAlarms();
 			_isPlaying = false;
-		} else{
+		} else {
 			TimerObject.cancelAlarms();
 		}
 		GuiManager.callOutput(MESSAGE_CANCEL_ALARM);

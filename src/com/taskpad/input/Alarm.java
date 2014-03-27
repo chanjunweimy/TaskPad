@@ -18,26 +18,14 @@ import com.taskpad.dateandtime.NullTimeValueException;
  */
 public class Alarm{	
 
-	//private static final int HOUR = 60 * 60;
-	//private static final int MINUTE = 60;
-	//private static final int SECOND = 1;
+
 	private static final String SPACE = " ";
-	//private static final Exception EXCEPTION_INVALID_INPUT = new Exception();//don't know choose which
-	//private final String ERROR = "ERROR!";
-	//private int _multiple = 0;
+
 	
 	private static final String MESSAGE_NUMBER_ERROR = "Error: Invalid time format %s";
 		
 	public Alarm(String input, String fullInput) {
 		initializeAlarm(input, fullInput);
-		
-		/* deprecated 
-		try {
-			initializeAlarm(input, fullInput);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
-		*/
 	}
 
 	private void initializeAlarm(String input, String fullInput) {
@@ -66,24 +54,47 @@ public class Alarm{
 	private String findTimeUnit(String input) {
 		String numberString = "";
 		String[] splitInput = input.split(SPACE);
-		numberString = successParseTime(splitInput[splitInput.length-1], numberString);
 		
+		try {
+			numberString = successParseTime(splitInput[splitInput.length-1], numberString);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			String newNumberString = "";
+			//Currently alarm only supports 1m and 1s and not 1y etc.
+			try{
+				newNumberString = splitInput[splitInput.length-2] + " " + splitInput[splitInput.length-1];
+			} catch (Exception e2){
+				//InputManager.outputToGui("Error: Not a valid Alarm format");
+				return numberString;
+			}
+			try {
+				numberString = successParseTime(newNumberString, numberString);
+			} catch (NullTimeUnitException | NullTimeValueException e1) {
+				InputManager.outputToGui(e.getMessage());
+			}
+		}
+		
+		/* deprecated for error handling
 		if (numberString == null){
 			String newNumberString = splitInput[splitInput.length-2] + " " + splitInput[splitInput.length-1];
 			numberString = successParseTime(newNumberString, numberString);
+			
+			if (numberString == null){
+				InputManager.outputToGui("Please enter an appropriate time unit");
+			}
 		} 
+		*/
 		return numberString;
 	}
 
-	private String successParseTime(String input, String numberString) {
+	private String successParseTime(String input, String numberString) throws NullTimeUnitException, NullTimeValueException {
 		DateAndTimeManager parser = DateAndTimeManager.getInstance();
-		try {
-			numberString = parser.convertToSecond(input);
-		} catch (NullTimeUnitException | NullTimeValueException e) {
-			InputManager.outputToGui(e.getMessage());
-			//System.err.println(e.getMessage());
-			numberString = null;
-		}
+		numberString = parser.convertToSecond(input);
+//		try {
+//			numberString = parser.convertToSecond(input);
+//		} catch (NullTimeUnitException | NullTimeValueException e) {
+//			//InputManager.outputToGui(e.getMessage());
+//			numberString = null;
+//		}
 		return numberString;
 	}
 
@@ -93,7 +104,6 @@ public class Alarm{
 			time = Integer.parseInt(numberString);
 		} catch (NumberFormatException e){
 			InputManager.outputToGui(String.format(MESSAGE_NUMBER_ERROR, numberString));
-			System.err.println(e.getMessage());
 			time = -1;
 		}
 		return time;
