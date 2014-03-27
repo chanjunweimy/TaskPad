@@ -1,10 +1,14 @@
 package com.taskpad.input;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.TimeObject;
 
 public class Add extends Command {
 
@@ -22,7 +26,6 @@ public class Add extends Command {
 	private static String PARAMETER_START_TIME = "START TIME";
 	private static String PARAMETER_END_DATE = "END DATE";
 	private static String PARAMETER_END_TIME = "END TIME";
-	private static String PARAMETER_CATEGORY = "CATEGORY";
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_INFO = "INFO";
 	private static String PARAMETER_VENUE = "VENUE";
@@ -94,7 +97,6 @@ public class Add extends Command {
 
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_CATEGORY, STRING_EMPTY);
 		putOneParameter(PARAMETER_DEADLINE, STRING_EMPTY);
 		putOneParameter(PARAMETER_DESCRIPTION, STRING_EMPTY); 
 		putOneParameter(PARAMETER_START_DATE, STRING_EMPTY);
@@ -107,7 +109,7 @@ public class Add extends Command {
 
 	@Override
 	protected void putInputParameters() {
-		
+		//do nothing
 	}
 	
 	/**
@@ -164,13 +166,62 @@ public class Add extends Command {
 	private void parseNonDelimitedString() {
 		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		String[] splitInput = input.split(STRING_SPACE);
-		extractTimeAndDate(splitInput);
+		String descString = extractTimeAndDate(splitInput);
 
+		if (descAlreadyEntered()){
+			inputInfo(descString);
+		} else {
+			inputDesc(descString);
+		}
 	}
 
-	private void extractTimeAndDate(String[] splitInput) {
-		// TODO Auto-generated method stub
+	/**
+	 * For each input index, if it is date, put in date; if it is time, put in time
+	 * Otherwise, string them together as description
+	 * @param splitInput
+	 */
+	private String extractTimeAndDate(String[] splitInput) {
+		ArrayList<String> dateArray = new ArrayList<String>();
+		ArrayList<String> timeArray = new ArrayList<String>();
 		
+		String newInput = STRING_EMPTY;
+
+		
+		for (int i=0; i<splitInput.length; i++){
+			String inputString = stripWhiteSpaces(splitInput[i]);
+			
+			DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputString);
+			if (dateObject != null){
+				dateArray.add(dateObject.getParsedDate());
+			} else{
+				TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputString);
+				if (timeObject != null){
+					timeArray.add(timeObject.getParsedTime());
+				} else {
+					newInput += inputString + STRING_SPACE;
+				}
+			}
+		}		
+		
+		orderDateArray(dateArray);
+		orderTimeArray(timeArray);
+		
+		return newInput;
+		
+	}
+
+
+	private void orderTimeArray(ArrayList<String> timeArray) {
+		Collections.sort(timeArray);
+		inputStartTime(timeArray.get(0));
+		inputEndTime(timeArray.get(1));
+	}
+
+	private void orderDateArray(ArrayList<String> dateArray) {
+		Collections.sort(dateArray);
+		inputDeadline(dateArray.get(0));
+		inputStartDate(dateArray.get(1));
+		inputEndDate(dateArray.get(2));
 	}
 
 	private void parseDelimitedString() {
@@ -225,6 +276,49 @@ public class Add extends Command {
 		}
 		inputDeadline(param);
 	}
+	
+	private void parseNextParam(String param) {
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param);
+
+		switch (firstChar){
+		case "d":
+			getDeadline(param);
+			break;
+		case "v":
+			inputVenue(param);
+			break;
+		case "s":
+			getStartDetails(param);
+			break;
+		case "e": 
+			getEndDetails(param);
+			break;
+		default:
+			_invalidParameters = true;
+		}		
+	}
+	
+	private void getStartDetails(String param){
+		String[] splitParam = param.split(STRING_SPACE);
+	}
+	
+	private void getEndDetails(String param){
+		
+	}
+
+	private String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
+	}
+	
+	private String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
+	}
+	
+	private boolean descAlreadyEntered(){
+		return inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY;
+	}
 
 	private void inputDeadline(String deadline) {
 		putOneParameter(PARAMETER_DEADLINE, deadline);		
@@ -234,9 +328,28 @@ public class Add extends Command {
 		putOneParameter(PARAMETER_DESCRIPTION, desc);		
 	}
 	
-	private void parseNextParam(String trim) {
-		// TODO Auto-generated method stub
-		
+	private void inputInfo(String info){
+		putOneParameter(PARAMETER_INFO, info);
+	}
+	
+	private void inputStartDate(String date){
+		putOneParameter(PARAMETER_START_DATE, date);
+	}
+	
+	private void inputEndDate(String date){
+		putOneParameter(PARAMETER_END_DATE, date);
+	}
+	
+	private void inputStartTime(String time){
+		putOneParameter(PARAMETER_START_TIME, time);
+	}
+	
+	private void inputEndTime(String time){
+		putOneParameter(PARAMETER_END_TIME, time);
+	}
+	
+	private void inputVenue(String venue){
+		putOneParameter(PARAMETER_VENUE, venue);
 	}
 	
 	private String stripWhiteSpaces(String input){
