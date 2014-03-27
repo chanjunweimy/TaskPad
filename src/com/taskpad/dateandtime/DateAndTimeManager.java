@@ -19,6 +19,15 @@ import com.taskpad.ui.GuiManager;
  * 
  */
 public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
+	/*
+	 * DEPRECATED private static final String SPACE = " "; private final static
+	 * String ERROR = "ERROR!"; private final static int CONVERT = 60; private
+	 * static final Exception EXCEPTION_INVALID_INPUT = new Exception();//don't
+	 * know choose which private static final String EMPTY = "";
+	 * 
+	 * 
+	 * private static int _multiple = 1;
+	 */
 
 	private static DateAndTime _dateAndTimeObject = null;
 
@@ -109,17 +118,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		}
 	};
 	
-	/**
-	 * formatDateAndTimeInString
-	 * This method takes in an input string and returns the string 
-	 * with all the number words converted to numbers, special words converted to date
-	 * and time words converted to time
-	 */
-	public String formatDateAndTimeInString(String input){
-		return DateAndTimeRetriever.formatDateAndTimeInString(input);
-	}
-	
-	
+
 	/**
 	 * parse a day (such as Monday to int)
 	 * @param dayString
@@ -238,6 +237,16 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	protected boolean isNumber(String numberString) {
 		NumberParser parser = NumberParser.getInstance();
 		return parser.parseTheNumbers(numberString) != null;
+	}
+	
+	/**
+	 * To parse day to date
+	 * @throws DatePassedException 
+	 * @throws InvalidDayException 
+	 */
+	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToDate(input);
 	}
 
 	/*

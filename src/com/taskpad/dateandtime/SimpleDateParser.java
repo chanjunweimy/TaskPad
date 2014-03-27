@@ -127,16 +127,16 @@ public class SimpleDateParser {
 		} catch (DatePassedException e) {
 			try {
 				dateString = formatDate(input);
+				
+				if (dateString == null){
+					throw e;
+				}
 			} catch (DatePassedException e1) {
 				throw e1;
 			}
 		}
 		
-		try {
-			dateString = formatDate(input);
-		} catch (DatePassedException e) {
-			throw e;
-		}
+		dateString = formatDate(input);
 
 		if (dateString == null){
 			dateString = dateStringWithoutYear;
@@ -166,6 +166,7 @@ public class SimpleDateParser {
 				}*/
 				
 				date = setYear(date);
+				
 				
 				if (isPassed(date) ){
 					throw new DatePassedException();
@@ -229,7 +230,7 @@ public class SimpleDateParser {
 		return dateString;
 	}
 	
-	/* Testing
+	///* Testing
 	public static void main (String[] args){
 		//System.out.println(formatDate("13-12-14"));
 		//System.out.println(formatDate("13 12 2014"));
@@ -239,6 +240,12 @@ public class SimpleDateParser {
 		//System.out.println(formatDate("011214"));
 		//System.out.println(formatDateWithoutYear("03 01"));  //Will use system year at 1970
 		//System.out.println(formatDate("Oct 18,93"));
+		try {
+			System.out.println(formatDateWithoutYear("1 January"));
+		} catch (DatePassedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	//*/
 }

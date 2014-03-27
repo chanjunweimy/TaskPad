@@ -193,8 +193,6 @@ public class TestTimeParser {
 			assertEquals(e.getMessage(), MESSAGE_INVALID);
 			e.printStackTrace();
 		}
-
-
 	}
 
 }

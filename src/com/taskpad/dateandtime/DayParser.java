@@ -68,12 +68,12 @@ public class DayParser {
 	 * @throws InvalidDayException 
 	 * @throws DatePassedException 
 	 */
-	protected String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
+	protected String parseDayToDate(String input) throws DatePassedException, InvalidDayException{
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		
 		for (String todayVariation : DAY_TODAY){
 			if (todayVariation.equals(input)){
-				return datm.getTodayDateAndTime();
+				return datm.getTodayDate();
 			}
 		}
 		
@@ -83,17 +83,26 @@ public class DayParser {
 		String[] analyzes = input.split(SPACE);
 		int len = analyzes.length;
 
-		int userDay = parseDayToInt(analyzes[len - 1]);
+		int userDay = -1;
+		try {
+			userDay = parseDayToInt(analyzes[len - 1]);
+		} catch (InvalidDayException e) {
+			//do nothing
+		}
 
 		boolean isDay = userDay >= 0 && userDay < 7;
 		if (isDay){
-			specialDay = input.substring(input.lastIndexOf(analyzes[len - 1])).trim();
+			specialDay = input.substring(0, input.lastIndexOf(analyzes[len - 1])).trim();
 			specialDay = swp.parseSpecialDay(specialDay, userDay);
 		} else {
-			specialDay = input.substring(input.lastIndexOf(analyzes[len - 1])).trim();
+			specialDay = input.substring(0, input.lastIndexOf(analyzes[len - 1])).trim();
 			specialDay = swp.parseSpecialDay(specialDay, analyzes[len - 1]);
 		}
 		
+		if (specialDay != null){
+			specialDay = specialDay.split(SPACE)[0];
+		}
+
 		return specialDay;
 	}
 	
@@ -124,10 +133,10 @@ public class DayParser {
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
 		try {
-			System.out.println(a.parseDayToInt("MON"));
-		} catch (InvalidDayException e) {
+			System.out.println(a.parseDayToDate("nxt Monday"));
+		} catch (InvalidDayException | DatePassedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	//*/
