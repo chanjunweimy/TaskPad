@@ -226,18 +226,9 @@ public class Add extends Command {
 
 	private void parseDelimitedString() {
 		checkAndRemoveDate();
-		int count = 0;
-		
-		_sc = new Scanner(input).useDelimiter("\\s-");
-		while(_sc.hasNext()){
-			String nextParam = _sc.next();
-			if (count == 0){
-				inputDesc(nextParam.trim());
-			} else {
-				parseNextParam(nextParam.trim());
-			}
-			count++;
-		}
+		checkAndRemoveVenue();
+		checkAndRemoveStart();
+		checkAndRemoveEnd();
 	}
 
 	private boolean checkIfDelimitedString() {
@@ -265,6 +256,52 @@ public class Add extends Command {
 		}
 		input = newInput;
 	}
+	
+	private void checkAndRemoveVenue() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-v")){
+				
+				
+			} else {
+
+			}
+		}
+		input = newInput;
+	}
+	
+	private void checkAndRemoveStart() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-s")){
+
+				
+			} else {
+
+			}
+		}
+		input = newInput;
+	}
+	
+	private void checkAndRemoveEnd() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-s")){
+
+				
+			} else {
+
+			}
+		}
+		input = newInput;
+	}
+	
 
 	private void getDeadline(String param) {
 		param = stripWhiteSpaces(param);
@@ -300,11 +337,50 @@ public class Add extends Command {
 	}
 	
 	private void getStartDetails(String param){
-		String[] splitParam = param.split(STRING_SPACE);
+		//check for commas or space, see which one to split
+		String[] inputParams = splitByCommaOrSpace(param);
+		inputParams = findDateTime(inputParams);
+		
+		inputStartDate(inputParams[0]);
+		inputStartTime(inputParams[1]);
 	}
 	
 	private void getEndDetails(String param){
+		String[] inputParams = splitByCommaOrSpace(param);
+		inputParams = findDateTime(inputParams);
 		
+		inputEndDate(inputParams[0]);
+		inputEndTime(inputParams[1]);
+	}
+
+	private String[] findDateTime(String[] inputParams) {
+		String[] dateTime = {STRING_EMPTY, STRING_EMPTY};
+		boolean gotDate = false;
+		boolean gotTime = false;
+		
+		for (int i=0; i<inputParams.length; i++){
+			if (!gotDate){
+				DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputParams[i].trim());
+				if (dateObject != null){
+					dateTime[0] = dateObject.getParsedDate();
+					gotDate = true;
+				} else if (!gotTime){
+					TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputParams[i].trim());
+					dateTime[1] = timeObject.getParsedTime();
+					gotTime = true;
+				}
+			} 
+		}
+		
+		return dateTime;
+	}
+
+	private String[] splitByCommaOrSpace(String param) {
+		if (param.contains(STRING_COMMA)){
+			return param.split(STRING_COMMA);
+		}else {
+			return param.split(STRING_SPACE);
+		}
 	}
 
 	private String removeFirstChar(String input) {
