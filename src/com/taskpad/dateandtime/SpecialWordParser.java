@@ -125,8 +125,12 @@ public class SpecialWordParser {
 		int todayDayStat = getTodayDay(todayDay);
 		int nxt = 1;
 		
+		//System.out.println(todayDay + " " + todayDayStat);
+		
 		if (specialDay.equals(EMPTY)){
-			nxt++;
+			if (userDay < todayDayStat){
+				nxt++;
+			}
 			return getNextDay(userDay, twp, todayDayStat, nxt, "d");
 		}
 

@@ -37,11 +37,27 @@ public class DayParser {
 		
 		"sun",
 		"mon",
-		"tues",
+		"tue",
 		"wed",
-		"thurs",
+		"thu",
 		"fri",
-		"sat"
+		"sat",
+		
+		"sund",
+		"mond",
+		"tues",
+		"wedn",
+		"thur",
+		"frid",
+		"satd",
+		
+		"sunda",
+		"munda",
+		"tuesd",
+		"wedne",
+		"thurs",
+		"frida",
+		"satur"
 	};
 	
 	private static DayParser _parseDay = new DayParser();
@@ -133,7 +149,7 @@ public class DayParser {
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
 		try {
-			System.out.println(a.parseDayToDate("nxt Monday"));
+			System.out.println(a.parseDayToDate("next fri"));
 		} catch (InvalidDayException | DatePassedException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
