@@ -133,6 +133,7 @@ public class Addrem extends Command{
 	}
 	
 	private void splitInputNoDelimiters(){
+		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		String[] splitInput = input.split(SPACE);
 		
 		if(isInvalidParameters(splitInput.length)){

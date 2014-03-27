@@ -93,11 +93,14 @@ public class DateAndTimeRetriever {
 	protected static String formatDateAndTimeInString(String input) {
 		//step one: convert all number words to numbers using number parser
 		//step two: find holiday words and replace with date
+		//input = HolidayDates.getInstance().replaceHolidayDate(input);
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
-		//step four: find PM or AM words and find time unit before and replace with time
-		//return that string to parse in respective Add/Addrem/Alarm classes
+		//step four: find dates -- find month words & find number before and after
+		//step four b: find dates -- find three consecutive numbers and try parse as date
+		//step five: find PM or AM words and find time unit before and replace with time
 		
-		return null;
+		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
+		return input;
 	}
 
 	
