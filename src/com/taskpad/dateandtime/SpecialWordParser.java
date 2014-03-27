@@ -22,19 +22,18 @@ public class SpecialWordParser {
 
 	//private static Map<Integer, String[]> MAP_SPECIAL_WORD = new HashMap<Integer, String[]>();
 	private static Map<String, Integer> MAP_SPECIAL_WORD = new HashMap<String, Integer>();
-	
-	private static SpecialWordParser _specialWordParser = new SpecialWordParser();
-	
+	private static Map<String, Integer> MAP_DAY = new HashMap<String, Integer>();
+		
 	private static final String[] MAP_TMR = {
-		"TMR", "TOMORROW", "TOMORRO"
+		"TMR", "TOMORROW", "TOMORRO", "TOM"
 	};
 	
 	private static final String[] MAP_YTD = {
-		"YTD", "YESTERDAY"
+		"YTD", "YESTERDAY", "YEST"
 	};
 	
 	private static final String[] MAP_WK = {
-		"WK", "WEEK"
+		"WK", "WEEK", "WEK"
 	};
 	
 	private static final String[] MAP_NXT = {
@@ -49,6 +48,8 @@ public class SpecialWordParser {
 		"THIS"
 	};
 	
+	private static SpecialWordParser _specialWordParser = new SpecialWordParser();
+	
 	private SpecialWordParser(){
 		initialiseSpecialWordMap();
 	}
@@ -61,6 +62,7 @@ public class SpecialWordParser {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		String todayDay = datm.getTodayDay();
 		int userDay = -1;
+		lastWord = lastWord.toUpperCase();
 		
 		userDay = getTodayDay(todayDay);
 		for (String myWk : MAP_WK){
@@ -69,21 +71,50 @@ public class SpecialWordParser {
 			}
 		}
 		
+		int day = 0;
 		for (String myYtd : MAP_YTD){
 			if (myYtd.equals(lastWord)){
-				userDay--;
-				return parseSpecialDay(specialDay, userDay);
+				day--;
 			}
 		}
 		
 		for (String myTmr : MAP_TMR){
 			if (myTmr.equals(lastWord)){
-				userDay++;
-				return parseSpecialDay(specialDay, userDay);
+				day++;
 			}
 		}
 		
-		throw new InvalidDayException(DAY_INVALID);
+		specialDay = specialDay.toUpperCase();
+		String[] tokens = specialDay.split(SPACE);
+		
+		for (int i = tokens.length - 1; i >=0 ; i--){
+			Integer value = MAP_DAY.get(tokens[i]);
+			
+			if (value == null){
+				break;
+			}
+			
+			day += value.intValue();
+			
+		}
+		if (day < 0){
+			throw new InvalidDayException(DAY_INVALID);
+		}
+		
+		TimeWordParser twp = TimeWordParser.getInstance();
+		String ans = null;
+		try {
+			ans = twp.timeWord(day + "d");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			//it won't happen
+		}
+		
+		if (ans != null){
+			return ans;
+		} else {
+			throw new InvalidDayException(DAY_INVALID);
+		}
+		
 	}
 	
 	protected String parseSpecialDay(String specialDay, int userDay) throws DatePassedException{
@@ -94,10 +125,11 @@ public class SpecialWordParser {
 		int todayDayStat = getTodayDay(todayDay);
 		int nxt = 1;
 		
-		if (specialDay == SpecialWordParser.EMPTY){
+		if (specialDay.equals(EMPTY)){
+			nxt++;
 			return getNextDay(userDay, twp, todayDayStat, nxt, "d");
 		}
-		
+
 		specialDay = specialDay.toUpperCase();
 		
 		nxt = calculateNext(specialDay, nxt);
@@ -119,7 +151,7 @@ public class SpecialWordParser {
 		
 		while (sc.hasNext()){
 			String specialToken = sc.next();
-			
+
 			Integer ans = MAP_SPECIAL_WORD.get(specialToken);
 			
 			if (ans == null){
@@ -139,17 +171,17 @@ public class SpecialWordParser {
 	 * @param nxt
 	 */
 	private String getNextDay(int userNum, TimeWordParser twp, int systemNum, int nxt, String unit) {
-		systemNum -= userNum;
+		userNum -= systemNum;
 		
-		if (systemNum <= 0){
-			systemNum += DAY_WEEK;
-		}
+		//if (userNum <= 0){
+		//	userNum += DAY_WEEK;
+		//}
 		
 		nxt--;
-		systemNum += DAY_WEEK * nxt;
+		userNum += DAY_WEEK * nxt;
 		
 		try {
-			return twp.timeWord(systemNum + unit);
+			return twp.timeWord(userNum + unit);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
 			assert (false);
 		}
@@ -189,6 +221,7 @@ public class SpecialWordParser {
 	protected String parseSpecialWord(String specialWord, int seconds){
 		int nxt = 0;
 		nxt = calculateNext(specialWord, nxt);
+		System.out.println(nxt);
 		
 		seconds *= nxt;
 		
@@ -221,17 +254,19 @@ public class SpecialWordParser {
 		initializeTmrMap();
 	}
 
+	
 	private void initializeTmrMap() {
 		for (String myTmr : MAP_TMR){
-			MAP_SPECIAL_WORD.put(myTmr, +1);
+			MAP_DAY.put(myTmr, +1);
 		}
 	}
 
 	private void initializeYtdMap() {
 		for (String myYtd : MAP_YTD){
-			MAP_SPECIAL_WORD.put(myYtd, -1);
+			MAP_DAY.put(myYtd, -1);
 		}
 	}
+	
 
 	private void initializeThisMap() {
 		for (String myThis : MAP_THIS){

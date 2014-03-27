@@ -291,6 +291,12 @@ public class TestDateParser {
 		testDateCommand("01 06", "01/06/2014");
 	}
 	
+	/*test those exceptions*/
+	@Test
+	public void test56(){
+		testDateCommand("01 02 2015", "01/02/2015");
+	}
+	
 	/*We test invalid dates*/
 	
 	/*We only support date-month-year*/
@@ -413,6 +419,16 @@ public class TestDateParser {
 	@Test
 	public void invalid33(){
 		testInvalidDateCommand("100 October,14", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid34(){
+		testInvalidDateCommand("1 1", DATE_PASSED);
+	}
+	
+	@Test
+	public void invalid35(){
+		testInvalidDateCommand("1 January", DATE_PASSED);
 	}
 	
 	
