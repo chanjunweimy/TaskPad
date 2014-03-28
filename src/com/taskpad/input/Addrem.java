@@ -1,12 +1,17 @@
 package com.taskpad.input;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
+import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
+import com.taskpad.ui.GuiManager;
 
 public class Addrem extends Command{
 	
@@ -43,6 +48,8 @@ public class Addrem extends Command{
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		
 		sc = new Scanner(System.in);
+		_dateObject = null;
+		_timeObject = null;
 	}
 
 	@Override
@@ -53,6 +60,14 @@ public class Addrem extends Command{
 			splitInputNoDelimiters();
 		}
 		
+		//putInputParameters();
+		
+		try {
+			checkTimeAndDate();
+		} catch (DatePassedException e) {
+			GuiManager.callOutput(e.getMessage());
+		}
+				
 		if (_invalidParameters){
 			return false;
 		}
@@ -136,8 +151,10 @@ public class Addrem extends Command{
 		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		String[] splitInput = input.split(SPACE);
 		
-		if(isInvalidParameters(splitInput.length)){
-			_invalidParameters = true;
+		try {
+			checkIfInvalidParameters(splitInput.length);
+		} catch (InvalidParameterException e) {
+			GuiManager.callOutput(e.getMessage());
 			return;
 		};
 		
@@ -207,11 +224,12 @@ public class Addrem extends Command{
 		}
 	}
 	
-	private boolean isInvalidParameters(int length){
+	private boolean checkIfInvalidParameters(int length) throws InvalidParameterException{
 		if (length == NUMBER_ARGUMENTS || length == NUMBER_ARGUMENTS + 1){
-			return false;
+			return true;
+		} else{
+			throw new InvalidParameterException();
 		}
-		return true;
 	}
 	
 	/* deprecated for flexiCommands without delimiters
@@ -257,6 +275,63 @@ public class Addrem extends Command{
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
+	}
+	
+	/** TO JUNWEI: I think got bug in this method :( 
+	 * 
+	 * Checks if the rem time and date added is after current time and date
+	 * If so, throw exception, and populate invalidParameters
+	 * @throws DatePassedException 
+	 */
+	private void checkTimeAndDate() throws DatePassedException {
+		Date now = new Date();
+		Date date = null;
+		date = parseRemDateAndTime(date);
+		
+		System.out.println(now.toString() + " " + date.toString());
+		
+		//It goes in this loop here :( 
+		if (now.compareTo(date) > 0){
+			_invalidParameters = true;
+			throw new DatePassedException();
+		}
+	}
+
+	private Date parseRemDateAndTime(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm");
+		String enteredDateAndTime = formatRemString();
+		try {
+			date = sdf.parse(enteredDateAndTime);
+		} catch (ParseException e) {
+			//Do nothing
+		}
+		return date;
+	}
+	
+	private String formatRemString(){
+		String dateString = formatParaDate() + " " + formatParaTime();
+		return dateString;
+	}
+	
+	private String formatParaDate(){
+		String dateString = "";
+		if (_remDate.equals("")){
+			dateString += DateAndTimeManager.getInstance().getTodayDate();
+		}else {
+			dateString += _remDate;
+		}
+		return dateString;
+	}
+	
+	private String formatParaTime(){
+		String timeString = "";
+		if(_remTime.equals("")){
+			timeString += DateAndTimeManager.getInstance().getTodayTime();
+		}else {
+			timeString += _remTime;
+		}
+		
+		return timeString;
 	}
 	
 	private String removeFirstChar(String input) {

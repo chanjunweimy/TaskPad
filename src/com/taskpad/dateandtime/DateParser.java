@@ -12,12 +12,12 @@ import java.util.Date;
  *
  */
 
-public class SimpleDateParser {
+public class DateParser {
 
 	//private static final String STRING_EMPTY = "";
 	//private static final String DATE_INVALID = "Not a valid date";
 	private static SimpleDateFormat _formatter = new SimpleDateFormat("dd/MM/yyyy");
-	private static SimpleDateParser _dateParser = new SimpleDateParser();
+	private static DateParser _dateParser = new DateParser();
 	
 	private static final String[] _dateWithoutYear = {
 		"d MMM", "MMM d", "dMMM", "MMMd",
@@ -81,10 +81,10 @@ public class SimpleDateParser {
 		 */
 	};
 	
-	private SimpleDateParser(){
+	private DateParser(){
 	}
 	
-	protected static SimpleDateParser getInstance(){
+	protected static DateParser getInstance(){
 		return _dateParser;
 	}
 	

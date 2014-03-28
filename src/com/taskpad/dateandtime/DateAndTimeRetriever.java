@@ -61,7 +61,7 @@ public class DateAndTimeRetriever {
 	/* Helper method for checking valid date in a String */
 	private static String isValidDate(String input){
 		input = trimInput(input);
-		SimpleDateParser dateParser = SimpleDateParser.getInstance();
+		DateParser dateParser = DateParser.getInstance();
 		try {
 			return dateParser.parseDate(input);
 		} catch (DatePassedException | InvalidDateException e) {
