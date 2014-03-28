@@ -1,7 +1,11 @@
 package com.taskpad.input;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -16,7 +20,6 @@ public class Add extends Command {
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_DASH = "-";
 	private static final String STRING_SPACE = " ";
-	private static final String STRING_COMMA = ",";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -27,12 +30,10 @@ public class Add extends Command {
 	private static String PARAMETER_END_DATE = "END DATE";
 	private static String PARAMETER_END_TIME = "END TIME";
 	private static String PARAMETER_DESCRIPTION = "DESC";
-	private static String PARAMETER_INFO = "INFO";
-	private static String PARAMETER_VENUE = "VENUE";
+	//private static String PARAMETER_INFO = "INFO";
 	
 	private static Scanner _sc; 
 	private static boolean _invalidParameters = false;
-	private static boolean noDescInQuotes = false;
 	
 	public Add(String input, String fullInput) {
 		super(input, fullInput);
@@ -66,15 +67,7 @@ public class Add extends Command {
 
 	@Override
 	protected boolean commandSpecificRun() {
-		String inputDesc = putDescInQuotesFirst(input);
-		
-		if (inputDesc.equals(STRING_EMPTY)){
-			//means no description in quotes 
-			noDescInQuotes = true;
-		} else {
-			//continue parsing the rest - what's not date and time is info
-			noDescInQuotes = false;
-		}
+		input = putDescInQuotesFirst(input);
 		
 		if(checkIfDelimitedString()){
 			parseDelimitedString();
@@ -102,9 +95,8 @@ public class Add extends Command {
 		putOneParameter(PARAMETER_START_DATE, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_DATE, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_TIME, STRING_EMPTY);
-		putOneParameter(PARAMETER_INFO, STRING_EMPTY);
+		//putOneParameter(PARAMETER_INFO, STRING_EMPTY);
 		putOneParameter(PARAMETER_START_TIME, STRING_EMPTY);
-		putOneParameter(PARAMETER_VENUE, STRING_EMPTY);		
 	}
 
 	@Override
@@ -168,9 +160,7 @@ public class Add extends Command {
 		String[] splitInput = input.split(STRING_SPACE);
 		String descString = extractTimeAndDate(splitInput);
 
-		if (descAlreadyEntered()){
-			inputInfo(descString);
-		} else {
+		if (!descAlreadyEntered()){
 			inputDesc(descString);
 		}
 	}
@@ -185,7 +175,6 @@ public class Add extends Command {
 		ArrayList<String> timeArray = new ArrayList<String>();
 		
 		String newInput = STRING_EMPTY;
-
 		
 		for (int i=0; i<splitInput.length; i++){
 			String inputString = stripWhiteSpaces(splitInput[i]);
@@ -210,7 +199,6 @@ public class Add extends Command {
 		
 	}
 
-
 	private void orderTimeArray(ArrayList<String> timeArray) {
 		Collections.sort(timeArray);
 		inputStartTime(timeArray.get(0));
@@ -218,23 +206,50 @@ public class Add extends Command {
 	}
 
 	private void orderDateArray(ArrayList<String> dateArray) {
-		Collections.sort(dateArray);
+		dateArray = sortDateArray(dateArray);
 		inputDeadline(dateArray.get(0));
 		inputStartDate(dateArray.get(1));
 		inputEndDate(dateArray.get(2));
 	}
 
+	private ArrayList<String> sortDateArray(ArrayList<String> dateArray) {
+		ArrayList<Date> dates = convertStringToDates(dateArray);
+
+		Collections.sort(dates, new Comparator<Date>(){
+			@Override
+			public int compare(Date d1, Date d2) {
+				return d1.compareTo(d2);
+			}
+		});
+		
+		return null;
+	}
+
+	private ArrayList<Date> convertStringToDates(ArrayList<String> dateArray) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		ArrayList<Date> dates = new ArrayList<Date>();
+		
+		for (int i=0; i<dateArray.size(); i++){
+			try {
+				dates.add(sdf.parse(dateArray.get(i)));
+			} catch (ParseException e) {
+				//do nothing
+			}
+		}
+		
+		return dates;
+	}
+
 	private void parseDelimitedString() {
 		checkAndRemoveDate();
-		checkAndRemoveVenue();
 		checkAndRemoveStart();
 		checkAndRemoveEnd();
+		checkAndInputDesc();
 	}
 
 	private boolean checkIfDelimitedString() {
 		String inputToCheck = input.toLowerCase();
-		if (inputToCheck.contains("-d") || inputToCheck.contains("-s") || 
-				inputToCheck.contains("-e") || inputToCheck.contains("-v")){
+		if (inputToCheck.contains("-d") || inputToCheck.contains("-s") || inputToCheck.contains("-e")){
 			return true;
 		}
 		
@@ -251,22 +266,7 @@ public class Add extends Command {
 				getDeadline(splitInput[i+1]);
 				splitInput[i+1] = STRING_EMPTY;
 			} else {
-				newInput += splitInput[i] + " ";
-			}
-		}
-		input = newInput;
-	}
-	
-	private void checkAndRemoveVenue() {
-		String[] splitInput = input.split(STRING_SPACE);
-		String newInput = STRING_EMPTY;
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].toLowerCase().equals("-v")){
-				
-				
-			} else {
-
+				newInput += splitInput[i] + STRING_SPACE;
 			}
 		}
 		input = newInput;
@@ -275,31 +275,92 @@ public class Add extends Command {
 	private void checkAndRemoveStart() {
 		String[] splitInput = input.split(STRING_SPACE);
 		String newInput = STRING_EMPTY;
+		String param = STRING_EMPTY;
+		int index = -1;
 		
 		for (int i=0; i<splitInput.length; i++){
 			if (splitInput[i].toLowerCase().equals("-s")){
-
+				index = i;
+				splitInput[i] = STRING_DASH;
+				if (findTimeOrDate(splitInput[i+1])){
+					param += splitInput[i+1] + STRING_SPACE;
+					splitInput[i+1] = STRING_DASH;
+				} 
 				
-			} else {
+				if (findTimeOrDate(splitInput[i+2])){
+					param += splitInput[i+2] + STRING_SPACE;
+					splitInput[i+2] = STRING_DASH;
+				} 
+			} 
+		}
+		
+		newInput = constructNewInputString(splitInput, newInput, index);
 
+		getStartDetails(param);
+		input = newInput;
+	}
+
+	private static String constructNewInputString(String[] splitInput,
+			String newInput, int index) {
+		if (index != -1){
+			for (int i=0; i<splitInput.length; i++){
+				if (splitInput[i].equals(STRING_DASH)){
+					continue;
+				} else {
+					newInput += splitInput[i].trim() + STRING_SPACE;
+				}
 			}
 		}
-		input = newInput;
+		return newInput;
 	}
 	
 	private void checkAndRemoveEnd() {
 		String[] splitInput = input.split(STRING_SPACE);
 		String newInput = STRING_EMPTY;
+		String param = STRING_EMPTY;
+		int index = -1;
 		
 		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].toLowerCase().equals("-s")){
-
+			if (splitInput[i].toLowerCase().equals("-e")){
+				index = i;
+				splitInput[i] = STRING_DASH;
+				if (findTimeOrDate(splitInput[i+1])){
+					param += splitInput[i+1] + STRING_SPACE;
+					splitInput[i+1] = STRING_DASH;
+				} 
 				
-			} else {
+				if (findTimeOrDate(splitInput[i+2])){
+					param += splitInput[i+2] + STRING_SPACE;
+					splitInput[i+2] = STRING_DASH;
+				} 
+			} 
+		}
+		
+		newInput = constructNewInputString(splitInput, newInput, index);
 
+		getEndDetails(param);
+		input = newInput;
+	}
+	
+	private void checkAndInputDesc(){
+		if (inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY){
+			inputDesc(input);
+		}
+	}
+	
+	private boolean findTimeOrDate(String param){
+		param = param.trim();		
+		
+		DateObject dateObject = DateAndTimeManager.getInstance().findDate(param);
+		if (dateObject != null){
+			return true;
+		} else {
+			TimeObject timeObject = DateAndTimeManager.getInstance().findTime(param);
+			if (timeObject != null){
+				return true;
 			}
 		}
-		input = newInput;
+		return false;
 	}
 	
 
@@ -314,31 +375,8 @@ public class Add extends Command {
 		inputDeadline(param);
 	}
 	
-	private void parseNextParam(String param) {
-		String firstChar = getFirstChar(param);
-		param = removeFirstChar(param);
-
-		switch (firstChar){
-		case "d":
-			getDeadline(param);
-			break;
-		case "v":
-			inputVenue(param);
-			break;
-		case "s":
-			getStartDetails(param);
-			break;
-		case "e": 
-			getEndDetails(param);
-			break;
-		default:
-			_invalidParameters = true;
-		}		
-	}
-	
 	private void getStartDetails(String param){
-		//check for commas or space, see which one to split
-		String[] inputParams = splitByCommaOrSpace(param);
+		String[] inputParams = splitBySpace(param);
 		inputParams = findDateTime(inputParams);
 		
 		inputStartDate(inputParams[0]);
@@ -346,7 +384,7 @@ public class Add extends Command {
 	}
 	
 	private void getEndDetails(String param){
-		String[] inputParams = splitByCommaOrSpace(param);
+		String[] inputParams = splitBySpace(param);
 		inputParams = findDateTime(inputParams);
 		
 		inputEndDate(inputParams[0]);
@@ -375,21 +413,8 @@ public class Add extends Command {
 		return dateTime;
 	}
 
-	private String[] splitByCommaOrSpace(String param) {
-		if (param.contains(STRING_COMMA)){
-			return param.split(STRING_COMMA);
-		}else {
-			return param.split(STRING_SPACE);
-		}
-	}
-
-	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
-	}
-	
-	private String getFirstChar(String input) {
-		String firstChar = input.trim().split("\\s+")[0];
-		return firstChar;
+	private String[] splitBySpace(String param) {
+		return param.split(STRING_SPACE);
 	}
 	
 	private boolean descAlreadyEntered(){
@@ -402,10 +427,6 @@ public class Add extends Command {
 	
 	private void inputDesc(String desc) {
 		putOneParameter(PARAMETER_DESCRIPTION, desc);		
-	}
-	
-	private void inputInfo(String info){
-		putOneParameter(PARAMETER_INFO, info);
 	}
 	
 	private void inputStartDate(String date){
@@ -424,12 +445,13 @@ public class Add extends Command {
 		putOneParameter(PARAMETER_END_TIME, time);
 	}
 	
-	private void inputVenue(String venue){
-		putOneParameter(PARAMETER_VENUE, venue);
-	}
-	
 	private String stripWhiteSpaces(String input){
 		return input.replaceAll(STRING_SPACE, STRING_EMPTY);
 	}
-
+	
+	/* Testing
+	public static void main(String[] args){
+		checkAndRemoveStart();
+	}
+	//*/
 }
