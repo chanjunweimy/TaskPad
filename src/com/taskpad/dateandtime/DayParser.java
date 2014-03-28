@@ -18,8 +18,6 @@ public class DayParser {
 	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
 	
 	
-	//private static final String DAY_YESTERDAY = "yesterday";
-	//private static final String DAY_TOMORROW = "tomorrow"; 
 	private static final String[] DAY_TODAY = {
 		"today", 
 		"tdy",
@@ -149,7 +147,7 @@ public class DayParser {
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
 		try {
-			System.out.println(a.parseDayToDate("next fri"));
+			System.out.println(a.parseDayToDate("next next prev next fri"));
 		} catch (InvalidDayException | DatePassedException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
