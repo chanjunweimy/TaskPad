@@ -149,7 +149,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws DatePassedException 
 	 */
 	public String parseDate(String dateString) throws DatePassedException, InvalidDateException{
-		SimpleDateParser dateParser = SimpleDateParser.getInstance();
+		DateParser dateParser = DateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
 
