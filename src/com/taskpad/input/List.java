@@ -11,6 +11,11 @@ package com.taskpad.input;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DatePassedException;
+import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.ui.GuiManager;
+
 public class List extends Command{
 
 	private static String COMMAND_LIST = "LIST";
@@ -39,6 +44,11 @@ public class List extends Command{
 
 	@Override
 	protected boolean commandSpecificRun() {
+		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		if(checkIfDateline()){
+			return true; 
+		}
+		
 		if (isInvalidListParameter()){
 			outputInvalidParameter();
 			return false;
@@ -103,6 +113,26 @@ public class List extends Command{
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * For listing by deadline 
+	 * Check if Dateline then input into map
+	 * @return isDeadline
+	 */
+	private boolean checkIfDateline() {
+		boolean isDeadline = false;
+		
+		try {
+			String deadline = DateAndTimeManager.getInstance().parseDate(input);
+			putOneParameter(PARAMETER_LIST_KEY, deadline);
+			isDeadline = true;
+		} catch (DatePassedException | InvalidDateException e) {
+			GuiManager.callOutput(e.getMessage());
+			isDeadline = false;
+		}
+		
+		return isDeadline;
 	}
 	
 	private void initialiseAllVariations(){

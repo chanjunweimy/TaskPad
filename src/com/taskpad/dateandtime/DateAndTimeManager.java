@@ -248,6 +248,17 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		DayParser dayParser = DayParser.getInstance();
 		return dayParser.parseDayToDate(input);
 	}
+	
+	/**
+	 * Takes in a string and formats date and time to TaskPad standards 
+	 * dd/mm/yyyy and hh:mm
+	 * @param input
+	 * @return string with date and time replaced by standard date and time 
+	 * or input string if no date and time exists
+	 */
+	public String formatDateAndTimeInString(String input){
+		return DateAndTimeRetriever.formatDateAndTimeInString(input);
+	}
 
 	/*
 	 * DEPRECATED public String parseTime(String timeString) throws Exception{
