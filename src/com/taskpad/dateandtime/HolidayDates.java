@@ -16,7 +16,7 @@ public class HolidayDates {
 	private static Map<String, String> _holidays = new HashMap<String, String>();
 	private static HolidayDates _holidayDate = new HolidayDates();
 	
-	private static final String STRING_NULL = "";
+	//private static final String STRING_NULL = "";
 	
 	private HolidayDates(){
 		initialiseHolidayMap();
@@ -33,7 +33,7 @@ public class HolidayDates {
 	 */
 	
 	protected static String replaceHolidayDate(String input){	
-		
+		parseHolidayDate(input);
 		return input;
 	}
 
