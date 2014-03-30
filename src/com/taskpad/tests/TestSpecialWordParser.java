@@ -17,50 +17,56 @@ public class TestSpecialWordParser {
 
 	private DateAndTimeManager _specialWordParser = DateAndTimeManager.getInstance();
 	
-	//day parser parts
+	//day parser part
 	@Test
-	public void validTest1() {
+	public void validTestDay1() {
 		testWordCommand("24/03/2014", "MON", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest2() {
+	public void validTestDay2() {
 		testWordCommand("07/04/2014", "NXT NXT MON", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest3() {
+	public void validTestDay3() {
 		testWordCommand("07/04/2014", "NXT NXT NXT PREV MON", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest4() {
+	public void validTestDay4() {
 		testWordCommand("30/03/2014", "NXT WK", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest5() {
+	public void validTestDay5() {
 		testWordCommand("23/03/2014", "THIS WK", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest6() {
+	public void validTestDay6() {
 		testWordCommand("24/03/2014", "THIS MON", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest7() {
+	public void validTestDay7() {
 		testWordCommand("24/03/2014", "TMR", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest8() {
+	public void validTestDay8() {
 		testWordCommand("26/03/2014", "TMR TMR TMR", "23/03/2014 00:01");
 	}
 	
 	@Test
-	public void validTest9() {
+	public void validTestDay9() {
 		testWordCommand("25/03/2014", "tmr tmr TOMORRO TOM TOMORROW YTD YEST YESTERDAY", "23/03/2014 00:01");
+	}
+	
+	//timewordparser part
+	@Test
+	public void validTestTimeWord() {
+		//testWordCommand("25/03/2014", "tmr tmr TOMORRO TOM TOMORROW YTD YEST YESTERDAY", "23/03/2014 00:01");
 	}
 	
 	@Test
