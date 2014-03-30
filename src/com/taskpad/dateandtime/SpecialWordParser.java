@@ -111,6 +111,7 @@ public class SpecialWordParser {
 			ans = twp.timeWord(day + "d");
 		} catch (NullTimeUnitException | NullTimeValueException e) {
 			//it won't happen
+			assert (false);
 		}
 		
 		if (ans != null){
