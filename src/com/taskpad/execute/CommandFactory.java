@@ -37,8 +37,7 @@ public class CommandFactory {
 		if (tasks.size() == 0) {
 			OutputToGui.output("No undone task found.");
 		} else {
-			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
-			OutputToGui.output(text);
+			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 		}
 		
 	}
@@ -51,8 +50,7 @@ public class CommandFactory {
 		if (tasks.size() == 0) {
 			OutputToGui.output("No finished task found.");
 		} else {
-			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
-			OutputToGui.output(text);
+			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 		}
 	}
 
@@ -64,8 +62,7 @@ public class CommandFactory {
 		if (tasks.size() == 0) {
 			OutputToGui.output("No task found.");
 		} else {
-			String text = OutputToGui.generateTextForTasks(tasks, listOfTasks);
-			OutputToGui.output(text);
+			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 		}
 	}
 
@@ -104,8 +101,8 @@ public class CommandFactory {
 		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(listOfTasks, keywords);
 		
 		// pass feedback to GUI
-		String feedback = OutputToGui.generateTextForTasks(results, listOfTasks);
-		OutputToGui.output("Number of tasks found: " + results.size() + "\n\n" + feedback);
+		OutputToGui.output("Number of tasks found: " + results.size() + "\n\n");
+		OutputToGui.outputColorTextForTasks(results, listOfTasks);
 	}
 
 	protected static void edit(String taskIdString, String description) {
@@ -124,8 +121,8 @@ public class CommandFactory {
 
 		Task task = CommandFactoryBackend.markTaskAsDone(taskIdString, listOfTasks);
 
-		OutputToGui.output(OutputToGui.generateTextForOneTask(
-				Integer.parseInt(taskIdString), task));
+		OutputToGui.outputColorTextForOneTask(
+				Integer.parseInt(taskIdString), task);
 	}
 
 	protected static void clear() {
@@ -142,7 +139,7 @@ public class CommandFactory {
 		int index = getIndexById(taskIdString);
 		Task task = CommandFactoryBackend.addInfoToTask(info, listOfTasks, index);
 		
-		OutputToGui.output(OutputToGui.generateTextForOneTask(index + 1, task));
+		OutputToGui.outputColorTextForOneTask(index + 1, task);
 	}
 
 	protected static int getIndexById(String taskIdString) {
