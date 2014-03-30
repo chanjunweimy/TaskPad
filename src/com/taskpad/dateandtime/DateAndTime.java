@@ -44,7 +44,7 @@ public class DateAndTime {
 	protected String getCurrentDay(){
 		setupDateAndTime();
 		
-		SimpleDateFormat formater = new SimpleDateFormat("E");
+		SimpleDateFormat formater = new SimpleDateFormat("EEEE");
 		return formater.format(_today);
 	}
 	

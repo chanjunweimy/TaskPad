@@ -20,17 +20,17 @@ public class TestSpecialWordParser {
 	//day parser part
 	@Test
 	public void validTestDay1() {
-		testWordCommand("24/03/2014", "MON", "23/03/2014 00:01");
+		testWordCommand("24/03/2014", "MOND", "23/03/2014 00:01");
 	}
 	
 	@Test
 	public void validTestDay2() {
-		testWordCommand("07/04/2014", "NXT NXT MON", "23/03/2014 00:01");
+		testWordCommand("07/04/2014", "NXT NXT MONDay", "23/03/2014 00:01");
 	}
 	
 	@Test
 	public void validTestDay3() {
-		testWordCommand("07/04/2014", "NXT NXT NXT PREV MON", "23/03/2014 00:01");
+		testWordCommand("07/04/2014", "NXT NXT NXT PREV MONda", "23/03/2014 00:01");
 	}
 	
 	@Test
