@@ -102,21 +102,30 @@ public class DayParser {
 			userDay = parseDayToInt(analyzes[len - 1]);
 		} catch (InvalidDayException e) {
 			//do nothing
+			//because it maybe is word like tmr
 		}
 
+		specialDay = input.substring(0, input.lastIndexOf(analyzes[len - 1])).trim();
 		boolean isDay = userDay >= 0 && userDay < 7;
 		if (isDay){
-			specialDay = input.substring(0, input.lastIndexOf(analyzes[len - 1])).trim();
 			specialDay = swp.parseSpecialDay(specialDay, userDay);
 		} else {
-			specialDay = input.substring(0, input.lastIndexOf(analyzes[len - 1])).trim();
 			specialDay = swp.parseSpecialDay(specialDay, analyzes[len - 1]);
 		}
 		
+		specialDay = discardTime(specialDay);
+
+		return specialDay;
+	}
+
+	/**
+	 * @param specialDay
+	 * @return
+	 */
+	private String discardTime(String specialDay) {
 		if (specialDay != null){
 			specialDay = specialDay.split(SPACE)[0];
 		}
-
 		return specialDay;
 	}
 	
@@ -147,7 +156,7 @@ public class DayParser {
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
 		try {
-			System.out.println(a.parseDayToDate("next next prev next fri"));
+			System.out.println(a.parseDayToDate("next next prev Sund"));
 		} catch (InvalidDayException | DatePassedException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();

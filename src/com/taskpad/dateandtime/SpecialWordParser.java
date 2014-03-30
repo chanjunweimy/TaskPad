@@ -67,6 +67,10 @@ public class SpecialWordParser {
 		userDay = getTodayDay(todayDay);
 		for (String myWk : MAP_WK){
 			if (myWk.equals(lastWord)){
+				if (specialDay == null || specialDay.trim().isEmpty()){
+					throw new InvalidDayException();
+				}
+				
 				return parseSpecialDay(specialDay, userDay);
 			}
 		}

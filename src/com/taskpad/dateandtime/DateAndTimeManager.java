@@ -29,9 +29,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * private static int _multiple = 1;
 	 */
 
-	private static DateAndTime _dateAndTimeObject = null;
+	private static DateAndTime _dateAndTimeObject = new DateAndTime();
 
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
+	
 
 	private DateAndTimeManager() {
 	}
@@ -53,7 +54,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	@Override
 	public String getTodayTime() {
-		_dateAndTimeObject = new DateAndTime();
+		//_dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentTime();
 	}
 
@@ -64,7 +65,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	@Override
 	public String getTodayDate() {
-		_dateAndTimeObject = new DateAndTime();
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentDate();
 	}
 
@@ -75,7 +76,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	@Override
 	public String getTodayDay() {
-		_dateAndTimeObject = new DateAndTime();
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentDay();
 	}
 
@@ -85,7 +86,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @return String
 	 */
 	public String getTodayDateAndTime() {
-		_dateAndTimeObject = new DateAndTime();
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
 		return _dateAndTimeObject.getCurrentTimeAndDate();
 	}
 
@@ -258,6 +259,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	public String formatDateAndTimeInString(String input){
 		return DateAndTimeRetriever.formatDateAndTimeInString(input);
+	}
+	
+	public void setDebug(String dateString) throws ParseException{
+		_dateAndTimeObject.setDebugDate(dateString);
 	}
 
 	/*
