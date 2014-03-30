@@ -22,7 +22,7 @@ public class OutputToGui {
 	protected static void outputColorTextForOneTask(int taskId, Task task) {
 		String text = "";
 		
-		text = "Task ID:\t\t" + taskId + "\n";
+		text = "Task ID:\t\t" + taskId;
 		GuiManager.showSelfDefinedMessage(text, Color.green, false); 
 		/*
 		text =  taskId + "\n";
@@ -33,7 +33,7 @@ public class OutputToGui {
 		text = "Description:\t";
 		GuiManager.showSelfDefinedMessage(text, Color.green, true);
 		*/
-		text = "Description:\t" + task.getDescription() + "\n";		
+		text = "Description:\t" + task.getDescription();		
 		GuiManager.showSelfDefinedMessage(text, Color.red, false);
 		
 		if (task.getDeadline() != null && !task.getDeadline().equals("")) {
@@ -41,7 +41,7 @@ public class OutputToGui {
 			text = "Deadline:\t";
 			GuiManager.showSelfDefinedMessage(text, Color.pink, true);
 			*/
-			text = "Deadline:\t\t" + task.getDeadline() + "\n";
+			text = "Deadline:\t\t" + task.getDeadline();
 			GuiManager.showSelfDefinedMessage(text, Color.orange, false);
 		}
 		
@@ -57,7 +57,7 @@ public class OutputToGui {
 			text += "Start:\t";
 			GuiManager.showSelfDefinedMessage(text, Color.yellow, true);
 			*/
-			text = "Start:\t\t" + start + "\n";
+			text = "Start:\t\t" + start;
 			GuiManager.showSelfDefinedMessage(text, Color.blue, false);
 		}
 		
@@ -73,7 +73,7 @@ public class OutputToGui {
 			text += "End:\t";
 			GuiManager.showSelfDefinedMessage(text, Color.orange, true);
 			*/
-			text = "End:\t\t" + end + "\n";
+			text = "End:\t\t" + end;
 			GuiManager.showSelfDefinedMessage(text, Color.blue, false);
 		}
 		
@@ -88,7 +88,7 @@ public class OutputToGui {
 			text = "Details:\t";
 			GuiManager.showSelfDefinedMessage(text, Color.red, true);
 			*/
-			text = "Details:\t\t" + task.getDetails() + "\n";
+			text = "Details:\t\t" + task.getDetails();
 			GuiManager.showSelfDefinedMessage(text, new Color(76, 0, 153), false);
 		}
 		

@@ -9,6 +9,9 @@ import com.taskpad.input.Input;
 public class ExecutorManager {
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
+	public static void showReminder() {
+		Reminder.showReminderForToday();
+	}
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
 		logger.info("Executor: "+ command);
