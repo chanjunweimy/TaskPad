@@ -6,7 +6,8 @@ import com.taskpad.alarm.AlarmManager;
 import com.taskpad.input.InputManager;
 
 public class GuiManager {
-	private static final String NEWLINE = "\n\n";
+	//private static final String NEWLINE = "\n\n";		--can i change this... TN
+	private static final String NEWLINE = "\n";
 	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
 	private static InputFrame _inputFrame;
 	private static OutputFrame _outputFrame;
@@ -46,10 +47,12 @@ public class GuiManager {
 
 	public static void callOutput(String out){
 		_outputFrame.addLine(out + NEWLINE);
+		//_outputFrame.addLine(out);	--can i change this... TN
 	}
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
 		_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);
+		//_outputFrame.addSelfDefinedLine(out, c, isBold);	--can i change this... TN
 	}
 
 	public static void startRemindingUser(){
@@ -57,7 +60,8 @@ public class GuiManager {
 	}
 	
 	public static void remindUser(String out){
-		_outputFrame.addReminder(out + NEWLINE);
+		//_outputFrame.addReminder(out + NEWLINE);	--can i change this... TN
+		_outputFrame.addReminder(NEWLINE + out + NEWLINE + NEWLINE);
 	}
 
 	protected static void passInput(String in){
