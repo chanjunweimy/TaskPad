@@ -13,7 +13,7 @@ public class DayParser {
 
 	private static final String SPACE = " ";
 
-	private static final String DAY_INVALID = "Not a valid day";
+	//private static final String DAY_INVALID = "Not a valid day";
 	
 	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
 	
@@ -50,7 +50,7 @@ public class DayParser {
 		"satd",
 		
 		"sunda",
-		"munda",
+		"monda",
 		"tuesd",
 		"wedne",
 		"thurs",
@@ -140,13 +140,13 @@ public class DayParser {
 		//initializeMapWeek();
 		
 		if (input == null){
-			throw new InvalidDayException(DayParser.DAY_INVALID);
+			throw new InvalidDayException();
 		}
 		
 		Integer value = _mapWeek.get(input.toLowerCase());
 		
 		if (value == null){
-			throw new InvalidDayException(DayParser.DAY_INVALID);
+			throw new InvalidDayException();
 		}
 		
 		return value.intValue();

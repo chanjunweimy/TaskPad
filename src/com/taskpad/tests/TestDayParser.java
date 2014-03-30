@@ -9,7 +9,7 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidDayException;
 
 public class TestDayParser {
-	private static final String DAY_INVALID = "Not a valid day";
+	private static final String DAY_INVALID = "Error: Invalid Day";
 
 	/*We test all cases at least once to ensure full path coverage*/
 	@Test
