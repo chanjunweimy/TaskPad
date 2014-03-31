@@ -129,6 +129,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
+		boolean isUpKey = arg0.getKeyCode() == NativeKeyEvent.VK_UP;
 		
 		/**
 		 * @author Jun
@@ -150,8 +151,15 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			switchOffAlarm();
 		} else if (isAltCKey){
 			cancelAlarms();
+		} else if (isUpKey){
+			showPastCommands();
 		}
 	}
+	
+	private void showPastCommands(){
+		GuiManager.outputPastCommands("Hello");
+	}
+	
 
 	private void cancelAlarms() {
 		try {
