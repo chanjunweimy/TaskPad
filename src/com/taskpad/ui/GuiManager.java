@@ -46,14 +46,13 @@ public class GuiManager {
 
 	public static void callOutput(String out){
 		_outputFrame.addLine(out + NEWLINE);	
-		//_outputFrame.addLine(out);	
 	}
 	
 	public static void callOutputNoLine(String out){
 		_outputFrame.addLine(out);
 	}
 	
-	public static void outputPastCommands(String out){
+	public static void callInputBox(String out){
 		_inputFrame.setLine(out);
 	}
 	

@@ -1,10 +1,16 @@
 package com.taskpad.ui;
 
+/**
+ * For implementing HotKeys for the GuiFrame
+ * @author Jun & Lynnette
+ */
+
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +25,7 @@ import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
+	
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	/**
@@ -37,6 +44,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private final int ROOTPANE_BORDER_THICKNESS = 2;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
+	
+	protected static ArrayList<String> _inputHistory = new ArrayList<String>();
+	protected static int _count = 0;	//For counting history
 		
 	protected GuiFrame(){
 		initalizeGuiFrame();
@@ -130,6 +140,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
 		boolean isUpKey = arg0.getKeyCode() == NativeKeyEvent.VK_UP;
+		boolean isDownKey = arg0.getKeyCode() == NativeKeyEvent.VK_DOWN;
 		
 		/**
 		 * @author Jun
@@ -153,11 +164,48 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			cancelAlarms();
 		} else if (isUpKey){
 			showPastCommands();
+		} else if (isDownKey){
+			showNextCommands();
 		}
 	}
 	
+	protected static void addHistory(String inputString){
+		_inputHistory.add(inputString);
+		resetHistoryCount();
+	}
+	
+	private static void resetHistoryCount(){
+		_count = 0;
+	}
+	
+	/**
+	 * For Junwei: Can help debug these two methods? :( 
+	 */
 	private void showPastCommands(){
-		GuiManager.outputPastCommands("Hello");
+		int size = _inputHistory.size();
+		String outputString = "";
+		try{
+			outputString = _inputHistory.get(size-_count-1);
+			GuiManager.callInputBox(outputString);
+			_count++;
+			System.out.println(outputString);
+		} catch (Exception e){
+			//Catches ArrayIndexOutOfBounds and IndexOutOfBoundsExceptions
+			//do nothing
+		}
+	}
+	
+	private void showNextCommands(){
+		int size = _inputHistory.size();
+		String outputString = "";
+		try{
+			outputString = _inputHistory.get(size-_count-1);
+			GuiManager.callInputBox(outputString);
+			System.out.println(outputString);
+			_count--;
+		} catch (Exception e){
+			//do nothing
+		}
 	}
 	
 
