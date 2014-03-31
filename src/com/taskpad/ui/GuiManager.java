@@ -7,7 +7,6 @@ import com.taskpad.input.InputManager;
 
 public class GuiManager {
 	private static final String NEWLINE = "\n\n";		
-	//private static final String NEWLINE = "\n";	--can i change this... TN
 	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
 	private static InputFrame _inputFrame;
 	private static OutputFrame _outputFrame;

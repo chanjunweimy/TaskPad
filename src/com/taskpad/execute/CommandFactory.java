@@ -3,7 +3,6 @@ package com.taskpad.execute;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
-import com.taskpad.storage.CommandRecord;
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
 import com.taskpad.storage.NoPreviousCommandException;
