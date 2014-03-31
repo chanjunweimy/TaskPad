@@ -3,7 +3,6 @@ package com.taskpad.ui;
 import java.awt.Color;
 
 import com.taskpad.alarm.AlarmManager;
-import com.taskpad.execute.ExecutorManager;
 import com.taskpad.input.InputManager;
 
 public class GuiManager {
@@ -48,7 +47,11 @@ public class GuiManager {
 
 	public static void callOutput(String out){
 		_outputFrame.addLine(out + NEWLINE);	
-		//_outputFrame.addLine(out);	--can i change this... TN
+		//_outputFrame.addLine(out);	
+	}
+	
+	public static void callOutputNoLine(String out){
+		_outputFrame.addLine(out);
 	}
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
