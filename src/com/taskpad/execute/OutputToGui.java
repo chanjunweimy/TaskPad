@@ -97,9 +97,9 @@ public class OutputToGui {
 		GuiManager.showSelfDefinedMessage(text, Color.gray, true);
 		*/
 		if (task.getDone() == 0) {
-			text = "Done or not:\tNot done yet.";
+			text = "Status:\t\tNot done.";
 		} else {
-			text = "Done or not:\tTask has been done.";
+			text = "Status:\t\tDone.";
 		}
 		GuiManager.showSelfDefinedMessage(text, Color.blue, true);
 		
@@ -169,9 +169,9 @@ public class OutputToGui {
 		}
 		
 		if (task.getDone() == 0) {
-			text += "Not done yet.";
+			text += "Not done.";
 		} else {
-			text += "Task has been done.";
+			text += "Done.";
 		}
 		
 		return text;
