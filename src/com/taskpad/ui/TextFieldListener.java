@@ -5,13 +5,24 @@ import java.awt.event.ActionListener;
 
 public class TextFieldListener implements ActionListener
 {  
+	private InputFrame _textFrame;
+	protected TextFieldListener(InputFrame textFrame){
+		setTextFrame(textFrame);
+	}
+
+	/**
+	 * @param textFrame
+	 */
+	private void setTextFrame(InputFrame textFrame) {
+		_textFrame = textFrame;
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent evt)
 	{  
-		String inputString = InputFrame.getText();
-		GuiManager.passInput(inputString);
-		GuiFrame.addHistory(inputString);
-		InputFrame.reset();
+		String inputString = _textFrame.getText();
+		_textFrame.passInput(inputString);
+		_textFrame.addHistory(inputString);
+		_textFrame.reset();
 	}
 }
