@@ -3,11 +3,7 @@
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
 
-import com.taskpad.storage.Task;
 import com.taskpad.ui.GuiManager;
 
 /**
