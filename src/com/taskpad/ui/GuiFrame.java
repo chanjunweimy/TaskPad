@@ -1,16 +1,12 @@
 package com.taskpad.ui;
 
-/**
- * For implementing HotKeys for the GuiFrame
- * @author Jun & Lynnette
- */
-
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +20,12 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
+/**
+ * For implementing HotKeys for the GuiFrame
+ * @author Jun & Lynnette
+ */
+
+public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
 	
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
@@ -45,32 +46,34 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
 	
-	protected static ArrayList<String> _inputHistory = new ArrayList<String>();
-	protected static int _count = 0;	//For counting history
-		
 	protected GuiFrame(){
+		setupLogger();
 		initalizeGuiFrame();
 	}
 
-	private void initalizeGuiFrame() {
-		//setup Logger also
+	/**
+	 * 
+	 */
+	private void setupLogger() {
 		LOGGER.setLevel(Level.INFO);
-		
+				
 		LOGGER.info("Setting up GuiFrame");
-		
+	}
+
+	private void initalizeGuiFrame() {
 		//to disable the titlebar
 		setUndecorated(true);
 		
 		getRootPane().setBorder(BORDER_ROOTPANE);
 		
 		setUpResizer();
-				
+				                  
 		addWindowListener(this);
 		
-		showWindow(true);
-				
-		focusInputBox();		
+		showWindow(true);	
 		
+		setAlwaysOnTop(true);
+			   		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -80,19 +83,14 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
 	}
 
-	private void focusInputBox() {
-		//to make it focus to input box
-		setAlwaysOnTop(true);
-		
-	}		//thinking a better way to solve this issue.
-
+	protected void requestFocusOnInputBox() {
+	}
 	     
 	protected void close(){ 
 		dispose();
 	}
 	
 	protected void showWindow(boolean isVisible){
-		focusInputBox();
 		setVisible(isVisible);
 	}
 
@@ -110,10 +108,10 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
                 ex.printStackTrace();
 
                 System.exit(1);
-        }
+        }     
 
         GlobalScreen.getInstance().addNativeKeyListener(this);
-        requestFocusInWindow();
+        //requestFocusInWindow(); should not request focus here
 	}
 	
 	@Override
@@ -139,13 +137,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
-		boolean isUpKey = arg0.getKeyCode() == NativeKeyEvent.VK_UP;
-		boolean isDownKey = arg0.getKeyCode() == NativeKeyEvent.VK_DOWN;
 		
 		/**
-		 * @author Jun
 		 * we will disable some keys when TaskPad is in
 		 * hiding mode
+		 * @author Jun
 		 */
 		isEscapeKey = isEscapeKey && isVisible();
 		isAltEndKey = isAltEndKey && isVisible();
@@ -162,51 +158,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			switchOffAlarm();
 		} else if (isAltCKey){
 			cancelAlarms();
-		} else if (isUpKey){
-			showPastCommands();
-		} else if (isDownKey){
-			showNextCommands();
-		}
+		} 
+		
 	}
 	
-	protected static void addHistory(String inputString){
-		_inputHistory.add(inputString);
-		resetHistoryCount();
-	}
 	
-	private static void resetHistoryCount(){
-		_count = 0;
-	}
-	
-	/**
-	 * For Junwei: Can help debug these two methods? :( 
-	 */
-	private void showPastCommands(){
-		int size = _inputHistory.size();
-		String outputString = "";
-		try{
-			outputString = _inputHistory.get(size-_count-1);
-			GuiManager.callInputBox(outputString);
-			_count++;
-			System.out.println(outputString);
-		} catch (Exception e){
-			//Catches ArrayIndexOutOfBounds and IndexOutOfBoundsExceptions
-			//do nothing
-		}
-	}
-	
-	private void showNextCommands(){
-		int size = _inputHistory.size();
-		String outputString = "";
-		try{
-			outputString = _inputHistory.get(size-_count-1);
-			GuiManager.callInputBox(outputString);
-			System.out.println(outputString);
-			_count--;
-		} catch (Exception e){
-			//do nothing
-		}
-	}
 	
 
 	private void cancelAlarms() {
@@ -266,15 +222,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				}
 			}
  
-			private void show() {
+			private void show() {    
 				showWindow(true);
 				setState(Frame.NORMAL);
+				
+				requestFocusOnInputBox();    
 			}
 
 			private void hide() {
 				showWindow(false);
 			}
-		};
+		};  
 		return changeVisibility;
 	}
 
@@ -340,5 +298,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	@Override
 	public void nativeKeyTyped(NativeKeyEvent arg0) {
 		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {		
 	}
 }

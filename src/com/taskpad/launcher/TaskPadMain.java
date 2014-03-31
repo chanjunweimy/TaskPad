@@ -8,6 +8,11 @@ package com.taskpad.launcher;
 
 import javax.swing.SwingUtilities;
  
+/**
+ * 
+ * @author Jun， Lynnette, Taining
+ *
+ */
 public class TaskPadMain{
 	
 	private TaskPadMain(){
