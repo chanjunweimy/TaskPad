@@ -9,7 +9,7 @@ import com.taskpad.ui.GuiManager;
 
 public class OutputToGui {
 	protected static void output(String feedback) {
-		GuiManager.callOutput(feedback);
+		GuiManager.callOutputNoLine(feedback + "\n");
 	}
 	
 	protected static void outputColorTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
@@ -23,7 +23,7 @@ public class OutputToGui {
 		String text = "";
 		
 		text = "Task ID:\t\t" + taskId;
-		GuiManager.showSelfDefinedMessage(text, Color.green, false); 
+		GuiManager.showSelfDefinedMessage(text, Color.DARK_GRAY, false); 
 		/*
 		text =  taskId + "\n";
 		GuiManager.showSelfDefinedMessage(text, Color.blue, false);
@@ -34,7 +34,7 @@ public class OutputToGui {
 		GuiManager.showSelfDefinedMessage(text, Color.green, true);
 		*/
 		text = "Description:\t" + task.getDescription();		
-		GuiManager.showSelfDefinedMessage(text, Color.red, false);
+		GuiManager.showSelfDefinedMessage(text, Color.MAGENTA, false);
 		
 		if (task.getDeadline() != null && !task.getDeadline().equals("")) {
 			/*
