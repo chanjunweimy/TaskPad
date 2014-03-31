@@ -1,5 +1,11 @@
 package com.taskpad.execute;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.taskpad.storage.CommandRecord;
@@ -11,6 +17,35 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class CommandFactoryBackend {
+	/**
+	 * ACCENDING_ORDER: a comparator used to sort Task by their dates.
+	 */
+	protected static final Comparator<Task> ACCENDING_ORDER = new Comparator<Task>() {
+		/**
+		 * compare: compare two tasks' Date
+		 * 
+		 * @param e1
+		 *            : task1
+		 * @param e2
+		 *            : task2
+		 * @return int
+		 */
+		@Override
+		public int compare(Task e1, Task e2) {
+			SimpleDateFormat dateConverter = new SimpleDateFormat(
+					"dd/MM/yyyy HH:mm");
+			Date d1, d2;
+			try {
+				d1 = dateConverter.parse(e1.getDeadline() + e1.getEndTime());
+				d2 = dateConverter.parse(e2.getDeadline() + e2.getEndTime());
+			} catch (ParseException e) {
+				System.err.println(e.getMessage());
+				return 0;
+			}
+			return d1.compareTo(d2);
+		}
+	};
+	
 	protected static Task addTask(String description, String deadline,
 			String startDate, String startTime, String endDate, String endTime,
 			String venue, TaskList listOfTasks) {
@@ -171,6 +206,26 @@ public class CommandFactoryBackend {
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 		return taskDeleted;
+	}
+
+	public static LinkedList<Integer> sortByDeadline(TaskList listOfTasks) {
+		LinkedList<Task> tasks = listOfTasks.getList();
+		
+		HashMap<Task, Integer> dictionaryForTaskIndex = new HashMap<Task, Integer>();
+		for(int i = 0; i < tasks.size(); i++) {
+			dictionaryForTaskIndex.put(tasks.get(i), i);
+		}
+		
+		Collections.sort(tasks, ACCENDING_ORDER);
+		
+		LinkedList<Integer> result = new LinkedList<Integer>();
+		for(int i = 0; i < tasks.size(); i++) {
+			Task task = tasks.get(i);
+			int index = dictionaryForTaskIndex.get(task);
+			result.add(index);
+		}
+		
+		return result;
 	}
 	
 }
