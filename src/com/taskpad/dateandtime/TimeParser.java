@@ -143,9 +143,11 @@ public class TimeParser {
                 if (hours.length() > 4){
                 	minutes = hours.substring(2, 4);
                 	hours = hours.substring(0, 4);
-                } else {
+                } else if (hours.length() == 4) {
                 	minutes = hours.substring(1, 3);
-                	hours = hours.substring(0, 1);
+                	hours = hours.substring(0, 3);
+                } else {
+                	throw new InvalidTimeException();
                 }
                
                 checkIfInvalidTimeString(hours, minutes, input);
