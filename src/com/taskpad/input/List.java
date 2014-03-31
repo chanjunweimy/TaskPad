@@ -125,7 +125,8 @@ public class List extends Command{
 		
 		try {
 			String deadline = DateAndTimeManager.getInstance().parseDate(input);
-			putOneParameter(PARAMETER_LIST_KEY, deadline);
+			//putOneParameter(PARAMETER_LIST_KEY, deadline);
+			parameterList = deadline;
 			isDeadline = true;
 		} catch (DatePassedException | InvalidDateException e) {
 			GuiManager.callOutput(e.getMessage());
