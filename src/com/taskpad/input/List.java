@@ -14,7 +14,6 @@ import java.util.Map;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
-import com.taskpad.ui.GuiManager;
 
 public class List extends Command{
 
@@ -82,7 +81,6 @@ public class List extends Command{
 	protected boolean checkIfEmptyString(){
 		if(isEmptyString()){
 			input = PARAMETER_VALID_LIST[0];
-			System.out.println("Empty parameter");
 		}
 		return false;
 	}
@@ -129,7 +127,7 @@ public class List extends Command{
 			parameterList = deadline;
 			isDeadline = true;
 		} catch (DatePassedException | InvalidDateException e) {
-			GuiManager.callOutput(e.getMessage());
+			//GuiManager.callOutput(e.getMessage());
 			isDeadline = false;
 		}
 		
