@@ -122,4 +122,8 @@ public class InputFrame extends GuiFrame{
 		//_input.removeMouseListener(_mousePress);      DEPRECATED
 		//_input.removeMouseMotionListener(_mouseMove); DEPRECATED
 	}
+
+	protected void setLine(String line) {
+		_input.setText(line);
+	}
 }

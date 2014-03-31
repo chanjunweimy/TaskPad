@@ -53,9 +53,16 @@ public class GuiManager {
 		_outputFrame.addLine(out);
 	}
 	
+	public static void outputPastCommands(String out){
+		_inputFrame.setLine(out);
+	}
+	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
 		_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
-		//_outputFrame.addSelfDefinedLine(out, c, isBold);	--can i change this... TN
+	}
+	
+	public static void showSelfDefinedMessageNoNewline(String out, Color c, boolean isBold){
+		_outputFrame.addSelfDefinedLine(out, c, isBold);
 	}
 
 	public static void startRemindingUser(){
