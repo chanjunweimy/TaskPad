@@ -2,6 +2,8 @@ package com.taskpad.tests;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
+
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -9,6 +11,7 @@ import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
 
 public class TestDateParser {
+	private static final String DATE_TEST = "01/04/2014 00:01";
 	private static final String DATE_PASSED = "Date has passed. Please enter a date in the future";
 	private static final String DATE_INVALID = "Error: Invalid Date Entered";
 	private DateAndTimeManager _dateParser = DateAndTimeManager.getInstance();
@@ -434,14 +437,27 @@ public class TestDateParser {
 	
 	
 	private void testDateCommand(String input, String expected){
+		setupDebug();
 		try {
 			assertEquals(_dateParser.parseDate(input), expected);
 		} catch (InvalidDateException | DatePassedException e) {
 			fail();
 		}
 	}
+
+	/**
+	 * 
+	 */
+	private void setupDebug() {
+		try {
+			_dateParser.setDebug(DATE_TEST);
+		} catch (ParseException e1) {
+			fail();
+		}
+	}
 	
 	private void testInvalidDateCommand(String input, String expected){
+		setupDebug();
 		try{
 			_dateParser.parseDate(input);
 		} catch (InvalidDateException | DatePassedException e){
