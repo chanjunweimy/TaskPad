@@ -1,5 +1,10 @@
 package com.taskpad.execute;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -11,6 +16,11 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class CommandFactory {
+	private static final String FEEDBACK_NO_TASK_WITH_DEADLINE = "No task with deadline in the database.";
+	private static final String FEEDBACK_NO_TASK = "No task found.";
+	private static final String FEEDBACK_NO_FINISHED_TASK = "No finished task found.";
+	private static final String LOGGING_ADDING_TASK = "adding task: %s";
+	private static final String FEEDBACK_NO_UNDONE_TASK = "No undone task found.";
 	private static final String FEEDBACK_CLEAR = "All tasks have been deleted. You can use undo to get them back.";
 	private static final String FEEDBACK_CANNOT_UNDO = "You don't have things to undo.";
 	private static Logger logger = Logger.getLogger("TaskPad");
@@ -18,7 +28,8 @@ public class CommandFactory {
 	protected static void add(String description, String deadline, String startDate,
 			String startTime, String endDate,
 			String endTime, String venue) {
-		logger.info("adding task: " + description);
+		logger.info(String.format(LOGGING_ADDING_TASK, description));
+		
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		
 		Task taskAdded = CommandFactoryBackend.addTask(description, deadline, startDate, startTime,
@@ -34,7 +45,7 @@ public class CommandFactory {
 		LinkedList<Integer> tasks = CommandFactoryBackend.getUndoneTasks(listOfTasks);
 		
 		if (tasks.size() == 0) {
-			OutputToGui.output("No undone task found.");
+			OutputToGui.output(FEEDBACK_NO_UNDONE_TASK);
 		} else {
 			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 		}
@@ -47,7 +58,7 @@ public class CommandFactory {
 		LinkedList<Integer> tasks = CommandFactoryBackend.getFinishedTasks(listOfTasks);
 		
 		if (tasks.size() == 0) {
-			OutputToGui.output("No finished task found.");
+			OutputToGui.output(FEEDBACK_NO_FINISHED_TASK);
 		} else {
 			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 		}
@@ -59,12 +70,24 @@ public class CommandFactory {
 		LinkedList<Integer> tasks = CommandFactoryBackend.getAllTasks(listOfTasks);
 		
 		if (tasks.size() == 0) {
-			OutputToGui.output("No task found.");
+			OutputToGui.output(FEEDBACK_NO_TASK);
 		} else {
 			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 		}
 	}
 
+	protected static void listByDeadline() {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		LinkedList<Integer> tasks = CommandFactoryBackend.sortByDeadline(listOfTasks);
+		
+		if (tasks.size() == 0) {
+			OutputToGui.output(FEEDBACK_NO_TASK_WITH_DEADLINE);
+		} else {
+			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+		}		
+	}
+	
 	protected static void undo() {
 		try {
 			String previousFile = CommandFactoryBackend.updateDataForUndo();		

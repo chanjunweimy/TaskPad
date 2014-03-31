@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 //import java.util.Map;
 
+
+
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
 import com.taskpad.execute.ExecutorManager;
@@ -64,7 +66,13 @@ public class TestExecutorData {
 		//DataManager.storeBack(tasks, "test_data.xml");
 	}
 	
+	private static void parameterizedStringTest() {
+		String LOGGING_ADDING_TASK = "adding task: %s";
+		String description = "sth";
+		System.out.println(String.format(LOGGING_ADDING_TASK, description));
+	}
+	
 	public static void main(String args[]) {
-		DataManager.retrieve("");
+		parameterizedStringTest();
 	}
 }
