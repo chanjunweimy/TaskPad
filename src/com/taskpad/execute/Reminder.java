@@ -1,6 +1,8 @@
 package com.taskpad.execute;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -10,6 +12,7 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class Reminder {
+	
 	protected static void showReminderForToday() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		LinkedList<Integer> tasks = getTasksDueToday();
@@ -34,4 +37,5 @@ public class Reminder {
 		
 		return results;
 	}
+	
 }
