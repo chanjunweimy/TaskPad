@@ -54,7 +54,11 @@ public class InputManager {
 	}
 	
 	public static String clearScreen(){
-		GuiManager.clearOutput();
+		if (!debug){
+			GuiManager.clearOutput();
+		}else {
+			System.out.println(STATUS_CLEAR);
+		}
 		return STATUS_CLEAR;
 	}
 	

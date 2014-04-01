@@ -18,7 +18,11 @@ public class TestInput {
 
 	private final ByteArrayOutputStream _outContent = new ByteArrayOutputStream();
 	
-	@Test
+	
+	/**
+	 * ToDo: Add, alarm not fully being able to test with output streams
+	 */
+	
 	public void testAdd(){	
 		setUpStream();
 		
@@ -46,7 +50,59 @@ public class TestInput {
 	@Test
 	public void testAddRem(){
 		setUpStream();
-		testInputString(" ", "addrem 1 23/04/2015 16:00");
+		testInputString("TIME 16:00\r\nDATE 23/04/2015\r\nTASKID 1", "addrem 1 23/04/2015 16:00");
+	}
+	
+	@Test
+	public void testAlarm(){
+		setUpStream();
+		testInputString("Output to GUI: Creating alarm... alarm collect laundry 30 min", "alarm collect laundry 30 min");
+	}
+	
+	
+	public void testStopAlarm(){
+		setUpStream();
+		testInputString("", "STOP");
+	}
+	
+	@Test
+	public void testClearScr(){
+		setUpStream();
+		testInputString("Output to GUI: Confirm clear screen? (Y/N)", "screen");
+		testInputString("Clear GUI Screen", "Y");
+	}
+	
+	@Test
+	public void testDelete(){
+		setUpStream();
+		testInputString("TASKID 1", "Del 1");
+	}
+	
+	@Test
+	public void testEdit(){
+		setUpStream();
+		testInputString("DESC new description\r\nTASKID 1", "Edit 1 new description");
+	}
+	
+	@Test
+	public void testSearch(){
+		setUpStream();
+		testInputString("KEYWORD dragon potions", "search dragon potions");
+	}
+	
+	@Test
+	public void testList(){
+		setUpStream();
+		testInputString("KEY ALL", "list all");
+		testInputString("KEY DONE", "list done");
+		testInputString("KEY UNDONE", "list undone");
+		testInputString("KEY 31/03/2016", "list 31/03/2016");
+	}
+	
+	@Test
+	public void testDone(){
+		setUpStream();
+		testInputString("TASKID 1", "done 1");
 	}
 	
 	private void testInputString(String expected, String input){
