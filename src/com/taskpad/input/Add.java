@@ -12,7 +12,20 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
+
+
+/**
+ * Add syntax
+ * with delimiters:
+ * add <desc> -d <deadline> -s <start date>,<start time> -e <end date>,<end time>
+ * 
+ * without delimiters... anything :D 
+ * @author Charbby
+ *
+ */
 
 public class Add extends Command {
 
@@ -20,6 +33,7 @@ public class Add extends Command {
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_DASH = "-";
 	private static final String STRING_SPACE = " ";
+	private static final String STRING_COMMA = ",";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -276,9 +290,42 @@ public class Add extends Command {
 
 	private void parseDelimitedString() {
 		checkAndRemoveDate();
+		
+		int count = 0;
+		_sc = new Scanner(input).useDelimiter("\\s-");
+		while(_sc.hasNext()){
+			String nextParam = _sc.next();
+			if (count == 0){
+				inputDesc(nextParam.trim());
+			} else {
+				parseNextParam(nextParam.trim());
+			}
+			count++;
+		}
+		_sc.close();
+		
+		/* Reverting to the old bit
 		checkAndRemoveStart();
 		checkAndRemoveEnd();
 		checkAndInputDesc();
+		*/
+	}
+	
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param);
+
+		switch (firstChar){
+		case "d":
+			putDeadline(param);
+			break;
+		case "s":
+			putStartTime(param);
+			break;
+		case "e": 
+			putEndTime(param);
+			break;
+		}
 	}
 
 	private boolean checkIfDelimitedString() {
@@ -481,6 +528,100 @@ public class Add extends Command {
 	
 	private String stripWhiteSpaces(String input){
 		return input.replaceAll(STRING_SPACE, STRING_EMPTY);
+	}
+	
+	private String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
+	}
+	
+	private String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
+	}
+	
+	private void putDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		try {
+			param = DateAndTimeManager.getInstance().parseDate(param);
+		} catch (InvalidDateException | DatePassedException e) {
+			InputManager.outputToGui(e.getMessage());
+			_invalidParameters = true;
+		}
+		inputDeadline(param);
+	}
+	
+	private void putStartTime(String param) {
+		String[] splitParam = param.split(STRING_COMMA);
+		
+		if (isValidTimeArgs(splitParam)){
+			//deprecated for flexi commands 
+			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
+			
+			String startTime = STRING_EMPTY;
+			try {
+				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException | InvalidTimeException e) {
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(startTime);
+				_invalidParameters = true;
+				return;
+			}
+			putOneParameter(PARAMETER_START_TIME, startTime);
+		
+			String startDate = STRING_EMPTY;
+			if (splitParam.length == 2){
+				try {
+					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (InvalidDateException | DatePassedException e) {
+					InputManager.outputToGui(e.getMessage()); 
+					_invalidParameters = true;
+					return;
+				}
+				putOneParameter(PARAMETER_START_DATE, startDate);
+			}
+		}
+	}
+	
+	private void putEndTime(String param) {
+		String[] splitParam = param.split(",");
+		
+		if (isValidTimeArgs(splitParam)){
+			//deprecated for flexi commands
+			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
+			String endTime = STRING_EMPTY;
+			
+			try {
+				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException | InvalidTimeException e) {
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(endTime);
+				_invalidParameters = true;
+				return;
+			}
+			
+			putOneParameter(PARAMETER_END_TIME, endTime);
+			
+			String endDate = STRING_EMPTY;
+			if (splitParam.length == 2){
+				try {
+					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (DatePassedException | InvalidDateException e) {
+					InputManager.outputToGui(e.getMessage());
+					_invalidParameters = true;
+					return;
+				}
+				putOneParameter(PARAMETER_END_DATE, endDate);
+			}
+		}
+	}
+	
+	private boolean isValidTimeArgs(String[] args){
+		if (args.length > 2){
+			InputManager.outputToGui("Error in number of time arguments: args.length");
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	/* Testing
