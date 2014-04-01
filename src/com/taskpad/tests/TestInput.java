@@ -30,6 +30,25 @@ public class TestInput {
 		//testFindValueCommand("Add4", CommandType.ADD, "add -d 23/03/2014 \"complete homework\"");
 	}
 	
+	@Test
+	public void testClear(){
+		setUpStream();
+		testInputString("Output to GUI: Confirm clear data? (Y/N)", "Clear");
+		testInputString("NULL ", "Y");
+	}
+	
+	@Test
+	public void testAddInfo(){
+		setUpStream();
+		testInputString("TASKID 1\r\nINFO venue: meeting room", "addinfo 1 venue: meeting room");
+	}
+	
+	@Test
+	public void testAddRem(){
+		setUpStream();
+		testInputString(" ", "addrem 1 23/04/2015 16:00");
+	}
+	
 	private void testInputString(String expected, String input){
 		InputManager.setDebug(true);
 		//assertEquals(description, expected, InputManager.receiveFromGui(input));
