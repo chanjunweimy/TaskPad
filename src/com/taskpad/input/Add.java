@@ -181,13 +181,21 @@ public class Add extends Command {
 		//"..." deadlinedate endtime startdate starttime
 		
 		
-		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		String inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 
-		String[] splitInput = input.split(STRING_SPACE);
-		putOneParameter(PARAMETER_DEADLINE, splitInput[0]);
-		putOneParameter(PARAMETER_END_TIME, splitInput[1]);
-		putOneParameter(PARAMETER_START_DATE, splitInput[2]);
-		putOneParameter(PARAMETER_START_TIME, splitInput[3]);
+		String[] splitInput = inputNew.split(STRING_SPACE);
+		int size = splitInput.length;
+		putOneParameter(PARAMETER_DEADLINE, splitInput[size-3]);
+		putOneParameter(PARAMETER_END_TIME, splitInput[size-2]);
+		putOneParameter(PARAMETER_START_DATE, splitInput[size-1]);
+		putOneParameter(PARAMETER_START_TIME, splitInput[size]);
+		
+		String desc = STRING_EMPTY;
+		for (int i=0; i<size-3; i++){
+			desc += splitInput[i] + STRING_SPACE;
+		}
+		
+		putOneParameter(PARAMETER_DESCRIPTION, desc);
 		
 		/* deprecated
 		String descString = extractTimeAndDate(splitInput);
