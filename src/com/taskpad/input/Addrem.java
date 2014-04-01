@@ -72,7 +72,7 @@ public class Addrem extends Command{
 				
 		if (_invalidParameters){
 			return false;
-		}
+		} 
 
 		GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
 		

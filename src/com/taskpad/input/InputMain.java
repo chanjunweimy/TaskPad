@@ -22,6 +22,7 @@ public class InputMain {
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	protected static String receiveInput(String input){
+		hasCheckedFlexi = false;
 		input = input.trim();
 		String outputString = STRING_EMPTY;
 		
@@ -45,7 +46,8 @@ public class InputMain {
 			} else if (hasCheckedFlexi){
 				invalidCommand(input);
 				outputString += commandType.toString();
-			} else {
+				
+			} else if (!hasCheckedFlexi){
 				hasCheckedFlexi = true;
 				outputString = flexiCommand(input);
 			}
@@ -108,6 +110,7 @@ public class InputMain {
 
 	@SuppressWarnings("static-access")
 	private static boolean isValidCommandType(CommandType commandType) {
+		System.out.println(commandType.toString());
 		return !commandType.equals(commandType.INVALID);
 	}
 
@@ -175,15 +178,15 @@ public class InputMain {
 	}
 
 	private static String flexiCommand(String input) {
-		hasCheckedFlexi = true;
+		hasCheckedFlexi = true; 
 		CommandType command = CommandQueue.findFlexi(input);
 		logger.info("Flexicommands: " + command.toString());
 		
 		if (isValidCommandType(command)){
-			String commandTypeString = replaceCommandWord(input, command);
-			performCommand(command, commandTypeString, input);
+			String inputString = replaceCommandWord(input, command);
+			performCommand(command, inputString, input);
 			
-			return command.toString() + " " + commandTypeString;
+			return command.toString() + " " + inputString;
 		} else {
 			//throw new EmptyStringException();
 			invalidCommand(input);

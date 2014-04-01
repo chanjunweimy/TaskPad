@@ -35,13 +35,14 @@ public abstract class Command {
 	protected abstract void initialiseOthers();
 
 	public void run() {
+		input = input.trim();
 		try {
 			checkIfEmptyString();
 		} catch (EmptyStringException e) {
 			showEmptyString();
 			return;
 		}
-		
+				
 		try {
 			checkIfIncorrectArguments();
 		} catch (TaskIDException | InvalidParameterException e) {
@@ -55,8 +56,10 @@ public abstract class Command {
 //		} 
 		clearInputParameters();
 		initialiseParametersToNull();
+		
 	
 		if (commandSpecificRun()){
+			System.out.println(input);
 			createInputObject();
 			passObjectToExecutor();
 		} else {
