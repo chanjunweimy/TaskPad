@@ -154,9 +154,9 @@ public class CommandQueue {
 	
 	private static boolean isInputSubstring(String value, String input){
 		String[] splitInput = input.split(STRING_SPACE);
-		
 		for (int i=0; i<splitInput.length; i++){
 			if (splitInput[i].toUpperCase().equals(value)){
+				//System.out.println(splitInput[i] + " " + value);
 				return true;
 			}
 		}

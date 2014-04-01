@@ -69,8 +69,10 @@ public class Add extends Command {
 	protected boolean commandSpecificRun() {		
 		if(checkIfDelimitedString()){
 			//this line is only useful if it is delimited
-			input = putDescInQuotesFirst(input);
-			
+			String temp = putDescInQuotesFirst(input);
+			if (!temp.trim().isEmpty()){
+				input = temp;
+			}
 			parseDelimitedString();
 		}else {
 			parseNonDelimitedString();
