@@ -1,5 +1,6 @@
 package com.taskpad.launcher;
 
+import com.taskpad.execute.ExecutorManager;
 import com.taskpad.ui.GuiManager;
 
 public class TaskPadLauncher implements Runnable {
@@ -14,6 +15,7 @@ public class TaskPadLauncher implements Runnable {
 	public void run() {
 		//initialStorage(); DEPRECATED
 		setUpGui();
+		ExecutorManager.showReminder();
 	}
 
 	/* DEPRECATED
