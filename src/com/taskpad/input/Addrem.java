@@ -74,6 +74,8 @@ public class Addrem extends Command{
 			return false;
 		}
 
+		GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+		
 		return true;
 	}
 
@@ -300,7 +302,6 @@ public class Addrem extends Command{
 	private Date parseRemDateAndTime(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String enteredDateAndTime = formatRemString();
-		System.out.println(enteredDateAndTime);
 		try {
 			date = sdf.parse(enteredDateAndTime);
 		} catch (ParseException e) {
