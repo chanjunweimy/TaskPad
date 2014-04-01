@@ -47,13 +47,7 @@ public class InputMain {
 				outputString += commandType.toString();
 			} else {
 				hasCheckedFlexi = true;
-				try {
-					outputString = flexiCommand(input);
-				} catch (EmptyStringException e) {
-					//ErrorMessages.emptyInputMessage();
-					InputManager.outputToGui(e.getMessage());
-					return STRING_EMPTY;
-				}
+				outputString = flexiCommand(input);
 			}
 		}
 		return outputString;
@@ -180,7 +174,7 @@ public class InputMain {
 		}
 	}
 
-	private static String flexiCommand(String input) throws EmptyStringException{
+	private static String flexiCommand(String input) {
 		hasCheckedFlexi = true;
 		CommandType command = CommandQueue.findFlexi(input);
 		logger.info("Flexicommands: " + command.toString());
@@ -191,7 +185,9 @@ public class InputMain {
 			
 			return command.toString() + " " + commandTypeString;
 		} else {
-			throw new EmptyStringException();
+			//throw new EmptyStringException();
+			invalidCommand(input);
+			return command.toString();
 		}
 
 	}
