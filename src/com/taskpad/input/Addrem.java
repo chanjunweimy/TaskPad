@@ -54,6 +54,8 @@ public class Addrem extends Command{
 
 	@Override
 	protected boolean commandSpecificRun() {
+		System.out.println(fullInput);
+		
 		if (!_isFlexiString){
 			splitInputParameters();
 		} else {
@@ -296,8 +298,9 @@ public class Addrem extends Command{
 	}
 
 	private Date parseRemDateAndTime(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy hh:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String enteredDateAndTime = formatRemString();
+		System.out.println(enteredDateAndTime);
 		try {
 			date = sdf.parse(enteredDateAndTime);
 		} catch (ParseException e) {
