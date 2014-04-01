@@ -91,7 +91,7 @@ public class CommandTypes {
 	}
 	
 	private static void putClearScreenVariations(){
-		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "CLCSCR", "SCREEN"};
+		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "CLCSCR", "SCREEN", "SCR"};
 		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
 	}
 	
