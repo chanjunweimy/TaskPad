@@ -41,6 +41,7 @@ public class Add extends Command {
 	
 	@Override
 	public void run(){
+		//"..." deadlinedate endtime startdate starttime
 		try {
 			checkIfEmptyString();
 		} catch (EmptyStringException e) {

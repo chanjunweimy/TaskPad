@@ -110,7 +110,6 @@ public class InputMain {
 
 	@SuppressWarnings("static-access")
 	private static boolean isValidCommandType(CommandType commandType) {
-		System.out.println(commandType.toString());
 		return !commandType.equals(commandType.INVALID);
 	}
 
