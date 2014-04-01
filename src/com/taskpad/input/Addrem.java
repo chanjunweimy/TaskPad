@@ -287,9 +287,7 @@ public class Addrem extends Command{
 		Date now = new Date();
 		Date date = null;
 		date = parseRemDateAndTime(date);
-		
-		System.out.println(now.toString() + " " + date.toString());
-		
+				
 		//It goes in this loop here :( 
 		if (now.compareTo(date) > 0){
 			_invalidParameters = true;
