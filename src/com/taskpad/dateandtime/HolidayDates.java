@@ -34,7 +34,12 @@ public class HolidayDates {
 	
 	protected String replaceHolidayDate(String input){	
 		String holidayDate = _holidays.get(input.toUpperCase());
-		holidayDate = parseHolidayDate(holidayDate);
+		if (holidayDate != null){
+			holidayDate = parseHolidayDate(holidayDate);
+		} else {
+			//can't replace
+			holidayDate = input;
+		}
 		return holidayDate;
 	}
 
