@@ -102,7 +102,12 @@ public class DateAndTimeRetriever {
 		String numberedInput = parseNumber(input);
 		
 		//step two: find holiday words and replace with date
-		//input = HolidayDates.getInstance().replaceHolidayDate(input);
+		String[] numberInputTokens = numberedInput.split(" ");
+		
+		for (int i = 0; i < numberInputTokens.length; i++){
+			String holidayInput = HolidayDates.getInstance().replaceHolidayDate(numberInputTokens[i]);
+		}
+
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
 		//step four: find dates -- find month words & find number before and after
 		//step four b: find dates -- find three consecutive numbers and try parse as date
