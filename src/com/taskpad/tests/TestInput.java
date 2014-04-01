@@ -91,6 +91,19 @@ public class TestInput {
 		testInputString("TASKID 1", "done 1");
 	}
 	
+	@Test
+	public void testAdd1(){
+		setUpStream();
+		testInputString("START TIME 11:00\r\n"
+				+ "END TIME 11:00\r\n"
+				+ "DEADLINE 11/11/2015\r\n"
+				+ "START DATE 11/11/2015\r\n"
+				+ "DESC \" aaa\" 1\r\n"
+				+ "END DATE 11/11/2015", 
+				"add 1 -s 11am, 11/11/15 -d 11/11/15 -e 11am, 11/11/15 \" aaa\"");
+	}
+	
+	
 	private void testInputString(String expected, String input){
 		InputManager.setDebug(true);
 		//assertEquals(description, expected, InputManager.receiveFromGui(input));
