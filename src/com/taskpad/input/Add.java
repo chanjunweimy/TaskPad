@@ -169,13 +169,6 @@ public class Add extends Command {
 		String descString = extractTimeAndDate(splitInput);
 
 		if (!descAlreadyEntered()){
-			/**
-			 * Lynnette,
-			 * you shouldn't save descString as description
-			 * remember what I told you?
-			 * You should save whatever user typed in as description
-			 * From: Jun Wei
-			 */
 			//inputDesc(descString);
 			System.out.println("DEBUG: " + fullInput);
 			inputDesc(input);
