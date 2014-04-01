@@ -105,8 +105,10 @@ public class OutputToGui {
 		
 	}
 
-	protected static String generateFeedbackForAdd(int taskId, Task taskAdded) {
-		return OutputToGui.generateTextForOneTask(taskId, taskAdded);
+	protected static void generateFeedbackForAdd(int taskId, Task taskAdded) {
+		//return OutputToGui.generateTextForOneTask(taskId, taskAdded);
+		OutputToGui.output("Task Successfully Added!\n");
+		OutputToGui.outputColorTextForOneTask(taskId, taskAdded);
 	}
 	
 	protected static String generateFeedbackForDelete(Task taskDeleted) {
