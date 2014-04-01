@@ -59,7 +59,6 @@ public abstract class Command {
 		
 	
 		if (commandSpecificRun()){
-			System.out.println(input);
 			createInputObject();
 			passObjectToExecutor();
 		} else {

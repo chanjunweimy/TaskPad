@@ -10,6 +10,7 @@ public class GuiManager {
 	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
 	private static InputFrame _inputFrame;
 	private static OutputFrame _outputFrame;
+	private static boolean debug = false;
 
 	//not designed to be instantiated
 	private GuiManager(){
@@ -45,11 +46,19 @@ public class GuiManager {
 	}
 
 	public static void callOutput(String out){
-		_outputFrame.addLine(out + NEWLINE);	
+		if (!debug){
+			_outputFrame.addLine(out + NEWLINE);	
+		} else{
+			System.out.println(out + NEWLINE);
+		}
 	}
 	
 	public static void callOutputNoLine(String out){
-		_outputFrame.addLine(out);
+		if (!debug){
+			_outputFrame.addLine(out);
+		} else{
+			System.out.println(out);
+		}
 	}
 	
 	/**
@@ -62,11 +71,19 @@ public class GuiManager {
 
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
-		_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
+		if (!debug){
+			_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
+		} else{
+			System.out.println(out + NEWLINE);
+		}
 	}
 	
 	public static void showSelfDefinedMessageNoNewline(String out, Color c, boolean isBold){
-		_outputFrame.addSelfDefinedLine(out, c, isBold);
+		if (!debug){
+			_outputFrame.addSelfDefinedLine(out, c, isBold);
+		} else{
+			System.out.println(out);
+		}
 	}
 
 	public static void startRemindingUser(){
@@ -118,5 +135,8 @@ public class GuiManager {
 		_outputFrame.clearOutputBox();
 	}
 	
+	public static void setDebug(boolean debugFlag){
+		debug = debugFlag;
+	}
 	
 }

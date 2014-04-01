@@ -53,9 +53,7 @@ public class Addrem extends Command{
 	}
 
 	@Override
-	protected boolean commandSpecificRun() {
-		System.out.println(fullInput);
-		
+	protected boolean commandSpecificRun() {		
 		if (!_isFlexiString){
 			splitInputParameters();
 		} else {
@@ -74,7 +72,7 @@ public class Addrem extends Command{
 			return false;
 		} 
 
-		GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+		//GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
 		
 		return true;
 	}
