@@ -6,8 +6,10 @@ import java.util.LinkedList;
 
 
 
+
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
+import com.taskpad.storage.TaskList;
 import com.taskpad.execute.ExecutorManager;
 import com.taskpad.input.Input;
 import com.taskpad.storage.Task;
@@ -72,7 +74,15 @@ public class TestExecutorData {
 		System.out.println(String.format(LOGGING_ADDING_TASK, description));
 	}
 	
+	private static void addTasks() {
+		TaskList list = DataManager.retrieve(DataFileStack.FILE);
+		for(int i = 0; i < 20; i++) {		
+			list.add(new Task("some task", null, null, null, null, null, null));
+		}
+		DataManager.storeBack(list, DataFileStack.FILE);
+	}
+	
 	public static void main(String args[]) {
-		parameterizedStringTest();
+		addTasks();
 	}
 }
