@@ -19,6 +19,11 @@ public class InvalidTimeException extends Exception {
 
 	private static Logger _logger = Logger.getLogger("TaskPad");
 	
+	public InvalidTimeException(){
+		super(MESSAGE);
+		_logger.info(MESSAGE); 
+	}
+	
 	public InvalidTimeException(String message){
 		super(MESSAGE + ": " + message);
 		_logger.info(MESSAGE + ": " + message); 

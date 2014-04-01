@@ -63,6 +63,11 @@ public class TestSpecialWordParser {
 		testWordCommand("25/03/2014", "tmr tmr TOMORRO TOM TOMORROW YTD YEST YESTERDAY", "23/03/2014 00:01");
 	}
 	
+	@Test
+	public void validTestDay10(){
+		testWordCommand("08/04/2014", "next Next Prev Next Tues", "23/03/2014 00:01");
+	}
+	
 	//timewordparser part
 	@Test
 	public void validTestTimeWord() {
@@ -77,6 +82,12 @@ public class TestSpecialWordParser {
 	@Test
 	public void invalidTest2() {
 		testInvalidWordCommand(MESSAGE_INVALID_DAY, "WEEK", "23/03/2014 00:01");
+	}
+	
+	//We do not support Yesterday
+	@Test
+	public void invalidTest3(){
+		testInvalidWordCommand("Error: Invalid Day: Not a valid day!", "Yesterday", "23/03/2014 00:01");
 	}
 	
 	private void testWordCommand (String expected, String input, String dateString){

@@ -3,6 +3,8 @@ package com.taskpad.ui;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.logging.Level;
@@ -18,7 +20,13 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener{
+/**
+ * For implementing HotKeys for the GuiFrame
+ * @author Jun & Lynnette
+ */
+
+public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
+	
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	/**
@@ -37,30 +45,35 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private final int ROOTPANE_BORDER_THICKNESS = 2;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
-		
+	
 	protected GuiFrame(){
+		setupLogger();
 		initalizeGuiFrame();
 	}
 
-	private void initalizeGuiFrame() {
-		//setup Logger also
+	/**
+	 * 
+	 */
+	private void setupLogger() {
 		LOGGER.setLevel(Level.INFO);
-		
+				
 		LOGGER.info("Setting up GuiFrame");
-		
+	}
+
+	private void initalizeGuiFrame() {
 		//to disable the titlebar
 		setUndecorated(true);
 		
 		getRootPane().setBorder(BORDER_ROOTPANE);
 		
 		setUpResizer();
-				
+				                  
 		addWindowListener(this);
 		
-		showWindow(true);
-				
-		focusInputBox();		
+		showWindow(true);	
 		
+		setAlwaysOnTop(true);
+			   		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -70,19 +83,14 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
 	}
 
-	private void focusInputBox() {
-		//to make it focus to input box
-		setAlwaysOnTop(true);
-		
-	}		//thinking a better way to solve this issue.
-
+	protected void requestFocusOnInputBox() {
+	}
 	     
 	protected void close(){ 
 		dispose();
 	}
 	
 	protected void showWindow(boolean isVisible){
-		focusInputBox();
 		setVisible(isVisible);
 	}
 
@@ -100,10 +108,10 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
                 ex.printStackTrace();
 
                 System.exit(1);
-        }
+        }     
 
         GlobalScreen.getInstance().addNativeKeyListener(this);
-        requestFocusInWindow();
+        //requestFocusInWindow(); should not request focus here
 	}
 	
 	@Override
@@ -129,12 +137,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
-		boolean isUpKey = arg0.getKeyCode() == NativeKeyEvent.VK_UP;
 		
 		/**
-		 * @author Jun
 		 * we will disable some keys when TaskPad is in
 		 * hiding mode
+		 * @author Jun
 		 */
 		isEscapeKey = isEscapeKey && isVisible();
 		isAltEndKey = isAltEndKey && isVisible();
@@ -151,14 +158,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			switchOffAlarm();
 		} else if (isAltCKey){
 			cancelAlarms();
-		} else if (isUpKey){
-			showPastCommands();
-		}
+		} 
+		
 	}
 	
-	private void showPastCommands(){
-		GuiManager.outputPastCommands("Hello");
-	}
+	
 	
 
 	private void cancelAlarms() {
@@ -218,15 +222,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				}
 			}
  
-			private void show() {
+			private void show() {    
 				showWindow(true);
 				setState(Frame.NORMAL);
+				
+				requestFocusOnInputBox();    
 			}
 
 			private void hide() {
 				showWindow(false);
 			}
-		};
+		};  
 		return changeVisibility;
 	}
 
@@ -292,5 +298,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	@Override
 	public void nativeKeyTyped(NativeKeyEvent arg0) {
 		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {		
 	}
 }

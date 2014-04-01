@@ -66,10 +66,11 @@ public class Add extends Command {
 	}
 
 	@Override
-	protected boolean commandSpecificRun() {
-		input = putDescInQuotesFirst(input);
-		
+	protected boolean commandSpecificRun() {		
 		if(checkIfDelimitedString()){
+			//this line is only useful if it is delimited
+			input = putDescInQuotesFirst(input);
+			
 			parseDelimitedString();
 		}else {
 			parseNonDelimitedString();
@@ -145,11 +146,16 @@ public class Add extends Command {
 		}
 	
 		_sc.close();
-		return normalString.toString().toString();
+		return normalString.toString();
 	}
 	
 	private void checkIfExistDesc() throws EmptyDescException {
-		if (inputParameters.get(PARAMETER_DESCRIPTION).equals(STRING_EMPTY)){
+		/**
+		 * should have null? 
+		 * Jun Wei
+		 */
+		if (inputParameters.get(PARAMETER_DESCRIPTION).trim().isEmpty()
+				|| (inputParameters.get(PARAMETER_DESCRIPTION) == null)){
 			_invalidParameters = true;
 			throw new EmptyDescException();
 		}		
@@ -157,11 +163,15 @@ public class Add extends Command {
 
 	private void parseNonDelimitedString() {
 		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		System.out.println("NO! " + input);
+		
 		String[] splitInput = input.split(STRING_SPACE);
 		String descString = extractTimeAndDate(splitInput);
 
 		if (!descAlreadyEntered()){
-			inputDesc(descString);
+			//inputDesc(descString);
+			System.out.println("DEBUG: " + fullInput);
+			inputDesc(input);
 		}
 	}
 
@@ -199,13 +209,34 @@ public class Add extends Command {
 		
 	}
 
+	/**
+	 * Lynnette, why you so sure that timeArray got 2 elements?
+	 * I think this is 1 of the bug.
+	 * From: Jun Wei
+	 * @param timeArray
+	 */
 	private void orderTimeArray(ArrayList<String> timeArray) {
+		//this method is add temporary to avoid bug
+		if (timeArray.size() != 2){
+			return;
+		}
+		
 		Collections.sort(timeArray);
 		inputStartTime(timeArray.get(0));
 		inputEndTime(timeArray.get(1));
 	}
 
+	/**
+	 * Lynnette, same here, why you so sure that 
+	 * dateArray got 3 elements?
+	 * @param dateArray
+	 */
 	private void orderDateArray(ArrayList<String> dateArray) {
+		//this method is add temporary to avoid bug
+		if (dateArray.size() != 3){
+			return;
+		}
+		
 		dateArray = sortDateArray(dateArray);
 		inputDeadline(dateArray.get(0));
 		inputStartDate(dateArray.get(1));

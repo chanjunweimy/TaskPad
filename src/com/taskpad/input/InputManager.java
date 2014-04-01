@@ -35,7 +35,11 @@ public class InputManager {
 	}
 
 	public static String outputToGui(String outputString){
-		GuiManager.callOutput(outputString);
+		if (!debug){
+			GuiManager.callOutput(outputString);
+		}else {
+			System.out.println(String.format(STATUS_GUI_OUTPUT, outputString));
+		}
 		return String.format(STATUS_GUI_OUTPUT, outputString);
 	}
 	
@@ -50,7 +54,11 @@ public class InputManager {
 	}
 	
 	public static String clearScreen(){
-		GuiManager.clearOutput();
+		if (!debug){
+			GuiManager.clearOutput();
+		}else {
+			System.out.println(STATUS_CLEAR);
+		}
 		return STATUS_CLEAR;
 	}
 	

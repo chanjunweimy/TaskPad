@@ -21,6 +21,8 @@ public class AlarmManager extends JApplet{
 	private static final String MESSAGE_ALARM = "ALARM!! %s";
 	private static final String MESSAGE_CANCEL_ALARM = "Cancelling Alarm";
 	private static final String MESSAGE_STOP_ALARM = "Stopping Alarm";
+	private static final String MESSAGE_NO_ALARM = "No alarm has been set";
+	private static final String MESSAGE_UNABLE_SET_ALARM = "Error: Unable to set alarm";
 	
 	private AlarmManager(){
 		/* deprecated, we no longer wants it to be an object
@@ -70,6 +72,7 @@ public class AlarmManager extends JApplet{
 		outputAlarmDesc();
 		
 		if (_alarm == null){
+			GuiManager.callOutput(MESSAGE_UNABLE_SET_ALARM);
 			throw EXCEPTION_ERROR;
 		}
 		
@@ -94,6 +97,7 @@ public class AlarmManager extends JApplet{
 
 	public static void turnOffAlarm() throws Exception{
 		if (_alarm == null){
+			GuiManager.callOutput(MESSAGE_NO_ALARM);
 			throw EXCEPTION_ERROR;
 		}
 		

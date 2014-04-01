@@ -17,8 +17,8 @@ public class GuiManager {
 
 	//by default 
 	public static void initialGuiManager() {
-		_inputFrame = new InputFrame();
 		_outputFrame = new FlexiFontOutputFrame();
+		_inputFrame = new InputFrame(); 
 	}
 
 	/* deprecated
@@ -46,16 +46,20 @@ public class GuiManager {
 
 	public static void callOutput(String out){
 		_outputFrame.addLine(out + NEWLINE);	
-		//_outputFrame.addLine(out);	
 	}
 	
 	public static void callOutputNoLine(String out){
 		_outputFrame.addLine(out);
 	}
 	
-	public static void outputPastCommands(String out){
+	/**
+	 * @deprecated
+	 * @param out
+	 */
+	protected static void callInputBox(String out){
 		_inputFrame.setLine(out);
 	}
+
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
 		_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
