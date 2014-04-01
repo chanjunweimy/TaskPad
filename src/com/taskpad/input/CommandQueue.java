@@ -15,8 +15,8 @@ public class CommandQueue {
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_EMPTY = "";
 	
-	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "Confirm clear screen? (Y/N)";
-	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "Confirm clear data? (Y/N)";
+	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "\nConfirm clear screen? (Y/N)";
+	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "\nConfirm clear data? (Y/N)";
 	
 	private static final CommandQueue _commandInstance = new CommandQueue();
 
@@ -154,9 +154,9 @@ public class CommandQueue {
 	
 	private static boolean isInputSubstring(String value, String input){
 		String[] splitInput = input.split(STRING_SPACE);
-		
 		for (int i=0; i<splitInput.length; i++){
 			if (splitInput[i].toUpperCase().equals(value)){
+				//System.out.println(splitInput[i] + " " + value);
 				return true;
 			}
 		}

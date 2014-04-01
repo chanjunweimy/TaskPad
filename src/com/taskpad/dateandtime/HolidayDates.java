@@ -32,9 +32,10 @@ public class HolidayDates {
 	 * @return String with holidayDates replaced, else returns input
 	 */
 	
-	protected static String replaceHolidayDate(String input){	
-		parseHolidayDate(input);
-		return input;
+	protected String replaceHolidayDate(String input){	
+		String holidayDate = _holidays.get(input.toUpperCase());
+		holidayDate = parseHolidayDate(holidayDate);
+		return holidayDate;
 	}
 
 	/** This method parses the date in the correct year
@@ -42,9 +43,10 @@ public class HolidayDates {
 	 * @param holidayDate
 	 * @return String, dd/mm/yyyy
 	 */
-	private static String parseHolidayDate(String holidayDate){
+	private String parseHolidayDate(String holidayDate){
 		holidayDate = addYear(holidayDate);
 		
+		/*
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
 		Date date = null;
 		try {
@@ -54,29 +56,50 @@ public class HolidayDates {
 			//do nothing
 		}
 		return sdf.format(date);
+		*.
+		*/
+		
+		return holidayDate;
 	}
 	
-	private static String addYear(String date) {
+	private String addYear(String date) {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		
-		return date+"/"+year;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date holidayDate = null;
+		try {
+			holidayDate = sdf.parse(date + "/" + year);
+			
+		} catch (ParseException e) {
+			//do nothing
+		}
+		
+		Date now = new Date();
+		if (now.compareTo(holidayDate) > 0){
+			year++;
+		}
+		
+		//System.out.println(now.toString() + "\n" + holidayDate.toString());
+		
+		return date + "/" + year;
 	}
 	
 	private static void initialiseHolidayMap(){
 		_holidays.put("CHRISTMAS", "25/12");
-		_holidays.put("APRIL FOOLS", "1/4");
-		_holidays.put("APRIL FOOLS DAY", "1/4");
-		_holidays.put("LABOUR DAY", "1/5");
-		_holidays.put("LABOR DAY", "1/5");
-		_holidays.put("NATIONAL DAY", "9/8");
-		_holidays.put("NEW YEAR", "1/1");
-		_holidays.put("NEW YEAR DAY", "1/1");
+		_holidays.put("APRIL FOOLS", "01/04");
+		_holidays.put("APRIL FOOLS DAY", "01/04");
+		_holidays.put("LABOUR DAY", "01/05");
+		_holidays.put("LABOR DAY", "01/05");
+		_holidays.put("NATIONAL DAY", "09/08");
+		_holidays.put("NEW YEAR", "01/01");
+		_holidays.put("NEW YEAR DAY", "01/01");
 	}
 	
-	/* Testing
+	///* Testing
 	public static void main(String[] args){
-		String input = "25/12";
-		System.out.println(parseHolidayDate(input));
+		String input = "LABOUR DAY";
+		HolidayDates holidayDates = HolidayDates.getInstance();
+		System.out.println(holidayDates.replaceHolidayDate(input));
 	}
 	//*/
 	

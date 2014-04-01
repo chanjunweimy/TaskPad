@@ -23,16 +23,16 @@ public class Addrem extends Command{
 	private static final String PARAMETER_REM_DATE = "DATE";
 	private static final String PARAMETER_REM_TIME = "TIME";
 	
-	private static String _taskID = "";
-	private static String _remDate = "";
-	private static String _remTime = "";
+	private String _taskID;
+	private String _remDate;
+	private String _remTime;
 	
 	private static DateObject _dateObject;
 	private static TimeObject _timeObject;
 	
 	private static Scanner sc;
-	private static boolean _invalidParameters = false;
-	private static boolean _isFlexiString = false;
+	private boolean _invalidParameters = false;
+	private boolean _isFlexiString = false;
 	
 	boolean _gotTaskID = false;
 	boolean _gotDate = false;
@@ -50,12 +50,13 @@ public class Addrem extends Command{
 		sc = new Scanner(System.in);
 		_dateObject = null;
 		_timeObject = null;
+		_taskID = "";
+		_remDate = "";
+		_remTime = "";
 	}
 
 	@Override
-	protected boolean commandSpecificRun() {
-		System.out.println(fullInput);
-		
+	protected boolean commandSpecificRun() {		
 		if (!_isFlexiString){
 			splitInputParameters();
 		} else {
@@ -72,8 +73,10 @@ public class Addrem extends Command{
 				
 		if (_invalidParameters){
 			return false;
-		}
+		} 
 
+		GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+		
 		return true;
 	}
 
@@ -108,14 +111,16 @@ public class Addrem extends Command{
 			String inputString[] = input.split(" ");
 			
 			if (isNotNumberArgs(inputString)){
+				System.out.println("Throw");
 				throw new InvalidParameterException();
 			}
 			
 			if(isNotValidTaskID(inputString[0])){
 				throw new TaskIDException(inputString[0]);
 			}
+		} else{
+			_isFlexiString = true;
 		}
-		_isFlexiString = true;
 		return false;
 	}
 	
@@ -135,7 +140,7 @@ public class Addrem extends Command{
 	
 	private void parseNextParam(String param){
 		String firstChar = getFirstChar(param);
-		param = removeFirstChar(param);
+		param = removeFirstChar(param).trim();
 
 		switch (firstChar){
 		case "d":
@@ -279,7 +284,7 @@ public class Addrem extends Command{
 		}
 	}
 	
-	/** TO JUNWEI: I think got bug in this method :( 
+	/** 
 	 * 
 	 * Checks if the rem time and date added is after current time and date
 	 * If so, throw exception, and populate invalidParameters
@@ -290,7 +295,6 @@ public class Addrem extends Command{
 		Date date = null;
 		date = parseRemDateAndTime(date);
 				
-		//It goes in this loop here :( 
 		if (now.compareTo(date) > 0){
 			_invalidParameters = true;
 			throw new DatePassedException();
@@ -300,7 +304,6 @@ public class Addrem extends Command{
 	private Date parseRemDateAndTime(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String enteredDateAndTime = formatRemString();
-		System.out.println(enteredDateAndTime);
 		try {
 			date = sdf.parse(enteredDateAndTime);
 		} catch (ParseException e) {
@@ -317,10 +320,11 @@ public class Addrem extends Command{
 	private String formatParaDate(){
 		String dateString = "";
 		if (_remDate.equals("")){
-			dateString += DateAndTimeManager.getInstance().getTodayDate();
-		}else {
-			dateString += _remDate;
+			_remDate = DateAndTimeManager.getInstance().getTodayDate();
 		}
+		
+		dateString += _remDate;
+		
 		return dateString;
 	}
 	

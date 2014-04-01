@@ -20,24 +20,12 @@ public class TestInput {
 	
 	
 	/**
-	 * ToDo: Add, alarm not fully being able to test with output streams
+	 * ToDo: alarm not fully being able to test with output streams
 	 */
 	
-	public void testAdd(){	
-		setUpStream();
-		
-		testInputString("CATEGORY \r\nSTART TIME \r\nEND TIME \r\nDEADLINE 23/03/2014\r\nVENUE "
-				+ "\r\nSTART DATE \r\nDESC homework to complete\r\nEND DATE " , "add homework to complete -d 23/03/2014");
-		
-		//testFindValueCommand("Add2", CommandType.ADD, "hello add");
-		//testFindValueCommand("Add3", CommandType.ADD, "add homework to complete -d 23/03/2014");
-		//testFindValueCommand("Add4", CommandType.ADD, "add -d 23/03/2014 \"complete homework\"");
-	}
-	
-	@Test
 	public void testClear(){
 		setUpStream();
-		testInputString("Output to GUI: Confirm clear data? (Y/N)", "Clear");
+		testInputString("Output to GUI: \r\nConfirm clear data? (Y/N)", "Clear");
 		testInputString("NULL ", "Y");
 	}
 	
@@ -59,16 +47,14 @@ public class TestInput {
 		testInputString("Output to GUI: Creating alarm... alarm collect laundry 30 min", "alarm collect laundry 30 min");
 	}
 	
-	
 	public void testStopAlarm(){
 		setUpStream();
 		testInputString("", "STOP");
 	}
 	
-	@Test
 	public void testClearScr(){
 		setUpStream();
-		testInputString("Output to GUI: Confirm clear screen? (Y/N)", "screen");
+		testInputString("Output to GUI:\r\nConfirm clear screen? (Y/N)", "screen");
 		testInputString("Clear GUI Screen", "Y");
 	}
 	
@@ -104,6 +90,19 @@ public class TestInput {
 		setUpStream();
 		testInputString("TASKID 1", "done 1");
 	}
+	
+	@Test
+	public void testAdd1(){
+		setUpStream();
+		testInputString("START TIME 11:00\r\n"
+				+ "END TIME 11:00\r\n"
+				+ "DEADLINE 11/11/2015\r\n"
+				+ "START DATE 11/11/2015\r\n"
+				+ "DESC \" aaa\" 1\r\n"
+				+ "END DATE 11/11/2015", 
+				"add 1 -s 11am, 11/11/15 -d 11/11/15 -e 11am, 11/11/15 \" aaa\"");
+	}
+	
 	
 	private void testInputString(String expected, String input){
 		InputManager.setDebug(true);

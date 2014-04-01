@@ -12,7 +12,20 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
+
+
+/**
+ * Add syntax
+ * with delimiters:
+ * add <desc> -d <deadline> -s <start date>,<start time> -e <end date>,<end time>
+ * 
+ * without delimiters... anything?
+ * @author Lynnette
+ *
+ */
 
 public class Add extends Command {
 
@@ -20,6 +33,7 @@ public class Add extends Command {
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_DASH = "-";
 	private static final String STRING_SPACE = " ";
+	private static final String STRING_COMMA = ",";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -37,6 +51,9 @@ public class Add extends Command {
 	
 	public Add(String input, String fullInput) {
 		super(input, fullInput);
+		
+		//Lynnette, don't forget to initialize boolean!! :)  Jun Wei
+		_invalidParameters = false;
 	}
 	
 	@Override
@@ -69,10 +86,15 @@ public class Add extends Command {
 	protected boolean commandSpecificRun() {		
 		if(checkIfDelimitedString()){
 			//this line is only useful if it is delimited
-			input = putDescInQuotesFirst(input);
+			String temp = putDescInQuotesFirst(input);
 			
+			if (!temp.trim().isEmpty()){
+				input = temp;
+			}
+			//System.out.println("DDE " + input);
 			parseDelimitedString();
-		}else {
+
+		} else {
 			parseNonDelimitedString();
 		}
 		
@@ -106,6 +128,11 @@ public class Add extends Command {
 	}
 	
 	/**
+	 * Lynnette,
+	 * I modify something here as well:
+	 * I won't set description here, as description should be set in another method.
+	 * This method is just to move description to the front
+	 * 
 	 * putDescInQuotesFirst: find description within " "
 	 * @return input string without description or empty string if " " not found
 	 */
@@ -128,6 +155,7 @@ public class Add extends Command {
 						normalString.append(STRING_SPACE + buildString);
 					}
 				} else {
+					//System.out.println(buildString);
 					tempDesc.append(STRING_SPACE + buildString);
 					if (buildString.endsWith(STRING_QUOTE)){
 						isFinish = true;
@@ -142,11 +170,15 @@ public class Add extends Command {
 			tempDesc = new StringBuffer(STRING_EMPTY);
 			return tempDesc.toString();
 		} else {
-			putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
+			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
+			tempDesc.append(normalString);
 		}
 	
 		_sc.close();
-		return normalString.toString();
+		
+		//System.out.println(tempDesc.toString());
+		
+		return tempDesc.toString();
 	}
 	
 	private void checkIfExistDesc() throws EmptyDescException {
@@ -162,10 +194,26 @@ public class Add extends Command {
 	}
 
 	private void parseNonDelimitedString() {
-		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
-		System.out.println("NO! " + input);
+		//"..." deadlinedate endtime startdate starttime
 		
-		String[] splitInput = input.split(STRING_SPACE);
+		
+		String inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+
+		String[] splitInput = inputNew.split(STRING_SPACE);
+		int size = splitInput.length;
+		putOneParameter(PARAMETER_DEADLINE, splitInput[size-3]);
+		putOneParameter(PARAMETER_END_TIME, splitInput[size-2]);
+		putOneParameter(PARAMETER_START_DATE, splitInput[size-1]);
+		putOneParameter(PARAMETER_START_TIME, splitInput[size]);
+		
+		String desc = STRING_EMPTY;
+		for (int i=0; i<size-3; i++){
+			desc += splitInput[i] + STRING_SPACE;
+		}
+		
+		putOneParameter(PARAMETER_DESCRIPTION, desc);
+		
+		/* deprecated
 		String descString = extractTimeAndDate(splitInput);
 
 		if (!descAlreadyEntered()){
@@ -173,6 +221,7 @@ public class Add extends Command {
 			System.out.println("DEBUG: " + fullInput);
 			inputDesc(input);
 		}
+		*/
 	}
 
 	/**
@@ -180,6 +229,7 @@ public class Add extends Command {
 	 * Otherwise, string them together as description
 	 * @param splitInput
 	 */
+	@SuppressWarnings("unused")
 	private String extractTimeAndDate(String[] splitInput) {
 		ArrayList<String> dateArray = new ArrayList<String>();
 		ArrayList<String> timeArray = new ArrayList<String>();
@@ -271,11 +321,114 @@ public class Add extends Command {
 		return dates;
 	}
 
-	private void parseDelimitedString() {
-		checkAndRemoveDate();
+	/**
+	 * Lynnette,
+	 * I have helped you modified something here:
+	 * get the description out first before using delimeter
+	 * 
+	 * parseDelimitedString: a method that parses
+	 * input that has a description in front.
+	 * @throws EmptyDescException 
+	 */
+	private void parseDelimitedString(){
+		//checkAndRemoveDate();
+		
+		//System.out.println("lalala   " + input);
+
+		_sc = new Scanner(input);
+		
+		StringBuffer description = new StringBuffer();
+		StringBuffer otherPart = new StringBuffer();
+		String tempInput = null;
+		
+		tempInput = retrieveDescription(_sc, description, tempInput);
+		otherPart = restructureOtherPart(otherPart, tempInput);
+		
+		//System.out.println(tempInput.toString() + " " + otherPart.toString() + " " + input);
+		
+		_sc.close();
+		
+		
+		_sc = new Scanner(otherPart.toString().trim());
+		//devide the useDelimiter to prevent resource leak;
+		_sc.useDelimiter("\\s-");
+		
+		while(_sc.hasNext()){
+			String nextParam = _sc.next().trim();
+			
+			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
+			//System.out.println("YYY: " + nextParam);
+			
+			parseNextParam(nextParam.trim());
+		}
+		_sc.close();
+		
+		/* Reverting to the old bit
 		checkAndRemoveStart();
 		checkAndRemoveEnd();
 		checkAndInputDesc();
+		*/
+	}
+
+	/**
+	 * 
+	 * @param otherPart
+	 * @param tempInput
+	 * @return
+	 */
+	private StringBuffer restructureOtherPart(StringBuffer otherPart, String tempInput) {
+		if (tempInput != null){
+			otherPart.append(tempInput.trim());
+		}
+		while (_sc.hasNext()){
+			otherPart.append(STRING_SPACE + _sc.next());
+		}
+		return otherPart;
+	}
+
+	/**
+	 * @param description
+	 * @param tempInput
+	 * @return
+	 */
+	private String retrieveDescription(Scanner sc, StringBuffer description,
+			String tempInput) {
+		boolean isBreak = false;
+		while (sc.hasNext()){
+			tempInput = sc.next();
+			 
+			if (tempInput.equals("-d") || tempInput.equals("-e") || tempInput.equals("-s")){
+				isBreak = true;
+				break;
+			}
+			
+			description.append(tempInput + STRING_SPACE);
+		}
+		
+		putOneParameter(PARAMETER_DESCRIPTION, description.toString().trim());
+		
+		if (!isBreak){
+			tempInput = STRING_EMPTY;
+		}
+		
+		return tempInput;
+	}
+	
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param);
+		
+		switch (firstChar){
+		case "d":
+			putDeadline(param);
+			break;
+		case "s":
+			putStartTime(param);
+			break;
+		case "e": 
+			putEndTime(param);
+			break;
+		}
 	}
 
 	private boolean checkIfDelimitedString() {
@@ -288,6 +441,7 @@ public class Add extends Command {
 	}
 	
 	/* Helper methods for parsing delimited strings */
+	@SuppressWarnings("unused")
 	private void checkAndRemoveDate() {
 		String[] splitInput = input.split(STRING_SPACE);
 		String newInput = STRING_EMPTY;
@@ -303,6 +457,7 @@ public class Add extends Command {
 		input = newInput;
 	}
 	
+	@SuppressWarnings("unused")
 	private void checkAndRemoveStart() {
 		String[] splitInput = input.split(STRING_SPACE);
 		String newInput = STRING_EMPTY;
@@ -345,6 +500,7 @@ public class Add extends Command {
 		return newInput;
 	}
 	
+	@SuppressWarnings("unused")
 	private void checkAndRemoveEnd() {
 		String[] splitInput = input.split(STRING_SPACE);
 		String newInput = STRING_EMPTY;
@@ -373,6 +529,7 @@ public class Add extends Command {
 		input = newInput;
 	}
 	
+	@SuppressWarnings("unused")
 	private void checkAndInputDesc(){
 		if (inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY){
 			inputDesc(input);
@@ -448,6 +605,7 @@ public class Add extends Command {
 		return param.split(STRING_SPACE);
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean descAlreadyEntered(){
 		return inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY;
 	}
@@ -478,6 +636,102 @@ public class Add extends Command {
 	
 	private String stripWhiteSpaces(String input){
 		return input.replaceAll(STRING_SPACE, STRING_EMPTY);
+	}
+	
+	private String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
+	}
+	
+	private String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
+	}
+	
+	private void putDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		try {
+			param = DateAndTimeManager.getInstance().parseDate(param);
+		} catch (InvalidDateException | DatePassedException e) {
+			InputManager.outputToGui(e.getMessage());
+			_invalidParameters = true;
+		}
+		inputDeadline(param);
+	}
+	
+	private void putStartTime(String param) {
+		String[] splitParam = param.split(STRING_COMMA);
+				
+		if (isValidTimeArgs(splitParam)){
+			//deprecated for flexi commands 
+			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
+			
+			String startTime = STRING_EMPTY;
+			try {
+				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException | InvalidTimeException e) {
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(startTime);
+				_invalidParameters = true;
+				return;
+			}
+			
+			putOneParameter(PARAMETER_START_TIME, startTime);
+		
+			String startDate = STRING_EMPTY;
+			if (splitParam.length == 2){
+				try {
+					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (InvalidDateException | DatePassedException e) {
+					InputManager.outputToGui(e.getMessage()); 
+					_invalidParameters = true;
+					return;
+				}
+				putOneParameter(PARAMETER_START_DATE, startDate);
+			}
+			
+		}
+	}
+	
+	private void putEndTime(String param) {
+		String[] splitParam = param.split(",");
+		
+		if (isValidTimeArgs(splitParam)){
+			//deprecated for flexi commands
+			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
+			String endTime = STRING_EMPTY;
+			
+			try {
+				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException | InvalidTimeException e) {
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(endTime);
+				_invalidParameters = true;
+				return;
+			}
+			
+			putOneParameter(PARAMETER_END_TIME, endTime);
+			
+			String endDate = STRING_EMPTY;
+			if (splitParam.length == 2){
+				try {
+					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (DatePassedException | InvalidDateException e) {
+					InputManager.outputToGui(e.getMessage());
+					_invalidParameters = true;
+					return;
+				}
+				putOneParameter(PARAMETER_END_DATE, endDate);
+			}
+		}
+	}
+	
+	private boolean isValidTimeArgs(String[] args){
+		if (args.length > 2){
+			InputManager.outputToGui("Error in number of time arguments: args.length");
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	/* Testing
