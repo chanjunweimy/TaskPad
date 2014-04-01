@@ -22,8 +22,8 @@ import com.taskpad.dateandtime.TimeObject;
  * with delimiters:
  * add <desc> -d <deadline> -s <start date>,<start time> -e <end date>,<end time>
  * 
- * without delimiters... anything :D 
- * @author Charbby
+ * without delimiters... anything?
+ * @author Lynnette
  *
  */
 
@@ -55,7 +55,6 @@ public class Add extends Command {
 	
 	@Override
 	public void run(){
-		//"..." deadlinedate endtime startdate starttime
 		try {
 			checkIfEmptyString();
 		} catch (EmptyStringException e) {
@@ -179,10 +178,18 @@ public class Add extends Command {
 	}
 
 	private void parseNonDelimitedString() {
-		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
-		System.out.println("NO! " + input);
+		//"..." deadlinedate endtime startdate starttime
 		
+		
+		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+
 		String[] splitInput = input.split(STRING_SPACE);
+		putOneParameter(PARAMETER_DEADLINE, splitInput[0]);
+		putOneParameter(PARAMETER_END_TIME, splitInput[1]);
+		putOneParameter(PARAMETER_START_DATE, splitInput[2]);
+		putOneParameter(PARAMETER_START_TIME, splitInput[3]);
+		
+		/* deprecated
 		String descString = extractTimeAndDate(splitInput);
 
 		if (!descAlreadyEntered()){
@@ -190,6 +197,7 @@ public class Add extends Command {
 			System.out.println("DEBUG: " + fullInput);
 			inputDesc(input);
 		}
+		*/
 	}
 
 	/**
