@@ -99,8 +99,7 @@ public class DateAndTimeRetriever {
 		String desc = createDesc(input);
 		
 		//step one: convert all number words to numbers using number parser		
-		String numberedInput = parseNumber(input, datmParser);
-		
+		String numberedInput = parseNumber(input);
 		
 		//step two: find holiday words and replace with date
 		//input = HolidayDates.getInstance().replaceHolidayDate(input);
@@ -117,7 +116,8 @@ public class DateAndTimeRetriever {
 	 * @param input
 	 * @param datmParser
 	 */
-	private static String parseNumber(String input, DateAndTimeManager datmParser) {
+	private static String parseNumber(String input) {
+		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
 		Scanner sc = new Scanner(input);
 		StringBuffer changedString = new StringBuffer();
 		StringBuffer numberString = new StringBuffer();
@@ -140,6 +140,12 @@ public class DateAndTimeRetriever {
 				numberString.append(token + " ");
 			}
 		}
+		
+		String realNumber = datmParser.parseNumber(numberString.toString().trim());
+		if (realNumber != null){
+			changedString.append(realNumber + " ");
+		}
+
 		sc.close();
 		return changedString.toString().trim();
 	}
@@ -157,6 +163,15 @@ public class DateAndTimeRetriever {
 			desc = desc + "\"";
 		}
 		return desc;
+	}
+	
+	public static void main (String[] args){
+		System.out.println(createDesc("aaaa"));
+		System.out.println(createDesc("\"aaaa"));
+		System.out.println(createDesc("\"aaaa\""));
+		System.out.println(parseNumber("one one one aaa one one one"));
+		System.out.println(parseNumber("one one one aaa"));
+		System.out.println(parseNumber("aaa"));
 	}
 
 	
