@@ -20,11 +20,12 @@ public class DateParser {
 	private static DateParser _dateParser = new DateParser();
 	
 	private static final String[] _dateWithoutYear = {
+		"d MMMM", "MMMM d", "dMMMM", "MMMMd",
 		"d MMM", "MMM d", "dMMM", "MMMd",
 		"d/MM", "d-MM",  //"d.MM", //"d MM",
 		"d/M", "d-M",  //"d.M", //"d M",
 		
-		
+		"dd MMMM", "MMMM dd", "ddMMMM", "MMMMdd",
 		"dd/M", "dd-M", //"dd.M", //"dd M", 
 		"dd/MM", "dd-MM", //"dd.MM", //"dd MM",  
 		"MMM dd", "dd MMM", "ddMMM", "MMMdd"
@@ -34,6 +35,9 @@ public class DateParser {
 	private static final String[] _dateFormats = {
 		"d/MM/yy", "d-MM-yy", "d.MM.yy", //"d MM yy", 
 		"d/M/yy", "d-M-yy", "d.M.yy", //"d M yy",
+		"MMMM d yy", "MMMM d , yy", "MMMM d, yy", "MMMM d,yy",  
+		"d MMMM yy", "d MMMM , yy", "d MMMM, yy", "d MMMM,yy", 
+		"d-MMMM-yy", "dMMMMyy",
 		"MMM d yy", "MMM d , yy", "MMM d, yy", "MMM d,yy",  
 		"d MMM yy", "d MMM , yy", "d MMM, yy", "d MMM,yy", 
 		"d-MMM-yy", "d MM , yy", "d MM, yy", "d MM,yy", 
@@ -41,6 +45,9 @@ public class DateParser {
 		
 		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", //"dd MM yy", 
 		"dd/M/yy", "dd-M-yy", "dd.M.yy", //"dd M yy",
+		"MMMM dd yy", "MMMM dd , yy", "MMMM dd, yy", "MMMM dd,yy",  
+		"dd MMMM yy", "dd MMMM , yy", "dd MMMM, yy", "dd MMMM,yy", 
+		"dd-MMMM-yy", "ddMMMMyy",
 		"MMM dd yy", "MMM dd , yy", "MMM dd, yy", "MMM dd,yy",  
 		"dd MMM yy", "dd MMM , yy", "dd MMM, yy", "dd MMM,yy", 
 		"dd-MMM-yy", "dd MM , yy", "dd MM, yy", "dd MM,yy", 
@@ -96,7 +103,7 @@ public class DateParser {
 		return _dateParser;
 	}
 	
-	protected String parseDate(String input) throws InvalidDateException, DatePassedException{
+	protected String parseDate(String input) throws InvalidDateException{
 		if (input == null){
 			throw new InvalidDateException();
 		}
@@ -124,26 +131,13 @@ public class DateParser {
 	 * 				: String
 	 * @return String
 	 * @throws InvalidDateException 
-	 * @throws DatePassedException 
 	 */
-	private String getActualDate(String input) throws DatePassedException {
+	private String getActualDate(String input){
 		String dateStringWithoutYear = null;
 		String dateString = null;
 		
-		try {
-			dateStringWithoutYear = formatDateWithoutYear(input);
-		} catch (DatePassedException e) {
-			try {
-				dateString = formatDate(input);
-				
-				if (dateString == null){
-					throw e;
-				}
-			} catch (DatePassedException e1) {
-				throw e1;
-			}
-		}
-		
+
+		dateStringWithoutYear = formatDateWithoutYear(input);
 		dateString = formatDate(input);
 
 		if (dateString == null){
@@ -152,7 +146,7 @@ public class DateParser {
 		return dateString;
 	}
 	
-	private static String formatDateWithoutYear(String input) throws DatePassedException{
+	private static String formatDateWithoutYear(String input){
 		assert (input != null);
 		
 		String dateString = null;
@@ -167,18 +161,19 @@ public class DateParser {
 				
 				Date date = sdf.parse(input);
 				
-				/*
-				boolean isWrongFormat = !input.equals(sdf.format(date)) && !dwy.contains("MMM");
+				
+				boolean isWrongFormat = !input.equals(sdf.format(date));
 				if (isWrongFormat){
 					continue;
-				}*/
+				}
 				
 				date = setYear(date);
 				
-				
+				/*
 				if (isPassed(date) ){
 					throw new DatePassedException();
 				}
+				*/
 				
 				dateString = _formatter.format(date);
 				break;
@@ -189,9 +184,22 @@ public class DateParser {
 		return dateString;
 	}
 
+	/**
+	 * should not be true because even if 
+	 * the date has passed it can be
+	 * startDate also
+	 * @deprecated
+	 * @param date
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	private static boolean isPassed(Date date) {
+		/*
 		Date now = new Date();
 		return now.compareTo(date) > 0;
+		*/
+		
+		return false;
 	}
 	
 	private static Date setYear(Date date) {
@@ -204,7 +212,7 @@ public class DateParser {
 		return date;
 	}
 
-	private static String formatDate(String input) throws DatePassedException{
+	private static String formatDate(String input){
 		assert (input != null);
 		
 		String dateString = null;
@@ -224,10 +232,11 @@ public class DateParser {
 				if (isWrongFormat){
 					continue;
 				}*/
-				
+				/*
 				if (isPassed(date) ){
 					throw new DatePassedException();
 				}
+				*/
 				
 				dateString = _formatter.format(date);
 				break;
@@ -249,8 +258,8 @@ public class DateParser {
 		//System.out.println(formatDateWithoutYear("03 01"));  //Will use system year at 1970
 		//System.out.println(formatDate("Oct 18,93"));
 		try {
-			System.out.println(DateParser.getInstance().parseDate("1 Jan 15"));
-		} catch (DatePassedException | InvalidDateException e) {
+			System.out.println(DateParser.getInstance().parseDate("1 January"));
+		} catch (InvalidDateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

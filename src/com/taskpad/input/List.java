@@ -133,7 +133,7 @@ public class List extends Command{
 			//putOneParameter(PARAMETER_LIST_KEY, deadline);
 			parameterList = deadline;
 			_isDeadline = true;
-		} catch (DatePassedException | InvalidDateException e) {
+		} catch (InvalidDateException e) {
 			//GuiManager.callOutput(e.getMessage());
 			_isDeadline = false;
 		}

@@ -7,12 +7,10 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
 
 public class TestDateParser {
 	private static final String DATE_TEST = "01/04/2014 00:01";
-	private static final String DATE_PASSED = "Date has passed. Please enter a date in the future";
 	private static final String DATE_INVALID = "Error: Invalid Date Entered";
 	private DateAndTimeManager _dateParser = DateAndTimeManager.getInstance();
 	
@@ -240,6 +238,22 @@ public class TestDateParser {
 		testDateCommand("01-06", "01/06/2014");
 	}
 	
+	@Test
+	public void test45(){
+		testDateCommand("01-01", "01/01/2014");
+	}
+	
+	@Test
+	public void test46(){
+		testDateCommand("20/03/14", "20/03/2014");
+	}
+	
+	@Test
+	public void test47(){
+		testDateCommand("1 January", "01/01/2014");
+	}
+	
+	
 	
 	
 	/*We test invalid dates*/
@@ -311,11 +325,6 @@ public class TestDateParser {
 	}
 	
 	@Test
-	public void invalid13(){
-		testInvalidDateCommand("20/03/14", DATE_PASSED);
-	}
-	
-	@Test
 	public void invalid14(){
 		testInvalidDateCommand("40-18-10", DATE_INVALID);
 	}
@@ -331,109 +340,104 @@ public class TestDateParser {
 	}
 	
 	@Test
-	public void invalid27(){
+	public void invalid17(){
 		testInvalidDateCommand("40-18-Oct", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid28(){
+	public void invalid18(){
 		testInvalidDateCommand("16/10/Oct", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid29(){
+	public void invalid19(){
 		testInvalidDateCommand("15/10/oct", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid30(){
+	public void invalid20(){
 		testInvalidDateCommand("35.18.10", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid31(){
+	public void invalid21(){
 		testInvalidDateCommand("49 18 10", DATE_INVALID);
 	}
 
 	/*boundary case: when it is null*/
 	@Test
-	public void invalid32(){
+	public void invalid22(){
 		testInvalidDateCommand(null, DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid33(){
+	public void invalid23(){
 		testInvalidDateCommand("100 October,14", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid34(){
+	public void invalid24(){
 		testInvalidDateCommand("1 1", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid35(){
-		testInvalidDateCommand("1 January", DATE_PASSED);
-	}
-	
-	@Test
-	public void invalid36(){
+	public void invalid25(){
 		testInvalidDateCommand("18 10 15", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid37(){
+	public void invalid26(){
 		testInvalidDateCommand("01.06", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid38(){
+	public void invalid27(){
 		testInvalidDateCommand("01 06", DATE_INVALID);
 	}
 	
 	/*test those exceptions*/
 	@Test
-	public void invalid39(){
+	public void invalid28(){
 		testInvalidDateCommand("01 02 2015", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid40(){
+	public void invalid29(){
 		testInvalidDateCommand("01.6", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid41(){
+	public void invalid30(){
 		testInvalidDateCommand("01 6", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid42(){
+	public void invalid31(){
 		testInvalidDateCommand("1.06", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid43(){
+	public void invalid32(){
 		testInvalidDateCommand("1 06", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid44(){
+	public void invalid33(){
 		testInvalidDateCommand("01 12", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid45(){
+	public void invalid34(){
 		testInvalidDateCommand("1.6", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid46(){
+	public void invalid35(){
 		testInvalidDateCommand("1 6", DATE_INVALID);
 	}
 	
 	@Test
-	public void invalid47(){
+	public void invalid36(){
 		testInvalidDateCommand("1 6 15", DATE_INVALID);
 	}
 	
@@ -441,7 +445,7 @@ public class TestDateParser {
 		setupDebug();
 		try {
 			assertEquals(_dateParser.parseDate(input), expected);
-		} catch (InvalidDateException | DatePassedException e) {
+		} catch (InvalidDateException e) {
 			fail();
 		}
 	}
@@ -461,7 +465,8 @@ public class TestDateParser {
 		setupDebug();
 		try{
 			_dateParser.parseDate(input);
-		} catch (InvalidDateException | DatePassedException e){
+			fail();
+		} catch (InvalidDateException e){
 			assertEquals(e.getMessage(), expected);
 		}
 	}

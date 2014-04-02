@@ -239,7 +239,7 @@ public class Add_old extends Command{
 		param = stripWhiteSpaces(param);
 		try {
 			param = DateAndTimeManager.getInstance().parseDate(param);
-		} catch (InvalidDateException | DatePassedException e) {
+		} catch (InvalidDateException e) {
 			InputManager.outputToGui(e.getMessage());
 			_invalidParameters = true;
 		}
@@ -277,7 +277,7 @@ public class Add_old extends Command{
 			if (splitParam.length == LENGTH_TIME){
 				try {
 					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException | DatePassedException e) {
+				} catch (InvalidDateException e) {
 					InputManager.outputToGui(e.getMessage()); 
 					_invalidParameters = true;
 					return;
@@ -319,7 +319,7 @@ public class Add_old extends Command{
 			if (splitParam.length == LENGTH_TIME){
 				try {
 					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (DatePassedException | InvalidDateException e) {
+				} catch (InvalidDateException e) {
 					InputManager.outputToGui(e.getMessage());
 					_invalidParameters = true;
 					return;

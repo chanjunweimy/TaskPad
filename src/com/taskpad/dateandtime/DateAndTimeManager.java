@@ -130,7 +130,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws InvalidDateException 
 	 * @throws DatePassedException 
 	 */
-	public String parseDate(String dateString) throws DatePassedException, InvalidDateException{
+	public String parseDate(String dateString) throws InvalidDateException{
 		DateParser dateParser = DateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
@@ -142,7 +142,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	
 	public DateObject findDate(String input){
-		return DateAndTimeRetriever.findDate(input);
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.findDate(input);
 	}
 	
 	/**
@@ -151,7 +152,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @returns TimeObject
 	 */
 	public TimeObject findTime(String input){
-		return DateAndTimeRetriever.findTime(input);
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.findTime(input);
 	}
 	
 	/**
@@ -232,7 +234,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * or input string if no date and time exists
 	 */
 	public String formatDateAndTimeInString(String input){
-		return DateAndTimeRetriever.formatDateAndTimeInString(input);
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.formatDateAndTimeInString(input);
 	}
 	
 	public void setDebug(String dateString) throws ParseException{
