@@ -26,37 +26,6 @@ public class HolidayDates {
 	protected static HolidayDates getInstance(){
 		return _holidayDate;
 	}
-	
-	/** 
-	 * This method takes an input String, finds if there is holiday dates 
-	 * and replace them with the numerical date
-	 * @param input
-	 * @return String with holidayDates replaced, else returns input
-	 */
-	
-	protected String replaceHolidayDate(String input){
-		int length = input.length();
-		String sub;
-		
-		for (int i=0; i<length; i++){
-			for (int j=1; j<=length-i; j++){
-				sub = input.substring(i, i+j);
-				if (isHoliday(sub)){
-					String holidayDate = parseHolidayDate(getHoliday(sub));
-					input = input.replace(sub, holidayDate);
-				}
-			}
-		}
-		return input;
-	}
-
-	private String getHoliday(String sub) {
-		return _holidays.get(sub.toUpperCase());
-	}
-
-	private boolean isHoliday(String sub) {
-		return _holidays.containsKey(sub.toUpperCase());
-	}
 
 	/** This method parses the date in the correct year
 	 * 
@@ -105,7 +74,7 @@ public class HolidayDates {
 		String input = " i is LABOUR DAY";
 		System.out.println(input);
 		HolidayDates holidayDates = HolidayDates.getInstance();
-		System.out.println(holidayDates.replaceHolidayDate(input));
+		//System.out.println(holidayDates.replaceHolidayDate(input));
 	}
 	//*/
 	
