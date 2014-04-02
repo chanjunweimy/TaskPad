@@ -47,12 +47,11 @@ public class Add extends Command {
 	//private static String PARAMETER_INFO = "INFO";
 	
 	private static Scanner _sc; 
-	private static boolean _invalidParameters = false;
+	private static boolean _invalidParameters;
 	
 	public Add(String input, String fullInput) {
 		super(input, fullInput);
 		
-		//Lynnette, don't forget to initialize boolean!! :)  Jun Wei
 		_invalidParameters = false;
 	}
 	
@@ -128,11 +127,6 @@ public class Add extends Command {
 	}
 	
 	/**
-	 * Lynnette,
-	 * I modify something here as well:
-	 * I won't set description here, as description should be set in another method.
-	 * This method is just to move description to the front
-	 * 
 	 * putDescInQuotesFirst: find description within " "
 	 * @return input string without description or empty string if " " not found
 	 */
@@ -405,7 +399,10 @@ public class Add extends Command {
 			description.append(tempInput + STRING_SPACE);
 		}
 		
-		putOneParameter(PARAMETER_DESCRIPTION, description.toString().trim());
+		String descString = description.toString().trim();
+		descString = descString.replaceAll("\"", STRING_EMPTY);
+		
+		putOneParameter(PARAMETER_DESCRIPTION, descString);
 		
 		if (!isBreak){
 			tempInput = STRING_EMPTY;
