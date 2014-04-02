@@ -41,13 +41,21 @@ public class HolidayDates {
 		for (int i=0; i<length; i++){
 			for (int j=1; j<=length-i; j++){
 				sub = input.substring(i, i+j);
-				if (_holidays.containsKey(sub.toUpperCase())){
-					String holidayDate = parseHolidayDate(_holidays.get(sub.toUpperCase()));
-					input = input.replaceAll(sub, holidayDate);
+				if (isHoliday(sub)){
+					String holidayDate = parseHolidayDate(getHoliday(sub));
+					input = input.replace(sub, holidayDate);
 				}
 			}
 		}
 		return input;
+	}
+
+	private String getHoliday(String sub) {
+		return _holidays.get(sub.toUpperCase());
+	}
+
+	private boolean isHoliday(String sub) {
+		return _holidays.containsKey(sub.toUpperCase());
 	}
 
 	/** This method parses the date in the correct year
@@ -84,6 +92,7 @@ public class HolidayDates {
 		_holidays.put("CHRISTMAS", "25/12");
 		_holidays.put("APRIL FOOLS", "01/04");
 		_holidays.put("APRIL FOOLS DAY", "01/04");
+		_holidays.put("INDEPENDENCE DAY", "04/07");
 		_holidays.put("LABOUR DAY", "01/05");
 		_holidays.put("LABOR DAY", "01/05");
 		_holidays.put("NATIONAL DAY", "09/08");

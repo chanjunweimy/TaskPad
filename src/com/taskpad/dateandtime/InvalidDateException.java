@@ -19,12 +19,10 @@ public class InvalidDateException extends Exception{
 	
 	public InvalidDateException(){
 		super(MESSAGE);
-		_logger.info(MESSAGE);
 	}
 	
 	public InvalidDateException(String Message){
 		super (MESSAGE + ": " + Message);
-		_logger.info(MESSAGE);
 	}
 
 }
