@@ -1,6 +1,5 @@
 package com.taskpad.dateandtime;
 
-import java.util.logging.Logger;
 
 /**
  * InvalidDateException thrown while it is not a valid date format
@@ -14,8 +13,6 @@ public class InvalidDateException extends Exception{
 	private static final long serialVersionUID = 8886449578429827179L;
 	
 	private static final String MESSAGE = "Error: Invalid Date Entered";
-	
-	private static Logger _logger = Logger.getLogger(MESSAGE);
 	
 	public InvalidDateException(){
 		super(MESSAGE);
