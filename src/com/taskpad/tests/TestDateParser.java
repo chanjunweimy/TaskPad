@@ -32,273 +32,215 @@ public class TestDateParser {
 	public void test3() {
 		testDateCommand("11.11.2015", "11/11/2015");
 	}
-	
-	@Test
-	public void test4(){
-		testDateCommand("18 10 15", "18/10/2015");
-	}
+		
 	
 	@Test 
-	public void test5(){
+	public void test4(){
 		testDateCommand("Oct 18 15", "18/10/2015");
 	}
 	
 	@Test
-	public void test6(){
+	public void test5(){
 		testDateCommand("October 18 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test7(){
+	public void test6(){
 		testDateCommand("Oct 18,16", "18/10/2016");
 	}
 	
 	@Test
-	public void test8(){
+	public void test7(){
 		testDateCommand("October 18,14", "18/10/2014");
 	}
 	
 	@Test
-	public void test9(){
+	public void test8(){
 		testDateCommand("Oct 18 , 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test10(){
+	public void test9(){
 		testDateCommand("October 18 , 15", "18/10/2015");
 	}
 	
 	@Test
-	public void test11(){
+	public void test10(){
 		testDateCommand("Oct 18, 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test12(){
+	public void test11(){
 		testDateCommand("October 18, 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test13(){
+	public void test12(){
 		testDateCommand("18 Oct 16", "18/10/2016");
 	}
 	
 	@Test
-	public void test14(){
+	public void test13(){
 		testDateCommand("18 October 15", "18/10/2015");
 	}
 	
 	@Test
-	public void test15(){
+	public void test14(){
 		testDateCommand("18 Oct, 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test16(){
+	public void test15(){
 		testDateCommand("18 October, 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test17(){
+	public void test16(){
 		testDateCommand("18-Oct-15", "18/10/2015");
 	}
 	
 	@Test
-	public void test18(){
+	public void test17(){
 		testDateCommand("18-October-15", "18/10/2015");
 	}
 	
 	@Test
-	public void test19(){
+	public void test18(){
 		testDateCommand("18 Oct,15", "18/10/2015");
 	}
 	
 	@Test
-	public void test20(){
+	public void test19(){
 		testDateCommand("18 October,14", "18/10/2014");
 	}
 	
 	@Test
-	public void test21(){
+	public void test20(){
 		testDateCommand("18 10 , 14", "18/10/2014");
 	}
 	
 	@Test
-	public void test22(){
+	public void test21(){
 		testDateCommand("18 10, 16", "18/10/2016");
 	}
 	
 	@Test
-	public void test23(){
+	public void test22(){
 		testDateCommand("18/10/2015", "18/10/2015");
 	}
 	
 	@Test
-	public void test24(){
+	public void test23(){
 		testDateCommand("18-10-2015", "18/10/2015");
 	}
 	
 	@Test
-	public void test25(){
+	public void test24(){
 		testDateCommand("18.10.2015", "18/10/2015");
 	}
 	
 	@Test
-	public void test26(){
+	public void test25(){
 		testDateCommand("18Oct15", "18/10/2015");
 	}
 	
 	@Test
-	public void test27(){
-		testDateCommand("1 6 15", "01/06/2015");
-	}
-	
-	@Test
-	public void test28(){
+	public void test26(){
 		testDateCommand("1 Jun 15", "01/06/2015");
 	}
 	
 	@Test 
-	public void test29(){
+	public void test27(){
 		testDateCommand("1.6.15", "01/06/2015");
 	}
 	
 	@Test
-	public void test30(){
+	public void test28(){
 		testDateCommand("1.6.2015", "01/06/2015");
 	}
 	
 	/*We test dates without year*/
 	@Test
-	public void test31(){
+	public void test29(){
 		testDateCommand("1/6", "01/06/2014");
 	}
 	
 	@Test
-	public void test32(){
+	public void test30(){
 		testDateCommand("1-6", "01/06/2014");
 	}
 	
 	@Test
-	public void test33(){
-		testDateCommand("1.6", "01/06/2014");
-	}
-	
-	@Test
-	public void test34(){
-		testDateCommand("1 6", "01/06/2014");
-	}
-	
-	@Test
-	public void test35(){
+	public void test31(){
 		testDateCommand("June 1", "01/06/2014");
 	}
 	
 	@Test
-	public void test36(){
+	public void test32(){
 		testDateCommand("1 Jun", "01/06/2014");
 	}
 	
 	@Test
-	public void test37(){
+	public void test33(){
 		testDateCommand("1Jun", "01/06/2014");
 	}
 	
 	@Test
-	public void test38(){
+	public void test34(){
 		testDateCommand("Jun1", "01/06/2014");
 	}
 	
 	@Test
-	public void test39(){
-		testDateCommand("01 12", "01/12/2014");
-	}
-	
-	@Test
-	public void test40(){
+	public void test35(){
 		testDateCommand("1/06", "01/06/2014");
 	}
 	
 	@Test
-	public void test41(){
+	public void test36(){
 		testDateCommand("1-06", "01/06/2014");
 	}
 	
 	@Test
-	public void test42(){
-		testDateCommand("1.06", "01/06/2014");
-	}
-	
-	@Test
-	public void test43(){
-		testDateCommand("1 06", "01/06/2014");
-	}
-	
-	@Test
-	public void test44(){
+	public void test37(){
 		testDateCommand("01/6", "01/06/2014");
 	}
 	
 	@Test
-	public void test45(){
+	public void test38(){
 		testDateCommand("01-6", "01/06/2014");
 	}
 	
 	@Test
-	public void test46(){
-		testDateCommand("01.6", "01/06/2014");
-	}
-	
-	@Test
-	public void test47(){
-		testDateCommand("01 6", "01/06/2014");
-	}
-	
-	@Test
-	public void test48(){
+	public void test39(){
 		testDateCommand("June 01", "01/06/2014");
 	}
 	
 	@Test
-	public void test49(){
+	public void test40(){
 		testDateCommand("01 Jun", "01/06/2014");
 	}
 	
 	@Test
-	public void test50(){
+	public void test41(){
 		testDateCommand("01Jun", "01/06/2014");
 	}
 	
 	@Test
-	public void test51(){
+	public void test42(){
 		testDateCommand("Jun01", "01/06/2014");
 	}
 	
 	@Test
-	public void test52(){
+	public void test43(){
 		testDateCommand("01/06", "01/06/2014");
 	}
 	
 	@Test
-	public void test53(){
+	public void test44(){
 		testDateCommand("01-06", "01/06/2014");
 	}
 	
-	@Test
-	public void test54(){
-		testDateCommand("01.06", "01/06/2014");
-	}
 	
-	@Test
-	public void test55(){
-		testDateCommand("01 06", "01/06/2014");
-	}
-	
-	/*test those exceptions*/
-	@Test
-	public void test56(){
-		testDateCommand("01 02 2015", "01/02/2015");
-	}
 	
 	/*We test invalid dates*/
 	
@@ -426,7 +368,7 @@ public class TestDateParser {
 	
 	@Test
 	public void invalid34(){
-		testInvalidDateCommand("1 1", DATE_PASSED);
+		testInvalidDateCommand("1 1", DATE_INVALID);
 	}
 	
 	@Test
@@ -434,7 +376,66 @@ public class TestDateParser {
 		testInvalidDateCommand("1 January", DATE_PASSED);
 	}
 	
+	@Test
+	public void invalid36(){
+		testInvalidDateCommand("18 10 15", DATE_INVALID);
+	}
 	
+	@Test
+	public void invalid37(){
+		testInvalidDateCommand("01.06", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid38(){
+		testInvalidDateCommand("01 06", DATE_INVALID);
+	}
+	
+	/*test those exceptions*/
+	@Test
+	public void invalid39(){
+		testInvalidDateCommand("01 02 2015", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid40(){
+		testInvalidDateCommand("01.6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid41(){
+		testInvalidDateCommand("01 6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid42(){
+		testInvalidDateCommand("1.06", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid43(){
+		testInvalidDateCommand("1 06", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid44(){
+		testInvalidDateCommand("01 12", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid45(){
+		testInvalidDateCommand("1.6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid46(){
+		testInvalidDateCommand("1 6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid47(){
+		testInvalidDateCommand("1 6 15", DATE_INVALID);
+	}
 	
 	private void testDateCommand(String input, String expected){
 		setupDebug();
