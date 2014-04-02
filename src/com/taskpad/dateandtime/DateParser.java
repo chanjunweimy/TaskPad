@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 /** This class takes in a date and checks if it fits any of the SimpleDateFormat
  * Returns null string if otherwise
@@ -82,11 +81,13 @@ public class DateParser {
 		 */
 	};
 	
+	/*
 	private static final String[] MONTHS = {
 		
 	};
 	
 	private static HashMap _monthMap = new HashMap();
+	*/
 	
 	private DateParser(){
 	}
