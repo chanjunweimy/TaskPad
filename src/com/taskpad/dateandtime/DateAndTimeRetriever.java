@@ -119,7 +119,7 @@ public class DateAndTimeRetriever{
 		//step five: find PM or AM words and find time unit before and replace with time
 		String timeInput = parseTime(input);
 		
-		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
+		//"..." deadlinedate endtime startdate starttime
 		return input;
 	}
 
