@@ -108,8 +108,15 @@ public class DateAndTimeRetriever {
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
 		String[] dayTokens = holidayString.split(" ");
 		StringBuffer dayString = new StringBuffer();
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		for (int i = 0; i < dayTokens.length; i++){
-			
+			String token = dayTokens[i];
+			if (datm.isDay(token)){
+				for (int j = i-1 ; j >= 0; j--){
+					
+				}
+			}
 		}
 		
 		
