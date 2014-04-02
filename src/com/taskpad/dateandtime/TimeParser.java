@@ -191,7 +191,7 @@ public class TimeParser {
 	}
 	
 	private static boolean time12Matches(String input){
-		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(\\s)?(a|p|am|pm)?$");
+		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(a|p|am|pm)?$");
 	    Matcher time12M = time12.matcher(input);
 	    
 	    return time12M.matches();
@@ -286,7 +286,7 @@ public class TimeParser {
 	}
 	
 	public static void main(String[] args){
-		String input = "8";
+		String input = "8.15 am";
 		long time = 0;
 		try {
 			time = decodeTime(input);
