@@ -9,9 +9,8 @@ public class TestSystem {
 	public static void main(String args[]) {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		int oldSize = listOfTasks.size();
-		InputManager.receiveFromGui("add watch movie");
+		InputManager.receiveFromGui("add watch movie -d 31/05/2015");
 		listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		System.out.println(listOfTasks.size());
 	}
-	
 }

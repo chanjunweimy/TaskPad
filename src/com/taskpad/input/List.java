@@ -19,14 +19,17 @@ public class List extends Command{
 
 	private static String COMMAND_LIST = "LIST";
 	private static String PARAMETER_LIST_KEY = "KEY";
-	private static String parameterList = "";
+	private static String PARAMETER_DEADLINE = "DEADLINE";
+	private String parameterList = "";
 	
 	private static final String[] PARAMETER_VALID_LIST = {"ALL", "DONE", "UNDONE"};
-	private static Map<String, String[]> parametersMap;
+	private Map<String, String[]> parametersMap;
 	
 	private static final String MESSAGE_INVALID_PARAMETER = "Error: Invalid List Parameter. Type help if you need! :)";
 	
 	private static int NUMBER_ARGUMENTS = 1;
+	
+	private boolean _isDeadline = false;
 	
 	public List(String input, String fullInput) {
 		super(input, fullInput);
@@ -39,6 +42,7 @@ public class List extends Command{
 		
 		parametersMap = new HashMap<String, String[]>();
 		initialiseParametersMap();
+		_isDeadline = false;
 	}
 
 	@Override
@@ -60,11 +64,18 @@ public class List extends Command{
 	@Override
 	protected void initialiseParametersToNull() {
 		putOneParameter(PARAMETER_LIST_KEY, parameterList);
+		putOneParameter(PARAMETER_DEADLINE, "");
 	}
 
 	@Override
 	protected void putInputParameters() {
-		putOneParameter(PARAMETER_LIST_KEY, parameterList);		
+		if (_isDeadline){
+			putOneParameter(PARAMETER_LIST_KEY, "");		
+			putOneParameter(PARAMETER_DEADLINE, parameterList);		
+		} else{
+			putOneParameter(PARAMETER_LIST_KEY, parameterList);		
+			putOneParameter(PARAMETER_DEADLINE, "");
+		}
 	}
 	
 	@Override
@@ -118,20 +129,18 @@ public class List extends Command{
 	 * Check if Dateline then input into map
 	 * @return isDeadline
 	 */
-	private boolean checkIfDateline() {
-		boolean isDeadline = false;
-		
+	private boolean checkIfDateline() {		
 		try {
 			String deadline = DateAndTimeManager.getInstance().parseDate(input);
 			//putOneParameter(PARAMETER_LIST_KEY, deadline);
 			parameterList = deadline;
-			isDeadline = true;
+			_isDeadline = true;
 		} catch (DatePassedException | InvalidDateException e) {
 			//GuiManager.callOutput(e.getMessage());
-			isDeadline = false;
+			_isDeadline = false;
 		}
 		
-		return isDeadline;
+		return _isDeadline;
 	}
 	
 	private void initialiseAllVariations(){

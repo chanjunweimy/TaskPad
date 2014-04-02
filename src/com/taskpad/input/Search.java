@@ -1,5 +1,8 @@
 package com.taskpad.input;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DateObject;
+
 public class Search extends Command{
 	
 	private static final String COMMAND_SEARCH = "SEARCH";
@@ -39,6 +42,9 @@ public class Search extends Command{
 	@Override
 	protected boolean commandSpecificRun() {
 		_keyword = input;
+		
+		checkAndInputDeadline();
+		
 		return true;
 	}
 
@@ -55,6 +61,17 @@ public class Search extends Command{
 	@Override
 	protected boolean checkIfIncorrectArguments(){
 		return false;
+	}
+	
+	private void checkAndInputDeadline(){
+		String[] splitInput = input.split(" ");
+		DateObject dateObject = null;
+		for (int i=0; i<splitInput.length; i++){
+			dateObject = DateAndTimeManager.getInstance().findDate(splitInput[i].trim());
+			if (dateObject != null){
+				_keyword += " " + dateObject.getParsedDate();
+			}
+		}
 	}
 
 }
