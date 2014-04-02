@@ -103,9 +103,41 @@ public class DateAndTimeRetriever {
 		
 		//step two: find holiday words and replace with date
 		String[] numberInputTokens = numberedInput.split(" ");
+		StringBuffer holidayString = new StringBuffer();
 		
 		for (int i = 0; i < numberInputTokens.length; i++){
-			String holidayInput = HolidayDates.getInstance().replaceHolidayDate(numberInputTokens[i]);
+			String token = numberInputTokens[i];
+			
+			//search 1 word
+			String holidayInput = HolidayDates.getInstance().replaceHolidayDate(token);
+			String pastOneToken, pastTwoToken;
+			if (holidayInput != null){
+				holidayString.append(holidayInput + " ");
+				continue;
+			}
+				
+			//search 2 words:
+			if (i >= 1){
+				pastOneToken = numberInputTokens[i - 1];
+				holidayInput = HolidayDates.getInstance().replaceHolidayDate(pastOneToken + " " + token);
+				if (holidayInput != null){
+					holidayString.append(holidayInput + " ");
+				}
+				continue;
+			}
+			
+			//search 3 words:
+			if (i >= 2){
+				pastOneToken = numberInputTokens[i - 1];
+				pastTwoToken = numberInputTokens[i - 2];
+				holidayInput = HolidayDates.getInstance().replaceHolidayDate(
+						pastTwoToken + " " + 
+						pastOneToken + " " + token);
+				if (holidayInput != null){
+					holidayString.append(holidayInput + " ");
+				}
+				continue;
+			}
 		}
 
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date

@@ -37,8 +37,7 @@ public class HolidayDates {
 		if (holidayDate != null){
 			holidayDate = parseHolidayDate(holidayDate);
 		} else {
-			//can't replace
-			holidayDate = input;
+			holidayDate = null;
 		}
 		return holidayDate;
 	}
@@ -105,6 +104,8 @@ public class HolidayDates {
 		String input = "LABOUR DAY";
 		HolidayDates holidayDates = HolidayDates.getInstance();
 		System.out.println(holidayDates.replaceHolidayDate(input));
+		System.out.println(holidayDates.replaceHolidayDate("RANDOM"));
+
 	}
 	//*/
 	
