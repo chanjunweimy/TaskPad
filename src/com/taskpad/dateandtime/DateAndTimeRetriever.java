@@ -1,9 +1,5 @@
 package com.taskpad.dateandtime;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -11,11 +7,11 @@ import java.util.Scanner;
  * 
  * Supposed to put all the protected methods from DateAndTimeManager here
  * 
- * @author Lynnette & Jun
+ * @author Lynnette
  *
  */
 
-public class DateAndTimeRetriever{
+public class DateAndTimeRetriever {
 	
 	private static final String STRING_EMPTY = "";
 
@@ -99,32 +95,61 @@ public class DateAndTimeRetriever{
 	protected static String formatDateAndTimeInString(String input) {
 		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
 		
+		
 		String desc = createDesc(input);
 		
 		//step one: convert all number words to numbers using number parser		
 		String numberedInput = parseNumber(input);
 		
 		//step two: find holiday words and replace with date
-		String holidayInput = HolidayDates.getInstance().replaceHolidayDate(input);
+		String[] numberInputTokens = numberedInput.split(" ");
+		StringBuffer holidayString = new StringBuffer();
 		
+		for (int i = 0; i < numberInputTokens.length; i++){
+			String token = numberInputTokens[i];
+			
+			//search 1 word
+			String holidayInput = HolidayDates.getInstance().replaceHolidayDate(token);
+			String pastOneToken, pastTwoToken;
+			if (holidayInput != null){
+				holidayString.append(holidayInput + " ");
+				continue;
+			}
+				
+			//search 2 words:
+			if (i >= 1){
+				pastOneToken = numberInputTokens[i - 1];
+				holidayInput = HolidayDates.getInstance().replaceHolidayDate(pastOneToken + " " + token);
+				if (holidayInput != null){
+					holidayString.append(holidayInput + " ");
+				}
+				continue;
+			}
+			
+			//search 3 words:
+			if (i >= 2){
+				pastOneToken = numberInputTokens[i - 1];
+				pastTwoToken = numberInputTokens[i - 2];
+				holidayInput = HolidayDates.getInstance().replaceHolidayDate(
+						pastTwoToken + " " + 
+						pastOneToken + " " + token);
+				if (holidayInput != null){
+					holidayString.append(holidayInput + " ");
+				}
+				continue;
+			}
+		}
+
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
-		//we can find substrings and put through dayParser, then find the longest substring
-		//and find the date
-		String dayInput = parseDay(input);
-		
 		//step four: find dates -- find month words & find number before and after
-		//Basically I find every substring and parse through DateParser
-		String dateInput = parseDate(input);
-		
+		//step four b: find dates -- find three consecutive numbers and try parse as date
 		//step five: find PM or AM words and find time unit before and replace with time
-		String timeInput = parseTime(input);
 		
-		//"..." deadlinedate endtime startdate starttime
+		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
 		return input;
 	}
 
 	/**
-	 * Takes in a string and replaces number written in words with the numeric ones
 	 * @param input
 	 * @param datmParser
 	 */
@@ -177,42 +202,6 @@ public class DateAndTimeRetriever{
 		return desc;
 	}
 	
-	private static String parseDay(String input){
-		return input;
-	}
-		
-	/**
-	 * Takes in a string and checks to find if there are time 
-	 * @param input
-	 * @return input with time replaced in HH:mm format
-	 */
-	private static String parseTime(String input){
-
-		return input;
-	}
-	
-	/**
-	 * Takes in a string and checks to find if there are dates 
-	 * @param input
-	 * @return input with date replaced in dd/mm/yyyy format
-	 */
-	private static String parseDate(String input){
-		
-		return input;
-	}
-	
-	private static ArrayList<String> sortSubStringsDescLength(ArrayList<String> subStrings){
-		Collections.sort(subStrings, new Comparator<String>(){
-			@Override
-			public int compare(String s1, String s2) {
-				return s2.length() - s1.length();
-			}
-		});
-		
-		return subStrings;
-	}
-	
-	
 	public static void main (String[] args){
 		System.out.println(createDesc("aaaa"));
 		System.out.println(createDesc("\"aaaa"));
@@ -220,9 +209,7 @@ public class DateAndTimeRetriever{
 		System.out.println(parseNumber("one one one aaa one one one"));
 		System.out.println(parseNumber("one one one aaa"));
 		System.out.println(parseNumber("aaa"));
-		System.out.println(parseDate("23-12 hello"));
-		System.out.println(parseDate("23 Dec hello"));
-		System.out.println(parseTime("8am hello"));
-		System.out.println(parseTime("8.15 pm hi"));
 	}
+
+	
 }
