@@ -188,20 +188,20 @@ public class Add extends Command {
 	}
 
 	private void parseNonDelimitedString() {
-		//"..." deadlinedate endtime startdate starttime
-		
+		//"..." deadlinedate startdate starttime enddate endtime
 		
 		String inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length;
-		putOneParameter(PARAMETER_DEADLINE, splitInput[size-3]);
-		putOneParameter(PARAMETER_END_TIME, splitInput[size-2]);
-		putOneParameter(PARAMETER_START_DATE, splitInput[size-1]);
-		putOneParameter(PARAMETER_START_TIME, splitInput[size]);
+		putOneParameter(PARAMETER_END_TIME, splitInput[size]);
+		putOneParameter(PARAMETER_END_DATE, splitInput[size-1]);
+		putOneParameter(PARAMETER_START_TIME, splitInput[size-2]);
+		putOneParameter(PARAMETER_START_DATE, splitInput[size-3]);
+		putOneParameter(PARAMETER_DEADLINE, splitInput[size-4]);
 		
 		String desc = STRING_EMPTY;
-		for (int i=0; i<size-3; i++){
+		for (int i=0; i<size-4; i++){
 			desc += splitInput[i] + STRING_SPACE;
 		}
 		
