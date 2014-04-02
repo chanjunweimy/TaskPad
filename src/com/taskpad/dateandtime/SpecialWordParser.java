@@ -301,7 +301,7 @@ public class SpecialWordParser {
 	}
 	
 	protected boolean isSpecialWord(String input){
-		return MAP_SPECIAL_WORD.containsKey(input);
+		return MAP_SPECIAL_WORD.containsKey(input.toUpperCase());
 	}
 	
 }
