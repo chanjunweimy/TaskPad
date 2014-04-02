@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 /** For special holiday dates
  * 
@@ -26,6 +25,22 @@ public class HolidayDates {
 	protected static HolidayDates getInstance(){
 		return _holidayDate;
 	}
+	
+	/** FOR JUNWEI: I can't think how to effectively do this :'(
+	 * This method takes an input String, finds if there is holiday dates
+	 * @param input
+	 * @return String with holidayDates replaced, else returns input
+	 */
+	
+	protected String replaceHolidayDate(String input){	
+		String holidayDate = _holidays.get(input.toUpperCase());
+		if (holidayDate != null){
+			holidayDate = parseHolidayDate(holidayDate);
+		} else {
+			holidayDate = null;
+		}
+		return holidayDate;
+	}
 
 	/** This method parses the date in the correct year
 	 * 
@@ -33,7 +48,21 @@ public class HolidayDates {
 	 * @return String, dd/mm/yyyy
 	 */
 	private String parseHolidayDate(String holidayDate){
-		holidayDate = addYear(holidayDate);		
+		holidayDate = addYear(holidayDate);
+		
+		/*
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		Date date = null;
+		try {
+			date = sdf.parse(holidayDate);
+			
+		} catch (ParseException e) {
+			//do nothing
+		}
+		return sdf.format(date);
+		*.
+		*/
+		
 		return holidayDate;
 	}
 	
@@ -54,6 +83,8 @@ public class HolidayDates {
 			year++;
 		}
 		
+		//System.out.println(now.toString() + "\n" + holidayDate.toString());
+		
 		return date + "/" + year;
 	}
 	
@@ -61,7 +92,6 @@ public class HolidayDates {
 		_holidays.put("CHRISTMAS", "25/12");
 		_holidays.put("APRIL FOOLS", "01/04");
 		_holidays.put("APRIL FOOLS DAY", "01/04");
-		_holidays.put("INDEPENDENCE DAY", "04/07");
 		_holidays.put("LABOUR DAY", "01/05");
 		_holidays.put("LABOR DAY", "01/05");
 		_holidays.put("NATIONAL DAY", "09/08");
@@ -71,10 +101,11 @@ public class HolidayDates {
 	
 	///* Testing
 	public static void main(String[] args){
-		String input = " i is LABOUR DAY";
-		System.out.println(input);
+		String input = "LABOUR DAY";
 		HolidayDates holidayDates = HolidayDates.getInstance();
-		//System.out.println(holidayDates.replaceHolidayDate(input));
+		System.out.println(holidayDates.replaceHolidayDate(input));
+		System.out.println(holidayDates.replaceHolidayDate("RANDOM"));
+
 	}
 	//*/
 	
