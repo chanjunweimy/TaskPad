@@ -103,7 +103,12 @@ public class DateAndTimeRetriever {
 		
 		//step two: find holiday words and replace with date
 		String[] numberInputTokens = numberedInput.split(" ");
+		boolean[] isModified = new boolean[numberInputTokens.length];
 		StringBuffer holidayString = new StringBuffer();
+		
+		for (int i = 0; i < isModified.length; i++){
+			isModified[i] = false;
+		}
 		
 		for (int i = 0; i < numberInputTokens.length; i++){
 			String token = numberInputTokens[i];
@@ -112,29 +117,41 @@ public class DateAndTimeRetriever {
 			String holidayInput = HolidayDates.getInstance().replaceHolidayDate(token);
 			String pastOneToken, pastTwoToken;
 			if (holidayInput != null){
-				holidayString.append(holidayInput + " ");
+				numberInputTokens[i] = holidayInput;
+				isModified[i] = true;
+				//holidayString.append(holidayInput + " ");
 				continue;
 			}
 				
 			//search 2 words:
-			if (i >= 1){
+			if (i >= 1 && !isModified[i - 1]){
 				pastOneToken = numberInputTokens[i - 1];
 				holidayInput = HolidayDates.getInstance().replaceHolidayDate(pastOneToken + " " + token);
 				if (holidayInput != null){
-					holidayString.append(holidayInput + " ");
+					numberInputTokens[i] = holidayInput;
+					numberInputTokens[i - 1] = null;
+					isModified[i] = true;
+					isModified[i - 1] = true;
+					//holidayString.append(holidayInput + " ");
 				}
 				continue;
 			}
 			
 			//search 3 words:
-			if (i >= 2){
+			if (i >= 2 && !isModified[i - 2] && !isModified[i - 1]){
 				pastOneToken = numberInputTokens[i - 1];
 				pastTwoToken = numberInputTokens[i - 2];
 				holidayInput = HolidayDates.getInstance().replaceHolidayDate(
 						pastTwoToken + " " + 
 						pastOneToken + " " + token);
 				if (holidayInput != null){
-					holidayString.append(holidayInput + " ");
+					numberInputTokens[i] = holidayInput;
+					numberInputTokens[i - 1] = null;
+					numberInputTokens[i - 2] = null;
+					isModified[i] = true;
+					isModified[i - 1] = true;
+					isModified[i - 2] = true;
+					//holidayString.append(holidayInput + " ");
 				}
 				continue;
 			}
