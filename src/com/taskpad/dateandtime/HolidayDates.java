@@ -91,7 +91,9 @@ public class HolidayDates {
 	private static void initialiseHolidayMap(){
 		_holidays.put("CHRISTMAS", "25/12");
 		_holidays.put("APRIL FOOLS", "01/04");
+		_holidays.put("APRIL FOOL", "01/04");
 		_holidays.put("APRIL FOOLS DAY", "01/04");
+		_holidays.put("APRIL FOOL DAY", "01/04");
 		_holidays.put("LABOUR DAY", "01/05");
 		_holidays.put("LABOR DAY", "01/05");
 		_holidays.put("NATIONAL DAY", "09/08");
