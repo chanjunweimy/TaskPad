@@ -187,20 +187,7 @@ public class DateAndTimeRetriever{
 	 * @return input with time replaced in HH:mm format
 	 */
 	private static String parseTime(String input){
-		int length = input.length();
-		String sub;
-		
-		for (int i=0; i<length; i++){
-			for (int j=1; j<=length-i; j++){
-				sub = input.substring(i, i+j);
-				try {
-					String time = TimeParser.parseTimeInput(sub);
-					//input = input.replace(sub, time);
-				} catch (TimeErrorException | InvalidTimeException e) {
-					//ignore
-				}
-			}
-		}
+
 		return input;
 	}
 	
@@ -210,33 +197,6 @@ public class DateAndTimeRetriever{
 	 * @return input with date replaced in dd/mm/yyyy format
 	 */
 	private static String parseDate(String input){
-		int length = input.length();
-		String sub;
-		ArrayList<String> subStrings = new ArrayList<String>();
-		
-		for (int i=0; i<length; i++){
-			for (int j=1; j<=length-i; j++){
-				sub = input.substring(i, i+j);
-				subStrings.add(sub);
-			}
-		}
-		
-		/**
-		 * For JUNWEI: I think this part here got problem...
-		 * basically i sort the substrings by desc length, so 23-03-2014 will be checked before
-		 * 23-03-20
-		 * If the date has passed, like 23-03-2014, it ignores, then I dont know how to solve the problem?
-		 */
-		subStrings = sortSubStringsDescLength(subStrings);
-		String date = "";
-		for (int i=0; i<subStrings.size(); i++){
-			try {
-				date = DateParser.getInstance().parseDate(subStrings.get(i).trim());
-				input = input.replace(subStrings.get(i), date);
-			} catch (InvalidDateException | DatePassedException e) {
-				//ignore
-			}
-		}
 		
 		return input;
 	}
