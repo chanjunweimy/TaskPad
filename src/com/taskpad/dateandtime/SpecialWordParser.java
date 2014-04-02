@@ -161,7 +161,7 @@ public class SpecialWordParser {
 		while (sc.hasNext()){
 			String specialToken = sc.next();
 
-			Integer ans = MAP_SPECIAL_WORD.get(specialToken);
+			Integer ans = MAP_SPECIAL_WORD.get(specialToken.toUpperCase());
 			
 			if (ans == null){
 				break;
@@ -230,7 +230,6 @@ public class SpecialWordParser {
 	protected String parseSpecialWord(String specialWord, int seconds){
 		int nxt = 0;
 		nxt = calculateNext(specialWord, nxt);
-		System.out.println(nxt);
 		
 		seconds *= nxt;
 		
@@ -247,7 +246,7 @@ public class SpecialWordParser {
 		String[] inputs = input.split(SPACE);
 		
 		for (int i = inputs.length - 1; i >= 0 ; i--){
-			if (MAP_SPECIAL_WORD.containsKey(inputs[i])){
+			if (MAP_SPECIAL_WORD.containsKey(inputs[i].toUpperCase())){
 				return inputs[i];
 			}
 		}

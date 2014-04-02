@@ -22,11 +22,9 @@ public class NullTimeValueException extends Exception{
 
 	public NullTimeValueException(){
 		super (MESSAGE);
-		_logger.info(MESSAGE);
 	}
 	
 	public NullTimeValueException(String Message){
 		super (MESSAGE);
-		_logger.info(MESSAGE);
 	}
 }

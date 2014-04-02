@@ -157,7 +157,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return TimeParser.parseTimeInput(timeString);
 	}
 
-
 	/**
 	 * convertToSecond: convert time from any unit to second
 	 * 
@@ -214,6 +213,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
 		DayParser dayParser = DayParser.getInstance();
 		return dayParser.parseDayToDate(input);
+	}
+	
+	public String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{
+		return TimeWordParser.getInstance().parseTimeWordWithSpecialWord(input);
 	}
 	
 	/**
