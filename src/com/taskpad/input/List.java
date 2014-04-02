@@ -63,18 +63,16 @@ public class List extends Command{
 	//Initialise default value
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_LIST_KEY, parameterList);
+		putOneParameter(PARAMETER_LIST_KEY, "");
 		putOneParameter(PARAMETER_DEADLINE, "");
 	}
 
 	@Override
 	protected void putInputParameters() {
 		if (_isDeadline){
-			putOneParameter(PARAMETER_LIST_KEY, "");		
 			putOneParameter(PARAMETER_DEADLINE, parameterList);		
 		} else{
 			putOneParameter(PARAMETER_LIST_KEY, parameterList);		
-			putOneParameter(PARAMETER_DEADLINE, "");
 		}
 	}
 	
