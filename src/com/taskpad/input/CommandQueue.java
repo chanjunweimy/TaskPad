@@ -5,9 +5,11 @@ package com.taskpad.input;
  * @author Lynnette
  */
 
+import java.awt.Color;
 import java.util.Map;
 
 import com.taskpad.alarm.AlarmManager;
+import com.taskpad.execute.ExecutorManager;
 import com.taskpad.input.CommandTypes.CommandType;
 
 public class CommandQueue {
@@ -17,6 +19,7 @@ public class CommandQueue {
 	
 	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "\nConfirm clear screen? (Y/N)";
 	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "\nConfirm clear data? (Y/N)";
+	private static final String MESSAGE_TODAYS_REMINDERS = "\nToday's Reminders: ";
 	
 	private static final CommandQueue _commandInstance = new CommandQueue();
 
@@ -103,6 +106,11 @@ public class CommandQueue {
 
 	protected void searchTask(String input, String fullInput) {
 		new Search(input, fullInput);
+	}
+	
+	protected void showRem(){
+		InputManager.outputFormatString(MESSAGE_TODAYS_REMINDERS, Color.RED, true);
+		ExecutorManager.showReminder();
 	}
 	
 	/* Helper methods to find Command Types */

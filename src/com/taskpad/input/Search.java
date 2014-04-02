@@ -65,13 +65,14 @@ public class Search extends Command{
 	
 	private void checkAndInputDeadline(){
 		String[] splitInput = input.split(" ");
-		DateObject dateObject = null;
+		
+		/*
 		for (int i=0; i<splitInput.length; i++){
 			dateObject = DateAndTimeManager.getInstance().findDate(splitInput[i].trim());
 			if (dateObject != null){
 				_keyword += " " + dateObject.getParsedDate();
 			}
 		}
+		*/
 	}
-
 }
