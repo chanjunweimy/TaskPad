@@ -1,5 +1,6 @@
 package com.taskpad.dateandtime;
 
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,27 @@ import java.util.Scanner;
 public class DateAndTimeRetriever {
 
 	private static final String STRING_EMPTY = "";
+	
+	private static final String DEADLINE = "DEADLINE";
+	private static final String TIME_START = "STARTTIME";
+	private static final String TIME_END = "ENDTIME";
+	private static final String[] KEYWORD_DEADLINES = {
+		"BY",
+		"BEFORE",
+		"BEF"
+	};
+	private static final String[] KEYWORD_STARTTIME = {
+		"AT",
+		"AFTER",
+		"ON",
+		"IN"
+	};
+	private static final String[] KEYWORD_ENDTIME = {
+		"UNTIL",
+		"~"
+	};
+	
+	private static HashMap _retrieverMap = new HashMap();
 
 	/**
 	 * In an input string, check if there is valid time
@@ -22,7 +44,6 @@ public class DateAndTimeRetriever {
 	 * @param inputString
 	 * @return time
 	 */
-
 	protected static TimeObject findTime(String inputString) {
 		TimeObject timeObject = null;
 
