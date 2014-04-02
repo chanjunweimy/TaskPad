@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.taskpad.storage.CommandRecord;
+import com.taskpad.ui.GuiManager;
 import com.taskpad.input.Input;
 
 public class ExecutorManager {
@@ -63,17 +64,21 @@ public class ExecutorManager {
 	}
 
 	private static void list(String option) {
+		GuiManager.clearOutput();
 		switch(option) {
 		case "ALL":
 			logger.info("Listing all tasks...");
+			GuiManager.callOutput("Listing all tasks...");
 			CommandFactory.listAll();
 			break;
 		case "DONE":
 			logger.info("Listing finished tasks...");
+			GuiManager.callOutput("Listing finished tasks...");
 			CommandFactory.listDone();
 			break;
 		case "UNDONE":
 			logger.info("Listing undone tasks...");
+			GuiManager.callOutput("Listing undone tasks...");
 			CommandFactory.listUndone();
 			break;
 		}	
