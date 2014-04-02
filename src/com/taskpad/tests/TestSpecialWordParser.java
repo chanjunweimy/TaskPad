@@ -117,6 +117,11 @@ public class TestSpecialWordParser {
 	}
 	
 	@Test
+	public void validTestTimeWord8(){
+		testTimeWordCommand("23/03/2014 01:01", "next next 30 min", "23/03/2014 00:01");
+	}
+	
+	@Test
 	public void invalidTest1() {
 		testInvalidWordCommand(MESSAGE_INVALID_TIME, "MAN", "23/3/2014 00:01");
 	}
