@@ -1,5 +1,9 @@
 package com.taskpad.dateandtime;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -11,7 +15,7 @@ import java.util.Scanner;
  *
  */
 
-public class DateAndTimeRetriever {
+public class DateAndTimeRetriever{
 	
 	private static final String STRING_EMPTY = "";
 
@@ -101,10 +105,13 @@ public class DateAndTimeRetriever {
 		String numberedInput = parseNumber(input);
 		
 		//step two: find holiday words and replace with date
-		//input = HolidayDates.getInstance().replaceHolidayDate(input);
+		String holidayInput = HolidayDates.getInstance().replaceHolidayDate(input);
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
+		
 		//step four: find dates -- find month words & find number before and after
-		//step four b: find dates -- find three consecutive numbers and try parse as date
+		//Basically I find every substring and parse through DateParser
+		String dateInput = parseDate(input);
+		
 		//step five: find PM or AM words and find time unit before and replace with time
 		
 		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
@@ -112,6 +119,7 @@ public class DateAndTimeRetriever {
 	}
 
 	/**
+	 * Takes in a string and replaces number written in words with the numeric ones
 	 * @param input
 	 * @param datmParser
 	 */
@@ -164,6 +172,56 @@ public class DateAndTimeRetriever {
 		return desc;
 	}
 	
+
+	/**
+	 * Takes in a string and checks to find if there are dates 
+	 * @param input
+	 * @return input with date replaced
+	 */
+	private static String parseDate(String input){
+		int length = input.length();
+		String sub;
+		ArrayList<String> subStrings = new ArrayList<String>();
+		
+		for (int i=0; i<length; i++){
+			for (int j=1; j<=length-i; j++){
+				sub = input.substring(i, i+j);
+				subStrings.add(sub);
+			}
+		}
+		
+		/**
+		 * For JUNWEI: I think this part here got problem...
+		 * basically i sort the substrings by desc length, so 23-03-2014 will be checked before
+		 * 23-03-20
+		 * If the date has passed, like 23-03-2014, it ignores, then I dont know how to solve the problem?
+		 */
+		subStrings = sortSubStringsDescLength(subStrings);
+		String date = "";
+		for (int i=0; i<subStrings.size(); i++){
+			try {
+				date = DateParser.getInstance().parseDate(subStrings.get(i).trim());
+				input = input.replace(subStrings.get(i), date);
+			} catch (InvalidDateException | DatePassedException e) {
+				//ignore
+			}
+		}
+		
+		return input;
+	}
+	
+	private static ArrayList<String> sortSubStringsDescLength(ArrayList<String> subStrings){
+		Collections.sort(subStrings, new Comparator<String>(){
+			@Override
+			public int compare(String s1, String s2) {
+				return s2.length() - s1.length();
+			}
+		});
+		
+		return subStrings;
+	}
+	
+	
 	public static void main (String[] args){
 		System.out.println(createDesc("aaaa"));
 		System.out.println(createDesc("\"aaaa"));
@@ -171,7 +229,7 @@ public class DateAndTimeRetriever {
 		System.out.println(parseNumber("one one one aaa one one one"));
 		System.out.println(parseNumber("one one one aaa"));
 		System.out.println(parseNumber("aaa"));
+		System.out.println(parseDate("23-12 hello"));
+		System.out.println(parseDate("23 Dec hello"));
 	}
-
-	
 }
