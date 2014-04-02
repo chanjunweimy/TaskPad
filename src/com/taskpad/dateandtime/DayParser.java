@@ -64,6 +64,10 @@ public class DayParser {
 		initializeMapWeek();
 	}
 	
+	protected boolean isDay(String input){
+		return _mapWeek.containsKey(input.toLowerCase());
+	}
+	
 	private void initializeMapWeek() {		
 		for (int i = 0; i < DAY_IN_WEEK.length; i++){
 			_mapWeek.put(DAY_IN_WEEK[i], i % 7);
@@ -155,7 +159,8 @@ public class DayParser {
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
 		
-		String input = "hello next next prev Sun";
+		/*
+		String input = "next next prev Sun";
 		String sub = "";
 		for (int i=0; i<input.length(); i++){
 			for (int j=1; j<=input.length()-i; j++){
@@ -168,9 +173,10 @@ public class DayParser {
 				}
 			}
 		}
+		*/
 		
 		try {
-			System.out.println(a.parseDayToDate("next next prev Sund"));
+			System.out.println(a.parseDayToDate("next next prev Monday"));
 		} catch (InvalidDayException | DatePassedException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();

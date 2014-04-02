@@ -97,12 +97,27 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return dayParser.parseDayToInt(dayString);
 	}
 	
+	/**
+	 * To parse day to date
+	 * @throws DatePassedException 
+	 * @throws InvalidDayException 
+	 */
+	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToDate(input);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param dayString
+	 * @return
+	 */
 	protected boolean isDay(String dayString){
 		DayParser dayParser = DayParser.getInstance();
 		try {
 			dayParser.parseDayToInt(dayString);
 		} catch (InvalidDayException e) {
-			GuiManager.callOutput(e.getMessage());
+			//GuiManager.callOutput(e.getMessage());
 			return false;
 		}
 		return true;
@@ -203,16 +218,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	protected boolean isNumber(String numberString) {
 		NumberParser parser = NumberParser.getInstance();
 		return parser.parseTheNumbers(numberString) != null;
-	}
-	
-	/**
-	 * To parse day to date
-	 * @throws DatePassedException 
-	 * @throws InvalidDayException 
-	 */
-	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
-		DayParser dayParser = DayParser.getInstance();
-		return dayParser.parseDayToDate(input);
 	}
 	
 	public String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{

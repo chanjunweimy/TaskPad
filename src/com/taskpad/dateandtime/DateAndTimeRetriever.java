@@ -7,7 +7,7 @@ import java.util.Scanner;
  * 
  * Supposed to put all the protected methods from DateAndTimeManager here
  * 
- * @author Lynnette
+ * @author Lynnette, Jun
  *
  */
 
@@ -92,26 +92,18 @@ public class DateAndTimeRetriever {
 	 * and time words converted to time
 	 */
 
-	protected static String formatDateAndTimeInString(String input) {
-		//DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
-		
-		
-		//String desc = createDesc(input);
-		String desc = input;
+	protected static String formatDateAndTimeInString(String desc) {
+		//split all nonAlphaNumerics character
+		String alphaNumericSpaceDesc = getAlphaNumericSpaceDesc(desc);
 		
 		//step one: convert all number words to numbers using number parser		
-		String numberedInput = parseNumber(input);
+		String numberedInput = parseNumber(alphaNumericSpaceDesc);
 		
 		//step two: find holiday words and replace with date
 		String holidayString = parseHolidayDates(numberedInput);
 
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
-		String[] dayTokens = holidayString.split(" ");
-		StringBuffer dayString = new StringBuffer();
-		for (int i = 0; i < dayTokens.length; i++){
-			
-		}
-		
+		String dayString = parseDay(holidayString);
 		
 		//step four: find dates -- find month words & find number before and after
 		//step four b: find dates -- find three consecutive numbers and try parse as date
@@ -119,6 +111,134 @@ public class DateAndTimeRetriever {
 		
 		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
 		return desc;
+	}
+
+	/**
+	 * @param input
+	 */
+	private static String getAlphaNumericSpaceDesc(String input) {
+		Scanner sc = new Scanner(input);
+		StringBuffer alphaNumericSpaceString = new StringBuffer();
+		while (sc.hasNext()){
+			String token = sc.next();
+			token = splitNonAlphaNumericCharacter(token);
+			alphaNumericSpaceString.append(token + " ");
+		}
+		sc.close();
+		return alphaNumericSpaceString.toString().trim();
+	}
+
+	/**
+	 * @param token
+	 */
+	private static String splitNonAlphaNumericCharacter(String token) {		
+		//characters in date and time cannot be omitted
+		if (isDate(token) || isTime(token)){
+			return token;
+		}
+		
+		//token = token.replaceAll("!", "");
+		//token = token.replaceAll(".", "");
+		//token = token.replaceAll(",", " ");
+		//token = token.replaceAll(";", " ");
+		//token = token.replaceAll("?", "");
+		//token = token.replaceAll("\"", " \" ");
+		//token = token.replaceAll("\'", " \' ");
+		//token = token.replaceAll("(", "");
+		//token = token.replaceAll(")", "");
+		//token = token.replaceAll("~", " until ");
+		//token = token.replaceAll("*", "");
+		
+		Scanner sc = new Scanner(token);
+		//sc.useDelimiter("[^A-Za-z0-9]");
+		StringBuffer tokenBuilder = new StringBuffer();
+		String anyCharacter;
+		while ((anyCharacter = sc.findInLine("[^A-Za-z0-9]")) != null){
+			int splitIndex = token.indexOf(anyCharacter);
+			String tempTokens = token.substring(0, splitIndex);
+			token = token.substring(splitIndex + 1, token.length());
+			tokenBuilder.append(tempTokens + " " + anyCharacter + " ");
+		}
+		if (token != null){
+			tokenBuilder.append(token);
+		}
+		sc.close();
+		return tokenBuilder.toString().trim();
+	}
+
+	private static boolean isTime(String input){
+		input = trimInput(input);
+		try {
+			TimeParser.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			return false;
+		} catch (Exception e){
+			return false;
+		}
+		return true;
+	}
+	
+	private static boolean isDate(String input){
+		input = trimInput(input);
+		DateParser dateParser = DateParser.getInstance();
+		try {
+			dateParser.parseDate(input);
+		} catch (InvalidDateException e) {
+			return false;
+		} catch (DatePassedException e) {
+			return true;
+		} 
+		return true;
+	}
+	
+	/**
+	 * @param holidayString
+	 */
+	private static String parseDay(String holidayString) {
+		String[] dayTokens = holidayString.split(" ");
+		StringBuffer dayString = new StringBuffer();
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		DayParser dp = DayParser.getInstance();
+		boolean[] isModified = new boolean[dayTokens.length];
+		
+		initializeArray(isModified);
+		
+		for (int i = 0; i < dayTokens.length; i++){
+			String firstToken = dayTokens[i];
+			StringBuffer changedTokens = new StringBuffer();
+			
+			if (dp.isDay(firstToken)){
+				isModified[i] = true;				
+				for (int j = i - 1 ; j >= 0; j--){
+					if (isModified[j]){
+						break;
+					}
+					
+					isModified[j] = true;
+					String token = dayTokens[j];
+					if (swp.isSpecialWord(token)){
+						changedTokens.append(token + " ");
+						dayTokens[j] = null;
+						isModified[j] = true;
+					} else {
+						break;
+					}
+				}
+				changedTokens.append(firstToken);
+				
+				try {
+					//System.err.println(changedTokens.toString());
+					dayTokens[i] = datm.parseDayToDate(changedTokens.toString().trim());
+				} catch (InvalidDayException | DatePassedException e) {
+					assert (false);
+				}
+			}
+		}
+		
+		dayString = buildString(dayTokens, dayString);
+		
+		return dayString.toString().trim();
 	}
 
 	/**
@@ -131,9 +251,7 @@ public class DateAndTimeRetriever {
 		boolean[] isModified = new boolean[numberInputTokens.length];
 		StringBuffer holidayString = new StringBuffer();
 		
-		for (int i = 0; i < isModified.length; i++){
-			isModified[i] = false;
-		}
+		initializeArray(isModified);
 		
 		HolidayDates holidayParser = HolidayDates.getInstance();
 		for (int i = 2; i < numberInputTokens.length; i++){
@@ -196,13 +314,32 @@ public class DateAndTimeRetriever {
 			}
 		}
 		
-		for (String token : numberInputTokens){
-			if (token != null){
-				holidayString.append(token + " ");
-			}
-		}
+		buildString(numberInputTokens, holidayString);
 		
 		return holidayString.toString().trim();
+	}
+
+	/**
+	 * @param numberInputTokens
+	 * @param holidayString
+	 */
+	private static StringBuffer buildString(String[] anyTokens,
+			StringBuffer anyString) {
+		for (String token : anyTokens){
+			if (token != null){
+				anyString.append(token + " ");
+			}
+		}
+		return anyString;
+	}
+
+	/**
+	 * @param isModified
+	 */
+	private static void initializeArray(boolean[] isModified) {
+		for (int i = 0; i < isModified.length; i++){
+			isModified[i] = false;
+		}
 	}
 
 	/**
@@ -244,12 +381,13 @@ public class DateAndTimeRetriever {
 	}
 
 	/**
-	 * @param input
 	 * @deprecated
+	 * @param input
 	 */
 	@SuppressWarnings("unused")
 	private static String createDesc(String input) {
 		String desc = input.trim();
+		
 		if (!desc.startsWith("\"")){
 			desc = "\"" + desc;
 		}
@@ -257,19 +395,22 @@ public class DateAndTimeRetriever {
 		if (!input.endsWith("\"")){
 			desc = desc + "\"";
 		}
+		
 		return desc;
 	}
 	
-	public static void main (String[] args){
-		//System.out.println(createDesc("aaaa"));
-		//System.out.println(createDesc("\"aaaa"));
-		//System.out.println(createDesc("\"aaaa\""));          
+	public static void main (String[] args){  
+		System.out.println(getAlphaNumericSpaceDesc("I am looking for Lynnette. She is going home on Monday."));
+		System.out.println(getAlphaNumericSpaceDesc("I am looking for Lynnette. She is going home on 1/4/15 12:00."));
 		System.out.println(parseNumber("one one one aaa one one one"));
 		System.out.println(parseNumber("one one one aaa"));
 		System.out.println(parseNumber("aaa"));
-		System.out.println(parseHolidayDates("last Christmas I gave you my heart"));
-		System.out.println(parseHolidayDates("last New Year I gave you my heart"));
-		System.out.println(parseHolidayDates("last April Fool Day I gave you my heart"));
+		System.out.println(parseHolidayDates("last Christmas I gave you my heart Christmas"));
+		System.out.println(parseHolidayDates("last New Year I gave you my heart Christmas"));
+		System.out.println(parseHolidayDates("last April Fool Day I gave you my heart Christmas"));
+		System.out.println(parseDay("Monday I want to eat Monday"));
+		System.out.println(parseDay("next nxt NXT prev Monday I want to catch Pokemon!"));
+		System.out.println(parseDay("next ASH nxt Monday I want to catch Pokemon nxt Fri !"));
 
 	}
 
