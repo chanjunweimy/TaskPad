@@ -158,6 +158,9 @@ public class InputMain {
 			case STOP:
 				CommandQueue.getInstance().stopAlarm(commandTypeString, input);
 				break;
+			case SHOW_REM:
+				CommandQueue.getInstance().showRem();
+				break;
 			case HELP:
 				CommandQueue.getInstance().Help();
 				break;
