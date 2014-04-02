@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 /** This class takes in a date and checks if it fits any of the SimpleDateFormat
  * Returns null string if otherwise
@@ -21,26 +22,26 @@ public class DateParser {
 	
 	private static final String[] _dateWithoutYear = {
 		"d MMM", "MMM d", "dMMM", "MMMd",
-		"d/MM", "d-MM",  "d.MM", "d MM",
-		"d/M", "d-M",  "d.M", "d M",
+		"d/MM", "d-MM",  //"d.MM", //"d MM",
+		"d/M", "d-M",  //"d.M", //"d M",
 		
 		
-		"dd/M", "dd-M", "dd.M", "dd M", 
-		"dd/MM", "dd-MM", "dd.MM", "dd MM",  
+		"dd/M", "dd-M", //"dd.M", //"dd M", 
+		"dd/MM", "dd-MM", //"dd.MM", //"dd MM",  
 		"MMM dd", "dd MMM", "ddMMM", "MMMdd"
 
 	};
 	
 	private static final String[] _dateFormats = {
-		"d/MM/yy", "d-MM-yy", "d.MM.yy", "d MM yy", 
-		"d/M/yy", "d-M-yy", "d.M.yy", "d M yy",
+		"d/MM/yy", "d-MM-yy", "d.MM.yy", //"d MM yy", 
+		"d/M/yy", "d-M-yy", "d.M.yy", //"d M yy",
 		"MMM d yy", "MMM d , yy", "MMM d, yy", "MMM d,yy",  
 		"d MMM yy", "d MMM , yy", "d MMM, yy", "d MMM,yy", 
 		"d-MMM-yy", "d MM , yy", "d MM, yy", "d MM,yy", 
 		"d M , yy", "d M, yy", "d M,yy", "dMMMyy", 
 		
-		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", "dd MM yy", 
-		"dd/M/yy", "dd-M-yy", "dd.M.yy", "dd M yy",
+		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", //"dd MM yy", 
+		"dd/M/yy", "dd-M-yy", "dd.M.yy", //"dd M yy",
 		"MMM dd yy", "MMM dd , yy", "MMM dd, yy", "MMM dd,yy",  
 		"dd MMM yy", "dd MMM , yy", "dd MMM, yy", "dd MMM,yy", 
 		"dd-MMM-yy", "dd MM , yy", "dd MM, yy", "dd MM,yy", 
@@ -55,15 +56,15 @@ public class DateParser {
 		*/
 		//"MMMddyy",
 		
-		"d/MM/yyyy", "d-MM-yyyy", "d.MM.yyyy", "d MM yyyy", 
-		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", "d M yyyy",
+		"d/MM/yyyy", "d-MM-yyyy", "d.MM.yyyy", //"d MM yyyy", 
+		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", //"d M yyyy",
 		"MMM d yyyy", "MMM d , yyyy", "MMM d, yyyy", "MMM d,yyyy",  
 		"d MMM yyyy", "d MMM , yyyy", "d MMM, yyyy", "d MMM,yyyy", 
 		"d-MMM-yyyy", "d MM , yyyy", "d MM, yyyy", "d MM,yyyy", 
 		"d M , yyyy", "d M, yyyy", "d M,yyyy", "dMMMyyyy", 
 		
-		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "dd MM yyyy", 
-		"dd/M/yyyy", "dd-M-yyyy", "dd.M.yyyy", "dd M yyyy",
+		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", //"dd MM yyyy", 
+		"dd/M/yyyy", "dd-M-yyyy", "dd.M.yyyy", //"dd M yyyy",
 		"MMM dd yyyy", "MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy",  
 		"dd MMM yyyy", "dd MMM , yyyy", "dd MMM, yyyy", "dd MMM,yyyy", 
 		"dd-MMM-yyyy", "dd MM , yyyy", "dd MM, yyyy", "dd MM,yyyy", 
@@ -80,6 +81,12 @@ public class DateParser {
 		 "MMddyyyy", "yyyyMMMdd"
 		 */
 	};
+	
+	private static final String[] MONTHS = {
+		
+	};
+	
+	private static HashMap _monthMap = new HashMap();
 	
 	private DateParser(){
 	}
@@ -241,8 +248,8 @@ public class DateParser {
 		//System.out.println(formatDateWithoutYear("03 01"));  //Will use system year at 1970
 		//System.out.println(formatDate("Oct 18,93"));
 		try {
-			System.out.println(formatDateWithoutYear("1 January"));
-		} catch (DatePassedException e) {
+			System.out.println(DateParser.getInstance().parseDate("1 Jan 15"));
+		} catch (DatePassedException | InvalidDateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
