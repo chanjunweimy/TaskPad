@@ -15,12 +15,10 @@ public class TimeErrorException extends Exception {
 	
 	public TimeErrorException(){
 		super(MESSAGE);
-		_logger.info(MESSAGE);
 		
 	}
 	
 	public TimeErrorException(String input){
 		super(MESSAGE + ": " + input);
-		_logger.info(MESSAGE);
 	}
 }
