@@ -14,8 +14,6 @@ public class SpecialWordParser {
 	
 	private static final String SPACE = " ";
 
-	private static final String DAY_INVALID = "Not a valid day!";
-
 	private static final int DAY_WEEK = 7;
 
 	private static final String EMPTY = "";
@@ -76,16 +74,29 @@ public class SpecialWordParser {
 		}
 		
 		int day = 0;
+		int chance = 2;
 		for (String myYtd : MAP_YTD){
 			if (myYtd.equals(lastWord)){
 				day--;
 			}
 		}
 		
+		if (day == 0){
+			chance--;
+		}
+		
 		for (String myTmr : MAP_TMR){
 			if (myTmr.equals(lastWord)){
 				day++;
 			}
+		}
+		
+		if (day == 0){
+			chance--;
+		}
+		
+		if (chance == 0){
+			throw new InvalidDayException();
 		}
 		
 		specialDay = specialDay.toUpperCase();
@@ -102,7 +113,7 @@ public class SpecialWordParser {
 			
 		}
 		if (day < 0){
-			throw new InvalidDayException(DAY_INVALID);
+			throw new InvalidDayException();
 		}
 		
 		TimeWordParser twp = TimeWordParser.getInstance();
@@ -117,7 +128,7 @@ public class SpecialWordParser {
 		if (ans != null){
 			return ans;
 		} else {
-			throw new InvalidDayException(DAY_INVALID);
+			throw new InvalidDayException();
 		}
 		
 	}

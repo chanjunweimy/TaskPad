@@ -176,7 +176,7 @@ public class DayParser {
 		*/
 		
 		try {
-			System.out.println(a.parseDayToDate("next next prev Monday"));
+			System.out.println(a.parseDayToDate("MAN"));
 		} catch (InvalidDayException | DatePassedException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();

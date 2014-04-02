@@ -19,7 +19,7 @@ import com.taskpad.dateandtime.NullTimeValueException;
 
 public class TestSpecialWordParser {
 
-	private static final String MESSAGE_INVALID_TIME = "Error: Invalid time entered";	
+	//private static final String MESSAGE_INVALID_TIME = "Error: Invalid time entered";	
 	private static final String MESSAGE_INVALID_DAY = "Error: Invalid Day";
 
 	private DateAndTimeManager _specialWordParser = DateAndTimeManager.getInstance();
@@ -123,7 +123,7 @@ public class TestSpecialWordParser {
 	
 	@Test
 	public void invalidTest1() {
-		testInvalidWordCommand(MESSAGE_INVALID_TIME, "MAN", "23/3/2014 00:01");
+		testInvalidWordCommand(MESSAGE_INVALID_DAY, "MAN", "23/3/2014 00:01");
 	}
 	
 	@Test
@@ -134,7 +134,7 @@ public class TestSpecialWordParser {
 	//We do not support Yesterday
 	@Test
 	public void invalidTest3(){
-		testInvalidWordCommand("Error: Invalid Day: Not a valid day!", "Yesterday", "23/03/2014 00:01");
+		testInvalidWordCommand(MESSAGE_INVALID_DAY, "Yesterday", "23/03/2014 00:01");
 	}
 	
 	private void testWordCommand (String expected, String input, String dateString){
@@ -151,7 +151,8 @@ public class TestSpecialWordParser {
 		setupDebugEnvironment(dateString);
 		
 		try {
-			_specialWordParser.parseDayToDate(input);
+			System.err.println(_specialWordParser.parseDayToDate(input));
+			fail();
 		} catch (InvalidDayException | DatePassedException e) {
 			assertEquals(e.getMessage(), expected);
 		}
