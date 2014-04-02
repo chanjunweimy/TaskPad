@@ -7,7 +7,7 @@ import java.util.Scanner;
  * 
  * Supposed to put all the protected methods from DateAndTimeManager here
  * 
- * @author Lynnette
+ * @author Lynnette & Jun
  *
  */
 
@@ -94,7 +94,6 @@ public class DateAndTimeRetriever {
 
 	protected static String formatDateAndTimeInString(String input) {
 		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
-		
 		
 		String desc = createDesc(input);
 		
