@@ -21,12 +21,10 @@ public class InvalidTimeException extends Exception {
 	
 	public InvalidTimeException(){
 		super(MESSAGE);
-		_logger.info(MESSAGE); 
 	}
 	
 	public InvalidTimeException(String message){
 		super(MESSAGE + ": " + message);
-		_logger.info(MESSAGE + ": " + message); 
 	}
 	
 }

@@ -106,6 +106,7 @@ public class DateAndTimeRetriever{
 		
 		//step two: find holiday words and replace with date
 		String holidayInput = HolidayDates.getInstance().replaceHolidayDate(input);
+		
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
 		
 		//step four: find dates -- find month words & find number before and after
@@ -113,6 +114,7 @@ public class DateAndTimeRetriever{
 		String dateInput = parseDate(input);
 		
 		//step five: find PM or AM words and find time unit before and replace with time
+		String timeInput = parseTime(input);
 		
 		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
 		return input;
@@ -174,9 +176,32 @@ public class DateAndTimeRetriever{
 	
 
 	/**
+	 * Takes in a string and checks to find if there are time 
+	 * @param input
+	 * @return input with time replaced in HH:mm format
+	 */
+	private static String parseTime(String input){
+		int length = input.length();
+		String sub;
+		
+		for (int i=0; i<length; i++){
+			for (int j=1; j<=length-i; j++){
+				sub = input.substring(i, i+j);
+				try {
+					String time = TimeParser.parseTimeInput(sub);
+					//input = input.replace(sub, time);
+				} catch (TimeErrorException | InvalidTimeException e) {
+					//ignore
+				}
+			}
+		}
+		return input;
+	}
+	
+	/**
 	 * Takes in a string and checks to find if there are dates 
 	 * @param input
-	 * @return input with date replaced
+	 * @return input with date replaced in dd/mm/yyyy format
 	 */
 	private static String parseDate(String input){
 		int length = input.length();
@@ -231,5 +256,7 @@ public class DateAndTimeRetriever{
 		System.out.println(parseNumber("aaa"));
 		System.out.println(parseDate("23-12 hello"));
 		System.out.println(parseDate("23 Dec hello"));
+		System.out.println(parseTime("8am hello"));
+		System.out.println(parseTime("8.15 pm hi"));
 	}
 }
