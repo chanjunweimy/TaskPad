@@ -1,5 +1,9 @@
 package com.taskpad.dateandtime;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -152,9 +156,23 @@ public class DayParser {
 		return value.intValue();
 	}
 	
-	/*
 	public static void main(String[] args){
 		DayParser a = DayParser.getInstance();
+		
+		String input = "hello next next prev Sun";
+		String sub = "";
+		for (int i=0; i<input.length(); i++){
+			for (int j=1; j<=input.length()-i; j++){
+				sub = input.substring(i, i+j);
+				try {
+					System.out.println(a.parseDayToDate(sub));
+				} catch (InvalidDayException | DatePassedException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+			}
+		}
+		
 		try {
 			System.out.println(a.parseDayToDate("next next prev Sund"));
 		} catch (InvalidDayException | DatePassedException e) {
@@ -162,5 +180,4 @@ public class DayParser {
 			//e.printStackTrace();
 		}
 	}
-	//*/
 }

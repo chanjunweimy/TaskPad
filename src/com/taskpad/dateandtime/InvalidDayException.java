@@ -14,12 +14,10 @@ public class InvalidDayException extends Exception{
 	
 	public InvalidDayException() {
 		super(MESSAGE);
-		_logger.info(MESSAGE);
 	}
 
 	public InvalidDayException(String message) {
 		super(MESSAGE + ": " + message);
-		_logger.info(MESSAGE);
 	}
 	
 }

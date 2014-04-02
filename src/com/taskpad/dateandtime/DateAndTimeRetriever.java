@@ -108,6 +108,9 @@ public class DateAndTimeRetriever{
 		String holidayInput = HolidayDates.getInstance().replaceHolidayDate(input);
 		
 		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
+		//we can find substrings and put through dayParser, then find the longest substring
+		//and find the date
+		String dayInput = parseDay(input);
 		
 		//step four: find dates -- find month words & find number before and after
 		//Basically I find every substring and parse through DateParser
@@ -174,7 +177,10 @@ public class DateAndTimeRetriever{
 		return desc;
 	}
 	
-
+	private static String parseDay(String input){
+		return input;
+	}
+		
 	/**
 	 * Takes in a string and checks to find if there are time 
 	 * @param input

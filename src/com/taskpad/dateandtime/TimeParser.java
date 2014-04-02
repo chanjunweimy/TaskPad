@@ -78,6 +78,7 @@ public class TimeParser {
 	}
 
 	private static long decodeTime(String input) throws InvalidTimeException{	    
+		input = input.trim();
         String hours = TIME_DEF, minutes = TIME_DEF;
         
         long time = TIME_NEG;
