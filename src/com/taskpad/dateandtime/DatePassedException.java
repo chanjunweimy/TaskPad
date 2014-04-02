@@ -1,7 +1,5 @@
 package com.taskpad.dateandtime;
 
-import java.util.logging.Logger;
-
 public class DatePassedException extends Exception {
 
 	/**

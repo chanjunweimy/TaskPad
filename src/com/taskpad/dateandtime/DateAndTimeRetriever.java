@@ -93,15 +93,40 @@ public class DateAndTimeRetriever {
 	 */
 
 	protected static String formatDateAndTimeInString(String input) {
-		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
 		
 		
-		String desc = createDesc(input);
+		//String desc = createDesc(input);
+		String desc = input;
 		
 		//step one: convert all number words to numbers using number parser		
 		String numberedInput = parseNumber(input);
 		
 		//step two: find holiday words and replace with date
+		String holidayString = parseHolidayDates(numberedInput);
+
+		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
+		String[] dayTokens = holidayString.split(" ");
+		StringBuffer dayString = new StringBuffer();
+		for (int i = 0; i < dayTokens.length; i++){
+			
+		}
+		
+		
+		//step four: find dates -- find month words & find number before and after
+		//step four b: find dates -- find three consecutive numbers and try parse as date
+		//step five: find PM or AM words and find time unit before and replace with time
+		
+		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
+		return desc;
+	}
+
+	/**
+	 * 
+	 * @param numberedInput
+	 * @return
+	 */
+	private static String parseHolidayDates(String numberedInput) {
 		String[] numberInputTokens = numberedInput.split(" ");
 		boolean[] isModified = new boolean[numberInputTokens.length];
 		StringBuffer holidayString = new StringBuffer();
@@ -110,38 +135,18 @@ public class DateAndTimeRetriever {
 			isModified[i] = false;
 		}
 		
-		for (int i = 0; i < numberInputTokens.length; i++){
+		HolidayDates holidayParser = HolidayDates.getInstance();
+		for (int i = 2; i < numberInputTokens.length; i++){
 			String token = numberInputTokens[i];
 			
-			//search 1 word
-			String holidayInput = HolidayDates.getInstance().replaceHolidayDate(token);
+			String holidayInput;
 			String pastOneToken, pastTwoToken;
-			if (holidayInput != null){
-				numberInputTokens[i] = holidayInput;
-				isModified[i] = true;
-				//holidayString.append(holidayInput + " ");
-				continue;
-			}
-				
-			//search 2 words:
-			if (i >= 1 && !isModified[i - 1]){
-				pastOneToken = numberInputTokens[i - 1];
-				holidayInput = HolidayDates.getInstance().replaceHolidayDate(pastOneToken + " " + token);
-				if (holidayInput != null){
-					numberInputTokens[i] = holidayInput;
-					numberInputTokens[i - 1] = null;
-					isModified[i] = true;
-					isModified[i - 1] = true;
-					//holidayString.append(holidayInput + " ");
-				}
-				continue;
-			}
 			
 			//search 3 words:
-			if (i >= 2 && !isModified[i - 2] && !isModified[i - 1]){
+			if (!isModified[i - 2] && !isModified[i - 1] && !isModified[i]){
 				pastOneToken = numberInputTokens[i - 1];
 				pastTwoToken = numberInputTokens[i - 2];
-				holidayInput = HolidayDates.getInstance().replaceHolidayDate(
+				holidayInput = holidayParser.replaceHolidayDate(
 						pastTwoToken + " " + 
 						pastOneToken + " " + token);
 				if (holidayInput != null){
@@ -153,17 +158,51 @@ public class DateAndTimeRetriever {
 					isModified[i - 2] = true;
 					//holidayString.append(holidayInput + " ");
 				}
-				continue;
 			}
 		}
-
-		//step three: find dayParser words and find words before (i.e. next/prev) and replace with date
-		//step four: find dates -- find month words & find number before and after
-		//step four b: find dates -- find three consecutive numbers and try parse as date
-		//step five: find PM or AM words and find time unit before and replace with time
 		
-		//return that string to parse in respective Add/Addrem/Alarm classes - already done with return input
-		return input;
+		for (int i = 1; i < numberInputTokens.length; i++){
+			String token = numberInputTokens[i];
+			String holidayInput;
+			String pastOneToken;
+				
+			//search 2 words:
+			if (!isModified[i - 1] && !isModified[i]){
+				pastOneToken = numberInputTokens[i - 1];
+				holidayInput = holidayParser.replaceHolidayDate(pastOneToken + " " + token);
+				if (holidayInput != null){
+					numberInputTokens[i] = holidayInput;
+					numberInputTokens[i - 1] = null;
+					isModified[i] = true;
+					isModified[i - 1] = true;
+					//holidayString.append(holidayInput + " ");
+				}
+			}
+		}
+		
+		for (int i = 0; i < numberInputTokens.length; i++) {
+			String token = numberInputTokens[i];
+
+			if (isModified[i]){
+				continue;
+			}
+			String holidayInput;
+			// search 1 word
+			holidayInput = holidayParser.replaceHolidayDate(token);
+			if (holidayInput != null) {
+				numberInputTokens[i] = holidayInput;
+				isModified[i] = true;
+				// holidayString.append(holidayInput + " ");
+			}
+		}
+		
+		for (String token : numberInputTokens){
+			if (token != null){
+				holidayString.append(token + " ");
+			}
+		}
+		
+		return holidayString.toString().trim();
 	}
 
 	/**
@@ -206,7 +245,9 @@ public class DateAndTimeRetriever {
 
 	/**
 	 * @param input
+	 * @deprecated
 	 */
+	@SuppressWarnings("unused")
 	private static String createDesc(String input) {
 		String desc = input.trim();
 		if (!desc.startsWith("\"")){
@@ -220,12 +261,16 @@ public class DateAndTimeRetriever {
 	}
 	
 	public static void main (String[] args){
-		System.out.println(createDesc("aaaa"));
-		System.out.println(createDesc("\"aaaa"));
-		System.out.println(createDesc("\"aaaa\""));          
+		//System.out.println(createDesc("aaaa"));
+		//System.out.println(createDesc("\"aaaa"));
+		//System.out.println(createDesc("\"aaaa\""));          
 		System.out.println(parseNumber("one one one aaa one one one"));
 		System.out.println(parseNumber("one one one aaa"));
 		System.out.println(parseNumber("aaa"));
+		System.out.println(parseHolidayDates("last Christmas I gave you my heart"));
+		System.out.println(parseHolidayDates("last New Year I gave you my heart"));
+		System.out.println(parseHolidayDates("last April Fool Day I gave you my heart"));
+
 	}
 
 	
