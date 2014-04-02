@@ -107,10 +107,16 @@ public class TimeWordParser{
 		SpecialWordParser swp = SpecialWordParser.getInstance();
 		
 		String splitWord = swp.getTimeWordWithoutSpecialWords(input);
+		if (splitWord == null){
+			splitWord = parseTimeWord(input);
+			timeWord = splitWord + SPACE + TIME_SEC;
+			return timeWord(timeWord);
+		}
+		
 		int splitPlace = input.lastIndexOf(splitWord) + splitWord.length() + 1;
 		int num = 0;
 		
-		specialWord = input.substring(splitPlace).trim();
+		specialWord = input.substring(0, splitPlace).trim();
 		timeWord = input.substring(splitPlace, input.length()).trim();
 		
 		try {
@@ -119,15 +125,11 @@ public class TimeWordParser{
 			timeWord = swp.parseSpecialWord(specialWord, num);
 			
 		} catch (NullTimeValueException e) {
-			if (input.split(SPACE).length > 1){
-				throw e;
-			} else {
-				num = calculateTimeWord(input);
-				timeWord = swp.parseSpecialWord(specialWord, num);
-			}
+
+			num = calculateTimeWord(input);
+			timeWord = swp.parseSpecialWord(specialWord, num);
 		}
-		timeWord = timeWord + TIME_SEC;
-		
+		timeWord = timeWord + SPACE + TIME_SEC;
 		return timeWord(timeWord);
 	}
 	
@@ -478,4 +480,12 @@ public class TimeWordParser{
 		return date;
 	}
 	
+	public static void main (String[] args){
+		try {
+			System.out.println(TimeWordParser.getInstance().parseTimeWordWithSpecialWord("next next 2 hour"));
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
