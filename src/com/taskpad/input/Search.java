@@ -63,8 +63,8 @@ public class Search extends Command{
 		return false;
 	}
 	
-	private void checkAndInputDeadline(){
-		String[] splitInput = input.split(" ");
+	private void checkAndInputDeadline(){	
+		_keyword += DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		
 		/*
 		for (int i=0; i<splitInput.length; i++){
