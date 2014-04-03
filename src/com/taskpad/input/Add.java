@@ -194,7 +194,7 @@ public class Add extends Command {
 		//"..." deadlinedate deadlintime startdate starttime enddate endtime
 		
 		String inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
-
+		System.out.println(inputNew);
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length;
 		putOneParameter(PARAMETER_END_TIME, splitInput[size]);
@@ -557,7 +557,7 @@ public class Add extends Command {
 		param = stripWhiteSpaces(param);
 		try {
 			param = DateAndTimeManager.getInstance().parseDate(param);
-		} catch (InvalidDateException | DatePassedException e) {
+		} catch (InvalidDateException e) {
 			InputManager.outputToGui(e.getMessage());
 			_invalidParameters = true;
 		}
@@ -659,93 +659,65 @@ public class Add extends Command {
 		String deadlineDate = STRING_EMPTY;
 		String deadlineTime = STRING_EMPTY;
 		
-		for (int i=0; i<splitParam.length; i++){
-			try {
-				deadlineDate = DateAndTimeManager.getInstance().parseDate(splitParam[i]);
-				inputDeadlineDate(deadlineDate);
-			} catch (InvalidDateException | DatePassedException e) {
-				try {
-					deadlineTime = DateAndTimeManager.getInstance().parseTime(splitParam[i]);
-					inputDeadlineTime(deadlineTime);
-				} catch (NullTimeUnitException | NullTimeValueException
-						| TimeErrorException | InvalidTimeException e1) {
-					//do nothing
+		if (isValidTimeArgs(splitParam)){
+			for (int i=0; i<splitParam.length; i++){
+				deadlineDate = checkIfIsDate(splitParam[i]);
+				if (notEmptyDateString(deadlineDate)){
+					inputDeadlineDate(deadlineDate);
+				} else {
+					deadlineTime = checkIfIsTime(splitParam[i]);
+					if (notEmptyTimeString(deadlineTime)){
+						inputDeadlineTime(deadlineTime);
+					}
 				}
-			}
+			}	
 		}
 		
-		if (deadlineDate.equals(STRING_EMPTY) && deadlineDate.equals(STRING_EMPTY)){
-			_invalidParameters = true;
-			InputManager.outputToGui(String.format(MESSAGE_INVALID_INPUT, param));
-			return;
-		}
+		checkEmptyDateTimeString(deadlineDate, deadlineTime, param);
 	}
 	
 	private void putStartTime(String param) {
 		String[] splitParam = param.split(STRING_COMMA);
+		
+		String startTime = STRING_EMPTY;
+		String startDate = STRING_EMPTY;
 				
 		if (isValidTimeArgs(splitParam)){
-			//deprecated for flexi commands 
-			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
-			
-			String startTime = STRING_EMPTY;
-			try {
-				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
-			} catch (TimeErrorException | InvalidTimeException e) {
-				InputManager.outputToGui(e.getMessage());
-				//outputErrorTimeMessage(startTime);
-				_invalidParameters = true;
-				return;
-			}
-			
-			putOneParameter(PARAMETER_START_TIME, startTime);
-		
-			String startDate = STRING_EMPTY;
-			if (splitParam.length == 2){
-				try {
-					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException | DatePassedException e) {
-					InputManager.outputToGui(e.getMessage()); 
-					_invalidParameters = true;
-					return;
+			for (int i=0; i<splitParam.length; i++){
+				startDate = checkIfIsDate(splitParam[i]);
+				if (notEmptyDateString(startDate)){
+					inputDeadlineDate(startDate);
+				} else {
+					startTime = checkIfIsTime(splitParam[i]);
+					if (notEmptyTimeString(startTime)){
+						inputDeadlineTime(startTime);
+					}
 				}
-				putOneParameter(PARAMETER_START_DATE, startDate);
 			}
-			
 		}
+		checkEmptyDateTimeString(startDate, startTime, param);
 	}
 	
 	private void putEndTime(String param) {
 		String[] splitParam = param.split(",");
-		
+		String endTime = STRING_EMPTY;
+		String endDate = STRING_EMPTY;
+
 		if (isValidTimeArgs(splitParam)){
-			//deprecated for flexi commands
-			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
-			String endTime = STRING_EMPTY;
-			
-			try {
-				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
-			} catch (TimeErrorException | InvalidTimeException e) {
-				InputManager.outputToGui(e.getMessage());
-				//outputErrorTimeMessage(endTime);
-				_invalidParameters = true;
-				return;
-			}
-			
-			putOneParameter(PARAMETER_END_TIME, endTime);
-			
-			String endDate = STRING_EMPTY;
-			if (splitParam.length == 2){
-				try {
-					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException | DatePassedException e) {
-					InputManager.outputToGui(e.getMessage());
-					_invalidParameters = true;
-					return;
+			for (int i=0; i<splitParam.length; i++){
+				endDate = checkIfIsDate(splitParam[i]);
+				if (notEmptyDateString(endDate)){
+					inputDeadlineDate(endDate);
+				} else {
+					endTime = checkIfIsTime(splitParam[i]);
+					if (notEmptyTimeString(endTime)){
+						inputDeadlineTime(endTime);
+					}
 				}
-				putOneParameter(PARAMETER_END_DATE, endDate);
 			}
 		}
+		checkEmptyDateTimeString(endDate, endTime, param);
+
 	}
 	
 	private boolean isValidTimeArgs(String[] args){
@@ -754,6 +726,48 @@ public class Add extends Command {
 			return false;
 		} else {
 			return true;
+		}
+	}
+	
+	private String checkIfIsTime(String string){
+		string.trim();
+		String timeString = STRING_EMPTY;
+		
+		try {
+			timeString = DateAndTimeManager.getInstance().parseTime(string);
+		} catch (NullTimeUnitException | NullTimeValueException
+				| TimeErrorException | InvalidTimeException e) {
+			//do nothing
+		}
+		
+		return timeString;
+	}
+	
+	private boolean notEmptyTimeString(String timeString){
+		return !timeString.equals(STRING_EMPTY);
+	}
+
+	private String checkIfIsDate(String string){
+		string.trim();
+		String dateString = STRING_EMPTY;
+		
+		try {
+			dateString = DateAndTimeManager.getInstance().parseDate(string);
+		} catch (InvalidDateException e) {
+			//do nothing
+		}
+		return dateString;
+	}
+	
+	private boolean notEmptyDateString(String dateString){
+		return !dateString.equals(STRING_EMPTY);
+	}
+	
+	private void checkEmptyDateTimeString(String date, String time, String param){
+		if (date.equals(STRING_EMPTY) && time.equals(STRING_EMPTY)){
+			_invalidParameters = true;
+			InputManager.outputToGui(String.format(MESSAGE_INVALID_INPUT, param));
+			return;
 		}
 	}
 	
