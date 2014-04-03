@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
-import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.NullTimeUnitException;
 import com.taskpad.dateandtime.NullTimeValueException;
@@ -193,8 +193,14 @@ public class Add extends Command {
 	private void parseNonDelimitedString() {
 		//"..." deadlinedate deadlintime startdate starttime enddate endtime
 		
-		String inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
-		System.out.println(inputNew);
+		String inputNew = STRING_EMPTY;
+		try {
+			inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
+		
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length;
 		putOneParameter(PARAMETER_END_TIME, splitInput[size]);
@@ -320,9 +326,6 @@ public class Add extends Command {
 	}
 
 	/**
-	 * Lynnette,
-	 * I have helped you modified something here:
-	 * get the description out first before using delimeter
 	 * 
 	 * parseDelimitedString: a method that parses
 	 * input that has a description in front.
@@ -331,8 +334,6 @@ public class Add extends Command {
 	private void parseDelimitedString(){
 		//checkAndRemoveDate();
 		
-		//System.out.println("lalala   " + input);
-
 		_sc = new Scanner(input);
 		
 		StringBuffer description = new StringBuffer();

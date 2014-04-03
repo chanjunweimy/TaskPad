@@ -1,5 +1,7 @@
 package com.taskpad.input;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+
 public class Edit extends Command{
 	
 	private static final String COMMAND_EDIT = "EDIT";
@@ -9,9 +11,11 @@ public class Edit extends Command{
 	private static String PARAMETER_DESC = "DESC";
 	private static String PARAMETER_DEADLINE = "DEADLINE";
 	
-	private static String _taskID;
-	private static String _desc;
-	private static String _deadline;
+	private String _taskID;
+	private String _desc;
+	private String _deadline;
+	
+	private static final String STRING_SPACE = " ";
 
 	public Edit(String input, String fullInput) {
 		super(input, fullInput);
@@ -29,8 +33,14 @@ public class Edit extends Command{
 
 	@Override
 	protected boolean commandSpecificRun() {
-		String[] splitParams = input.split(" ");
-		_taskID = splitParams[0].trim();
+		//String[] splitParams = input.split(" ");
+		
+		//_taskID = splitParams[0].trim();
+		try {
+			_taskID = findTaskID(fullInput);
+		} catch (TaskIDException e) {
+			InputManager.outputToGui(e.getMessage());
+		}
 		
 		if (isDesc()){
 			fullInput = removeWordDesc(fullInput);
@@ -43,10 +53,60 @@ public class Edit extends Command{
 			_desc = removeTaskID(fullInput, _taskID);
 		}
 		
-		//System.out.println("Desc: " + _desc + "deadline: " + _deadline);
+		System.out.println("Desc: " + _desc + "deadline: " + _deadline);
 		
 		putInputParameters();
 		return true;
+	}
+	
+	@Override
+	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
+		String inputString[] = input.split(" ");
+		
+		if (isNotNumberArgs(inputString)){
+			System.out.println("Throw");
+			throw new InvalidParameterException();
+		}
+			
+		return false;
+	}
+	
+	/**
+	 * Takes in input string and finds the first integer as taskID
+	 * @param input
+	 * @return
+	 * @throws TaskIDException 
+	 */
+	private String findTaskID(String input) throws TaskIDException{
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		System.out.println("NumInput: " + numberInput);
+
+		if (numberInput != null){
+			input = numberInput;
+			fullInput = numberInput;
+		}
+		
+		int taskID = -1;
+		String[] splitInput = input.split(STRING_SPACE);
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (taskID == -1){
+				try{
+					taskID = Integer.parseInt(splitInput[i]);
+				} catch (NumberFormatException e){
+					//do nothing
+				}
+			}
+		}
+		
+		System.out.println("TaskID " + taskID);
+		
+		if (taskID == -1){
+			throw new TaskIDException();
+		}
+		
+		
+		return ""+taskID;
 	}
 
 	@Override
@@ -105,7 +165,6 @@ public class Edit extends Command{
 		
 		String[] inputSplit = inputCopy.split(" ");
 		for (int i=0; i<inputSplit.length; i++){
-			System.out.println(inputSplit[i]);
 			if (isNotDescWord(inputSplit[i].trim())){
 				newString += inputSplit[i] + " ";
 			} else if (count > 0) {
