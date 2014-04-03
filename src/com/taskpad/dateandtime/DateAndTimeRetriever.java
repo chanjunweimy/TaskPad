@@ -193,7 +193,9 @@ public class DateAndTimeRetriever {
 		// with time
 		String timeString = parseTime(dateString);
 		
-		ArrayList<String> allDateAndTime = extractDateAndTime(timeString);
+		String timeWordString = parseTimeWord(timeString);
+		
+		ArrayList<String> allDateAndTime = extractDateAndTime(timeWordString);
 		
 		//System.err.println(allDateAndTime.get(POSITION_DEADLINE));
 		//System.err.println(allDateAndTime.get(POSITION_STARTTIME));
@@ -211,7 +213,16 @@ public class DateAndTimeRetriever {
 		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
 	}
 
-	
+	/**
+	 * not implement yet. Implement later
+	 * @param timeString
+	 * @return
+	 */
+	private String parseTimeWord(String timeString) {
+		// TODO Auto-generated method stub
+		return timeString;
+	}
+
 	private String removeParseFreeZone(String alphaNumericSpaceDesc) throws InvalidQuotesException {
 		boolean removeStat = false;
 		String[] descTokens = alphaNumericSpaceDesc.split(" ");
@@ -740,6 +751,7 @@ public class DateAndTimeRetriever {
 	}
 
 	/**
+	 * not fully integrated yet
 	 * @param holidayString
 	 */
 	private String parseDay(String holidayString) {
@@ -992,6 +1004,9 @@ public class DateAndTimeRetriever {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out
+		.println(datr.parseDay("tmr tmr tmr tmr tomorrow"));
 	}
 
 }
