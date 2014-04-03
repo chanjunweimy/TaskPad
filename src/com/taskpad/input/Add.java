@@ -13,6 +13,8 @@ import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 
@@ -20,9 +22,8 @@ import com.taskpad.dateandtime.TimeObject;
 /**
  * Add syntax
  * with delimiters:
- * add <desc> -d <deadline> -s <start date>,<start time> -e <end date>,<end time>
+ * add <desc> -d <deadlinedate>,<deadlinetime> -s <start date>,<start time> -e <end date>,<end time>
  * 
- * without delimiters... anything?
  * @author Lynnette
  *
  */
@@ -38,7 +39,8 @@ public class Add extends Command {
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
 	
-	private static String PARAMETER_DEADLINE = "DEADLINE";
+	private static String PARAMETER_DEADLINE_DATE = "DEADLINE DATE";
+	private static String PARAMETER_DEADLINE_TIME = "DEADLINE TIME";
 	private static String PARAMETER_START_DATE = "START DATE";
 	private static String PARAMETER_START_TIME = "START TIME";
 	private static String PARAMETER_END_DATE = "END DATE";
@@ -112,7 +114,8 @@ public class Add extends Command {
 
 	@Override
 	protected void initialiseParametersToNull() {
-		putOneParameter(PARAMETER_DEADLINE, STRING_EMPTY);
+		putOneParameter(PARAMETER_DEADLINE_DATE, STRING_EMPTY);
+		putOneParameter(PARAMETER_DEADLINE_TIME, STRING_EMPTY);
 		putOneParameter(PARAMETER_DESCRIPTION, STRING_EMPTY); 
 		putOneParameter(PARAMETER_START_DATE, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_DATE, STRING_EMPTY);
@@ -188,7 +191,7 @@ public class Add extends Command {
 	}
 
 	private void parseNonDelimitedString() {
-		//"..." deadlinedate startdate starttime enddate endtime
+		//"..." deadlinedate deadlintime startdate starttime enddate endtime
 		
 		String inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 
@@ -198,10 +201,11 @@ public class Add extends Command {
 		putOneParameter(PARAMETER_END_DATE, splitInput[size-1]);
 		putOneParameter(PARAMETER_START_TIME, splitInput[size-2]);
 		putOneParameter(PARAMETER_START_DATE, splitInput[size-3]);
-		putOneParameter(PARAMETER_DEADLINE, splitInput[size-4]);
+		putOneParameter(PARAMETER_DEADLINE_DATE, splitInput[size-4]);
+		putOneParameter(PARAMETER_DEADLINE_TIME, splitInput[size-4]);
 		
 		String desc = STRING_EMPTY;
-		for (int i=0; i<size-4; i++){
+		for (int i=0; i<size-5; i++){
 			desc += splitInput[i] + STRING_SPACE;
 		}
 		
@@ -282,7 +286,7 @@ public class Add extends Command {
 		}
 		
 		dateArray = sortDateArray(dateArray);
-		inputDeadline(dateArray.get(0));
+		inputDeadlineDate(dateArray.get(0));
 		inputStartDate(dateArray.get(1));
 		inputEndDate(dateArray.get(2));
 	}
@@ -553,11 +557,11 @@ public class Add extends Command {
 		param = stripWhiteSpaces(param);
 		try {
 			param = DateAndTimeManager.getInstance().parseDate(param);
-		} catch (InvalidDateException e) {
+		} catch (InvalidDateException | DatePassedException e) {
 			InputManager.outputToGui(e.getMessage());
 			_invalidParameters = true;
 		}
-		inputDeadline(param);
+		inputDeadlineDate(param);
 	}
 	
 	private void getStartDetails(String param){
@@ -607,8 +611,12 @@ public class Add extends Command {
 		return inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY;
 	}
 
-	private void inputDeadline(String deadline) {
-		putOneParameter(PARAMETER_DEADLINE, deadline);		
+	private void inputDeadlineDate(String deadline) {
+		putOneParameter(PARAMETER_DEADLINE_DATE, deadline);		
+	}
+	
+	private void inputDeadlineTime(String deadline){
+		putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
 	}
 	
 	private void inputDesc(String desc) {
@@ -646,13 +654,31 @@ public class Add extends Command {
 	
 	private void putDeadline(String param) {
 		param = stripWhiteSpaces(param);
-		try {
-			param = DateAndTimeManager.getInstance().parseDate(param);
-		} catch (InvalidDateException e) {
-			InputManager.outputToGui(e.getMessage());
-			_invalidParameters = true;
+		String[] splitParam = param.split(STRING_COMMA);
+		
+		String deadlineDate = STRING_EMPTY;
+		String deadlineTime = STRING_EMPTY;
+		
+		for (int i=0; i<splitParam.length; i++){
+			try {
+				deadlineDate = DateAndTimeManager.getInstance().parseDate(splitParam[i]);
+				inputDeadlineDate(deadlineDate);
+			} catch (InvalidDateException | DatePassedException e) {
+				try {
+					deadlineTime = DateAndTimeManager.getInstance().parseTime(splitParam[i]);
+					inputDeadlineTime(deadlineTime);
+				} catch (NullTimeUnitException | NullTimeValueException
+						| TimeErrorException | InvalidTimeException e1) {
+					//do nothing
+				}
+			}
 		}
-		inputDeadline(param);
+		
+		if (deadlineDate.equals(STRING_EMPTY) && deadlineDate.equals(STRING_EMPTY)){
+			_invalidParameters = true;
+			InputManager.outputToGui(String.format(MESSAGE_INVALID_INPUT, param));
+			return;
+		}
 	}
 	
 	private void putStartTime(String param) {
@@ -678,7 +704,7 @@ public class Add extends Command {
 			if (splitParam.length == 2){
 				try {
 					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException e) {
+				} catch (InvalidDateException | DatePassedException e) {
 					InputManager.outputToGui(e.getMessage()); 
 					_invalidParameters = true;
 					return;
@@ -712,7 +738,7 @@ public class Add extends Command {
 			if (splitParam.length == 2){
 				try {
 					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
-				} catch (InvalidDateException e) {
+				} catch (InvalidDateException | DatePassedException e) {
 					InputManager.outputToGui(e.getMessage());
 					_invalidParameters = true;
 					return;
