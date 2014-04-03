@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -154,11 +155,7 @@ public class DateAndTimeRetriever {
 	 * @param desc
 	 * @return desc |Deadline: | StartTime: Date then Time | EndTime: Date Then Time
 	 */
-	protected String formatDateAndTimeInString(String desc) {
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		String todayDate = datm.getTodayDate();
-		String now = datm.getTodayTime();
-		
+	protected String formatDateAndTimeInString(String desc) {		
 		String deadlineDate = null;
 		String deadlineTime = null;
 		String startDate = null;
@@ -187,98 +184,7 @@ public class DateAndTimeRetriever {
 		// with time
 		String timeString = parseTime(dateString);
 		
-		String[] flexiTokens = timeString.split(" ");
-
-		String type = null;
-		String recordDate = null;
-		String recordTime = null;
-		for (String token: flexiTokens){
-			String value = _retrieverMap.get(token);
-			if (value != null){
-				type = value;
-				recordDate = null;
-				recordTime = null;
-			} else {
-				if (type != null){
-					boolean hasDone = false;
-					if (isDate(token)){
-						if (recordDate == null){
-							recordDate = token;
-							hasDone = true;
-						} 
-					} else if (isTime(token)){
-						if (recordDate == null){
-							recordTime = token;
-							hasDone = true;
-						} 
-					}
-					
-					if (!hasDone){
-						/*
-						if (DEADLINE.equals(type)){
-							if (deadlineDate == null && deadlineTime == null){
-								deadlineDate = recordDate;
-								deadlineTime = recordTime;
-							} else if (deadlineDate != null && deadlineTime == null){
-								if (recordDate != null && compareDate(deadlineDate, recordDate) < 0){
-									deadlineDate = recordDate;
-									deadlineTime = recordTime;
-								} else if (recordDate == null && compareDate(deadlineDate, todayDate) < 0){
-									deadlineDate = todayDate;
-									deadlineTime = recordTime;
-								}
-							} else if (deadlineDate == null && deadlineTime != null){
-								deadlineDate = todayDate;
-								
-								if (startDate != null){
-									
-								}
-							}
-						} else if (TIME_END.equals(type)){
-							
-						} 
-						*/
-						if (TIME_START.equals(type)){
-							if (startDate == null && startTime == null){
-								startDate = recordDate;
-								startTime = recordTime;
-							} else if (startDate != null && startTime == null){
-								if (recordDate != null && compareDate(startDate, recordDate) > 0){
-									startDate = recordDate;
-									startTime = recordTime;
-								} 
-							} else if (startDate == null && startTime != null){
-								startDate = todayDate;
-								if (recordDate != null && compareDate(startDate, recordDate) > 0){
-									startDate = recordDate;
-								} 
-								
-								if (recordTime != null && compareTime(startTime, recordTime) < 0){
-									startTime = recordTime;
-								}
-							} else if (startDate != null && startTime != null){
-								if (recordDate != null && compareDate(startDate, recordDate) > 0){
-									startDate = recordDate;
-								} 
-								
-								if (recordTime != null && compareTime(startTime, recordTime) < 0){
-									startTime = recordTime;
-								}
-							} else {
-								//unreachable
-								assert (false);
-							}
-						} else {
-							//unreachable
-							assert (false);
-						}
-						
-						
-					}
-					
-				}
-			}
-		}
+		extractDateAndTime(timeString);
 
 		// return that string to parse in respective Add/Addrem/Alarm classes -
 		// already done with return input
@@ -286,6 +192,201 @@ public class DateAndTimeRetriever {
 		String startTimeRes = startDate + " " + startTime;
 		String endTimeRes = endDate + " " + endTime;
 		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
+	}
+
+	/**
+	 * @param timeString
+	 */
+	private void extractDateAndTime(String timeString) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDate = datm.getTodayDate();
+		String now = datm.getTodayDateAndTime();
+		
+		String[] flexiTokens = timeString.split(" ");
+		
+		String startDateEarliest = null;
+		String startTimeEarliest = null;
+		String startEarliest = null;
+		
+		LinkedList<String> startDates = new LinkedList<String>();
+		LinkedList<String> startTimes = new LinkedList<String>();
+		
+		LinkedList<String> deadlineDates = new LinkedList<String>();
+		LinkedList<String> deadlineTimes = new LinkedList<String>();
+		
+		LinkedList<String> endDates = new LinkedList<String>();
+		LinkedList<String> endTimes = new LinkedList<String>();
+		
+		String recordDate = null;
+		String recordTime = null;
+		
+		for (int i = flexiTokens.length - 1; i >= 0; i--){
+			String token = flexiTokens[i];
+			
+			if (isDate(token)){
+				token = parseDate(token);
+				
+				if (recordDate == null){
+					recordDate = token;
+				} else {
+					startDates.add(recordDate);
+					startTimes.add(recordTime);
+					
+					recordDate = token;
+					recordTime = null;
+				}
+				
+			} else if (isTime(token)){
+				token = parseTime(token);
+				
+				if (recordTime == null){
+					recordTime = token;
+				} else {
+					startDates.add(recordDate);
+					startTimes.add(recordTime);
+					
+					recordDate = null;
+					recordTime = token;
+				}
+				
+			} else if (isType(token)){
+				boolean useWrong = (recordDate == null && recordTime == null);
+				
+				if (!useWrong){
+					String type = _retrieverMap.get(token);
+					if (DEADLINE.equals(type)){
+						deadlineDates.add(recordDate);
+						deadlineTimes.add(recordTime);
+					} else if (TIME_START.equals(type)){
+						startDates.add(recordDate);
+						startTimes.add(recordTime);
+					} else if (TIME_END.equals(type)){
+						endDates.add(recordDate);
+						endTimes.add(recordTime);
+					}
+					recordDate = null;
+					recordTime = null;
+				}
+			}
+		}
+
+		startEarliest = retrieveStartEarliest(todayDate, now, startDateEarliest,
+				startTimeEarliest, startEarliest, startDates, startTimes);
+		
+		startDateEarliest = startEarliest.split(" ")[0];
+		
+		String deadlineLatest = retrieveNotStartLatest(deadlineDates, deadlineTimes, startDateEarliest);
+		String endLatest = retrieveNotStartLatest(endDates, endTimes, startDateEarliest);
+		
+		
+	}
+
+	/**
+	 * @param todayDate
+	 * @param now
+	 * @param startDateEarliest
+	 * @param startTimeEarliest
+	 * @param startEarliest
+	 * @param startDates
+	 * @param startTimes
+	 * @return
+	 */
+	private String retrieveStartEarliest(String todayDate, String now,
+			String startDateEarliest, String startTimeEarliest,
+			String startEarliest, LinkedList<String> startDates,
+			LinkedList<String> startTimes) {
+		assert (startDates.size() == startTimes.size());
+		
+		for (int i = 0; i < startDates.size(); i++){
+			if (startDates.get(i) != null && startTimes.get(i) != null){
+				String start = startDates.get(i) + " " + startTimes.get(i);
+				if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+					startEarliest = start;
+				}
+			} else if (startDates.get(i) != null && startTimes.get(i) == null){
+				String startDate = startDates.get(i);
+				if (startDateEarliest == null || compareDate(startDateEarliest, startDate) > 0){
+					startDateEarliest = startDate;
+				}
+			} else if (startDates.get(i) == null && startTimes.get(i) != null){
+				String startTime = startTimes.get(i);
+				if (startTimeEarliest == null || compareTime(startTimeEarliest, startTime) > 0){
+					startTimeEarliest = startTime;
+				}
+			} else {
+				//unreachable
+				assert (false);
+			}
+		}
+		
+		if (startDateEarliest != null){
+			if (startTimeEarliest == null){
+				startTimeEarliest = "";
+			}
+			
+			String start = startDateEarliest + " " + startTimeEarliest;
+			if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+				startEarliest = start;
+			}
+		} else if (startTimeEarliest != null){
+			String start = todayDate + " " + startTimeEarliest;
+			if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+				startEarliest = start;
+			}
+		} else if (startEarliest == null){
+			startEarliest = now;
+		}
+		return startEarliest.trim();
+	}
+
+	private String retrieveNotStartLatest(LinkedList<String> Dates,
+			LinkedList<String> Times, String startDateEarliest) {
+		assert (Dates.size() == Times.size());
+		String latest = null;
+		String dateLatest = null;
+		String timeLatest = null;
+		
+		for (int i = 0; i < Dates.size(); i++){
+			if (Dates.get(i) != null && Times.get(i) != null){
+				String notStart = Dates.get(i) + " " + Times.get(i);
+				if (latest == null || compareDateAndTime(latest, notStart) < 0){
+					latest = notStart;
+				}
+			} else if (Dates.get(i) != null && Times.get(i) == null){
+				String dateGet = Dates.get(i);
+				if (dateLatest == null || compareDate(dateLatest, dateGet) < 0){
+					dateLatest = dateGet;
+				}
+			} else if (Dates.get(i) == null && Times.get(i) != null){
+				String timeGet = Times.get(i);
+				if (timeLatest == null || compareTime(timeLatest, timeGet) < 0){
+					timeLatest = timeGet;
+				}
+			} else {
+				//unreachable
+				assert (false);
+			}
+		}
+		
+		if (dateLatest != null){
+			if (timeLatest == null){
+				timeLatest = "";
+			}
+			String cur = dateLatest + " " + timeLatest;
+			if (latest == null || compareDateAndTime(latest, cur) < 0){
+				latest = cur;
+			}
+		} else if (timeLatest != null){
+			String cur = startDateEarliest + " " + timeLatest;
+			if (latest == null || compareDateAndTime(latest, cur) < 0){
+				latest = cur;
+			}
+		} 
+		return latest.trim();
+	}
+
+	private boolean isType(String token) {
+		return _retrieverMap.containsKey(token);
 	}
 
 	protected int compareDate(String firstDateString, String secondDateString){
@@ -779,6 +880,8 @@ public class DateAndTimeRetriever {
 		System.out
 				.println(datr.parseDate("1 / 11 / 2014 , I watch movie in 1 December"));
 		System.out.println(datr.parseTime("1 am"));
+		System.out.println(datr.parseDate("11/11/2015"));
+		System.out.println(datr.parseTime("11:00"));
 	}
 
 }
