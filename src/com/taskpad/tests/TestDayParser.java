@@ -99,6 +99,7 @@ public class TestDayParser {
 	private void testInvalidDay(String input){
 		try {
 			DateAndTimeManager.getInstance().parseDayToInt(input);
+			fail();
 		} catch (InvalidDayException e) {
 			assertEquals(e.getMessage(), DAY_INVALID);
 		}

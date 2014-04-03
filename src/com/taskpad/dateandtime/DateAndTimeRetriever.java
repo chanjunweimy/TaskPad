@@ -214,16 +214,60 @@ public class DateAndTimeRetriever {
 					}
 					
 					if (!hasDone){
+						/*
 						if (DEADLINE.equals(type)){
-							if (deadlineDate == null){
+							if (deadlineDate == null && deadlineTime == null){
 								deadlineDate = recordDate;
-							} else {
+								deadlineTime = recordTime;
+							} else if (deadlineDate != null && deadlineTime == null){
+								if (recordDate != null && compareDate(deadlineDate, recordDate) < 0){
+									deadlineDate = recordDate;
+									deadlineTime = recordTime;
+								} else if (recordDate == null && compareDate(deadlineDate, todayDate) < 0){
+									deadlineDate = todayDate;
+									deadlineTime = recordTime;
+								}
+							} else if (deadlineDate == null && deadlineTime != null){
+								deadlineDate = todayDate;
 								
+								if (startDate != null){
+									
+								}
 							}
-						} else if (TIME_START.equals(type)){
-							
 						} else if (TIME_END.equals(type)){
 							
+						} 
+						*/
+						if (TIME_START.equals(type)){
+							if (startDate == null && startTime == null){
+								startDate = recordDate;
+								startTime = recordTime;
+							} else if (startDate != null && startTime == null){
+								if (recordDate != null && compareDate(startDate, recordDate) > 0){
+									startDate = recordDate;
+									startTime = recordTime;
+								} 
+							} else if (startDate == null && startTime != null){
+								startDate = todayDate;
+								if (recordDate != null && compareDate(startDate, recordDate) > 0){
+									startDate = recordDate;
+								} 
+								
+								if (recordTime != null && compareTime(startTime, recordTime) < 0){
+									startTime = recordTime;
+								}
+							} else if (startDate != null && startTime != null){
+								if (recordDate != null && compareDate(startDate, recordDate) > 0){
+									startDate = recordDate;
+								} 
+								
+								if (recordTime != null && compareTime(startTime, recordTime) < 0){
+									startTime = recordTime;
+								}
+							} else {
+								//unreachable
+								assert (false);
+							}
 						} else {
 							//unreachable
 							assert (false);
@@ -244,8 +288,36 @@ public class DateAndTimeRetriever {
 		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
 	}
 
-	private int compareDate(String firstDateString, String secondDateString){
+	protected int compareDate(String firstDateString, String secondDateString){
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date firstDate = new Date();
+		Date secondDate = new Date();
+		try {
+			firstDate = sdf.parse(firstDateString);
+			secondDate = sdf.parse(secondDateString);
+		} catch (ParseException e) {
+			//should not use this function if it hasn't been converted
+			assert (false);
+		}
+		return firstDate.compareTo(secondDate);
+	}
+	
+	protected int compareTime(String firstTimeString, String secondTimeString){
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		Date firstTime = new Date();
+		Date secondTime = new Date();
+		try {
+			firstTime = sdf.parse(firstTimeString);
+			secondTime = sdf.parse(secondTimeString);
+		} catch (ParseException e) {
+			//should not use this function if it hasn't been converted
+			assert (false);
+		}
+		return firstTime.compareTo(secondTime);
+	}
+	
+	protected int compareDateAndTime(String firstDateString, String secondDateString){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Date firstDate = new Date();
 		Date secondDate = new Date();
 		try {
