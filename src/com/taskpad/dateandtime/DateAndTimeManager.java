@@ -232,8 +232,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @param input
 	 * @return string with date and time replaced by standard date and time 
 	 * or input string if no date and time exists
+	 * @throws InvalidQuotesException 
 	 */
-	public String formatDateAndTimeInString(String input){
+	public String formatDateAndTimeInString(String input) throws InvalidQuotesException{
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		return datr.formatDateAndTimeInString(input);
 	}

@@ -166,14 +166,17 @@ public class DateAndTimeRetriever {
 	 * 
 	 * @param desc
 	 * @return desc |Deadline: | StartTime: Date then Time | EndTime: Date Then Time
+	 * @throws InvalidQuotesException 
 	 */
-	protected String formatDateAndTimeInString(String desc) {		
+	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {		
 		
 		// split all nonAlphaNumerics character
 		String alphaNumericSpaceDesc = getAlphaNumericSpaceDesc(desc);
+		
+		String noQuoteDesc = removeParseFreeZone(alphaNumericSpaceDesc);
 	
 		// step one: convert all number words to numbers using number parser
-		String numberedInput = parseNumber(alphaNumericSpaceDesc);
+		String numberedInput = parseNumber(noQuoteDesc);
 
 		// step two: find holiday words and replace with date
 		String holidayString = parseHolidayDates(numberedInput);
@@ -206,6 +209,40 @@ public class DateAndTimeRetriever {
 		// already done with return input
 		
 		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
+	}
+
+	
+	private String removeParseFreeZone(String alphaNumericSpaceDesc) throws InvalidQuotesException {
+		boolean removeStat = false;
+		String[] descTokens = alphaNumericSpaceDesc.split(" ");
+		for (int i = 0; i < descTokens.length; i++){
+			if ("\"".equals(descTokens[i])){
+				if (!removeStat){
+					removeStat = true;
+				} else {
+					removeStat = false;
+				}
+				descTokens[i] = null;
+			} else {
+				if (removeStat){
+					descTokens[i] = null;
+				}
+			}
+		}
+		
+		if (removeStat){
+			throw new InvalidQuotesException();
+		}
+		
+		StringBuffer tokensBuilder = new StringBuffer();
+		
+		for (String token : descTokens){
+			if (token != null){
+				tokensBuilder.append(token + " ");
+			}
+		}
+		
+		return tokensBuilder.toString().trim();
 	}
 
 	/**
@@ -941,8 +978,20 @@ public class DateAndTimeRetriever {
 		System.out.println(datr.parseTime("11:00"));
 		System.out.println(datr.formatDateAndTimeInString("aaa"));
 		*/
-		System.out.println(datr.formatDateAndTimeInString("aaa at 11/3 by 3/4 11pm"));
+		try {
+			System.out.println(datr.formatDateAndTimeInString("aaa at 11/3 by 3/4 11pm"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		try {
+			String noQuoteDesc = datr.removeParseFreeZone("\" aaaa \" bbbb ");
+			System.out.println(noQuoteDesc);
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
