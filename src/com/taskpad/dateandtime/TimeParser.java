@@ -227,7 +227,11 @@ public class TimeParser {
         } else if (containsNightWords(input)){
         	hours = TIME_NIGHT;
         	minutes = TIME_ZERO;
-        } else {
+        } else if (containsMidnightWords(input)){
+        	hours = TIME_ZERO;
+        	minutes = TIME_ZERO;
+        }
+        else {
         	return time;
         }
         
@@ -252,6 +256,10 @@ public class TimeParser {
 		return input.toLowerCase().contains("morning") || input.toLowerCase().contains("morn");
 	}
 
+	
+	private static boolean containsMidnightWords(String input) {
+		return input.toLowerCase().contains("midnight") || input.toLowerCase().contains("midngt");
+	}
 	private static long convertToSeconds(String hours, String minutes){
 		return (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
 	}
