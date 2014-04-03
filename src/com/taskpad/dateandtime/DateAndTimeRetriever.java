@@ -907,7 +907,7 @@ public class DateAndTimeRetriever {
 	 * @param input
 	 * @param datmParser
 	 */
-	private String parseNumber(String input) {
+	protected String parseNumber(String input) {
 		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
 		Scanner sc = new Scanner(input);
 		StringBuffer changedString = new StringBuffer();

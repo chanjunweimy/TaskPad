@@ -216,6 +216,17 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		NumberParser parser = NumberParser.getInstance();
 		return parser.parseTheNumbers(numberString);
 	}
+	
+	
+	/**
+	 * Takes in a string and changes number words to numbers
+	 * i.e. "one day in forever" changes to "1 day in forever"
+	 * @param input
+	 * @return string changed to numerics
+	 */
+	public String parseNumberString(String input){
+		return DateAndTimeRetriever.getInstance().parseNumber(input);
+	}
 
 	protected boolean isNumber(String numberString) {
 		NumberParser parser = NumberParser.getInstance();
@@ -275,12 +286,14 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * 
 	 * private void setMultiple(int multiple) { _multiple = multiple; }
 	 */
-
+	
 	// for debug:
 	/*
-	 * public static void main(String[] args){ DateAndTimeManager now = new
-	 * DateAndTimeManager(); System.out.println(now.getTodayTime());
-	 * System.out.println(now.getTodayDate());
-	 * System.out.println(now.getTodayDay()); }
+	 public static void main(String[] args){
+		 DateAndTimeManager now = new DateAndTimeManager(); System.out.println(now.getTodayTime());
+		 System.out.println(now.getTodayDate());
+		 System.out.println(now.getTodayDay()); 
+		 System.out.println(DateAndTimeManager.getInstance().parseNumberString("nine day in forever"));
+	 }
 	 */
 }

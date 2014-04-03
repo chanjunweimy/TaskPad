@@ -1,7 +1,7 @@
 package com.taskpad.input;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.DateObject;
+import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Search extends Command{
 	
@@ -64,7 +64,12 @@ public class Search extends Command{
 	}
 	
 	private void checkAndInputDeadline(){	
-		_keyword += DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		try {
+			_keyword += DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
 		
 		/*
 		for (int i=0; i<splitInput.length; i++){
