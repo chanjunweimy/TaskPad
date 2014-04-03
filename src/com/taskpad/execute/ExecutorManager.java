@@ -20,7 +20,7 @@ public class ExecutorManager {
 		
 		switch (commandType) {
 		case "ADD":
-			CommandFactory.add(parameters.get("DESC"), parameters.get("DEADLINE"),
+			CommandFactory.add(parameters.get("DESC"), parameters.get("DEADLINE DATE"),
 					parameters.get("START DATE"), parameters.get("START TIME"),
 					parameters.get("END DATE"), parameters.get("END TIME"),
 					parameters.get("VENUE"));
