@@ -230,7 +230,7 @@ public class Add extends Command {
 		String deadlineDate = splitInput[size - 5];
 		String deadlineTime = splitInput[size - 4];
 		String deadline = deadlineDate + STRING_SPACE + deadlineTime;
-		if (!STRING_NULL.equals(startDate)){
+		if (!STRING_NULL.equals(deadlineDate) && !STRING_NULL.equals(deadlineTime)){
 			//putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
 			putOneParameter(PARAMETER_DEADLINE_DATE, deadline);
 		}
