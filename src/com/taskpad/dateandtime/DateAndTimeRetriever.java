@@ -212,7 +212,7 @@ public class DateAndTimeRetriever {
 		// return that string to parse in respective Add/Addrem/Alarm classes -
 		// already done with return input
 		
-		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
+		return deadlineRes + " " + startTimeRes + " " + endTimeRes;
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class DateAndTimeRetriever {
 		boolean removeStat = false;
 		String[] descTokens = alphaNumericSpaceDesc.split(" ");
 		for (int i = 0; i < descTokens.length; i++){
-			if ("\"".equals(descTokens[i])){
+			if ("\"".equals(descTokens[i]) || "\'".equals(descTokens[i])){
 				if (!removeStat){
 					removeStat = true;
 				} else {
