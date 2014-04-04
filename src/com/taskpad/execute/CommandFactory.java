@@ -142,16 +142,22 @@ public class CommandFactory {
 		OutputToGui.outputColorTextForTasks(results, listOfTasks);
 	}
 
-	protected static void edit(String taskIdString, String description) {
+	protected static void edit(String taskIdString, String description, String deadline) {
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		
-		String taskHistory = CommandFactoryBackend.editTaskDescription(taskIdString, description,
+		Task task = CommandFactoryBackend.editTask(taskIdString, description, deadline,
 				listOfTasks);
 		
 		// pass feedback to gui
 		OutputToGui.output(STRING_NEWLINE);
-		OutputToGui.output("'" + taskHistory + "' changed to '" 
+		/*
+		if(description != null && !description.equals("")) {
+			OutputToGui.output("'" + taskHistory + "' changed to '" 
 				+ OutputToGui.generateTitleForOneTask(taskIdString, description) + "'");
+		}
+		*/
+		int taskid = Integer.parseInt(taskIdString);
+		OutputToGui.outputColorTextForOneTask(taskid, task);
 	}
 
 	protected static void markAsDone(String taskIdString) {
@@ -186,7 +192,7 @@ public class CommandFactory {
 	protected static int getIndexById(String taskIdString) {
 		return Integer.parseInt(taskIdString) - 1;
 	}
-
+	
 	protected static void delete(String taskIdString) {		
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		

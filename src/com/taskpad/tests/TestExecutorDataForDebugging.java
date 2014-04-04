@@ -14,7 +14,13 @@ import com.taskpad.execute.ExecutorManager;
 import com.taskpad.input.Input;
 import com.taskpad.storage.Task;
 
-public class TestExecutorData {
+/**
+ * TestExecutorData
+ * 
+ * This class is for debugging purpose only
+ *
+ */
+public class TestExecutorDataForDebugging {
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, DataFileStack.FILE);
