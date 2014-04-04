@@ -195,6 +195,8 @@ public class DateAndTimeRetriever {
 		
 		String timeWordString = parseTimeWord(timeString);
 		
+		//System.err.println(timeString);
+		
 		ArrayList<String> allDateAndTime = extractDateAndTime(timeWordString);
 		
 		//System.err.println(allDateAndTime.get(POSITION_DEADLINE));
@@ -374,6 +376,8 @@ public class DateAndTimeRetriever {
 			endLatest = null;
 		}
 		
+		//System.err.println(deadlineLatest);
+		//System.err.println(startEarliest);
 		if (deadlineLatest != null && compareDateAndTime(deadlineLatest, startEarliest) <= 0){
 			deadlineLatest = null;
 		} else if (deadlineLatest != null && compareDateAndTime(deadlineLatest, now) <= 0){
@@ -475,7 +479,7 @@ public class DateAndTimeRetriever {
 		
 		if (dateLatest != null){
 			if (timeLatest == null){
-				timeLatest = "";
+				timeLatest = "23:59";
 			}
 			String cur = dateLatest + " " + timeLatest;
 			if (latest == null || compareDateAndTime(latest, cur) < 0){
@@ -1005,8 +1009,13 @@ public class DateAndTimeRetriever {
 			e.printStackTrace();
 		}
 		
-		System.out
-		.println(datr.parseDay("tmr tmr tmr tmr tomorrow"));
+		try {
+			System.out
+			.println(datr.formatDateAndTimeInString("do cs2010 assignment by Monday"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
