@@ -30,6 +30,7 @@ import com.taskpad.dateandtime.TimeObject;
 
 public class Add extends Command {
 
+	private static final String STRING_NULL = "null";
 	private static final String STRING_QUOTE = "\"";
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_DASH = "-";
@@ -202,18 +203,46 @@ public class Add extends Command {
 		}
 		
 		String[] splitInput = inputNew.split(STRING_SPACE);
-		int size = splitInput.length;
-		putOneParameter(PARAMETER_END_TIME, splitInput[size]);
-		putOneParameter(PARAMETER_END_DATE, splitInput[size-1]);
-		putOneParameter(PARAMETER_START_TIME, splitInput[size-2]);
-		putOneParameter(PARAMETER_START_DATE, splitInput[size-3]);
-		putOneParameter(PARAMETER_DEADLINE_DATE, splitInput[size-4]);
-		putOneParameter(PARAMETER_DEADLINE_TIME, splitInput[size-4]);
+		int size = splitInput.length - 1;
 		
-		String desc = STRING_EMPTY;
-		for (int i=0; i<size-5; i++){
-			desc += splitInput[i] + STRING_SPACE;
+		
+		String endTime = splitInput[size];
+		if (!STRING_NULL.equals(endTime)){
+			putOneParameter(PARAMETER_END_TIME, endTime);
 		}
+		
+		String endDate = splitInput[size - 1];
+		if (!STRING_NULL.equals(endDate)){
+			putOneParameter(PARAMETER_END_DATE, endDate);
+		}
+		
+		String startTime = splitInput[size - 2];
+		if (!STRING_NULL.equals(startTime)) {
+			putOneParameter(PARAMETER_START_TIME, startTime);
+		}
+		
+		
+		String startDate = splitInput[size - 3];
+		if (!STRING_NULL.equals(startDate)){
+			putOneParameter(PARAMETER_START_DATE, startDate);
+		}
+		
+		String deadlineDate = splitInput[size - 5];
+		String deadlineTime = splitInput[size - 4];
+		String deadline = deadlineDate + STRING_SPACE + deadlineTime;
+		if (!STRING_NULL.equals(startDate)){
+			//putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
+			putOneParameter(PARAMETER_DEADLINE_DATE, deadline);
+		}
+		
+		
+		/*
+		String desc = STRING_EMPTY;
+		for (int i=0; i < size-5; i++){
+			desc += splitInput[i] + STRING_SPACE;
+		}*/
+		
+		String desc = input;
 		
 		putOneParameter(PARAMETER_DESCRIPTION, desc);
 		
@@ -435,7 +464,9 @@ public class Add extends Command {
 
 	private boolean checkIfDelimitedString() {
 		String inputToCheck = input.toLowerCase();
-		if (inputToCheck.contains("-d") || inputToCheck.contains("-s") || inputToCheck.contains("-e")){
+		//should add space if we want to use contains. :) because it maybe have "to-do", then it will think it is a
+		//delimited String	
+		if (inputToCheck.contains(" -d ") || inputToCheck.contains(" -s ") || inputToCheck.contains(" -e ")){
 			return true;
 		}
 		
