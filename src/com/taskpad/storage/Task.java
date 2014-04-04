@@ -85,4 +85,8 @@ public class Task {
 		this.description = description;
 	}
 	
+	public void setDeadline(String deadline) {
+		this.deadline = deadline;
+	}
+	
 }

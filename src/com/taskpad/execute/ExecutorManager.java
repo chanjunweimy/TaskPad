@@ -44,7 +44,8 @@ public class ExecutorManager {
 			CommandRecord.pushForUndo(command);
 			break;
 		case "EDIT":
-			CommandFactory.edit(parameters.get("TASKID"), parameters.get("DESC"));
+			CommandFactory.edit(parameters.get("TASKID"), parameters.get("DESC"),
+					parameters.get("DEADLINE"));
 			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":

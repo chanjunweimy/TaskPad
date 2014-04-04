@@ -130,10 +130,11 @@ public class CommandFactoryBackend {
 		for(int index = 0; index < listOfTasks.size(); index++) {
 			Task task = listOfTasks.get(index);
 			String description = task.getDescription();
+			String details = task.getDetails();
 			
 			boolean isCandidate = true;
 			for(String keyword: keywords) {
-				if(!description.contains(keyword)) {
+				if(!description.contains(keyword) && !details.contains(keyword)) {
 					isCandidate = false;
 				}
 			}
@@ -145,15 +146,20 @@ public class CommandFactoryBackend {
 		return results;
 	}
 	
-	protected static String editTaskDescription(String taskIdString,
-			String description, TaskList listOfTasks) {
+	protected static Task editTask(String taskIdString,
+			String description, String deadline, TaskList listOfTasks) {
 		Task task = getTaskById(listOfTasks, taskIdString);
 		String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
 		
-		task.setDescription(description);
+		if(description != null && !description.equals("")) {
+			task.setDescription(description);
+		}
+		if(deadline != null && !deadline.equals("")) {
+			task.setDeadline(deadline);
+		}
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		return taskHistory;
+		return task;
 	}
 	
 	protected static Task markTaskAsDone(String taskIdString, TaskList listOfTasks) {
