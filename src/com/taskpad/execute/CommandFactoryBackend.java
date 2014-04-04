@@ -19,6 +19,7 @@ import com.taskpad.storage.TaskList;
 public class CommandFactoryBackend {
 	/**
 	 * ACCENDING_ORDER: a comparator used to sort Task by their dates.
+	 * 
 	 */
 	protected static final Comparator<Task> ACCENDING_ORDER = new Comparator<Task>() {
 		/**
@@ -91,11 +92,15 @@ public class CommandFactoryBackend {
 
 	protected static String updateDataForUndo() throws NoPreviousFileException {
 		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
 		String previousFile = DataFileStack.popForUndo();
-		TaskList listOfTasks = DataManager.retrieve(previousFile);
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		TaskList previousListOfTasks = DataManager.retrieve(previousFile);
+		
+		DataManager.storeBack(previousListOfTasks, DataFileStack.FILE);
 		DataManager.storeBack(currentListOfTasks, previousFile);
+		
 		DataFileStack.pushForRedo(previousFile);
+		
 		return previousFile;
 	}
 	
@@ -103,16 +108,21 @@ public class CommandFactoryBackend {
 			throws NoPreviousCommandException {
 		String command = CommandRecord.popForUndo();
 		CommandRecord.pushForRedo(command);
+		
 		return command;
 	}
 	
 	protected static String updateDataForRedo() throws NoPreviousFileException {
 		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
 		String previousFile = DataFileStack.popForRedo();
-		TaskList listOfTasks = DataManager.retrieve(previousFile);
-		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		TaskList previousListOfTasks = DataManager.retrieve(previousFile);
+		
+		DataManager.storeBack(previousListOfTasks, DataFileStack.FILE);
 		DataManager.storeBack(currentListOfTasks, previousFile);
+		
 		DataFileStack.pushForUndo(previousFile);
+		
 		return previousFile;
 	}
 	
@@ -120,6 +130,7 @@ public class CommandFactoryBackend {
 			throws NoPreviousCommandException {
 		String command = CommandRecord.popForRedo();
 		CommandRecord.pushForUndo(command);
+		
 		return command;
 	}
 
@@ -129,14 +140,11 @@ public class CommandFactoryBackend {
 		
 		for(int index = 0; index < listOfTasks.size(); index++) {
 			Task task = listOfTasks.get(index);
-			String description = task.getDescription();
 			
-			boolean isCandidate = true;
-			for(String keyword: keywords) {
-				if(!description.contains(keyword)) {
-					isCandidate = false;
-				}
-			}
+			String description = task.getDescription();
+			String details = task.getDetails();		
+			
+			boolean isCandidate = containsKeywords(keywords, description, details);
 			
 			if(isCandidate) {
 				results.add(index);
@@ -144,16 +152,32 @@ public class CommandFactoryBackend {
 		}
 		return results;
 	}
+
+	private static boolean containsKeywords(String[] keywords,
+			String description, String details) {
+		boolean isCandidate = true;
+		for(String keyword: keywords) {
+			if(!description.contains(keyword) && !details.contains(keyword)) {
+				isCandidate = false;
+			}
+		}
+		return isCandidate;
+	}
 	
-	protected static String editTaskDescription(String taskIdString,
-			String description, TaskList listOfTasks) {
+	protected static Task editTask(String taskIdString,
+			String description, String deadline, TaskList listOfTasks) {
 		Task task = getTaskById(listOfTasks, taskIdString);
-		String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
+		// String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
 		
-		task.setDescription(description);
+		if(description != null && !description.equals("")) {
+			task.setDescription(description);
+		}
+		if(deadline != null && !deadline.equals("")) {
+			task.setDeadline(deadline);
+		}
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
-		return taskHistory;
+		return task;
 	}
 	
 	protected static Task markTaskAsDone(String taskIdString, TaskList listOfTasks) {
@@ -179,15 +203,20 @@ public class CommandFactoryBackend {
 	
 	protected static TaskList archiveForUndo() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		// request a file for archive purpose
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
+		
 		DataFileStack.pushForUndo(fileRecord);
+		
 		return listOfTasks;
 	}
 	
 	protected static Task addInfoToTask(String info, TaskList listOfTasks,
 			int index) {
 		Task task = listOfTasks.get(index);
+		
 		if(task.getDetails() == null) {
 			task.setDetails(info);
 		} else {
