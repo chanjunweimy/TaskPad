@@ -84,6 +84,7 @@ public class TimeParser {
         long time = TIME_NEG;
         
         time = checkMornAftEvenWords(input);
+        //System.err.println(time);
         
         if (time != TIME_NEG){
         	return time;
@@ -181,9 +182,13 @@ public class TimeParser {
 	 }
 	
 	private static void checkIfInvalidTimeString(String hours, String minutes, String input) throws InvalidTimeException {
-        if (Integer.parseInt(hours) >= 12 || Integer.parseInt(minutes) > 60){
+        int h = Integer.parseInt(hours);
+        int m = Integer.parseInt(minutes);
+		if (h >= 12 || m > 60){
         	throw new InvalidTimeException(input);
-        }		
+        } else if (h < 0 || m < 0){
+        	throw new InvalidTimeException(input);
+        }
 	}
 
 	private static boolean timePatternMatch(String input) {
@@ -230,38 +235,39 @@ public class TimeParser {
         } else if (containsMidnightWords(input)){
         	hours = TIME_ZERO;
         	minutes = TIME_ZERO;
-        }
-        else {
+        } else {
         	return time;
         }
+        
+        //System.err.println(hours + " " + minutes);
         
     	time = convertToSeconds(hours, minutes);
 		return time;
 	}
 
 	private static boolean containsNightWords(String input) {
-		return input.toLowerCase().contains("night") || input.toLowerCase().contains("ngt");
+		return input.toLowerCase().equals("night") || input.toLowerCase().equals("ngt");
 	}
 
 	private static boolean containsEveWords(String input) {
-		return input.toLowerCase().contains("evening") || input.toLowerCase().contains("eve");
+		return input.toLowerCase().equals("evening") || input.toLowerCase().equals("eve");
 	}
 
 	private static boolean containsAftWords(String input) {
-		return input.toLowerCase().contains("afternoon") || input.toLowerCase().contains("aft") ||
-        		input.toLowerCase().contains("noon");
+		return input.toLowerCase().equals("afternoon") || input.toLowerCase().equals("aft") ||
+        		input.toLowerCase().equals("noon");
 	}
 
 	private static boolean containsMornWords(String input) {
-		return input.toLowerCase().contains("morning") || input.toLowerCase().contains("morn");
+		return input.toLowerCase().equals("morning") || input.toLowerCase().equals("morn");
 	}
 
 	
 	private static boolean containsMidnightWords(String input) {
-		return input.toLowerCase().contains("midnight") || input.toLowerCase().contains("midngt");
+		return input.toLowerCase().equals("midnight") || input.toLowerCase().equals("midngt");
 	}
 	private static long convertToSeconds(String hours, String minutes){
-		return (Long.parseLong(hours)* 60 + Long.parseLong(minutes)) * 60 * 1000;
+		return (Long.parseLong(hours) * 60 + Long.parseLong(minutes)) * 60 * 1000;
 	}
 	
 	private static String convertMillisecondsToTime(long milliseconds){
@@ -287,23 +293,26 @@ public class TimeParser {
 	}
 	
 	private static boolean isInvalidTime(String timeString){
-		if (timeString.equals("-1:-1")){
+		if (timeString.trim().equals("-1:-1")){
 			return true;
 		}
 		return false;
 	}
 	
 	public static void main(String[] args){
-		String input = "8.15 am";
-		long time = 0;
+		String input = "even";
+		
+		//System.out.println(checkMornAftEvenWords(input));
+		
+		String time = null;
 		try {
-			time = decodeTime(input);
-		} catch (InvalidTimeException e) {
+			time = parseTime(input);
+		} catch (InvalidTimeException | NullTimeUnitException | NullTimeValueException | TimeErrorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String timeString = convertMillisecondsToTime(time);
-		System.out.println(input + " " + timeString);
+		//String timeString = convertMillisecondsToTime(time);
+		System.out.println(input + " " + time);
 	}
 	
 }
