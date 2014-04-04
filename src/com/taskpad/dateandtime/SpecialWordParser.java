@@ -179,7 +179,7 @@ public class SpecialWordParser {
 
 	protected boolean isWk(String input){
 		for (String myWk : MAP_WK){
-			if (myWk.equals(input)){
+			if (myWk.equals(input.toUpperCase())){
 				return true;
 			}
 		}

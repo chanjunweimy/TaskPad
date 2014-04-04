@@ -51,7 +51,8 @@ public class DateAndTimeRetriever {
 		"TILL",
 		"TO",
 		"TIL",
-		"~"
+		"~",
+		"FOR"
 	};
 	
 	private static HashMap<String, String> _retrieverMap = new HashMap<String, String>();
@@ -109,8 +110,9 @@ public class DateAndTimeRetriever {
 	/* Helper methods for checking valid time in a String */
 	private String isValidTime(String input) {
 		input = trimInput(input);
+		TimeParser tp = TimeParser.getInstance();
 		try {
-			return TimeParser.parseTimeInput(input);
+			return tp.parseTimeInput(input);
 		} catch (TimeErrorException | InvalidTimeException e) {
 			return STRING_EMPTY;
 		}
@@ -165,7 +167,7 @@ public class DateAndTimeRetriever {
 	/**
 	 * 
 	 * @param desc
-	 * @return desc |Deadline: | StartTime: Date then Time | EndTime: Date Then Time
+	 * @return Deadline: | StartTime: Date then Time | EndTime: Date Then Time
 	 * @throws InvalidQuotesException 
 	 */
 	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {			
@@ -205,13 +207,68 @@ public class DateAndTimeRetriever {
 	}
 
 	/**
-	 * not implement yet. Implement later
 	 * @param timeString
 	 * @return
 	 */
 	private String parseTimeWord(String timeString) {
-		// TODO Auto-generated method stub
-		return timeString;
+		String[] timeWordTokens = timeString.split(" ");
+		
+		TimeWordParser twp = TimeWordParser.getInstance();
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		NumberParser np = NumberParser.getInstance();
+		
+		boolean[] isModified = new boolean[timeWordTokens.length];
+		
+		initializeArray(isModified);
+		
+		for (int i = 0; i < timeWordTokens.length; i++){
+			String firstToken = timeWordTokens[i];
+			StringBuffer changedTokens = new StringBuffer();
+
+			if (twp.isTimeUnits(firstToken)) {
+				isModified[i] = true;
+				String secondToken = null;
+				
+				for (int j = i - 1; j >= 0; j--) {
+					if (isModified[j]) {
+						break;
+					}
+					
+					isModified[j] = true;
+					String token = timeWordTokens[j];
+					
+					if (swp.isSpecialWord(token)) {
+						changedTokens.append(token + " ");
+						timeWordTokens[j] = null;
+					} else if (j == i - 1 && np.isDigitString(token)){
+						timeWordTokens[j] = null;
+						secondToken = token;
+					} else {
+						break;
+					}
+					
+				}
+				if (secondToken != null){
+					changedTokens.append(secondToken + " ");
+				}
+				changedTokens.append(firstToken);
+
+
+				try {
+					timeWordTokens[i] = twp.parseTimeWordWithSpecialWord(changedTokens.toString()
+								.trim());
+				} catch (NullTimeUnitException | NullTimeValueException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+		
+		StringBuffer timeWordString = new StringBuffer();
+		timeWordString = buildString(timeWordTokens, timeWordString);
+		
+		return timeWordString.toString().trim();
 	}
 
 	private String removeParseFreeZone(String alphaNumericSpaceDesc) throws InvalidQuotesException {
@@ -722,8 +779,9 @@ public class DateAndTimeRetriever {
 
 	private boolean isTime(String input) {
 		input = trimInput(input);
+		TimeParser tp = TimeParser.getInstance();
 		try {
-			TimeParser.parseTimeInput(input);
+			tp.parseTimeInput(input);
 		} catch (TimeErrorException | InvalidTimeException e) {
 			return false;
 		} catch (Exception e) {
@@ -807,12 +865,8 @@ public class DateAndTimeRetriever {
 		}
 		
 		dayBuilder = new StringBuffer();
-		for (int i = 0; i < dayTokens.length; i++){
-			String token = dayTokens[i];
-			if (token != null){
-				dayBuilder.append(token + " ");
-			}
-		}
+
+		dayBuilder = buildString(dayTokens, dayBuilder);
 		dayBuilder.append(tmrTdyStr);
 		
 		dayString = dayBuilder.toString().trim();
@@ -1063,13 +1117,15 @@ public class DateAndTimeRetriever {
 		System.out.println(datr.parseTime("11:00"));
 		System.out.println(datr.formatDateAndTimeInString("aaa"));
 		*/
+		/*
 		try {
 			System.out.println(datr.formatDateAndTimeInString("aaa at 11/3 by 3/4 11pm"));
 		} catch (InvalidQuotesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		*/
+		
 		try {
 			String noQuoteDesc = datr.removeParseFreeZone("\" aaaa \" bbbb ");
 			System.out.println(noQuoteDesc);
@@ -1078,13 +1134,17 @@ public class DateAndTimeRetriever {
 			e.printStackTrace();
 		}
 		
+		/*
 		try {
 			System.out
-			.println(datr.formatDateAndTimeInString("do cs2010 assignment by tmr"));
+			.println(datr.formatDateAndTimeInString("do cs2010 assignment by nxt nxt Wk"));
 		} catch (InvalidQuotesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
+		
+		System.out.println(datr.parseTimeWord("1 hour"));
 	}
 
 }

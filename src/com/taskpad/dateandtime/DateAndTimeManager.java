@@ -166,11 +166,13 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	public String parseTime(String timeString) throws NullTimeUnitException,
 			NullTimeValueException, TimeErrorException, InvalidTimeException {
-		return TimeParser.parseTime(timeString);
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTime(timeString);
 	}
 
 	public String parseTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
-		return TimeParser.parseTimeInput(timeString);
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTimeInput(timeString);
 	}
 
 	/**
