@@ -50,7 +50,7 @@ public class AlarmManager extends JApplet{
 
 		boolean isOn = true;
 		_startAlarmTimer.setAlarmTimer(isOn, time);
-	}
+	}  
 	
 	private static void ensureInitialization() {
 		if (_alarm == null){

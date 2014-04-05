@@ -26,10 +26,12 @@ public class GuiTableModel extends DefaultTableModel {
 		return false;
 	}
 	
+	/*
 	public void refresh(Object[][] objects){
 	    //make the changes to the table, then call fireTableChanged
 		_data = objects;
 	    fireTableChanged(null);
 	}
+	*/
 
 }
