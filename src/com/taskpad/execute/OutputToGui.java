@@ -12,6 +12,11 @@ public class OutputToGui {
 		GuiManager.callOutputNoLine(feedback + "\n");
 	}
 	
+	protected static void outputTable(LinkedList<Integer> candidates, TaskList listOfTasks) {
+		String[][] tableArray = generate2dArrayForTasks(candidates, listOfTasks);
+		GuiManager.callTable(tableArray);
+	}
+	
 	protected static String[][] generate2dArrayForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
 		int numberOfTasks = candidates.size();
 		String[][] result = new String[numberOfTasks][6];
@@ -26,7 +31,7 @@ public class OutputToGui {
 	}
 	
 	private static String[] fillIn2dArrayForOneTask(int index, Task task) {
-		String[] result = new String[5];
+		String[] result = new String[6];
 		
 		int taskId = index + 1;
 		
