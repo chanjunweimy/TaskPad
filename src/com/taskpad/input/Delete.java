@@ -26,7 +26,7 @@ public class Delete extends Command{
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_DELETE);	
 	}
-
+	
 	@Override
 	protected boolean commandSpecificRun() {
 		putInputParameters();

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+
 public abstract class Command {
 
 	protected static Input inputObject;
@@ -42,6 +44,11 @@ public abstract class Command {
 			showEmptyString();
 			return;
 		}
+		
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		if (numberInput != null){
+			input = numberInput;
+		}
 				
 		try {
 			checkIfIncorrectArguments();
@@ -50,10 +57,7 @@ public abstract class Command {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
-				
-//		if (checkIfEmptyString() || checkIfIncorrectArguments()){
-//			return;
-//		} 
+		
 		clearInputParameters();
 		initialiseParametersToNull();
 		
