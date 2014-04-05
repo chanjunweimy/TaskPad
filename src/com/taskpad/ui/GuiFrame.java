@@ -86,6 +86,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	protected void showUp(GuiFrame visibleFrame){
 		setSize(visibleFrame.getSize());
 		setLocation(visibleFrame.getLocation());
+		setVisible(true);
 	}
 	     
 	protected void close(){ 
