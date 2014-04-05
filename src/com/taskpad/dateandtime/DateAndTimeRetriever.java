@@ -54,7 +54,14 @@ public class DateAndTimeRetriever {
 		"~",
 		"FOR"
 	};
-	
+	private static final String[] KEYWORD_TODAY = {
+		"TODAY",
+		"TDY",
+		"2DAY"
+	};
+	private static final String[] KEYWORD_NOW = {
+		"NOW"
+	};
 	private static HashMap<String, String> _retrieverMap = new HashMap<String, String>();
 	private static DateAndTimeRetriever _retriever = new DateAndTimeRetriever();
 	
@@ -245,7 +252,9 @@ public class DateAndTimeRetriever {
 		
 		String dayString = parseDay(holidayString);
 		
-		String dateString = parseDate(dayString);
+		String todayAndNowString = parseTodayAndNow(dayString);
+		
+		String dateString = parseDate(todayAndNowString);
 		
 		String timeString = parseTime(dateString);
 		//System.err.println(numberedInput);
@@ -255,6 +264,27 @@ public class DateAndTimeRetriever {
 		return timeWordString;
 	}
 	
+	private String parseTodayAndNow(String dayString) {
+		String[] todayAndNowTokens = dayString.split(" ");
+		StringBuffer todayAndNowBuilder = new StringBuffer();
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDate = datm.getTodayDate();
+		String now = datm.getTodayDateAndTime();
+		
+		for (int i = 0; i < todayAndNowTokens.length; i++){
+			String token = todayAndNowTokens[i];
+			if (isToday(token)){
+				todayAndNowTokens[i] = todayDate;
+			} else if (isNow(token)){
+				todayAndNowTokens[i] = now;
+			}
+		}
+		
+		todayAndNowBuilder = buildString(todayAndNowTokens, todayAndNowBuilder);
+		
+		return todayAndNowBuilder.toString().trim();
+	}
+
 	/**
 	 * format DateAndTime as Deadline, StartTime, EndTime
 	 * @param desc
@@ -473,7 +503,7 @@ public class DateAndTimeRetriever {
 					recordDate = null;
 					recordTime = null;
 				}
-			}
+			} 
 		}
 		
 		if (recordDate != null || recordTime != null){
@@ -484,7 +514,13 @@ public class DateAndTimeRetriever {
 		startEarliest = retrieveStartEarliest(todayDate, now, startDateEarliest,
 				startTimeEarliest, startEarliest, startDates, startTimes);
 		
-		startDateEarliest = startEarliest.split(" ")[0];
+		if (startEarliest == null){
+			startDateEarliest = todayDate;
+		} else {
+			startDateEarliest = startEarliest.split(" ")[0];
+		}
+		
+		//System.out.println("DD: " + startDateEarliest);
 		
 		String deadlineLatest = retrieveNotStartLatest(deadlineDates, deadlineTimes, startDateEarliest);
 		String endLatest = retrieveNotStartLatest(endDates, endTimes, startDateEarliest);
@@ -493,7 +529,7 @@ public class DateAndTimeRetriever {
 		//System.err.println(startEarliest);
 		//System.err.println(endLatest);
 		
-		if (endLatest != null && compareDateAndTime(endLatest, startEarliest) <= 0){
+		if (endLatest != null && startEarliest != null && compareDateAndTime(endLatest, startEarliest) <= 0){
 			endLatest = null;
 		} else if (endLatest != null && compareDateAndTime(endLatest, now) <= 0){
 			endLatest = null;
@@ -501,7 +537,7 @@ public class DateAndTimeRetriever {
 		
 		//System.err.println(deadlineLatest);
 		//System.err.println(startEarliest);
-		if (deadlineLatest != null && compareDateAndTime(deadlineLatest, startEarliest) <= 0){
+		if (deadlineLatest != null && startEarliest != null && compareDateAndTime(deadlineLatest, startEarliest) <= 0){
 			deadlineLatest = null;
 		} else if (deadlineLatest != null && compareDateAndTime(deadlineLatest, now) <= 0){
 			deadlineLatest = null;
@@ -512,7 +548,27 @@ public class DateAndTimeRetriever {
 		allDateAndTime.add(endLatest);
 		return allDateAndTime;
 	}
+	
+	private boolean isToday(String input){
+		input = input.toUpperCase();
+		for (int i = 0; i < KEYWORD_TODAY.length; i++){
+			if (KEYWORD_TODAY[i].equals(input)){
+				return true;
+			}
+		}
+		return false;
+	}
 
+	private boolean isNow(String input){
+		input = input.toUpperCase();
+		for (int i = 0; i < KEYWORD_NOW.length; i++){
+			if (KEYWORD_NOW[i].equals(input)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * @param todayDate
 	 * @param now
@@ -566,7 +622,8 @@ public class DateAndTimeRetriever {
 				startEarliest = start;
 			}
 		} else if (startEarliest == null){
-			startEarliest = now;
+			//startEarliest = now;
+			return null;
 		}
 		return startEarliest.trim();
 	}
@@ -1313,6 +1370,15 @@ public class DateAndTimeRetriever {
 		}
 		
 		System.out.println(datr.parseTimeWord("1 hour"));
+		
+		System.out.println(datr.parseTodayAndNow("find Lynnette by Today"));
+		
+		try {
+			System.out.println(datr.formatDateAndTimeInString("find Lynnette by Today"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
