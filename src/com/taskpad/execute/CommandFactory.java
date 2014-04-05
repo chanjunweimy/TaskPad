@@ -61,8 +61,9 @@ public class CommandFactory {
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_NO_FINISHED_TASK);
 		} else {
-			OutputToGui.output(STRING_NEWLINE);
-			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			// OutputToGui.output(STRING_NEWLINE);
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(tasks, listOfTasks);
 		}
 	}
 
@@ -75,8 +76,9 @@ public class CommandFactory {
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_NO_TASK);
 		} else {
-			OutputToGui.output(STRING_NEWLINE);
-			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			// OutputToGui.output(STRING_NEWLINE);
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(tasks, listOfTasks);
 		}
 	}
 

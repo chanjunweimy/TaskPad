@@ -11,15 +11,16 @@ import com.taskpad.storage.TaskList;
 
 public class Reminder {
 	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "You have no task due today.";
-	private static final String NEWLINE = "/n";
+	private static final String NEWLINE = "\n";
 	
 	protected static void showReminderForToday() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		LinkedList<Integer> tasks = getTasksDueToday();
 		if(tasks.size() == 0) {
-			OutputToGui.output(NEWLINE + FEEDBACK_NO_TASK_DUE_TODAY);
+			OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
 		} else {
-			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(tasks, listOfTasks);
 		}
 	}
 
