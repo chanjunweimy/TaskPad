@@ -36,7 +36,7 @@ public class Reminder {
 		for (int i = 0; i < allTasks.size(); i++) {
 			Task task = allTasks.get(i);
 			String deadline = task.getDeadline();
-			if(deadline != null && deadline.equals(dateString)) {
+			if(deadline != null && deadline.contains(dateString)) {
 				results.add(i);
 			}
 		}
