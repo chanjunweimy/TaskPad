@@ -169,6 +169,11 @@ public class TestTimeParser {
 		testTimeCommand("19:00", "NiGHt");
 	}
 	
+	@Test
+	public void wordTest15(){
+		testTimeCommand("19:00", "19:00");
+	}
+	
 	/**
 	 * Test unsupported cases
 	 * @param expected

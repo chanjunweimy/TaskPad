@@ -208,7 +208,18 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	public String parseNumber(String numberString) {
 		NumberParser parser = NumberParser.getInstance();
-		return parser.parseTheNumbers(numberString);
+		return parser.parseTheNumbers(numberString, true);
+	}
+	
+	/**
+	 * 
+	 * @param numberString
+	 * @param isStrict
+	 * @return
+	 */
+	public String parseNumber(String numberString, boolean isStrict) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, isStrict);
 	}
 	
 	
@@ -224,7 +235,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 
 	protected boolean isNumber(String numberString) {
 		NumberParser parser = NumberParser.getInstance();
-		return parser.parseTheNumbers(numberString) != null;
+		return parser.parseTheNumbers(numberString, true) != null;
 	}
 	
 	public String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{
@@ -244,11 +255,43 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return datr.formatDateAndTimeInString(input);
 	}
 	
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 * @throws InvalidQuotesException
+	 */
 	public ArrayList<String> searchTimeAndDate(String input) throws InvalidQuotesException{
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		return datr.searchTimeAndDate(input);
 	}
 	
+	
+	/**
+	 * 
+	 * @param firstDateString
+	 * @param secondDateString
+	 * @return
+	 */
+	public int compareDateAndTime(String firstDateString, String secondDateString){
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.compareDateAndTimeExecutor(firstDateString, secondDateString);
+	}
+	
+	/**
+	 * 
+	 * @param dateString
+	 * @return
+	 */
+	public int compareDateAndTime(String dateString){
+		return compareDateAndTime(dateString, getTodayDate() + " 23:59");
+	}
+	
+	/**
+	 * 
+	 * @param dateString
+	 * @throws ParseException
+	 */
 	public void setDebug(String dateString) throws ParseException{
 		_dateAndTimeObject.setDebugDate(dateString);
 	}

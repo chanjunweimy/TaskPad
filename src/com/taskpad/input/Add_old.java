@@ -183,7 +183,10 @@ public class Add_old extends Command{
 	private void splitInputParameters(){
 		checkAndRemoveDate();
 		
-		_sc = new Scanner(input).useDelimiter("\\s-");
+		//split into 2 parts:
+		_sc = new Scanner(input);
+		_sc.useDelimiter("\\s-");
+		
 		while(_sc.hasNext()){
 			String nextParam = _sc.next();
 			if (_count == 0){

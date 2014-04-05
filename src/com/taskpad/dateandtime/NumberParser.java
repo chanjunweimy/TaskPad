@@ -80,12 +80,20 @@ public class NumberParser {
 	}
 
 	//this method returns null when error occurs
-	protected String parseTheNumbers(String input){
+	protected String parseTheNumbers(String input, boolean isStrict){
 		//cannot reach here if input is null
 		assert (input != null);
 		
+		//System.err.println(input + " " + isDigitString(input));
+		
 		if (isDigitString(input)){
-			return STRING_EMPTY + Integer.parseInt(input);
+			if (!isStrict){
+				//System.err.println("DD " + input);
+				return input;
+			} else {
+				return STRING_EMPTY + Integer.parseInt(input);
+			}
+			//return STRING_EMPTY + Integer.parseInt(input);
 			//return STRING_EMPTY + Double.parseDouble(input);
 		}
 		

@@ -80,7 +80,11 @@ public class Search extends Command{
 			timeBuilder.append(token + STRING_DELIMITERS);
 		}
 		int deleteIdx = timeBuilder.lastIndexOf(STRING_DELIMITERS);
-		timeBuilder.deleteCharAt(deleteIdx);
+		
+		if (deleteIdx > -1){
+			timeBuilder.deleteCharAt(deleteIdx);
+		}
+		
 		return timeBuilder.toString().trim();
 	}
 
