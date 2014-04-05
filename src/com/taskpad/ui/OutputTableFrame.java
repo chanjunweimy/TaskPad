@@ -61,9 +61,23 @@ public class OutputTableFrame extends GuiFrame{
 	}
 	
 	protected void refresh(Object[][] objects){
-		_taskpadTableModel.refresh(objects);
-		_table.setModel(_taskpadTableModel);
+		reset();
+		//_taskpadTableModel.refresh(objects);
+		
+		/* DEBUG
+		for (int i = 0; i < objects.length; i++){
+			for (int j = 0; j < objects[i].length; j++){
+				System.err.println(objects[i][j]);
+			}
+		}
+		*/
+		
+		for (int i = 0; i < objects.length; i++){
+			_taskpadTableModel.addRow(objects[i]);
+		}
+		
 		setUpColumnWidth();
+	    _table.repaint(); // Repaint all the component (all Cells).
 	}
 	
 	private void setUpColumnWidth() {
@@ -81,7 +95,10 @@ public class OutputTableFrame extends GuiFrame{
 		        column.setCellRenderer(new GuiCellRenderer());
 		    }
 		}
-		
+	}
+	
+	private void reset() {
+		  _taskpadTableModel.setRowCount(0);
 	}
 
 	///*
