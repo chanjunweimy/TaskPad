@@ -2,12 +2,6 @@ package com.taskpad.execute;
 
 //@author A0105788U
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.taskpad.storage.CommandRecord;
@@ -23,6 +17,7 @@ public class CommandFactoryBackend {
 	 * ACCENDING_ORDER: a comparator used to sort Task by their dates.
 	 * 
 	 */
+	/*
 	protected static final Comparator<Task> ACCENDING_ORDER = new Comparator<Task>() {
 		/**
 		 * compare: compare two tasks' Date
@@ -33,7 +28,7 @@ public class CommandFactoryBackend {
 		 *            : task2
 		 * @return int
 		 */
-		@Override
+	/*	@Override
 		public int compare(Task e1, Task e2) {
 			SimpleDateFormat dateConverter = new SimpleDateFormat(
 					"dd/MM/yyyy HH:mm");
@@ -48,6 +43,7 @@ public class CommandFactoryBackend {
 			return d1.compareTo(d2);
 		}
 	};
+	*/
 	
 	protected static Task addTask(String description, String deadline,
 			String startDate, String startTime, String endDate, String endTime,
@@ -292,6 +288,7 @@ public class CommandFactoryBackend {
 		return taskDeleted;
 	}
 
+	/*
 	public static LinkedList<Integer> sortByDeadline(TaskList listOfTasks) {
 		LinkedList<Task> tasks = listOfTasks.getList();
 		
@@ -311,5 +308,5 @@ public class CommandFactoryBackend {
 		
 		return result;
 	}
-	
+	*/
 }

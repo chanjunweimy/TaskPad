@@ -14,6 +14,7 @@ public class ExecutorManager {
 	
 	public static void showReminder() {
 		Reminder.showReminderForToday();
+		Reminder.showReminderForOverdue();
 	}
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
