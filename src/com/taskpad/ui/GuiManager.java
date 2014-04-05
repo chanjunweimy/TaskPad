@@ -1,7 +1,5 @@
 package com.taskpad.ui;
 
-//@author A0112084U
-
 import java.awt.Color;
 
 import com.taskpad.alarm.AlarmManager;
@@ -47,6 +45,8 @@ public class GuiManager {
 			firstFrame.showWindow(false);
 			secondFrame.showUp(firstFrame);
 		}
+		
+		_inputFrame.requestFocusOnInputBox();
 	}
 	
 	public static void showWindow(boolean isVisible){
