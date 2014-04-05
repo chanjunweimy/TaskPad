@@ -236,13 +236,12 @@ public class Add extends Command {
 		}
 		
 		
-		/*
 		String desc = STRING_EMPTY;
-		for (int i=0; i < size-5; i++){
+		for (int i=0; i < size - 5; i++){
 			desc += splitInput[i] + STRING_SPACE;
-		}*/
+		}
 		
-		String desc = input;
+		//String desc = input;
 		
 		putOneParameter(PARAMETER_DESCRIPTION, desc);
 		
