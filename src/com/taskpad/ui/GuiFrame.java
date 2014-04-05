@@ -83,7 +83,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
 	}
 
-	protected void requestFocusOnInputBox() {
+	protected void showUp(GuiFrame visibleFrame){
+		setSize(visibleFrame.getSize());
+		setLocation(visibleFrame.getLocation());
 	}
 	     
 	protected void close(){ 
@@ -162,7 +164,11 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 	}
 	
-	
+	/**
+	 * override by inputFrame
+	 */
+	protected void requestFocusOnInputBox() {
+	}
 	
 
 	private void cancelAlarms() {
@@ -226,7 +232,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				showWindow(true);
 				setState(Frame.NORMAL);
 				
-				requestFocusOnInputBox();    
+				requestFocusOnInputBox();
 			}
 
 			private void hide() {
