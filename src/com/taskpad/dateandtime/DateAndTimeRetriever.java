@@ -166,6 +166,8 @@ public class DateAndTimeRetriever {
 	protected ArrayList<String> searchTimeAndDate(String desc) throws InvalidQuotesException{
 		String formattedString = convertStandardDateAndTime(desc);
 		
+		//System.err.println(formattedString);
+		
 		ArrayList<String> searchResult = extractAllDateAndTime(formattedString);
 		
 		return searchResult;
@@ -246,6 +248,7 @@ public class DateAndTimeRetriever {
 		String dateString = parseDate(dayString);
 		
 		String timeString = parseTime(dateString);
+		//System.err.println(numberedInput);
 		
 		String timeWordString = parseTimeWord(timeString);
 	
@@ -664,6 +667,66 @@ public class DateAndTimeRetriever {
 		return firstDate.compareTo(secondDate);
 	}
 	
+	protected int compareDateAndTimeExecutor(String firstDateString, String secondDateString){
+		if (firstDateString == null || secondDateString == null){
+			return -2;
+		}
+		
+		firstDateString = firstDateString.trim();
+		secondDateString = secondDateString.trim();
+		
+		firstDateString = addTimeCap(firstDateString);
+		secondDateString = addTimeCap(secondDateString);
+		
+		if (firstDateString == null || secondDateString == null){
+			return -2;
+		}
+		
+		return compareDateAndTime(firstDateString, secondDateString);
+	}
+
+	/**
+	 * @param firstDateString
+	 * @return
+	 */
+	private String addTimeCap(String dateString) {
+		if (!isDateAndTime(dateString)){
+			if (isDate(dateString)){
+				dateString = dateString + " 00:00";
+			} else if (isTimeAndDate(dateString)){
+				String[] tokens = dateString.split(" ");
+				dateString = tokens[1] + " " + tokens[0];
+			} else {
+				dateString = null;
+			}
+		}
+		return dateString;
+	}
+	
+	private boolean isTimeAndDate(String dateString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd/MM/yyyy");		
+		
+		try {
+			sdf.parse(dateString);
+		} catch (ParseException e) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	private boolean isDateAndTime(String dateString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");		
+		
+		try {
+			sdf.parse(dateString);
+		} catch (ParseException e) {
+			return false;
+		}
+		
+		return true;
+	}
+
 	private String parseTime(String dateString) {
 		String[] timeTokens = dateString.split(" ");
 		StringBuffer timeString = new StringBuffer();
@@ -1110,14 +1173,16 @@ public class DateAndTimeRetriever {
 	 */
 	protected String parseNumber(String input) {
 		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
+		NumberParser np = NumberParser.getInstance();
 		Scanner sc = new Scanner(input);
 		StringBuffer changedString = new StringBuffer();
 		StringBuffer numberString = new StringBuffer();
 		boolean isNumberContinue = false;
+		
 		while (sc.hasNext()) {
 			String token = sc.next();
 			if (!datmParser.isNumber(token)) {
-				if (isNumberContinue) {
+				if (isNumberContinue ) {
 					String realNumber = datmParser.parseNumber(numberString
 							.toString().trim());
 					changedString.append(realNumber + " ");
@@ -1126,6 +1191,19 @@ public class DateAndTimeRetriever {
 
 				changedString.append(token + " ");
 				isNumberContinue = false;
+			} else if (np.isDigitString(token)){
+				if (isNumberContinue) {
+					String realNumber = datmParser.parseNumber(numberString
+							.toString().trim());
+					changedString.append(realNumber + " ");
+					numberString = new StringBuffer();
+				}
+				
+				//System.err.println("AAA: " + token);
+				isNumberContinue = false;
+				String realNumber = datmParser.parseNumber(token, false);
+				changedString.append(realNumber + " ");
+				numberString = new StringBuffer();
 			} else {
 				if (!isNumberContinue) {
 					isNumberContinue = true;
@@ -1135,7 +1213,7 @@ public class DateAndTimeRetriever {
 		}
 
 		String realNumber = datmParser.parseNumber(numberString.toString()
-				.trim());
+				.trim(), false);
 		if (realNumber != null) {
 			changedString.append(realNumber + " ");
 		}
@@ -1217,6 +1295,22 @@ public class DateAndTimeRetriever {
 			e.printStackTrace();
 		}
 		*/
+		
+		try {
+			System.out
+			.println(datr.formatDateAndTimeInString("11:00"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//VERY IMP TEST CASE
+		try {
+			System.out.println(datr.searchTimeAndDate("12:00 06/04/2014").toString());
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		System.out.println(datr.parseTimeWord("1 hour"));
 	}

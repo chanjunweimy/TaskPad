@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.util.logging.Logger;
 
 import com.taskpad.storage.DataManager;
+import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.execute.ExecutorManager;
 import com.taskpad.ui.GuiManager;
 
@@ -81,6 +82,29 @@ public class InputManager {
 	
 	public static void setDebug(boolean debug){
 		InputManager.debug = debug;
+	}
+	
+	/**
+	 * CompareDateAndTime(String, String) : compare two date and time, 
+	 * can accept date only. Return -2, if it is not date or date and time
+	 * @param firstDateString the first date you want to compare
+	 * @param secondDateString the second date you want to compare
+	 * @return int: if int > 0, first is bigger; int < 0, first is smaller; int = 0, both are equal
+	 */
+	public int compareDateAndTime(String firstDateString, String secondDateString){
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		return datm.compareDateAndTime(firstDateString, secondDateString);
+	}
+	
+	/**
+	 * compareDateAndTime(String) : compare the user's date and today 23:59
+	 * can accept date only. Return -2, if it is not date or date and time
+	 * @param dateString the date you want to compare
+	 * @return int: if int > 0, first is bigger; int < 0, first is smaller; int = 0, both are equal
+	 */
+	public int compareDateAndTime(String dateString){
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		return datm.compareDateAndTime(dateString);
 	}
 	
 }
