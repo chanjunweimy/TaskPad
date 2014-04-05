@@ -153,7 +153,7 @@ public class TestSpecialWordParser {
 		setupDebugEnvironment(dateString);
 		
 		try {
-			System.err.println(_specialWordParser.parseDayToDate(input));
+			_specialWordParser.parseDayToDate(input);
 			fail();
 		} catch (InvalidDayException | DatePassedException e) {
 			assertEquals(e.getMessage(), expected);
