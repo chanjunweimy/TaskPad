@@ -24,53 +24,49 @@ public class OutputToGui {
 		int index = 0;
 		for(int next: candidates) {
 			Task task = listOfTasks.get(index);
-			result[index] = fillIn2dArrayForOneTask(index, task);
+			fillIn2dArrayForOneTask(result, index, task);
 		}		
 		
 		return result;
 	}
 	
-	private static String[] fillIn2dArrayForOneTask(int index, Task task) {
-		String[] result = new String[6];
-		
+	private static void fillIn2dArrayForOneTask(String[][] result, int index, Task task) {		
 		int taskId = index + 1;
 		
-		result[0] = "" + index + 1;
-		result[1] = task.getDescription();
+		result[index][0] = "" + taskId;
+		result[index][1] = task.getDescription();
 		
 		if(task.getDeadline() == null || task.getDeadline().equals("")) {
-			result[2] = "-";
+			result[index][2] = "-";
 		} else {
-			result[2] = task.getDeadline();
+			result[index][2] = task.getDeadline();
 		}
 		
 		if(task.getStartTime() == null || task.getStartTime().equals("")) {
 			if(task.getStartDate() == null || task.getStartDate().equals("")) {
-				result[3] = "-";
+				result[index][3] = "-";
 			} else {
-				result[3] = task.getStartDate();
+				result[index][3] = task.getStartDate();
 			}
 		} else {
 			if(task.getStartDate() == null || task.getStartDate().equals("")) {
-				result[3] = task.getStartTime();
+				result[index][3] = task.getStartTime();
 			} else {
-				result[3] = task.getStartTime() + " " + task.getStartDate();
+				result[index][3] = task.getStartTime() + " " + task.getStartDate();
 			}			
 		}
 		
 		if(task.getDetails() == null || task.getDetails().equals("")) {
-			result[4] = task.getDetails();
+			result[index][4] = task.getDetails();
 		} else {
-			result[4] = "-";
+			result[index][4] = "-";
 		}
 		
 		if(task.getDone() == 1) {
-			result[5] = "Done";
+			result[index][5] = "Done";
 		} else {
-			result[5] = "Not done yet";
+			result[index][5] = "Not done yet";
 		}
-		
-		return result;
 	}
 
 	protected static void outputColorTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
