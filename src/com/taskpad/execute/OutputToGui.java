@@ -19,7 +19,7 @@ public class OutputToGui {
 	
 	protected static String[][] generate2dArrayForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
 		int numberOfTasks = candidates.size();
-		String[][] result = new String[numberOfTasks][6];
+		String[][] result = new String[numberOfTasks][7];
 		/*
 		for(int i = 0; i < numberOfTasks; i++) {
 			for(int j = 0; j < 6; j++) {
@@ -62,17 +62,31 @@ public class OutputToGui {
 				result[index][3] = task.getStartTime() + " " + task.getStartDate();
 			}			
 		}
-		
-		if(task.getDetails() == null || task.getDetails().equals("")) {
-			result[index][4] = task.getDetails();
+
+		if(task.getEndTime() == null || task.getEndTime().equals("")) {
+			if(task.getEndDate() == null || task.getEndDate().equals("")) {
+				result[index][4] = "-";
+			} else {
+				result[index][4] = task.getEndDate();
+			}
 		} else {
-			result[index][4] = "-";
+			if(task.getEndDate() == null || task.getEndDate().equals("")) {
+				result[index][4] = task.getEndTime();
+			} else {
+				result[index][4] = task.getEndTime() + " " + task.getEndDate();
+			}			
+		}
+		
+		if(task.getDetails() == null || task.getDetails().trim().equals("")) {
+			result[index][5] = "-";
+		} else {
+			result[index][5] = task.getDetails();
 		}
 		
 		if(task.getDone() == 1) {
-			result[index][5] = "Done";
+			result[index][6] = "Done";
 		} else {
-			result[index][5] = "Not done yet";
+			result[index][6] = "Not done yet";
 		}
 		
 		return result;
