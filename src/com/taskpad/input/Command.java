@@ -61,7 +61,6 @@ public abstract class Command {
 		clearInputParameters();
 		initialiseParametersToNull();
 		
-	
 		if (commandSpecificRun()){
 			createInputObject();
 			passObjectToExecutor();
@@ -69,13 +68,6 @@ public abstract class Command {
 			return;
 		}
 	}
-	
-	/* deprecated for Exceptions
-	private void showIncorrectArguments(){
-		String errorMessage = MESSAGE_INVALID_PARAMETER_NUMBER;
-		InputManager.outputToGui(errorMessage);
-	}
-	*/
 	
 	protected void showEmptyString(){
 		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
@@ -108,22 +100,9 @@ public abstract class Command {
 			throw new InvalidParameterException();
 		}
 		
-		/* deprecated
-		if (isNotNumberArgs(inputString)){
-			invalidParameterError();
-			return true;
-		}
-		*/
-		
 		if(isNotValidTaskID(inputString[0])){
 			throw new TaskIDException(inputString[0]);
 		}
-		
-		/* deprecated
-		if (isNotValidTaskID(inputString[0])){
-			return true;
-		}
-		*/
 		
 		return false;
 	}
