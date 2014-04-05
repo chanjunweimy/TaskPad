@@ -163,15 +163,76 @@ public class DateAndTimeRetriever {
 		return !parsedString.equals(STRING_EMPTY);
 	}
 
-	
-	/**
-	 * 
-	 * @param desc
-	 * @return Deadline: | StartTime: Date then Time | EndTime: Date Then Time
-	 * @throws InvalidQuotesException 
-	 */
-	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {			
+	protected ArrayList<String> searchTimeAndDate(String desc) throws InvalidQuotesException{
+		String formattedString = convertStandardDateAndTime(desc);
 		
+		ArrayList<String> searchResult = extractAllDateAndTime(formattedString);
+		
+		return searchResult;
+	}
+
+	/**
+	 * @param formattedString
+	 */
+	private ArrayList<String> extractAllDateAndTime(String formattedString) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDate = datm.getTodayDate();
+		
+		String recordTime = null;
+		String recordDate = null;
+		
+		ArrayList<String> TimeAndDateRes = new ArrayList<String>();
+		
+		String[] formattedTokens = formattedString.split(" ");
+		for (int i = 0; i < formattedTokens.length; i++){
+			String token = formattedTokens[i];
+			if (isDate(token)){
+				if (recordDate != null){
+					String res;
+					if (recordTime == null){
+						res = recordDate;
+					} else {
+						res = recordTime + " " + recordDate;
+					}
+					TimeAndDateRes.add(res);
+				}
+				recordDate = token;
+			} else if (isTime(token)){
+				if (recordTime != null){
+					String res;
+					if (recordDate == null){
+						res = recordTime + " " + todayDate;
+					} else {
+						res = recordTime + " " + recordDate;
+					}
+					TimeAndDateRes.add(res);
+				}
+				recordTime = token;
+			}
+		}
+		
+		String res = null;
+		if (recordTime != null && recordDate!= null){
+			res = recordTime + " " + recordDate;
+		} else if (recordTime != null && recordDate == null){
+			res = recordTime + " " + todayDate;
+		} else if (recordTime == null && recordDate != null){
+			res = recordDate;
+		}
+		
+		if (res != null){
+			TimeAndDateRes.add(res);
+		}
+		return TimeAndDateRes;
+	}
+
+	/**
+	 * format all the date and time in a string to standard format
+	 * @param desc
+	 * @throws InvalidQuotesException
+	 */
+	private String convertStandardDateAndTime(String desc)
+			throws InvalidQuotesException {
 		String alphaNumericSpaceDesc = getAlphaNumericSpaceDesc(desc);
 		
 		String noQuoteDesc = removeParseFreeZone(alphaNumericSpaceDesc);
@@ -187,8 +248,21 @@ public class DateAndTimeRetriever {
 		String timeString = parseTime(dateString);
 		
 		String timeWordString = parseTimeWord(timeString);
+	
+		return timeWordString;
+	}
+	
+	/**
+	 * format DateAndTime as Deadline, StartTime, EndTime
+	 * @param desc
+	 * @return Deadline: | StartTime: Date then Time | EndTime: Date Then Time
+	 * @throws InvalidQuotesException 
+	 */
+	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {			
 		
-		ArrayList<String> allDateAndTime = extractDateAndTime(timeWordString);
+		String formattedString = convertStandardDateAndTime(desc);
+		
+		ArrayList<String> allDateAndTime = extractDateAndTime(formattedString);
 		
 		//System.err.println(allDateAndTime.get(POSITION_DEADLINE));
 		//System.err.println(allDateAndTime.get(POSITION_STARTTIME));

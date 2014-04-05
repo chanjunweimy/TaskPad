@@ -137,6 +137,8 @@ public abstract class Command {
 		putInputParameters();
 		inputObject = new Input(getCOMMAND(), inputParameters);	
 		
+		//inputObject.showAll();
+		
 		logger.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;
 	}

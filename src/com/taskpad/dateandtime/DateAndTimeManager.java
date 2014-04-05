@@ -3,6 +3,7 @@
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import com.taskpad.ui.GuiManager;
 
@@ -249,6 +250,11 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public String formatDateAndTimeInString(String input) throws InvalidQuotesException{
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		return datr.formatDateAndTimeInString(input);
+	}
+	
+	public ArrayList<String> searchTimeAndDate(String input) throws InvalidQuotesException{
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.searchTimeAndDate(input);
 	}
 	
 	public void setDebug(String dateString) throws ParseException{

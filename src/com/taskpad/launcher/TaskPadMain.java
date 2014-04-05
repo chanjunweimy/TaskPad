@@ -1,8 +1,4 @@
-/**
- * Author: Chan Jun Wei, Lynnette Ng Hui Xian, Wang Taining
- * Product: TaskPad
- * Team: W13-3j
- */
+
 
 package com.taskpad.launcher;
 
@@ -10,6 +6,10 @@ import javax.swing.SwingUtilities;
  
 /**
  * 
+ * Author: Chan Jun Wei, Lynnette Ng Hui Xian, Wang Taining
+ * Product: TaskPad
+ * Team: W13-3j
+ *
  * @author Jun， Lynnette, Taining
  *
  */
