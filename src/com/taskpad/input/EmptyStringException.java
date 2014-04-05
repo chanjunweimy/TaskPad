@@ -1,5 +1,7 @@
 package com.taskpad.input;
 
+//@author A0119646X
+
 import java.util.logging.Logger;
 
 public class EmptyStringException extends Exception {

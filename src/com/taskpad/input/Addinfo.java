@@ -1,5 +1,7 @@
 package com.taskpad.input;
 
+//@author A0119646X
+
 public class Addinfo extends Command{
 	
 	private static final String COMMAND_ADD_INFO = "ADDINFO";

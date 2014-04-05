@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+//@author A0112084U
+
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.ViewFactory;
 
@@ -18,7 +20,6 @@ import javax.swing.text.ViewFactory;
  * and we add the viewFactory that we manually create to here,
  * in order to connect it to JTextPane
  * 
- * @author Jun
  * 
  */
 public class WrapEditorKit extends StyledEditorKit {

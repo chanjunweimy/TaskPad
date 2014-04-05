@@ -13,10 +13,10 @@ import java.util.Scanner;
  * String
  * 
  * Supposed to put all the protected methods from DateAndTimeManager here
- * 
- * @author Lynnette, Jun
- * 
+ *  
  */
+
+//@author A0112084U
 
 public class DateAndTimeRetriever {
 

@@ -1,5 +1,7 @@
 package com.taskpad.dateandtime;
 
+//@author A0119646X
+
 public class TimeObject {
 
 	private String parsedTime;

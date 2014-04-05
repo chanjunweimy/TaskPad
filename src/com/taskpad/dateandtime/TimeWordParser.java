@@ -9,11 +9,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 /**
- * 
- * @author Jun and Lynnette
  *
  * make TimeWordParser to be a singleton to increase efficiency.
  */
+
+//@author A0112084U
 
 public class TimeWordParser{
 	

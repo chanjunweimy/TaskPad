@@ -4,10 +4,12 @@ import java.util.logging.Logger;
 
 /**
  * 
- * @author Jun & Lynnette
  * NullTimeValueException: an exception thrown
  * when user did not key in a time value
  */
+
+//@author A0119646X
+
 public class NullTimeValueException extends Exception{
 	
 	/**

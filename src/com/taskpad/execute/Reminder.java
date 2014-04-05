@@ -1,5 +1,7 @@
 package com.taskpad.execute;
 
+//@author A0105788U
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -11,7 +13,6 @@ import com.taskpad.storage.TaskList;
 
 public class Reminder {
 	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "You have no task due today.";
-	private static final String NEWLINE = "\n";
 	
 	protected static void showReminderForToday() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);

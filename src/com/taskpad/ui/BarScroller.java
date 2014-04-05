@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+//@author A0112084U
+
 import javax.swing.JScrollBar;
 
 public class BarScroller implements Runnable {

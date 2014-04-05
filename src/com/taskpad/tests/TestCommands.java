@@ -1,8 +1,9 @@
 package com.taskpad.tests;
 
+//@author A0119646X
+
 /**
  * This class is to test the command words
- * @author Lynnette
  */
 
 import static org.junit.Assert.*;
