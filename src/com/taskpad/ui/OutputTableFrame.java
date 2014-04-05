@@ -82,7 +82,7 @@ public class OutputTableFrame extends GuiFrame{
 		}
 		
 		setUpColumnWidth();
-	    _table.repaint(); // Repaint all the component (all Cells).
+	    _table.repaint();
 	}
 	
 	private void setUpColumnWidth() {
