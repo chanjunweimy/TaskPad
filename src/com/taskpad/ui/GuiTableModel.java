@@ -9,31 +9,15 @@ public class GuiTableModel extends DefaultTableModel {
 	 */
 	private static final long serialVersionUID = 7747422784248466091L;
 
-	private final String[] _columnNames = { "Task ID", "Description",
-			"Deadline", "Start", "End", "Details", "Status" };
+	private static final String[] _columnNames = { "ID", "Description",
+			"By", "Start", "End", "Info", "Stat" };
 
-	private Object[][] _data = {
-
+	private static Object[][] _data = {
+		{"1", "Hi Lynnette!", "06/04/2014", "01:00 05/04/2014", "12:00 05/04/2014", "JUST FOR FUN", "DONE"}
 	};
-
-	@Override
-	public int getColumnCount() {
-		return _columnNames.length;
-	}
-
-	@Override
-	public int getRowCount() {
-		return _data.length;
-	}
-
-	@Override
-	public String getColumnName(int col) {
-		return _columnNames[col];
-	}
-
-	@Override
-	public Object getValueAt(int row, int col) {
-		return _data[row][col];
+	
+	protected GuiTableModel(){
+		super(_data, _columnNames);
 	}
 
 	@Override

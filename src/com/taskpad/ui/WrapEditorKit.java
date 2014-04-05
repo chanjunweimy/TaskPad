@@ -5,8 +5,7 @@ import javax.swing.text.ViewFactory;
 
 /**
  * 
- * @author Jun
- * @category
+ * 
  * This class is created to fix
  * the line wrap problem in JTextPane Java 1.7
  * Hope it works!
@@ -18,6 +17,8 @@ import javax.swing.text.ViewFactory;
  * text as styled text and provides a minimal set of actions for editing styled text, 
  * and we add the viewFactory that we manually create to here,
  * in order to connect it to JTextPane
+ * 
+ * @author Jun
  * 
  */
 public class WrapEditorKit extends StyledEditorKit {
