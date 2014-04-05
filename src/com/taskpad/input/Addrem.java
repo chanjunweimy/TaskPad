@@ -126,7 +126,8 @@ public class Addrem extends Command{
 	
 	private void splitInputParameters(){
 		int count = 0;
-		sc = new Scanner(input).useDelimiter("\\s-");
+		sc = new Scanner(input);
+		sc.useDelimiter("\\s-");
 		while(sc.hasNext()){
 			String nextParam = sc.next();
 			if (count == 0){
@@ -136,6 +137,7 @@ public class Addrem extends Command{
 			}
 			count++;
 		}
+		sc.close();
 	}
 	
 	private void parseNextParam(String param){
