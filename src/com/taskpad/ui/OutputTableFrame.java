@@ -5,7 +5,11 @@ import java.awt.Font;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableColumn;
+
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
 
 public class OutputTableFrame extends GuiFrame{
 	/**
@@ -15,6 +19,7 @@ public class OutputTableFrame extends GuiFrame{
 	
 	private JTable _table;
 	private GuiTableModel _taskpadTableModel;
+	private JScrollPane _scrollBox;
 	
 	private final static int TABLEFRAME_WIDTH = 480;
 	private final static int TABLEFRAME_HEIGHT = 350;
@@ -35,10 +40,10 @@ public class OutputTableFrame extends GuiFrame{
 		
 		_taskpadTableModel = new GuiTableModel();
 		_table = new JTable(_taskpadTableModel);
-		JScrollPane scrollPane = new JScrollPane(_table);	
+		_scrollBox = new JScrollPane(_table);	
 		
 		_table.setFillsViewportHeight(true);
-		add(scrollPane);	
+		add(_scrollBox);	
 		
 		customizeHeaderStyle();
 		
@@ -99,6 +104,36 @@ public class OutputTableFrame extends GuiFrame{
 	
 	private void reset() {
 		  _taskpadTableModel.setRowCount(0);
+	}
+	
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		super.nativeKeyPressed(arg0);
+		
+		boolean isCtrlW= arg0.getKeyCode() == NativeKeyEvent.VK_W
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+		boolean isCtrlS = arg0.getKeyCode() == NativeKeyEvent.VK_S				
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+
+		
+		if (isCtrlW){
+			scrollUp();
+			
+		} else if (isCtrlS){
+			scrollDown();
+		}
+	}
+
+	private void scrollDown() {
+		Runnable downScroller = new BarScroller(false, _scrollBox.getVerticalScrollBar());
+		SwingUtilities.invokeLater(downScroller);
+	}
+
+	private void scrollUp() {
+		Runnable upScroller = new BarScroller(true, _scrollBox.getVerticalScrollBar());
+		SwingUtilities.invokeLater(upScroller);
 	}
 
 	///*
