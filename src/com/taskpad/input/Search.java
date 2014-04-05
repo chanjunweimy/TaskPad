@@ -14,7 +14,7 @@ public class Search extends Command{
 	private static String _keyword;
 	
 	private static String PARAMETER_TIME = "TIME";
-	private static String _time;
+	private static String _time = null;
 
 	public Search(String input, String fullInput) {
 		super(input, fullInput);
@@ -56,7 +56,7 @@ public class Search extends Command{
 			_time = null;
 		}
 		
-		checkAndInputDeadline();
+		//checkAndInputDeadline();
 		
 		return true;
 	}
@@ -88,6 +88,7 @@ public class Search extends Command{
 		}
 	}
 	
+
 	@Override
 	protected boolean checkIfIncorrectArguments(){
 		return false;
@@ -96,6 +97,7 @@ public class Search extends Command{
 	/**
 	 * @deprecated
 	 */
+	@SuppressWarnings("unused")
 	private void checkAndInputDeadline(){	
 		try {
 			_keyword += DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
