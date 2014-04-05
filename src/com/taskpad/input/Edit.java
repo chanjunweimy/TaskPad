@@ -1,6 +1,7 @@
 package com.taskpad.input;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Edit extends Command{
 	
@@ -36,6 +37,7 @@ public class Edit extends Command{
 		//String[] splitParams = input.split(" ");
 		
 		//_taskID = splitParams[0].trim();
+		
 		try {
 			_taskID = findTaskID(fullInput);
 		} catch (TaskIDException e) {
@@ -47,7 +49,7 @@ public class Edit extends Command{
 			_desc = removeTaskID(fullInput, _taskID);
 		} else if (isDeadline()){
 			fullInput = removeWordDeadline(fullInput);
-			_deadline = removeTaskID(fullInput, _taskID);
+			_deadline = findDeadline(fullInput);
 		} else {
 			//no tag, just assume description
 			_desc = removeTaskID(fullInput, _taskID);
@@ -59,9 +61,22 @@ public class Edit extends Command{
 		return true;
 	}
 	
+	private String findDeadline(String fullInput) {
+		String formatInput = null;
+		try {
+			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+		}
+		System.out.println(formatInput);
+		
+		String[] splitResult = formatInput.split(STRING_SPACE);
+		return splitResult[2];
+	}
+
 	@Override
 	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
-		String inputString[] = input.split(" ");
+		String inputString[] = input.split(STRING_SPACE);
 		
 		if (isNotNumberArgs(inputString)){
 			System.out.println("Throw");
