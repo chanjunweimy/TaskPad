@@ -189,6 +189,7 @@ public class TimeWordParser{
 			
 			_numberword = _numberparser.parseNumber(input);
 			
+			//System.err.println("DE: " + _numberword + " " + input);
 			if (_numberword == null){
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
 			}
@@ -254,6 +255,10 @@ public class TimeWordParser{
 		initialiseWeekString();
 		initialiseMonthString();
 		initialiseYearString();
+	}
+	
+	protected boolean isTimeUnits(String input){
+		return _timewordsMap.containsKey(input.toUpperCase());
 	}
 
 	private void initialiseSecString() {

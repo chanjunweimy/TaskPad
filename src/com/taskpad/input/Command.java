@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
+
 public abstract class Command {
 
 	protected static Input inputObject;
@@ -42,6 +44,11 @@ public abstract class Command {
 			showEmptyString();
 			return;
 		}
+		
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		if (numberInput != null){
+			input = numberInput;
+		}
 				
 		try {
 			checkIfIncorrectArguments();
@@ -50,14 +57,10 @@ public abstract class Command {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
-				
-//		if (checkIfEmptyString() || checkIfIncorrectArguments()){
-//			return;
-//		} 
+		
 		clearInputParameters();
 		initialiseParametersToNull();
 		
-	
 		if (commandSpecificRun()){
 			createInputObject();
 			passObjectToExecutor();
@@ -65,13 +68,6 @@ public abstract class Command {
 			return;
 		}
 	}
-	
-	/* deprecated for Exceptions
-	private void showIncorrectArguments(){
-		String errorMessage = MESSAGE_INVALID_PARAMETER_NUMBER;
-		InputManager.outputToGui(errorMessage);
-	}
-	*/
 	
 	protected void showEmptyString(){
 		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
@@ -104,22 +100,9 @@ public abstract class Command {
 			throw new InvalidParameterException();
 		}
 		
-		/* deprecated
-		if (isNotNumberArgs(inputString)){
-			invalidParameterError();
-			return true;
-		}
-		*/
-		
 		if(isNotValidTaskID(inputString[0])){
 			throw new TaskIDException(inputString[0]);
 		}
-		
-		/* deprecated
-		if (isNotValidTaskID(inputString[0])){
-			return true;
-		}
-		*/
 		
 		return false;
 	}
@@ -136,6 +119,8 @@ public abstract class Command {
 		//clearInputParameters();	
 		putInputParameters();
 		inputObject = new Input(getCOMMAND(), inputParameters);	
+		
+		//inputObject.showAll();
 		
 		logger.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;

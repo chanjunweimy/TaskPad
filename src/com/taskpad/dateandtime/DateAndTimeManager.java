@@ -3,6 +3,7 @@
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import com.taskpad.ui.GuiManager;
 
@@ -128,7 +129,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * 
 	 * @return timeString, in dd/mm/yyyy 
 	 * @throws InvalidDateException 
-	 * @throws DatePassedException 
 	 */
 	public String parseDate(String dateString) throws InvalidDateException{
 		DateParser dateParser = DateParser.getInstance();
@@ -167,11 +167,13 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	public String parseTime(String timeString) throws NullTimeUnitException,
 			NullTimeValueException, TimeErrorException, InvalidTimeException {
-		return TimeParser.parseTime(timeString);
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTime(timeString);
 	}
 
 	public String parseTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
-		return TimeParser.parseTimeInput(timeString);
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTimeInput(timeString);
 	}
 
 	/**
@@ -248,6 +250,11 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public String formatDateAndTimeInString(String input) throws InvalidQuotesException{
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		return datr.formatDateAndTimeInString(input);
+	}
+	
+	public ArrayList<String> searchTimeAndDate(String input) throws InvalidQuotesException{
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.searchTimeAndDate(input);
 	}
 	
 	public void setDebug(String dateString) throws ParseException{

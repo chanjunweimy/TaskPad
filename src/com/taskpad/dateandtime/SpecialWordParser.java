@@ -8,7 +8,7 @@ import java.util.Scanner;
  * SpecialWordParser: parses special words like next and previous
  * 
  * @author Jun, Lynnette
- *
+ * 
  */
 public class SpecialWordParser {
 	
@@ -161,6 +161,30 @@ public class SpecialWordParser {
 		return getNextDay(userDay, twp, todayDayStat, nxt, "d");
 	}
 
+	protected boolean isTmrYtd(String input){
+		for (String tmr : MAP_TMR){
+			if (tmr.equals(input.toUpperCase())){
+				return true;
+			}
+		}
+		
+		for (String ytd : MAP_YTD){
+			if (ytd.equals(input.toUpperCase())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	protected boolean isWk(String input){
+		for (String myWk : MAP_WK){
+			if (myWk.equals(input.toUpperCase())){
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * @param specialDay
 	 * @param nxt

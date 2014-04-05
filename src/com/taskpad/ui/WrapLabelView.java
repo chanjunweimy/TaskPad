@@ -2,7 +2,7 @@ package com.taskpad.ui;
 
 /**
  * 
- * @author Jun
+ * 
  * This class is created to fix
  * the line wrap problem in JTextPane Java 1.7
  * Hope it works!
@@ -15,7 +15,7 @@ package com.taskpad.ui;
  * 
  * The rest again is measured and can be broken once more 
  * if it's bigger than available width.
- * 
+ * @author Jun
  * 
  */
 

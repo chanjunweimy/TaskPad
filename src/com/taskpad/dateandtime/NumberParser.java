@@ -125,7 +125,7 @@ public class NumberParser {
 		return STRING_EMPTY + total;
 	}
 
-	private boolean isDigitString(String input) {
+	protected boolean isDigitString(String input) {
 		try{
 			Integer.parseInt(input);
 			//Double.parseDouble(input);

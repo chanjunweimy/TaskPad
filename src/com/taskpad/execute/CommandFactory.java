@@ -1,10 +1,5 @@
 package com.taskpad.execute;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
@@ -149,7 +144,7 @@ public class CommandFactory {
 				listOfTasks);
 		
 		// pass feedback to gui
-		OutputToGui.output(STRING_NEWLINE);
+		OutputToGui.output("TASK " + taskIdString + " EDITED: " + STRING_NEWLINE);
 		/*
 		if(description != null && !description.equals("")) {
 			OutputToGui.output("'" + taskHistory + "' changed to '" 
