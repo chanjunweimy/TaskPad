@@ -17,8 +17,6 @@ public class CommandQueue {
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_EMPTY = "";
 	
-	private static final String MESSAGE_CONFIRMATION_CLEAR_SCREEN = "\nConfirm clear screen? (Y/N)";
-	private static final String MESSAGE_CONFIRMATION_CLEAR_DATA = "\nConfirm clear data? (Y/N)";
 	private static final String MESSAGE_TODAYS_REMINDERS = "\nToday's Reminders: ";
 	
 	private static final CommandQueue _commandInstance = new CommandQueue();
@@ -83,18 +81,11 @@ public class CommandQueue {
 	protected void doneTask(String input, String fullInput) {
 		new Done(input, fullInput);
 	}
-
-	protected void clearAllTasksConfirmation(){
-		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_DATA);
-	}
 	
 	protected void clearAllTasks() {
 		new ClearTasks(STRING_EMPTY, "CLEAR");
 	}
-	
-	protected void clearScreen(){
-		InputManager.outputToGui(MESSAGE_CONFIRMATION_CLEAR_SCREEN);
-	}
+
 	
 	protected void undoLast() {
 		new Undo(STRING_EMPTY, "UNDO");
