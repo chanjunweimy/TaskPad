@@ -21,15 +21,18 @@ public class DateParser {
 	
 	private static final String[] _dateWithoutYear = {
 		"d MMMM", "MMMM d", "dMMMM", "MMMMd",
+		"d/MMMM", "d-MMMM",
 		"d MMM", "MMM d", "dMMM", "MMMd",
+		"d/MMM", "d-MMM",
 		"d/MM", "d-MM",  //"d.MM", //"d MM",
 		"d/M", "d-M",  //"d.M", //"d M",
 		
 		"dd MMMM", "MMMM dd", "ddMMMM", "MMMMdd",
+		"dd/MMMM", "dd-MMMM",
+		"MMM dd", "dd MMM", "ddMMM", "MMMdd",
+		"dd/MMM", "dd-MMM",
 		"dd/M", "dd-M", //"dd.M", //"dd M", 
-		"dd/MM", "dd-MM", //"dd.MM", //"dd MM",  
-		"MMM dd", "dd MMM", "ddMMM", "MMMdd"
-
+		"dd/MM", "dd-MM", //"dd.MM", //"dd MM", 
 	};
 	
 	private static final String[] _dateFormats = {
@@ -136,11 +139,12 @@ public class DateParser {
 		String dateStringWithoutYear = null;
 		String dateString = null;
 		
-
+		input = input.toUpperCase();
+		
 		dateStringWithoutYear = formatDateWithoutYear(input);
 		dateString = formatDate(input);
 
-		if (dateString == null){
+		if (dateString == null || dateString.trim().isEmpty()){
 			dateString = dateStringWithoutYear;
 		}
 		return dateString;
@@ -162,7 +166,7 @@ public class DateParser {
 				Date date = sdf.parse(input);
 				
 				
-				boolean isWrongFormat = !input.equals(sdf.format(date));
+				boolean isWrongFormat = !input.equals(sdf.format(date).toUpperCase());
 				if (isWrongFormat){
 					continue;
 				}
@@ -227,11 +231,11 @@ public class DateParser {
 				
 				Date date = sdf.parse(input);
 				
-				/*
-				boolean isWrongFormat = !input.equals(sdf.format(date)) && !df.contains("MMM");
+				
+				boolean isWrongFormat = !input.equals(sdf.format(date).toUpperCase());
 				if (isWrongFormat){
 					continue;
-				}*/
+				}
 				/*
 				if (isPassed(date) ){
 					throw new DatePassedException();
@@ -258,7 +262,7 @@ public class DateParser {
 		//System.out.println(formatDateWithoutYear("03 01"));  //Will use system year at 1970
 		//System.out.println(formatDate("Oct 18,93"));
 		try {
-			System.out.println(DateParser.getInstance().parseDate("1 January"));
+			System.out.println(DateParser.getInstance().parseDate("18Oct"));
 		} catch (InvalidDateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
