@@ -26,7 +26,7 @@ public class HolidayDates {
 		return _holidayDate;
 	}
 	
-	/** FOR JUNWEI: I can't think how to effectively do this :'(
+	/**
 	 * This method takes an input String, finds if there is holiday dates
 	 * @param input
 	 * @return String with holidayDates replaced, else returns input
@@ -94,6 +94,7 @@ public class HolidayDates {
 		_holidays.put("APRIL FOOL", "01/04");
 		_holidays.put("APRIL FOOLS DAY", "01/04");
 		_holidays.put("APRIL FOOL DAY", "01/04");
+		_holidays.put("INDEPDENCE DAY", "04/07");
 		_holidays.put("LABOUR DAY", "01/05");
 		_holidays.put("LABOR DAY", "01/05");
 		_holidays.put("NATIONAL DAY", "09/08");
