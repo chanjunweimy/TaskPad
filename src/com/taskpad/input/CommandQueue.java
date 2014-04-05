@@ -2,8 +2,9 @@ package com.taskpad.input;
 
 /** Trying to make Command a Singleton class
  * 
- * @author Lynnette
  */
+
+//@author A0119646X
 
 import java.awt.Color;
 import java.util.Map;

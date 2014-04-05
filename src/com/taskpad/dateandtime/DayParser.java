@@ -7,8 +7,10 @@ import java.util.Map;
  * DayParser: a singleton parser that parses day such as Monday, Tuesday,
  * and also BigFestival such as Christmas and New Year
  * 
- * @author Jun
  */
+
+//@author A0112084U
+
 public class DayParser {
 
 	private static final String SPACE = " ";

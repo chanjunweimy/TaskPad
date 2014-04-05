@@ -4,11 +4,11 @@ import java.util.TimerTask;
 
 /**
  * 
- * @author Jun
- *
  * AlarmTask is the task that should be done
  * after the timer delay, which is stop playing sound. :D
  */
+
+//@author A0112084U
 
 public class AlarmOffTask extends TimerTask {
 	

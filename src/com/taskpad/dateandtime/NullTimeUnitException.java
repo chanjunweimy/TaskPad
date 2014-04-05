@@ -4,10 +4,12 @@ import java.util.logging.Logger;
 
 /**
  * 
- * @author Jun & Lynnette
  * NullTimeUnitException: an exception thrown when users did not
  * key in time unit
  */
+
+//@author A0112084U
+
 public class NullTimeUnitException extends Exception{
 	/**
 	 * generated

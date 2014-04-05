@@ -2,9 +2,10 @@ package com.taskpad.dateandtime;
 
 /**
  * Date object to contain parsed date and the input date format
- * @author Lynnette 
  *
  */
+
+//@author A0119646X
 
 public class DateObject {
 	

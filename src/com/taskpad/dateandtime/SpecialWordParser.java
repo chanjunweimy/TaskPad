@@ -6,10 +6,11 @@ import java.util.Scanner;
 
 /**
  * SpecialWordParser: parses special words like next and previous
- * 
- * @author Jun, Lynnette
- * 
+ *  
  */
+
+//@author A0112084U
+
 public class SpecialWordParser {
 	
 	private static final String SPACE = " ";

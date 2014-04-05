@@ -5,12 +5,12 @@ import java.util.Timer;
 
 /**
  * 
- * @author Jun
- *
  * TimerObject is the timer
  * that counts how long the 
  * song plays
  */
+
+//@author A0112084U
 
 public class TimerObject {
 	private static LinkedList<Timer> _timers = new LinkedList<Timer>();

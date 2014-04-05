@@ -18,13 +18,13 @@ import com.taskpad.dateandtime.NullTimeValueException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 
+//@author A0119646X
 
 /**
  * Add syntax
  * with delimiters:
  * add <desc> -d <deadlinedate>,<deadlinetime> -s <start date>,<start time> -e <end date>,<end time>
  * 
- * @author Lynnette
  *
  */
 
