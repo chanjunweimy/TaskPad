@@ -10,6 +10,7 @@ public class GuiManager {
 	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
 	private static InputFrame _inputFrame;
 	private static OutputFrame _outputFrame;
+	private static OutputTableFrame _tableFrame;
 	private static boolean debug = false;
 
 	//not designed to be instantiated
@@ -20,6 +21,7 @@ public class GuiManager {
 	public static void initialGuiManager() {
 		_outputFrame = new FlexiFontOutputFrame();
 		_inputFrame = new InputFrame(); 
+		_tableFrame = new OutputTableFrame();
 	}
 
 	/* deprecated
@@ -29,6 +31,21 @@ public class GuiManager {
 		setOutputFrame(outputFrame);
 	}
 	 */
+	
+	public static void callTable(Object[][] data){
+		swapFrame(_outputFrame, _tableFrame);
+		_tableFrame.refresh(data);
+	}
+
+	/**
+	 * @param data
+	 */
+	private static void swapFrame(GuiFrame firstFrame, GuiFrame secondFrame) {
+		if (firstFrame.isVisible()){
+			firstFrame.showWindow(false);
+			secondFrame.showUp(firstFrame);
+		}
+	}
 	
 	public static void showWindow(boolean isVisible){
 		_inputFrame.showWindow(isVisible);
@@ -47,6 +64,7 @@ public class GuiManager {
 
 	public static void callOutput(String out){
 		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addLine(out + NEWLINE);	
 		} else{
 			System.out.println(out + NEWLINE);
@@ -55,6 +73,7 @@ public class GuiManager {
 	
 	public static void callOutputNoLine(String out){
 		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addLine(out);
 		} else{
 			System.out.println(out);
@@ -72,6 +91,7 @@ public class GuiManager {
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
 		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
 		} else{
 			System.out.println(out + NEWLINE);
@@ -80,6 +100,7 @@ public class GuiManager {
 	
 	public static void showSelfDefinedMessageNoNewline(String out, Color c, boolean isBold){
 		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addSelfDefinedLine(out, c, isBold);
 		} else{
 			System.out.println(out);

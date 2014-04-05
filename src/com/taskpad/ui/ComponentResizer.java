@@ -18,13 +18,13 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 /**
- *  @author Jun
  *  reference: http://tips4java.wordpress.com/2009/09/13/resizing-components/
  *  
  *  The ComponentResizer allows you to resize a component by dragging a border
  *  of the component.
  *  
  *  MouseAdapter is better because it is more OO-oriented.
+ *  @author Jun
  */
 public class ComponentResizer extends MouseAdapter{
 	private final static Dimension MINIMUM_SIZE = new Dimension(10, 10);

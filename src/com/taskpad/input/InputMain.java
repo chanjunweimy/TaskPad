@@ -6,18 +6,11 @@ import com.taskpad.input.CommandTypes.CommandType;
 
 public class InputMain {
 
-	private static final String MESSAGE_NOT_CLEAR_DATA = "Not clearing data";
-	private static final String MESSAGE_NOT_CLEAR_SCREEN = "Not clearing Screen";
 	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
-	
-	private static final String COMMAND_CLEAR = "CLEAR";
-	private static final String COMMAND_CLEAR_SCREEN = "CLEARSCREEN";
 	
 	private static final String STRING_EMPTY = "";
 			
-	private static boolean isConfirmation = false;
 	private static boolean hasCheckedFlexi = false;
-	private static String currentCommand = STRING_EMPTY;
 		
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
@@ -25,83 +18,30 @@ public class InputMain {
 		hasCheckedFlexi = false;
 		input = input.trim();
 		String outputString = STRING_EMPTY;
+
+		if (errorIfNoInput(input)){
+			ErrorMessages.emptyInputMessage();
+		}
 		
-		if (isConfirmation){
-			processConfirmation(input);
-		} else {
-			if (errorIfNoInput(input)){
-				ErrorMessages.emptyInputMessage();
-			}
+		String inputCopy = input;
+		String commandTypeString = parseInput(inputCopy);
+		CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
+		logger.info("Command: " + commandType.toString());
+		
+		if (isValidCommandType(commandType)){		
+			commandTypeString = removeFirstWord(input);
+			outputString = commandType.toString() + " " + commandTypeString;
+			performCommand (commandType, commandTypeString, input);
 			
-			String inputCopy = input;
-			String commandTypeString = parseInput(inputCopy);
-			CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
-			logger.info("Command: " + commandType.toString());
+		} else if (hasCheckedFlexi){
+			invalidCommand(input);
+			outputString += commandType.toString();
 			
-			if (isValidCommandType(commandType)){		
-				commandTypeString = removeFirstWord(input);
-				outputString = commandType.toString() + " " + commandTypeString;
-				performCommand (commandType, commandTypeString, input);
-				
-			} else if (hasCheckedFlexi){
-				invalidCommand(input);
-				outputString += commandType.toString();
-				
-			} else if (!hasCheckedFlexi){
-				hasCheckedFlexi = true;
-				outputString = flexiCommand(input);
-			}
+		} else if (!hasCheckedFlexi){
+			hasCheckedFlexi = true;
+			outputString = flexiCommand(input);
 		}
 		return outputString;
-	}
-	
-	private static void processConfirmation(String input) {
-		if (isConfirmClear(input)){
-			executeConfirmation();
-		} else if (isNotClearing(input)){
-			processNoClear();
-		} else {
-			ErrorMessages.invalidConfirmationInput();
-		}
-		resetConfirmationVariable();		
-	}
-
-	private static boolean isConfirmClear(String input){
-		return input.equalsIgnoreCase("Y");
-	}
-	
-	private static boolean isNotClearing(String input){
-		return input.equalsIgnoreCase("N");
-	}
-	
-	private static void executeConfirmation(){
-		if (currentCommand.equals(COMMAND_CLEAR)){
-			//clearAllTasks();		//deprecated
-			CommandQueue.getInstance().clearAllTasks();
-		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
-			InputManager.clearScreen();
-		}
-	}
-	
-	private static void processNoClear(){
-		if (currentCommand.equals(COMMAND_CLEAR)){
-			InputManager.outputToGui(MESSAGE_NOT_CLEAR_DATA);
-		} else if (currentCommand.equals(COMMAND_CLEAR_SCREEN)){
-			InputManager.outputToGui(MESSAGE_NOT_CLEAR_SCREEN);
-		}
-	}
-	
-	private static void resetConfirmationVariable(){
-		setConfirmationFalse();
-		setCurrCommandEmpty();
-	}
-
-	private static void setCurrCommandEmpty() {
-		currentCommand = STRING_EMPTY;
-	}
-
-	private static void setConfirmationFalse() {
-		isConfirmation = false;
 	}
 	
 	private static boolean errorIfNoInput(String input) {
@@ -134,14 +74,10 @@ public class InputMain {
 				CommandQueue.getInstance().listTask(commandTypeString, input);
 				break;
 			case CLEAR_ALL:
-				isConfirmation = true;
-				currentCommand = COMMAND_CLEAR;
-				CommandQueue.getInstance().clearAllTasksConfirmation();
+				CommandQueue.getInstance().clearAllTasks();
 				break;
 			case CLEAR_SCREEN:
-				isConfirmation = true;
-				currentCommand = COMMAND_CLEAR_SCREEN;
-				CommandQueue.getInstance().clearScreen();
+				InputManager.clearScreen();
 				break;
 			case DELETE:
 				CommandQueue.getInstance().deleteTask(commandTypeString, input);
