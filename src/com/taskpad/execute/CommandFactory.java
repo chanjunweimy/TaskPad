@@ -11,6 +11,7 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class CommandFactory {
+	private static final String FEEDBACK_NO_TASK_FOUND = "No task is found.";
 	private static final String FEEDBACK_NO_TASK_WITH_DEADLINE = "No task with deadline in the database.";
 	private static final String FEEDBACK_NO_TASK = "No task found.";
 	private static final String FEEDBACK_NO_FINISHED_TASK = "No finished task found.";
@@ -91,8 +92,9 @@ public class CommandFactory {
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_NO_TASK_WITH_DEADLINE);
 		} else {
-			OutputToGui.output(STRING_NEWLINE);
-			OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			// OutputToGui.output(STRING_NEWLINE);
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(tasks, listOfTasks);
 		}		
 	}
 	
@@ -135,9 +137,19 @@ public class CommandFactory {
 		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(listOfTasks, keywords);
 		
 		// pass feedback to GUI
-		OutputToGui.output(STRING_NEWLINE);
-		OutputToGui.output("Number of tasks found: " + results.size() + "\n\n");
-		OutputToGui.outputColorTextForTasks(results, listOfTasks);
+		// OutputToGui.output(STRING_NEWLINE);
+		// OutputToGui.output("Number of tasks found: " + results.size() + "\n\n");
+		// OutputToGui.outputColorTextForTasks(results, listOfTasks);
+		
+		if (results.size() == 0) {
+			OutputToGui.output(STRING_NEWLINE);
+			OutputToGui.output(FEEDBACK_NO_TASK_FOUND);
+		} else {
+			// OutputToGui.output(STRING_NEWLINE);
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(results, listOfTasks);
+		}	
+		
 	}
 
 	protected static void edit(String taskIdString, String description, String deadline) {
