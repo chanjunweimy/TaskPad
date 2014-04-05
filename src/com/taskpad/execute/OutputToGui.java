@@ -20,17 +20,24 @@ public class OutputToGui {
 	protected static String[][] generate2dArrayForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
 		int numberOfTasks = candidates.size();
 		String[][] result = new String[numberOfTasks][6];
-		
+		/*
+		for(int i = 0; i < numberOfTasks; i++) {
+			for(int j = 0; j < 6; j++) {
+				result[i][j] = "";
+			}
+		}
+		*/
 		int index = 0;
 		for(int next: candidates) {
-			Task task = listOfTasks.get(index);
-			fillIn2dArrayForOneTask(result, index, task);
+			Task task = listOfTasks.get(next);
+			result = fillIn2dArrayForOneTask(result, index, task);
+			index++;
 		}		
 		
 		return result;
 	}
 	
-	private static void fillIn2dArrayForOneTask(String[][] result, int index, Task task) {		
+	private static String[][] fillIn2dArrayForOneTask(String[][] result, int index, Task task) {		
 		int taskId = index + 1;
 		
 		result[index][0] = "" + taskId;
@@ -67,6 +74,8 @@ public class OutputToGui {
 		} else {
 			result[index][5] = "Not done yet";
 		}
+		
+		return result;
 	}
 
 	protected static void outputColorTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
