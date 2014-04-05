@@ -20,10 +20,9 @@ import java.util.Scanner;
 
 public class DateAndTimeRetriever {
 
+	private static final int POSITION_DESCRIPTION = 3;
 	private static final int POSITION_ENDTIME = 2;
-
 	private static final int POSITION_STARTTIME = 1;
-
 	private static final int POSITION_DEADLINE = 0;
 
 	private static final String STRING_NULL = "null";
@@ -288,7 +287,7 @@ public class DateAndTimeRetriever {
 	/**
 	 * format DateAndTime as Deadline, StartTime, EndTime
 	 * @param desc
-	 * @return Deadline: | StartTime: Date then Time | EndTime: Date Then Time
+	 * @return desc | Deadline: | StartTime: Date then Time | EndTime: Date Then Time
 	 * @throws InvalidQuotesException 
 	 */
 	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {			
@@ -301,6 +300,8 @@ public class DateAndTimeRetriever {
 		//System.err.println(allDateAndTime.get(POSITION_STARTTIME));
 		//System.err.println(allDateAndTime.get(POSITION_ENDTIME));
 		
+		desc = allDateAndTime.remove(POSITION_DESCRIPTION);
+		
 		allDateAndTime = modifyAllDateAndTime(allDateAndTime);
 
 		String deadlineRes = allDateAndTime.get(POSITION_DEADLINE);
@@ -310,7 +311,7 @@ public class DateAndTimeRetriever {
 		// return that string to parse in respective Add/Addrem/Alarm classes -
 		// already done with return input
 		
-		return deadlineRes + " " + startTimeRes + " " + endTimeRes;
+		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
 	}
 
 	/**
@@ -451,6 +452,8 @@ public class DateAndTimeRetriever {
 		
 		ArrayList<String> allDateAndTime = new ArrayList<String>();
 
+		StringBuffer descBuilder = new StringBuffer();
+		String desc;
 		
 		String recordDate = null;
 		String recordTime = null;
@@ -471,6 +474,8 @@ public class DateAndTimeRetriever {
 					recordTime = null;
 				}
 				
+				flexiTokens[i] = null;
+				
 			} else if (isTime(token)){
 				token = parseTime(token);
 				
@@ -484,6 +489,8 @@ public class DateAndTimeRetriever {
 					recordTime = token;
 				}
 				
+				flexiTokens[i] = null;
+
 			} else if (isType(token)){
 				boolean useWrong = (recordDate == null && recordTime == null);
 				
@@ -502,6 +509,9 @@ public class DateAndTimeRetriever {
 					}
 					recordDate = null;
 					recordTime = null;
+					
+					flexiTokens[i] = null;
+
 				}
 			} 
 		}
@@ -543,9 +553,14 @@ public class DateAndTimeRetriever {
 			deadlineLatest = null;
 		}
 		
+		descBuilder = buildString(flexiTokens, descBuilder);
+		desc = descBuilder.toString().trim();
+		
 		allDateAndTime.add(deadlineLatest);
 		allDateAndTime.add(startEarliest);
 		allDateAndTime.add(endLatest);
+		allDateAndTime.add(desc);
+		
 		return allDateAndTime;
 	}
 	
@@ -1379,6 +1394,8 @@ public class DateAndTimeRetriever {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//System.out.println("AAA".split(" ").length);
 	}
 
 }
