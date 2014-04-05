@@ -14,81 +14,81 @@ public class TestDateAndTimeRetriever {
 
 
 	@Test
-	public void testValidBigger1() {
-		testInputCommand(1, "10/12/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidBigger1() {
+		testCompareDateAndTimeExecutor(1, "10/12/2014", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testValidBigger2() {
-		testInputCommand(1, "10/12/2014 11:00", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidBigger2() {
+		testCompareDateAndTimeExecutor(1, "10/12/2014 11:00", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testValidBigger3() {
-		testInputCommand(1, "19/10/2014 00:01", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidBigger3() {
+		testCompareDateAndTimeExecutor(1, "19/10/2014 00:01", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testValidBigger4() {
-		testInputCommand(1, "00:01 19/10/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidBigger4() {
+		testCompareDateAndTimeExecutor(1, "00:01 19/10/2014", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testValidBigger5() {
-		testInputCommand(1, "00:01 18/10/2014", "00:01 18/8/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidBigger5() {
+		testCompareDateAndTimeExecutor(1, "00:01 18/10/2014", "00:01 18/8/2014", "18/10/2014 00:00");
 	}
 	
 	/**
 	 * this is compared with 18/10/2014 23:59
 	 */
 	@Test
-	public void testValidSmaller2() {
-		testInputCommand(-1, "00:01 18/10/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidSmaller2() {
+		testCompareDateAndTimeExecutor(-1, "00:01 18/10/2014", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testValidSmaller1() {
-		testInputCommand(-1, "00:01 18/8/2014",  "00:01 18/10/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidSmaller1() {
+		testCompareDateAndTimeExecutor(-1, "00:01 18/8/2014",  "00:01 18/10/2014", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testValidSame1() {
-		testInputCommand(0, "00:01 18/10/2014",  "00:01 18/10/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorValidSame1() {
+		testCompareDateAndTimeExecutor(0, "00:01 18/10/2014",  "00:01 18/10/2014", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testInvalid1() {
-		testInputCommand(-2, null, null, "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorInvalid1() {
+		testCompareDateAndTimeExecutor(-2, null, null, "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testInvalid2() {
-		testInputCommand(-2, null, "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorInvalid2() {
+		testCompareDateAndTimeExecutor(-2, null, "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testInvalid3() {
-		testInputCommand(-2, "00:01 18/10/2014", null, "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorInvalid3() {
+		testCompareDateAndTimeExecutor(-2, "00:01 18/10/2014", null, "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testInvalid4() {
-		testInputCommand(-2, "00:01 18/10/2014", "AA", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorInvalid4() {
+		testCompareDateAndTimeExecutor(-2, "00:01 18/10/2014", "AA", "18/10/2014 00:00");
 	}
 	
 	@Test
-	public void testInvalid5() {
-		testInputCommand(-2, "BB", "00:01 18/10/2014", "18/10/2014 00:00");
+	public void testCompareDateAndTimeExecutorInvalid5() {
+		testCompareDateAndTimeExecutor(-2, "BB", "00:01 18/10/2014", "18/10/2014 00:00");
 	}
 	
-	private void testInputCommand(int expected, String input1, String dateString){
+	private void testCompareDateAndTimeExecutor(int expected, String input1, String dateString){
 		setupDebugEnvironment(dateString);
 
 		assertEquals(expected, _datm.compareDateAndTime(input1));
 
 	}
 	
-	private void testInputCommand(int expected, String input1, String input2, String dateString){
+	private void testCompareDateAndTimeExecutor(int expected, String input1, String input2, String dateString){
 		setupDebugEnvironment(dateString);
 
 		assertEquals(expected, _datm.compareDateAndTime(input1, input2));
