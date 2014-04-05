@@ -12,6 +12,62 @@ public class OutputToGui {
 		GuiManager.callOutputNoLine(feedback + "\n");
 	}
 	
+	protected static String[][] generate2dArrayForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
+		int numberOfTasks = candidates.size();
+		String[][] result = new String[numberOfTasks][6];
+		
+		int index = 0;
+		for(int next: candidates) {
+			Task task = listOfTasks.get(index);
+			result[index] = fillIn2dArrayForOneTask(index, task);
+		}		
+		
+		return result;
+	}
+	
+	private static String[] fillIn2dArrayForOneTask(int index, Task task) {
+		String[] result = new String[5];
+		
+		int taskId = index + 1;
+		
+		result[0] = "" + index + 1;
+		result[1] = task.getDescription();
+		
+		if(task.getDeadline() == null || task.getDeadline().equals("")) {
+			result[2] = "-";
+		} else {
+			result[2] = task.getDeadline();
+		}
+		
+		if(task.getStartTime() == null || task.getStartTime().equals("")) {
+			if(task.getStartDate() == null || task.getStartDate().equals("")) {
+				result[3] = "-";
+			} else {
+				result[3] = task.getStartDate();
+			}
+		} else {
+			if(task.getStartDate() == null || task.getStartDate().equals("")) {
+				result[3] = task.getStartTime();
+			} else {
+				result[3] = task.getStartTime() + " " + task.getStartDate();
+			}			
+		}
+		
+		if(task.getDetails() == null || task.getDetails().equals("")) {
+			result[4] = task.getDetails();
+		} else {
+			result[4] = "-";
+		}
+		
+		if(task.getDone() == 1) {
+			result[5] = "Done";
+		} else {
+			result[5] = "Not done yet";
+		}
+		
+		return result;
+	}
+
 	protected static void outputColorTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
 		for(int next: candidates) {
 			int taskId = next + 1;
