@@ -1,5 +1,7 @@
 package com.taskpad.launcher;
 
+//@author A0119646X
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,7 +11,6 @@ import java.util.logging.SimpleFormatter;
 
 
 /** This class is to set up global logging to a file
- * @author Lynnette
  */
 public class LogManager {
 

@@ -14,6 +14,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+//@author A0112084U
+
 /**
  * The standard class for rendering (displaying) individual cells in a JTable.
  * This class inherits from JTextArea, a standard component class. However
@@ -27,7 +29,6 @@ import javax.swing.table.TableColumnModel;
  * http://manivelcode.blogspot.sg/2008/08/how-to-wrap-text-inside
  * -cells-of-jtable.html
  * 
- * @author Jun
  * @see JTable
  * @see JTextArea
  */

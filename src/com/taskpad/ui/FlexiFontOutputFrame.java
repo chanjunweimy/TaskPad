@@ -1,3 +1,5 @@
+//@author A0112084U
+
 /**
  * This class is going to take over
  * the original output frame because it is more flexible 

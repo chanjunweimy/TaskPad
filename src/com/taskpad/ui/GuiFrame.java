@@ -22,8 +22,10 @@ import org.jnativehook.keyboard.NativeKeyListener;
 
 /**
  * For implementing HotKeys for the GuiFrame
- * @author Jun & Lynnette
  */
+
+//@author A0112084U
+
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
 	
@@ -144,7 +146,6 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		/**
 		 * we will disable some keys when TaskPad is in
 		 * hiding mode
-		 * @author Jun
 		 */
 		isEscapeKey = isEscapeKey && isVisible();
 		isAltEndKey = isAltEndKey && isVisible();

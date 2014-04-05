@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+//@author A0112084U
+
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -9,9 +11,7 @@ import javax.swing.JFrame;
 /**
  * 
  * ===================DEPRECATED========================== 
- * 
- * @author Jun
- *
+ *  *
  * @category
  * MouseDragActioner is the actual class to do the moving
  * with the help of MousePressedDetector.

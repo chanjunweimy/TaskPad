@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+//@author A0112084U
+
 /**
  * 
  * 
@@ -15,7 +17,6 @@ package com.taskpad.ui;
  * 
  * The rest again is measured and can be broken once more 
  * if it's bigger than available width.
- * @author Jun
  * 
  */
 
