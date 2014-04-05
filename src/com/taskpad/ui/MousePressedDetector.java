@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+//@author A0112084U
+
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -8,7 +10,6 @@ import java.awt.event.MouseListener;
  * 
  * ===================DEPRECATED==========================
  * 
- * @author Jun
  * @category
  * MousePressedDetector is created to detect whether 
  * the mouse has clicked on the boxes or not.

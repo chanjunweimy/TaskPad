@@ -11,6 +11,7 @@ import javax.swing.SwingUtilities;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
+//@author A0112084U
 
 public class InputFrame extends GuiFrame{
 	

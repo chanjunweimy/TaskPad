@@ -1,5 +1,7 @@
 package com.taskpad.ui;
 
+//@author A0112084U
+
 /**
  * 
  * This class is created to fix
@@ -7,7 +9,6 @@ package com.taskpad.ui;
  * Hope it works!
  * 
  * WrapColumnFactory creates view on JTexTPane Doucument
- * @author Jun
  * 
  */
 

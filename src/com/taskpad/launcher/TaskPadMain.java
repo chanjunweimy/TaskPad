@@ -1,6 +1,6 @@
-
-
 package com.taskpad.launcher;
+
+//@author A0112084U
 
 import javax.swing.SwingUtilities;
  
@@ -9,8 +9,6 @@ import javax.swing.SwingUtilities;
  * Author: Chan Jun Wei, Lynnette Ng Hui Xian, Wang Taining
  * Product: TaskPad
  * Team: W13-3j
- *
- * @author Jun， Lynnette, Taining
  *
  */
 public class TaskPadMain{

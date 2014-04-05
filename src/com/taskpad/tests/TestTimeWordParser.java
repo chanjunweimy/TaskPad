@@ -10,7 +10,6 @@ import com.taskpad.dateandtime.NullTimeValueException;
 
 /**
  * 
- * @author Jun & Lynnette
  *
  * @category
  * TestTimeWordParser: a Junit test case written to test TimeWordParser
