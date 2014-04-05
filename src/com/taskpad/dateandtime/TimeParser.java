@@ -38,6 +38,7 @@ public class TimeParser {
 	 */
 	protected String parseTime(String input) throws NullTimeUnitException, NullTimeValueException, TimeErrorException, InvalidTimeException{
 		TimeWordParser twp = TimeWordParser.getInstance();
+		
 		String timeString = EMPTY;
 		long time = 0;
 		
@@ -315,7 +316,7 @@ public class TimeParser {
 	}
 	
 	public static void main(String[] args){
-		String input = "even";
+		String input = "1am";
 		
 		//System.out.println(checkMornAftEvenWords(input));
 		TimeParser tp = TimeParser.getInstance();
