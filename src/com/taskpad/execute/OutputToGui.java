@@ -29,17 +29,16 @@ public class OutputToGui {
 		*/
 		int index = 0;
 		for(int next: candidates) {
+			int taskId = next + 1;
 			Task task = listOfTasks.get(next);
-			result = fillIn2dArrayForOneTask(result, index, task);
+			result = fillIn2dArrayForOneTask(result, taskId, index, task);
 			index++;
 		}		
 		
 		return result;
 	}
 	
-	private static String[][] fillIn2dArrayForOneTask(String[][] result, int index, Task task) {		
-		int taskId = index + 1;
-		
+	private static String[][] fillIn2dArrayForOneTask(String[][] result, int taskId, int index, Task task) {		
 		result[index][0] = "" + taskId;
 		result[index][1] = task.getDescription();
 		
