@@ -45,6 +45,8 @@ public class GuiManager {
 			firstFrame.showWindow(false);
 			secondFrame.showUp(firstFrame);
 		}
+		
+		_inputFrame.requestFocusOnInputBox();
 	}
 	
 	public static void showWindow(boolean isVisible){
