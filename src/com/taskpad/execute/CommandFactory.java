@@ -132,11 +132,12 @@ public class CommandFactory {
 		}
 	}
 
-	protected static void search(String keywordsString) {
+	protected static void search(String keywordsString, String timeString) {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
 		String[] keywords = keywordsString.split(" ");
-		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(listOfTasks, keywords);
+		String[] times = timeString.split("&");
+		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(listOfTasks, keywords, times);
 		
 		// pass feedback to GUI
 		// OutputToGui.output(STRING_NEWLINE);

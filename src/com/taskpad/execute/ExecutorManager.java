@@ -52,7 +52,7 @@ public class ExecutorManager {
 			break;
 		case "SEARCH":
 			logger.info("Search keyword: " + parameters.get("KEYWORD"));
-			CommandFactory.search(parameters.get("KEYWORD"));
+			CommandFactory.search(parameters.get("KEYWORD"), parameters.get("TIME"));
 			break;
 		case "UNDO":
 			CommandFactory.undo();

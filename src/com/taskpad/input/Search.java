@@ -9,7 +9,7 @@ import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Search extends Command{
 	
-	private static final String STRING_DELIMITERS = "*";
+	private static final String STRING_DELIMITERS = "&";
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final int NUMBER_ARGUMENTS = 1;
 	

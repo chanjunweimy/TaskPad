@@ -137,16 +137,22 @@ public class CommandFactoryBackend {
 	}
 
 	protected static LinkedList<Integer> getSearchResult(TaskList listOfTasks,
-			String[] keywords) {
+			String[] keywords, String[] times) {
 		LinkedList<Integer> results = new LinkedList<Integer>();
 		
 		for(int index = 0; index < listOfTasks.size(); index++) {
 			Task task = listOfTasks.get(index);
 			
 			String description = task.getDescription();
-			String details = task.getDetails();		
+			String details = task.getDetails();	
+			if(details == null) {
+				details = "";
+			}
 			
-			boolean isCandidate = containsKeywords(keywords, description, details);
+			boolean isCandidate = false;
+			
+			isCandidate = containsKeywords(keywords, description, details);
+			isCandidate = containsTimes(times, task);
 			
 			if(isCandidate) {
 				results.add(index);
@@ -164,6 +170,53 @@ public class CommandFactoryBackend {
 			}
 		}
 		return isCandidate;
+	}
+
+	private static boolean containsTimes(String[] timesOrDates, Task task) {
+		String deadline = task.getDeadline();
+		String startDate = task.getStartDate();
+		String startTime = task.getStartTime();
+		String endDate = task.getEndDate();
+		String endTime = task.getEndTime();
+		
+		for(String timeOrDate: timesOrDates) {
+			// check deadline
+			if(deadline != null && deadline.contains(timeOrDate)) {
+				return true;
+			}
+			
+			// check start/end time
+			String time = "";
+			String date = "";
+			if(timeOrDate.contains(" ")) {
+				// time + date
+				String[] timeAndDate = timeOrDate.split(" ");
+				time = timeAndDate[0];
+				date = timeAndDate[1];
+				
+				if(startDate != null && startDate.equals(date) 
+						&& startTime != null && startTime.equals(time)) {
+					return true;
+				}
+				if(endDate != null && endDate.equals(date) 
+						&& endTime != null && endTime.equals(time)) {
+					return true;
+				}
+				
+			} else {
+				// only date
+				date = timeOrDate;
+				if(startDate != null && startDate.equals(date)) {
+					return true;
+				}
+				if(endDate != null && endDate.equals(date)) {
+					return true;
+				}
+			}
+			
+		}
+		
+		return false;
 	}
 	
 	protected static Task editTask(String taskIdString,
