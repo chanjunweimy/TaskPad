@@ -2,9 +2,10 @@ package com.taskpad.dateandtime;
 
 /**
  * InvalidTimeException when user keys in AM string >12 or PM string > 25 or minutes >60
- * @author Lynnette
  *
  */
+
+//@author A0119646X
 
 public class InvalidTimeException extends Exception {
 

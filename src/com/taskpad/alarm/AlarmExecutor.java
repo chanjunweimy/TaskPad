@@ -2,11 +2,9 @@ package com.taskpad.alarm;
 
 import com.taskpad.ui.GuiManager;
 
+//@author A0112084U
 
 /**
- * 
- * @author Jun
- * 
  * and note that: Alarm can only support 
  * 10 s, not 10s
  * 

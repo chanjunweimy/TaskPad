@@ -6,6 +6,8 @@ import javax.swing.JApplet;
 
 import com.taskpad.ui.GuiManager;
 
+//@author A0112084U
+
 public class AlarmManager extends JApplet{
 
 	

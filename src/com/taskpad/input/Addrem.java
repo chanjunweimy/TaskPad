@@ -13,6 +13,8 @@ import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.ui.GuiManager;
 
+//@author A0119646X
+
 public class Addrem extends Command{
 	
 	private static final String COMMAND_ADD_REM = "ADDREM";

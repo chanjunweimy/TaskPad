@@ -9,8 +9,10 @@ import java.util.Map;
 
 /** For special holiday dates
  * 
- * @author Lynnette 
  */
+
+//@author A0119646X
+
 public class HolidayDates {
 	
 	private static Map<String, String> _holidays = new HashMap<String, String>();

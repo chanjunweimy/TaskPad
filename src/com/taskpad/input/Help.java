@@ -6,6 +6,8 @@
  * Output: Output frame shows list of commands and their syntax
  */
 
+//@author A0119646X
+
 package com.taskpad.input;
 
 import java.awt.Color;

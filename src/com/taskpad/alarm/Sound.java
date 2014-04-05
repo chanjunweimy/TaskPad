@@ -6,11 +6,12 @@ import java.net.URL;
 
 /**
  * 
- * @author Jun
  * This is a helper class
  * to play the sound
  *
  */
+
+//@author A0112084U
 
 public class Sound {
 	private AudioClip _song; // Sound player

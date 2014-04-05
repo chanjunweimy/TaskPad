@@ -7,8 +7,6 @@ import com.taskpad.dateandtime.NullTimeValueException;
 
 
 /**
- * 
- * @author Jun and Lynnette
  *
  * To implement an alarm
  * 
@@ -16,6 +14,9 @@ import com.taskpad.dateandtime.NullTimeValueException;
  * 
  * 
  */
+
+//@author A0112084U
+
 public class Alarm{	
 
 
@@ -73,28 +74,13 @@ public class Alarm{
 			}
 		}
 		
-		/* deprecated for error handling
-		if (numberString == null){
-			String newNumberString = splitInput[splitInput.length-2] + " " + splitInput[splitInput.length-1];
-			numberString = successParseTime(newNumberString, numberString);
-			
-			if (numberString == null){
-				InputManager.outputToGui("Please enter an appropriate time unit");
-			}
-		} 
-		*/
 		return numberString;
 	}
 
 	private String successParseTime(String input, String numberString) throws NullTimeUnitException, NullTimeValueException {
 		DateAndTimeManager parser = DateAndTimeManager.getInstance();
 		numberString = parser.convertToSecond(input);
-//		try {
-//			numberString = parser.convertToSecond(input);
-//		} catch (NullTimeUnitException | NullTimeValueException e) {
-//			//InputManager.outputToGui(e.getMessage());
-//			numberString = null;
-//		}
+
 		return numberString;
 	}
 
@@ -127,90 +113,4 @@ public class Alarm{
 		description = description.trim(); 
 		return description;
 	}
-	
-	/* DEPRECATED
-	private void initializeAlarm(String input, String fullInput) throws Exception{
-		
-		String inputString[] = fullInput.split(SPACE);
-		int length = inputString.length;
-		
-		String unit = inputString[length - 1];
-		calculateMultiple(unit);
-
-		//String numberString = computeNumberString(inputString, length);
-		String numberString = inputString[length-2].trim();
-		numberString = parseNumber(numberString);
-		
-		int time = 0;
-		try{
-			time = Integer.parseInt(numberString);
-		} catch (NumberFormatException e){
-			InputManager.outputToGui(String.format(MESSAGE_NUMBER_ERROR, numberString));
-			System.err.println(e.getMessage());
-			return;
-		}
-		
-		time *= _multiple;
-		
-		String desc = findDesc(inputString, length);
-			
-		InputManager.outputToGui("Creating alarm... " + fullInput);
-		
-		AlarmManager.initializeAlarm(desc, time);		
-	}
-
-	private String parseNumber(String numberString) throws NullPointerException{
-		NumberParser parser = new NumberParser();
-		return parser.parseTheNumbers(numberString);
-	}
-
-	
-	
-	/* Deprecated - can use for finding desc instead
-	private String computeNumberString(String[] inputString, int length) {
-		String numberString = "";
-		for (int i = 1; i < length - 1; i++){
-			numberString = numberString + inputString[i] + SPACE;
-		}
-		numberString = numberString.trim(); 
-		return numberString;
-	}
-	*/
-	/*
-	private void calculateMultiple(String unit) throws Exception {
-		switch (unit.toLowerCase()){
-		case "s":
-		case "second":
-		case "seconds":
-		case "sec":
-		case "secs":
-			setMultiple(SECOND);
-			break;
-
-		case "m":
-		case "minute":
-		case "minutes":
-		case "min":
-		case "mins":
-			setMultiple(MINUTE);
-			break;
-
-		case "h":
-		case "hour":
-		case "hours":
-		case "hr":
-		case "hrs":
-			setMultiple(HOUR);
-			break;
-
-		default:
-			InputManager.outputToGui(ERROR);
-			throw EXCEPTION_INVALID_INPUT;
-		}
-	}
-
-	private void setMultiple(int multiple) {
-		_multiple = multiple;
-	}
-	*/
 }

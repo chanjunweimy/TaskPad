@@ -8,9 +8,9 @@ import java.util.Date;
 /** This class takes in a date and checks if it fits any of the SimpleDateFormat
  * Returns null string if otherwise
  * 
- * @author Lynnette, Jun
- *
  */
+
+//@author A0119646X
 
 public class DateParser {
 

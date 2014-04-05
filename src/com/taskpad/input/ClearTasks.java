@@ -1,5 +1,7 @@
 package com.taskpad.input;
 
+//@author A0119646X
+
 public class ClearTasks extends Command{
 	
 	private static final String COMMAND_CLEAR = "CLEAR";
