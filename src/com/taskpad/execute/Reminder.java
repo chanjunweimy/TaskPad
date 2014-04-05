@@ -44,4 +44,37 @@ public class Reminder {
 		return results;
 	}
 	
+	protected static LinkedList<Integer> getOverdueTasks() {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String today = sdf.format(date);	
+		Task taskDueToday = new Task("dummy", today, "", "", "", "", null);
+		
+		TaskList list = DataManager.retrieve(DataFileStack.FILE);
+		
+		TaskDeadlineComparator comparator = new TaskDeadlineComparator();		
+		LinkedList<Integer> result = new LinkedList<Integer>();
+		
+		for(int i = 0; i < list.size(); i++) {
+			Task task = list.get(i);
+			if(comparator.compare(taskDueToday, task) > 0) {
+				result.add(i);
+			}
+		}
+		
+		return result;
+	}
+
+	protected static void showReminderForOverdue() {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		LinkedList<Integer> tasks = getOverdueTasks();
+		
+		if(tasks.size() == 0) {
+			OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
+		} else {
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(tasks, listOfTasks);
+		}
+	}
+	
 }

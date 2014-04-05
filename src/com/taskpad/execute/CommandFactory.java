@@ -85,6 +85,7 @@ public class CommandFactory {
 		}
 	}
 
+	/*
 	protected static void listByDeadline() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
@@ -99,6 +100,7 @@ public class CommandFactory {
 			OutputToGui.outputTable(tasks, listOfTasks);
 		}		
 	}
+	*/
 	
 	protected static void undo() {
 		try {
