@@ -1,12 +1,13 @@
 package com.taskpad.input;
 
+import java.util.ArrayList;
+
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Search extends Command{
 	
-	private static final String STRING_NULL = "null";
-	private static final String STRING_SPACE = " ";
+	private static final String STRING_DELIMITERS = "*";
 	private static final String COMMAND_SEARCH = "SEARCH";
 	private static final int NUMBER_ARGUMENTS = 1;
 	
@@ -48,28 +49,36 @@ public class Search extends Command{
 	protected boolean commandSpecificRun() {
 		_keyword = input;
 		
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		try {
-			String timeString = datm.formatDateAndTimeInString(input);
-			_time = getTime(timeString);
-		} catch (InvalidQuotesException e) {
-			_time = null;
-		}
+		extractTime();
 		
 		//checkAndInputDeadline();
 		
 		return true;
 	}
 
-	private String getTime(String timeString) {
-		String[] timeTokens = timeString.split(STRING_SPACE);
-		StringBuffer timeBuilder = new StringBuffer();
-		for (int i = 0; i < timeTokens.length; i++){
-			String token = timeTokens[i];
-			if (!STRING_NULL.equals(token)){
-				timeBuilder.append(token + STRING_SPACE);
-			}
+	/**
+	 * replaced checkAndInputDeadline();
+	 * get _time varaible
+	 */
+	private void extractTime() {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		try {
+			ArrayList<String> timesArray = datm.searchTimeAndDate(input);
+			_time = getTime(timesArray);
+		} catch (InvalidQuotesException e) {
+			_time = null;
 		}
+		//System.out.println(_time);
+	}
+
+	private String getTime(ArrayList<String> timesArray) {
+		StringBuffer timeBuilder = new StringBuffer();
+		for (int i = 0; i < timesArray.size(); i++){
+			String token = timesArray.get(i);
+			timeBuilder.append(token + STRING_DELIMITERS);
+		}
+		int deleteIdx = timeBuilder.lastIndexOf(STRING_DELIMITERS);
+		timeBuilder.deleteCharAt(deleteIdx);
 		return timeBuilder.toString().trim();
 	}
 
