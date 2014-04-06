@@ -13,7 +13,8 @@ public class GuiManager {
 	private static InputFrame _inputFrame;
 	private static OutputFrame _outputFrame;
 	private static OutputTableFrame _tableFrame;
-	private static boolean debug = false;
+	private static boolean _isDebug = false;
+	private static boolean _isTableCalled = false;
 
 	//not designed to be instantiated
 	private GuiManager(){
@@ -34,7 +35,7 @@ public class GuiManager {
 	}
 	 */
 	
-	public static void callTable(Object[][] data){
+	public static void callTable(Object[][] data){		
 		swapFrame(_outputFrame, _tableFrame);
 		_tableFrame.refresh(data);
 	}
@@ -42,8 +43,9 @@ public class GuiManager {
 	/**
 	 * @param data
 	 */
-	private static void swapFrame(GuiFrame firstFrame, GuiFrame secondFrame) {
+	private static void swapFrame(GuiFrame firstFrame, GuiFrame secondFrame) {		
 		if (firstFrame.isVisible()){
+			_isTableCalled = !_isTableCalled;
 			firstFrame.showWindow(false);
 			secondFrame.showUp(firstFrame);
 		}
@@ -67,7 +69,7 @@ public class GuiManager {
 	}
 
 	public static void callOutput(String out){
-		if (!debug){
+		if (!_isDebug){
 			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addLine(out + NEWLINE);	
 		} else{
@@ -76,7 +78,7 @@ public class GuiManager {
 	}
 	
 	public static void callOutputNoLine(String out){
-		if (!debug){
+		if (!_isDebug){
 			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addLine(out);
 		} else{
@@ -94,7 +96,7 @@ public class GuiManager {
 
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
-		if (!debug){
+		if (!_isDebug){
 			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
 		} else{
@@ -103,7 +105,7 @@ public class GuiManager {
 	}
 	
 	public static void showSelfDefinedMessageNoNewline(String out, Color c, boolean isBold){
-		if (!debug){
+		if (!_isDebug){
 			swapFrame( _tableFrame, _outputFrame);
 			_outputFrame.addSelfDefinedLine(out, c, isBold);
 		} else{
@@ -136,7 +138,7 @@ public class GuiManager {
 	
 	protected static void cancelAlarms() {
 		try {
-			AlarmManager.cancelAlarms();
+			AlarmManager.cancelAlarms(); 
 		} catch (Exception e) {
 			//do nothing
 		}
@@ -144,6 +146,35 @@ public class GuiManager {
 	
 	protected static OutputFrame getOutputFrame() {
 		return _outputFrame;
+	}
+	
+	public static void clearOutput(){
+		_outputFrame.clearOutputBox();
+	}
+	
+	//for debug
+	public static boolean getInputFrameVisibility(){
+		boolean isNormal = _inputFrame.isVisible();
+		return isNormal;
+	}
+	
+	public static boolean getOutputFrameVisibility(){
+		boolean isNormal = _outputFrame.isVisible();
+		return isNormal;
+	}
+	
+	public static boolean getTableVisibility(){
+		boolean isNormal = _tableFrame.isVisible();
+		return isNormal;
+	}
+	
+	public static boolean isTableActive(){
+		return _isTableCalled;
+	}
+
+	public static void setDebug(boolean isDebugFlag){
+		_isDebug = isDebugFlag;
+		_isTableCalled = false;
 	}
 
 	/* deprecated
@@ -155,13 +186,5 @@ public class GuiManager {
 		GuiManager._outputFrame = _outputFrame;
 	}
 	 */
-
-	public static void clearOutput(){
-		_outputFrame.clearOutputBox();
-	}
-	
-	public static void setDebug(boolean debugFlag){
-		debug = debugFlag;
-	}
 	
 }
