@@ -199,8 +199,11 @@ public class DateAndTimeRetriever {
 					String res;
 					if (recordTime == null){
 						res = recordDate;
+						recordDate = null;
 					} else {
 						res = recordTime + " " + recordDate;
+						recordDate = null;
+						recordTime = null;
 					}
 					TimeAndDateRes.add(res);
 				}
@@ -210,8 +213,11 @@ public class DateAndTimeRetriever {
 					String res;
 					if (recordDate == null){
 						res = recordTime + " " + todayDate;
+						recordTime = null;
 					} else {
 						res = recordTime + " " + recordDate;
+						recordDate = null;
+						recordTime = null;
 					}
 					TimeAndDateRes.add(res);
 				}
@@ -1394,6 +1400,14 @@ public class DateAndTimeRetriever {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//VERY IMP TEST CASE
+				try {
+					System.out.println(datr.searchTimeAndDate("20:14 05/04/2014 03/02/2014").toString());
+				} catch (InvalidQuotesException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		
 		//System.out.println("AAA".split(" ").length);
 	}
