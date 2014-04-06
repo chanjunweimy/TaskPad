@@ -14,7 +14,7 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 public class OutputTableFrame extends GuiFrame {
-	private static final Color COLOR_TABLE_BACKGROUND = Color.white;
+	private static final Color COLOR_TABLE_BACKGROUND = new Color(240,248,255);
 
 	/**
 	 * generated

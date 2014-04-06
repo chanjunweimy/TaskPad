@@ -26,9 +26,6 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * For implementing HotKeys for the GuiFrame
  */
 
-
-
-
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
 	
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
