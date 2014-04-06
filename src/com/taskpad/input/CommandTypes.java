@@ -1,10 +1,11 @@
+//@author A0119646X
+
 package com.taskpad.input;
 
 /**
  * CommandTypes has been changed to a Singleton class
  */
 
-//@author A0119646X
 
 import java.util.HashMap;
 import java.util.Map;

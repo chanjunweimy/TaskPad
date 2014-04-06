@@ -1,3 +1,5 @@
+//@author A0119646X
+
 /**
  * This class creates a Delete object
  * 
@@ -6,8 +8,6 @@
  * Returns Input object
  * 
  */
-
-//@author A0119646X
 
 
 package com.taskpad.input;

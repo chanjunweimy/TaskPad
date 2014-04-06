@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.alarm;
 
 import java.applet.Applet;
@@ -11,7 +13,6 @@ import java.net.URL;
  *
  */
 
-//@author A0112084U
 
 public class Sound {
 	private AudioClip _song; // Sound player

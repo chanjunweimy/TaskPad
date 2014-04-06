@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.ui;
 
 import java.awt.Color;
@@ -14,7 +16,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-//@author A0112084U
+
 
 /**
  * The standard class for rendering (displaying) individual cells in a JTable.

@@ -1,8 +1,8 @@
+//@author A0112084U
+
 package com.taskpad.alarm;
 
 import com.taskpad.ui.GuiManager;
-
-//@author A0112084U
 
 /**
  * and note that: Alarm can only support 

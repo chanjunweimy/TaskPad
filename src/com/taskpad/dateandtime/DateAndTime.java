@@ -1,6 +1,6 @@
-/* This helper class creates the date and time object */
-
 //@author A0112084U
+
+/* This helper class creates the date and time object */
 
 package com.taskpad.dateandtime;
 

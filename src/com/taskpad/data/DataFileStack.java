@@ -1,6 +1,6 @@
-package com.taskpad.data;
-
 //@author A0105788U
+
+package com.taskpad.data;
 
 import java.util.LinkedList;
 

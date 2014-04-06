@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.alarm;
 
 import java.util.LinkedList;
@@ -9,8 +11,6 @@ import java.util.Timer;
  * that counts how long the 
  * song plays
  */
-
-//@author A0112084U
 
 public class TimerObject {
 	private static LinkedList<Timer> _timers = new LinkedList<Timer>();
