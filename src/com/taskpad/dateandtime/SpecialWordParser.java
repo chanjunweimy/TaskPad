@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 import java.util.HashMap;
@@ -9,7 +11,7 @@ import java.util.Scanner;
  *  
  */
 
-//@author A0112084U
+
 
 public class SpecialWordParser {
 	
@@ -259,7 +261,6 @@ public class SpecialWordParser {
 	 * 
 	 * It is the only method that parses words like next and prev.
 	 * 
-	 * @author Jun
 	 * @param specialWord String
 	 * @return int
 	 */

@@ -1,6 +1,7 @@
+//@author A0119646X
+
 package com.taskpad.input;
 
-//@author A0119646X
 
 public class ClearTasks extends Command{
 	

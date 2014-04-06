@@ -1,3 +1,5 @@
+//@author A0119646X
+
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
@@ -9,8 +11,6 @@ import java.util.Date;
  * Returns null string if otherwise
  * 
  */
-
-//@author A0119646X
 
 public class DateParser {
 

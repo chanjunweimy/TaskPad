@@ -1,6 +1,6 @@
-package com.taskpad.input;
-
 //@author A0119646X
+
+package com.taskpad.input;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;

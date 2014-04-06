@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.alarm;
 
 import java.awt.Color;
@@ -5,8 +7,6 @@ import java.awt.Color;
 import javax.swing.JApplet;
 
 import com.taskpad.ui.GuiManager;
-
-//@author A0112084U
 
 public class AlarmManager extends JApplet{
 

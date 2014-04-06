@@ -1,6 +1,7 @@
+//@author A0112084U
+
 package com.taskpad.launcher;
 
-//@author A0112084U
 
 import javax.swing.SwingUtilities;
  

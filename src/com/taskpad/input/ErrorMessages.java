@@ -1,10 +1,10 @@
+//@author A0119646X
+
 package com.taskpad.input;
 
 /** Class for all Input error messages for Input Handling
  * 
  */
-
-//@author A0119646X
 
 public class ErrorMessages {
 	

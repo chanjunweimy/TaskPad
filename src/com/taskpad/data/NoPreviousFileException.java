@@ -1,7 +1,6 @@
-package com.taskpad.data;
-
 //@author A0105788U
 
-public class NoPreviousFileException extends Exception {
+package com.taskpad.data;
 
+public class NoPreviousFileException extends Exception {
 }

@@ -1,6 +1,6 @@
-package com.taskpad.tests;
-
 //@author A0119646X
+
+package com.taskpad.tests;
 
 /**
  * This class is to test the command words
