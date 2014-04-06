@@ -1,8 +1,8 @@
+//@author A0119646X
+
 /** This class is used for calling APIs from other packages
  * 
  */
-
-//@author A0119646X
 
 package com.taskpad.input;
 
