@@ -6,8 +6,6 @@ package com.taskpad.input;
  * 
  */
 
-//@author A0119646X
-
 import java.awt.Color;
 import java.util.Map;
 
