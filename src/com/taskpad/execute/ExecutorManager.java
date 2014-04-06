@@ -3,6 +3,8 @@ package com.taskpad.execute;
 //@author A0105788U
 
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import com.taskpad.storage.CommandRecord;
@@ -10,11 +12,23 @@ import com.taskpad.ui.GuiManager;
 import com.taskpad.input.Input;
 
 public class ExecutorManager {
+	private static final String MESSAGE_SHOWING_REMINDER = "Showing tasks due today & overdue tasks...";
+	
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	public static void showReminder() {
-		Reminder.showReminderForToday();
-		Reminder.showReminderForOverdue();
+		OutputToGui.output(MESSAGE_SHOWING_REMINDER);
+		
+		Timer timer = new Timer();
+		
+		timer.schedule(new TimerTask() {
+			  @Override
+			  public void run() {
+					Reminder.showReminderForToday();
+					Reminder.showReminderForOverdue();
+			  }
+		}, 2*1000);
+		
 	}
 	public static void receiveFromInput(Input input, String command) {
 		String commandType = input.getCommand();
