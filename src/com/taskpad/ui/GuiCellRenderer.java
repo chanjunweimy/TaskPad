@@ -5,7 +5,6 @@ package com.taskpad.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
