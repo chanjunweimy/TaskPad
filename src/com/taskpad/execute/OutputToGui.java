@@ -87,7 +87,7 @@ public class OutputToGui {
 		if(task.getDone() == 1) {
 			result[index][6] = "Done";
 		} else {
-			result[index][6] = "Not done yet";
+			result[index][6] = "Not done";
 		}
 		
 		return result;
