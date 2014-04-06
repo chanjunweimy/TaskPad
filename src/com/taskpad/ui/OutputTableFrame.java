@@ -14,6 +14,8 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 public class OutputTableFrame extends GuiFrame {
+	private static final Color COLOR_TABLE_BACKGROUND = Color.white;
+
 	/**
 	 * generated
 	 */
@@ -49,6 +51,8 @@ public class OutputTableFrame extends GuiFrame {
 		add(_scrollBox);
 
 		customizeHeaderStyle();
+		
+		_table.setBackground(COLOR_TABLE_BACKGROUND);
 
 		setUpColumnWidth();
 	}
@@ -59,7 +63,7 @@ public class OutputTableFrame extends GuiFrame {
 	private void customizeHeaderStyle() {
 		_table.getTableHeader().setFont(FONT_HEADER_DEFAULT);
 		_table.getTableHeader().setBackground(Color.black);
-		_table.getTableHeader().setForeground(Color.white);
+		_table.getTableHeader().setForeground(OutputTableFrame.COLOR_TABLE_BACKGROUND);
 	}
 
 	protected void setUpFrame() {
@@ -92,20 +96,19 @@ public class OutputTableFrame extends GuiFrame {
 		for (int i = 0; i < colNo; i++) {
 			column = _table.getColumnModel().getColumn(i);
 			int divider = 3;
-			int columnWidthId = 10;
-			int noOfColumnLeft = colNo - 2;
-			boolean isDesc = i == 0;
+			int preferredWidthID = 1;
+			int noOfColLeft = 2;
+			boolean isDesc = i == 1;
 			boolean isID = i == 0;
-			System.out.println(getWidth());
-			if (isDesc) {
-				column.setPreferredWidth((getWidth() - columnWidthId)/ divider);
+			if (isID) {
 				column.setCellRenderer(new GuiCellRenderer());
-			} else if (isID) {
-				column.setPreferredWidth(columnWidthId);
+				column.setPreferredWidth(preferredWidthID);
+			} else if (isDesc) {
 				column.setCellRenderer(new GuiCellRenderer());
+				column.setPreferredWidth((getWidth() - preferredWidthID) / divider);
 			} else {
-				column.setPreferredWidth((getWidth() - columnWidthId) / (divider * noOfColumnLeft));
 				column.setCellRenderer(new GuiCellRenderer());
+				column.setPreferredWidth((getWidth() - preferredWidthID) / (divider * (colNo - noOfColLeft)));
 			}
 		}
 	}
