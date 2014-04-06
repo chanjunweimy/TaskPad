@@ -13,13 +13,26 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class Reminder {
-	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "You have no task due today.";
+	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No task due today.";
+	private static final String FEEDBACK_NO_OVERDUE = "No overdue task.";
 	
 	protected static void showReminderForToday() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		LinkedList<Integer> tasks = getTasksDueToday();
 		if(tasks.size() == 0) {
 			OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
+		} else {
+			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
+			OutputToGui.outputTable(tasks, listOfTasks);
+		}
+	}
+	
+	protected static void showReminderForOverdue() {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		LinkedList<Integer> tasks = getOverdueTasks();
+		
+		if(tasks.size() == 0) {
+			OutputToGui.output(FEEDBACK_NO_OVERDUE);
 		} else {
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
@@ -66,18 +79,6 @@ public class Reminder {
 		}
 		
 		return result;
-	}
-
-	protected static void showReminderForOverdue() {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		LinkedList<Integer> tasks = getOverdueTasks();
-		
-		if(tasks.size() == 0) {
-			OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
-		} else {
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
-			OutputToGui.outputTable(tasks, listOfTasks);
-		}
 	}
 	
 }
