@@ -148,7 +148,7 @@ public class CommandFactoryBackend {
 			boolean isCandidate = false;
 			
 			isCandidate = containsKeywords(keywords, description, details);
-			isCandidate = containsTimes(times, task);
+			isCandidate = isCandidate || containsTimes(times, task);
 			
 			if(isCandidate) {
 				results.add(index);
@@ -176,6 +176,9 @@ public class CommandFactoryBackend {
 		String endTime = task.getEndTime();
 		
 		for(String timeOrDate: timesOrDates) {
+			if(timeOrDate.trim().equals("")) {
+				continue;
+			}
 			// check deadline
 			if(deadline != null && deadline.contains(timeOrDate)) {
 				return true;
