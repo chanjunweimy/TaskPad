@@ -1,11 +1,11 @@
+//@author A0119646X
+
 package com.taskpad.dateandtime;
 
 
 /**
  * InvalidDateException thrown while it is not a valid date format
  */
-
-//@author A0119646X
 
 public class InvalidDateException extends Exception{
 

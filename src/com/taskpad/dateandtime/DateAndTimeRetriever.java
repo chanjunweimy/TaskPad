@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
@@ -16,7 +18,7 @@ import java.util.Scanner;
  *  
  */
 
-//@author A0112084U
+
 
 public class DateAndTimeRetriever {
 

@@ -1,3 +1,5 @@
+//@author A0119646X
+
 package com.taskpad.input;
 
 import java.text.ParseException;
@@ -18,7 +20,6 @@ import com.taskpad.dateandtime.NullTimeValueException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 
-//@author A0119646X
 
 /**
  * Add syntax

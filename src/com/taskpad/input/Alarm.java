@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.input;
 
 import com.taskpad.alarm.AlarmManager;
@@ -15,7 +17,6 @@ import com.taskpad.dateandtime.NullTimeValueException;
  * 
  */
 
-//@author A0112084U
 
 public class Alarm{	
 

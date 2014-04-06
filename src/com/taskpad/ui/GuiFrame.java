@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.ui;
 
 import java.awt.Color;
@@ -24,7 +26,7 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * For implementing HotKeys for the GuiFrame
  */
 
-//@author A0112084U
+
 
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{

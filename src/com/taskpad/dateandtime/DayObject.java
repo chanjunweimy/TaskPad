@@ -1,10 +1,10 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 /**
  * DayObject: an object to save "holiday" name and date
  */
-
-//@author A0112084U
 
 public class DayObject {
 	
