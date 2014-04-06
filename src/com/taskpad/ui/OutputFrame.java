@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.ui;
 
 import java.awt.Color;
@@ -12,7 +14,7 @@ import javax.swing.border.Border;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
-//@author A0112084U
+
 
 /**
  * 

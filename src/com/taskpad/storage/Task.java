@@ -1,3 +1,5 @@
+//@author A0105788U
+
 package com.taskpad.storage;
 
 import java.text.ParseException;
@@ -5,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 
-//@author A0105788U
 
 public class Task{
 	private String description;

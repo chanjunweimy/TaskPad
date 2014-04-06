@@ -1,3 +1,5 @@
+//@author A0119646X
+
 /**
  * This class creates a List Object
  * 
@@ -6,7 +8,7 @@
  * Returns input object
  */
 
-//@author A0119646X
+
 
 package com.taskpad.input;
 

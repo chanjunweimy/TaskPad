@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 import java.util.HashMap;
@@ -8,8 +10,6 @@ import java.util.Map;
  * and also BigFestival such as Christmas and New Year
  * 
  */
-
-//@author A0112084U
 
 public class DayParser {
 

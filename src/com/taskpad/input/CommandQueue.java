@@ -1,3 +1,5 @@
+//@author A0119646Xv
+
 package com.taskpad.input;
 
 /** Trying to make Command a Singleton class

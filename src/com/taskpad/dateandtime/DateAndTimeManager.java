@@ -1,6 +1,6 @@
-/* Public API to call dates */
-
 //@author A0119646X
+
+/* Public API to call dates */
 
 package com.taskpad.dateandtime;
 

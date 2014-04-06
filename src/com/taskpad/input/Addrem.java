@@ -1,3 +1,5 @@
+//@author A0119646X
+
 package com.taskpad.input;
 
 import java.text.ParseException;
@@ -13,7 +15,6 @@ import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.ui.GuiManager;
 
-//@author A0119646X
 
 public class Addrem extends Command{
 	

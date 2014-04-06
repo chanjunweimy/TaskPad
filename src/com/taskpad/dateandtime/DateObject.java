@@ -1,3 +1,5 @@
+//@author A0119646X
+
 package com.taskpad.dateandtime;
 
 /**
@@ -5,7 +7,7 @@ package com.taskpad.dateandtime;
  *
  */
 
-//@author A0119646X
+
 
 public class DateObject {
 	
