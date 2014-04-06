@@ -92,14 +92,19 @@ public class OutputTableFrame extends GuiFrame{
 		int colNo = _table.getColumnCount();
 		for (int i = 0; i < colNo; i++) {
 		    column = _table.getColumnModel().getColumn(i);
-		    int divider = 3;
-			boolean isDesc = i == 1;
-			if (isDesc) {
-		        column.setPreferredWidth(getWidth() / divider); 
-		        column.setCellRenderer(new GuiCellRenderer());
+		    if(i==0){
+		    	column.setPreferredWidth(1);;
+		    	column.setCellRenderer(new GuiCellRenderer());
 		    } else {
-		        column.setPreferredWidth(getWidth() / (divider * (colNo - 1)));
-		        column.setCellRenderer(new GuiCellRenderer());
+			    int divider = 3;
+				boolean isDesc = i == 1;
+				if (isDesc) {
+			        column.setPreferredWidth(getWidth() / divider); 
+			        column.setCellRenderer(new GuiCellRenderer());
+			    } else {
+			        column.setPreferredWidth(getWidth() / (divider * (colNo - 1)));
+			        column.setCellRenderer(new GuiCellRenderer());
+			    }
 		    }
 		}
 	}
