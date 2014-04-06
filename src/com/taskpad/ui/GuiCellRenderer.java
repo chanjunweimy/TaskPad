@@ -5,6 +5,7 @@ package com.taskpad.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,9 +51,9 @@ public class GuiCellRenderer extends JTextArea implements TableCellRenderer {
 	private static final int DESC = 1;
 	private static final int ID = 0;
 	
-	private static final int FONT_SIZE = 10;
-	private static final int FONT_STYLE = Font.BOLD;
-	private static final String FONT_TYPE = "Verdana";
+	private static final int FONT_SIZE = 11;
+	private static final int FONT_STYLE = Font.PLAIN;
+	private static final String FONT_TYPE = "Georgia";
 	private static final Font FONT_DEFAULT = new Font(FONT_TYPE, FONT_STYLE, GuiCellRenderer.FONT_SIZE);
 
 	private final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
@@ -66,6 +67,20 @@ public class GuiCellRenderer extends JTextArea implements TableCellRenderer {
 	public GuiCellRenderer() {
 		setLineWrap(true);
 		setWrapStyleWord(true);
+
+		/* Finding out the types of fonts Java supports
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+		  String fontNames[] = ge.getAvailableFontFamilyNames();
+
+		  // Iterate the font family names
+
+		  for (int i=0; i<fontNames.length; i++) {
+
+		     System.out.println(fontNames[i]);
+
+		  }
+		  */
 	}
 
 	/**
@@ -124,11 +139,13 @@ public class GuiCellRenderer extends JTextArea implements TableCellRenderer {
 	private void setFontColor(int column) {
 		switch (column) {
 		case ID:
-			setForeground(Color.cyan);
+			//setForeground(Color.cyan);
+			setForeground(new Color(41, 36, 33));
 			break;
 
 		case DESC:
-			setForeground(Color.blue);
+			//setForeground(Color.blue);
+			setForeground(new Color(49, 46, 158));
 			break;
 
 		case DEADLINE:
@@ -136,19 +153,23 @@ public class GuiCellRenderer extends JTextArea implements TableCellRenderer {
 			break;
 
 		case START:
-			setForeground(Color.orange);
+			//setForeground(Color.burntsienna);
+			setForeground(new Color(205, 51, 51));
 			break;
 
 		case END:
-			setForeground(Color.pink);
+			//setForeground(Color.teal);
+			setForeground(new Color(56, 142, 142));
 			break;
 
 		case INFO:
-			setForeground(Color.gray);
+			//setForeground(Color.purple);
+			setForeground(new Color(78, 51, 134));
 			break;
 
 		case STAT:
-			setForeground(Color.magenta);
+			//setForeground(Color.maroon 4);
+			setForeground(new Color(139, 28, 98));
 			break;
 
 		default:

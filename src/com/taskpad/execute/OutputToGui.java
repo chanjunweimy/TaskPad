@@ -104,7 +104,7 @@ public class OutputToGui {
 		String text = "";
 		
 		text = "Task ID:\t\t" + taskId;
-		GuiManager.showSelfDefinedMessage(text, Color.DARK_GRAY, false); 
+		GuiManager.showSelfDefinedMessage(text, new Color(16,78,139), false); 
 		/*
 		text =  taskId + "\n";
 		GuiManager.showSelfDefinedMessage(text, Color.blue, false);
@@ -188,7 +188,8 @@ public class OutputToGui {
 
 	protected static void generateFeedbackForAdd(int taskId, Task taskAdded) {
 		//return OutputToGui.generateTextForOneTask(taskId, taskAdded);
-		OutputToGui.output("Task Successfully Added!\n");
+		//OutputToGui.output("Task Successfully Added!\n");
+		GuiManager.showSelfDefinedMessage("Task Successfully Added!\n", new Color(25,20,147), false);
 		OutputToGui.outputColorTextForOneTask(taskId, taskAdded);
 	}
 	
