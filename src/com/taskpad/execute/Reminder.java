@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+import com.taskpad.input.InputManager;
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
 import com.taskpad.storage.Task;
@@ -45,19 +46,20 @@ public class Reminder {
 	}
 	
 	protected static LinkedList<Integer> getOverdueTasks() {
+		/*
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		String today = sdf.format(date);	
 		Task taskDueToday = new Task("dummy", today, "", "", "", "", null);
+		*/
 		
 		TaskList list = DataManager.retrieve(DataFileStack.FILE);
-		
-		TaskDeadlineComparator comparator = new TaskDeadlineComparator();		
+				
 		LinkedList<Integer> result = new LinkedList<Integer>();
 		
 		for(int i = 0; i < list.size(); i++) {
 			Task task = list.get(i);
-			if(comparator.compare(taskDueToday, task) > 0) {
+			if(InputManager.compareDateAndTime(task.getDeadline()) == -1) {
 				result.add(i);
 			}
 		}

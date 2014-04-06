@@ -91,7 +91,7 @@ public class InputManager {
 	 * @param secondDateString the second date you want to compare
 	 * @return int: if int > 0, first is bigger; int < 0, first is smaller; int = 0, both are equal
 	 */
-	public int compareDateAndTime(String firstDateString, String secondDateString){
+	public static int compareDateAndTime(String firstDateString, String secondDateString){
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		return datm.compareDateAndTime(firstDateString, secondDateString);
 	}
@@ -102,7 +102,7 @@ public class InputManager {
 	 * @param dateString the date you want to compare
 	 * @return int: if int > 0, first is bigger; int < 0, first is smaller; int = 0, both are equal
 	 */
-	public int compareDateAndTime(String dateString){
+	public static int compareDateAndTime(String dateString){
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		return datm.compareDateAndTime(dateString);
 	}
