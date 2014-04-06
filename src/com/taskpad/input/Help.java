@@ -1,3 +1,5 @@
+//@author A0119646X
+
 /* 
  * This is the class for the command HELP 
  * 
@@ -6,7 +8,6 @@
  * Output: Output frame shows list of commands and their syntax
  */
 
-//@author A0119646X
 
 package com.taskpad.input;
 

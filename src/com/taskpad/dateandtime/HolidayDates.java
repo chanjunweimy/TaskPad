@@ -1,3 +1,5 @@
+//@author A0119646X
+
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
@@ -10,8 +12,6 @@ import java.util.Map;
 /** For special holiday dates
  * 
  */
-
-//@author A0119646X
 
 public class HolidayDates {
 	

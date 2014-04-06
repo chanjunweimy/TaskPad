@@ -1,6 +1,8 @@
+//@author A0112084U
+
 package com.taskpad.ui;
 
-//@author A0112084U
+
 
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.ViewFactory;

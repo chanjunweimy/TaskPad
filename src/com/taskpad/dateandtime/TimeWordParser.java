@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
@@ -12,8 +14,6 @@ import java.util.Scanner;
  *
  * make TimeWordParser to be a singleton to increase efficiency.
  */
-
-//@author A0112084U
 
 public class TimeWordParser{
 	
@@ -351,18 +351,6 @@ public class TimeWordParser{
 				return true;
 			} 
 		}
-		
-		/** 
-		 * @author Jun
-		 * We cannot just see if input contains that value
-		 * six also contains "s" but it is not the time unit
-		 */
-		/*
-		if (input.contains(value)){
-			_index = input.toUpperCase().indexOf(value);
-			return true;
-		}
-		 */
 		
 		return false;
 	}

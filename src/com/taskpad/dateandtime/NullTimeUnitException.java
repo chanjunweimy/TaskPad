@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 import java.util.logging.Logger;
@@ -7,8 +9,6 @@ import java.util.logging.Logger;
  * NullTimeUnitException: an exception thrown when users did not
  * key in time unit
  */
-
-//@author A0112084U
 
 public class NullTimeUnitException extends Exception{
 	/**

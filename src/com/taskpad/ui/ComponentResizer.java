@@ -1,6 +1,8 @@
+//@author A0112084U
+
 package com.taskpad.ui;
 
-//@author A0112084U
+
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -25,7 +27,6 @@ import javax.swing.SwingUtilities;
  *  of the component.
  *  
  *  MouseAdapter is better because it is more OO-oriented.
- *  @author Jun
  */
 public class ComponentResizer extends MouseAdapter{
 	private final static Dimension MINIMUM_SIZE = new Dimension(10, 10);

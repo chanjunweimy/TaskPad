@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.ui;
 
 import java.awt.Color;
@@ -24,7 +26,7 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * For implementing HotKeys for the GuiFrame
  */
 
-//@author A0112084U
+
 
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
@@ -43,7 +45,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	protected final Color ROOTPANE_BORDER_COLOR = 
 			//new Color(120, 48, 160);//light purple?
 			//new Color(41,36,33);	//Black
-			Color.GRAY;
+			//Color.gray;
+			new Color(41,36,33);
 	private final int ROOTPANE_BORDER_THICKNESS = 2;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
