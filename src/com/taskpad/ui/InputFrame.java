@@ -13,8 +13,6 @@ import javax.swing.SwingUtilities;
 import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
-
-
 public class InputFrame extends GuiFrame{
 	
 	/**
