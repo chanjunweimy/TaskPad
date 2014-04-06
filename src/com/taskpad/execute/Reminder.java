@@ -59,7 +59,8 @@ public class Reminder {
 		
 		for(int i = 0; i < list.size(); i++) {
 			Task task = list.get(i);
-			if(InputManager.compareDateAndTime(task.getDeadline()) == -1) {
+			int compareToToday = InputManager.compareDateAndTime(task.getDeadline());
+			if(compareToToday == -1 || compareToToday == 0) {
 				result.add(i);
 			}
 		}
