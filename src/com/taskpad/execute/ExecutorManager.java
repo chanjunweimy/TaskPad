@@ -12,7 +12,7 @@ import com.taskpad.ui.GuiManager;
 import com.taskpad.input.Input;
 
 public class ExecutorManager {
-	private static final String MESSAGE_SHOWING_REMINDER = "Showing tasks due today & overdue tasks...";
+	private static final String MESSAGE_SHOWING_REMINDER = "Showing tasks due today, overdue tasks, and tasks with reminder...";
 	
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
@@ -26,8 +26,9 @@ public class ExecutorManager {
 			  public void run() {
 					Reminder.showReminderForToday();
 					Reminder.showReminderForOverdue();
+					Reminder.showReminderTasks();
 			  }
-		}, 2*1000);
+		}, 1*1000);
 		
 	}
 	public static void receiveFromInput(Input input, String command) {
@@ -78,9 +79,13 @@ public class ExecutorManager {
 		case "LIST":
 			list(parameters.get("KEY"));
 			break;
+		case "ADDREM":
+			CommandFactory.addReminder(parameters.get("TASKID"), parameters.get("DATE"));
+			break;
 		}
 	}
 
+	
 	private static void list(String option) {
 		GuiManager.clearOutput();
 		switch(option) {

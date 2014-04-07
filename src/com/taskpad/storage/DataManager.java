@@ -31,15 +31,6 @@ public class DataManager {
 		int numberOfTasks = retrieve(DataFileStack.FILE).size();
 		return numberOfTasks;
 	}
-	
-	public static void initializeXml(){
-		// do nothing
-		/*
-		LinkedList<Task> tasks = new LinkedList<Task>();
-		DataManager.storeBack(tasks, DataFile.FILE);
-		DataManager.storeBack(tasks, DataFile.FILE_PREV);
-		*/
-	}
 		
 	public static TaskList retrieve(String file) {
 		TaskList listOfTasks = new TaskList();
@@ -69,6 +60,7 @@ public class DataManager {
 					String endTime;
 					String venue;
 					String details;
+					String reminderDate;
 					int done;
 					
 					if (task.getElementsByTagName("description").item(0) != null) {
@@ -122,8 +114,14 @@ public class DataManager {
 					assert(task.getElementsByTagName("done") != null);
 					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
 					
+					if(task.getElementsByTagName("reminder_date").item(0) != null) {
+						reminderDate = task.getElementsByTagName("reminder_date").item(0).getTextContent();
+					} else {
+						reminderDate = "";
+					}
+					
 					listOfTasks.add(new Task(description, deadline, startDate,
-							startTime, endDate, endTime, venue, details, done));
+							startTime, endDate, endTime, venue, details, done, reminderDate));
 				}
 			}
 			
@@ -203,6 +201,10 @@ public class DataManager {
 				Element done = doc.createElement("done");
 				done.appendChild(doc.createTextNode(Integer.toString(taskInList.getDone())));
 				task.appendChild(done);
+				
+				Element reminderDate = doc.createElement("reminder_date");
+				reminderDate.appendChild(doc.createTextNode(taskInList.getReminderDate()));
+				task.appendChild(reminderDate);
 				
 			}
 				
