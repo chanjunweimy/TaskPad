@@ -14,7 +14,6 @@ import com.taskpad.ui.GuiManager;
 
 /**
  * ATTEMPT to test GUI!!! 
- * @author Jun
  *
  */
 public class TestGui {

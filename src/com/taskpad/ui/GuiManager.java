@@ -4,6 +4,8 @@ package com.taskpad.ui;
 
 import java.awt.Color;
 
+import javax.swing.SwingUtilities;
+
 import com.taskpad.alarm.AlarmManager;
 import com.taskpad.input.InputManager;
 
@@ -20,11 +22,17 @@ public class GuiManager {
 	private GuiManager(){
 	}
 
-	//by default 
+	//invoke all frames to a thread
 	public static void initialGuiManager() {
-		_outputFrame = new FlexiFontOutputFrame();
-		_inputFrame = new InputFrame(); 
-		_tableFrame = new OutputTableFrame();
+		Runnable runInitialization = new Runnable(){
+			@Override
+			public void run(){
+				_outputFrame = new FlexiFontOutputFrame();
+				_inputFrame = new InputFrame(); 
+				_tableFrame = new OutputTableFrame();
+			}
+		};
+		SwingUtilities.invokeLater(runInitialization);
 	}
 
 	/* deprecated
@@ -131,20 +139,33 @@ public class GuiManager {
 	}
 	
 	protected static void turnOffAlarm(){
-		try {
-			AlarmManager.turnOffAlarm();
-		} catch (Exception e) {
-			//System.err.println(e.getMessage());
-			//do nothing
-		}
+		Runnable runAlarmOff = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AlarmManager.turnOffAlarm();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		SwingUtilities.invokeLater(runAlarmOff);
 	}
 	
 	protected static void cancelAlarms() {
-		try {
-			AlarmManager.cancelAlarms(); 
-		} catch (Exception e) {
-			//do nothing
-		}
+		Runnable runAlarmCancel = new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AlarmManager.turnOffAlarm();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		SwingUtilities.invokeLater(runAlarmCancel);
 	}
 	
 	protected static OutputFrame getOutputFrame() {

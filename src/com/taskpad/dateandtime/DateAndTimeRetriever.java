@@ -375,6 +375,7 @@ public class DateAndTimeRetriever {
 		String[] descTokens = alphaNumericSpaceDesc.split(" ");
 		for (int i = 0; i < descTokens.length; i++) {
 			//don't allow ' ' for parse free zone because user might type it who's
+			
 			if ("\"".equals(descTokens[i])) {
 				if (!removeStat) {
 					removeStat = true;
