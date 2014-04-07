@@ -11,8 +11,10 @@ package com.taskpad.ui;
 import java.awt.Color;
 
 import javax.swing.BorderFactory;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.text.AttributeSet;
@@ -42,7 +44,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	private JTextPane _outputBox = new JTextPane();	
 	private ComponentMover _moveOutputBox = new ComponentMover(this);
-
+	
 	protected FlexiFontOutputFrame()
 	{
 		super(true);
@@ -54,6 +56,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		initializeOutputBox();
 		setUpScrollBar();
 		getContentPane().add(_scrollBox);
+		_isHiding = false;
 	}
 
 	@Override
@@ -98,6 +101,22 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		//JScrollPane provides scroll bar, so I add outputbox inside it.
 		_scrollBox = new JScrollPane(_outputBox);
 		disableHorizontalScrollBar();
+		
+		resetScrollBarPosition();
+	}
+
+	/**
+	 * 
+	 */
+	private void resetScrollBarPosition() {
+		SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+            	JScrollBar vertical = _scrollBox.getVerticalScrollBar();
+        		_scrollBox.getVerticalScrollBar().setValue( vertical.getMaximum() );
+            }
+        });
+		
 	}
 	
 	@Override
@@ -108,12 +127,14 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	@Override
 	protected void addLine(String line) {
 		append(line, DEFAULT_COLOR_NORMAL);
+		resetScrollBarPosition();
 	}
 	
 	@Override
 	protected void addReminder(String line) {
 		boolean isBold = true;
 		append(line, DEFAULT_COLOR_REMINDER, isBold);
+		resetScrollBarPosition();
 	}
 	
 	@Override
@@ -121,7 +142,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		append(line, c, isBold);
 	}
 	
-	/*
+	/**
 	 * Method to replace appendToPane()
 	 * this method is easier to write
 	 * and can handle setEditable(false)
@@ -138,6 +159,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		StyledDocument doc = _outputBox.getStyledDocument();
 		int len = doc.getLength();
 		printMessage(msg, aset, doc, len);
+		resetScrollBarPosition();
 	}
 
 	private void printMessage(String msg, AttributeSet aset,
@@ -152,7 +174,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	
 	
-	/*
+	/**
 	 * appendToPane() finally works
 	 * but it is obviously not the best way
 	 * so I implement another method
@@ -221,6 +243,5 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		//clear every listener before closing
 		_moveOutputBox.deregisterComponent(_outputBox);
 	}
-	
 	
 }

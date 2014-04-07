@@ -1,12 +1,10 @@
-//@author A0119646Xv
+//@author A0119646X
 
 package com.taskpad.input;
 
 /** Trying to make Command a Singleton class
  * 
  */
-
-//@author A0119646X
 
 import java.awt.Color;
 import java.util.Map;
