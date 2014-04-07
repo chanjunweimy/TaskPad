@@ -164,7 +164,7 @@ public class CommandFactory {
 				listOfTasks);
 		
 		// pass feedback to gui
-		OutputToGui.output("TASK " + taskIdString + " EDITED: " + STRING_NEWLINE);
+		OutputToGui.output(STRING_NEWLINE + "TASK " + taskIdString + " EDITED: " + STRING_NEWLINE);
 		/*
 		if(description != null && !description.equals("")) {
 			OutputToGui.output("'" + taskHistory + "' changed to '" 
