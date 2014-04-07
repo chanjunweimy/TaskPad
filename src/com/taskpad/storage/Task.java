@@ -18,6 +18,7 @@ public class Task{
 	private String venue; 
 	private String details;
 	private int done;	// 0 for undone, 1 for done
+	private String reminderDate;
 	
 	public Task(String description, String deadline, String startDate, String startTime,
 			String endDate, String endTime, String venue) {
@@ -29,11 +30,12 @@ public class Task{
 		this.endTime = endTime;
 		this.venue = venue;
 		this.done = 0;
+		this.reminderDate = "";
 	}
 
 	public Task(String description, String deadline, String startDate, String startTime,
 			String endDate, String endTime, String venue,
-			String details, int done) {
+			String details, int done, String reminderDate) {
 		this.description = description;
 		this.deadline = deadline;
 		this.startDate = startDate;
@@ -43,6 +45,7 @@ public class Task{
 		this.details = details;
 		this.venue = venue;
 		this.done = done;
+		this.reminderDate = reminderDate;
 	}
 	
 	public String getDescription() {
@@ -80,6 +83,10 @@ public class Task{
 	public int getDone() {
 		return done;
 	}
+	
+	public String getReminderDate() {
+		return reminderDate;
+	}
 
 	public void setDetails(String details) {
 		this.details = details;
@@ -95,6 +102,10 @@ public class Task{
 	
 	public void setDeadline(String deadline) {
 		this.deadline = deadline;
+	}
+	
+	public void setReminderDate(String date) {
+		this.reminderDate = date;
 	}
 	
 }

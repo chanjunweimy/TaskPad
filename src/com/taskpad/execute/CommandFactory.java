@@ -221,5 +221,13 @@ public class CommandFactory {
 		OutputToGui.output(OutputToGui.generateFeedbackForDelete(taskDeleted));
 	}
 
+	protected static void addReminder(String taskIdString, String date) {
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
+		
+		int indexOfTask = Integer.parseInt(taskIdString) - 1;	
+		assert(indexOfTask < listOfTasks.size());
+		
+		CommandFactoryBackend.setReminder(indexOfTask, date, listOfTasks);
+	}
 
 }

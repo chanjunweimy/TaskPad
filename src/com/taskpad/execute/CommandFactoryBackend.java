@@ -291,6 +291,13 @@ public class CommandFactoryBackend {
 		return taskDeleted;
 	}
 
+	public static void setReminder(int indexOfTask, String date, TaskList listOfTasks) {
+		Task task = listOfTasks.get(indexOfTask);
+		task.setReminderDate(date);
+		
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+	}
+
 	/*
 	public static LinkedList<Integer> sortByDeadline(TaskList listOfTasks) {
 		LinkedList<Task> tasks = listOfTasks.getList();
