@@ -2,8 +2,6 @@
 
 package com.taskpad.tests;
 
-
-
 import java.util.Timer;
 import java.util.TimerTask;
 
