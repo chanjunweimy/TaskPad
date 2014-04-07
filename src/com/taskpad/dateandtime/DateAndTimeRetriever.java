@@ -382,10 +382,12 @@ public class DateAndTimeRetriever {
 				} else {
 					removeStat = false;
 				}
-				descTokens[i] = null;
+				//descTokens[i] = null;
+				descTokens[i] = "\"" + descTokens[i];
 			} else {
 				if (removeStat) {
-					descTokens[i] = null;
+					//descTokens[i] = null;
+					descTokens[i] = "\"" + descTokens[i];
 				}
 			}
 		}
@@ -395,14 +397,13 @@ public class DateAndTimeRetriever {
 		}
 
 		StringBuffer tokensBuilder = new StringBuffer();
-
-		for (String token : descTokens) {
-			if (token != null) {
-				tokensBuilder.append(token + " ");
-			}
-		}
+		tokensBuilder = buildString(descTokens, tokensBuilder);
 
 		return tokensBuilder.toString().trim();
+	}
+	
+	private boolean isParseFree(String token){
+		return token.startsWith("\"");
 	}
 
 	/**
@@ -456,7 +457,15 @@ public class DateAndTimeRetriever {
 		for (int i = flexiTokens.length - 1; i >= 0; i--) {
 			String token = flexiTokens[i];
 
-			if (isDate(token)) {
+			if (isParseFree(token)){
+				if (recordDate != null || recordTime != null) {
+					startDates.add(recordDate);
+					startTimes.add(recordTime);
+
+					recordDate = null;
+					recordTime = null;
+				}
+			} else if (isDate(token)) {
 				token = parseDate(token);
 
 				if (recordDate == null) {
