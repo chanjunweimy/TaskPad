@@ -22,7 +22,7 @@ public class TestStorage {
 		CommandRecord.pushForUndo("add do homework 1");
 		CommandRecord.pushForUndo("delete 1");
 		try {
-			assert(CommandRecord.popForUndo().equals("delete 1"));
+			assertTrue(CommandRecord.popForUndo().equals("delete 1"));
 		} catch (NoPreviousCommandException e) {
 			fail("Fail to pop from CommandRecord undoStack");
 		}
@@ -47,12 +47,12 @@ public class TestStorage {
 			fail("Fail to pop from DataFileStack undoStack");
 		}
 		DataFileStack.pushForRedo(".data0.xml");
-		assert(DataFileStack.requestDataFile().equals(".data1.xml"));
+		assertTrue(DataFileStack.requestDataFile().equals(".data1.xml"));
 		DataFileStack.pushForUndo(".data1.xml");
-		assert(DataFileStack.requestDataFile().equals(".data2.xml"));
+		assertTrue(DataFileStack.requestDataFile().equals(".data2.xml"));
 	}
 
-	@Test(expected = SAXParseException.class)
+	@Test
 	public void TestDataManager() {
 		/* 
 		 * Only testing 0, 1, 2 tasks here,
@@ -60,43 +60,74 @@ public class TestStorage {
 		 */
 		TaskList list = new TaskList();
 		DataManager.storeBack(list, DataFileStack.FILE);
-		assert(DataManager.retrieveNumberOfTasks() == 0);
+		assertTrue(DataManager.retrieveNumberOfTasks() == 0);
 		
 		list.add(new Task("some task", null, null, null, null, null, null));
 		DataManager.storeBack(list, DataFileStack.FILE);
-		assert(DataManager.retrieveNumberOfTasks() == 1);
+		assertTrue(DataManager.retrieveNumberOfTasks() == 1);
 		
 		list.add(new Task("some task", null, null, null, null, null, null));
 		DataManager.storeBack(list, DataFileStack.FILE);
-		assert(DataManager.retrieveNumberOfTasks() == 2);
+		assertTrue(DataManager.retrieveNumberOfTasks() == 2);
 		
 		TaskList currentList = DataManager.retrieve(DataFileStack.FILE);
 		Task task = currentList.get(0);
-		assert(task.getDescription().equals("some task"));
+		assertTrue(task.getDescription().equals("some task"));
 		/* 
 		 * There is usually no need to test that all other attributes are null/empty
 		 * They are unlikely to be dealt with differently 
 		 * Only testing deadline and venue here
 		 */
-		assert(task.getDeadline() == null);
-		assert(task.getVenue() == null);
+		assertTrue(task.getDeadline() == null);
+		assertTrue(task.getVenue() == null);
 		
 		/* partition: existing file */
 		TaskList testList = DataManager.retrieve(DataFileStack.FILE);
-		assert(testList.size() > 0);
+		assertTrue(testList.size() > 0);
 		
 		/* partition: non-existing file */
 		testList = DataManager.retrieve("test.xml");
-		assert(testList.size() == 0);
+		assertTrue(testList.size() == 0);
 		
 		/* partition: empty string as file name */
-		testList = DataManager.retrieve("");	// should throw SAXParseException
-		
+		// testList = DataManager.retrieve("");
+
 	}
 	
 	@Test
-	public void testStoreAndRetrive() {
+	public void testStoreAndRetriveFloatingTasks() {
+		TaskList list = new TaskList();
+		list.add(new Task("task 1", null, null, null, null, null, null));
+		list.add(new Task("task 2", null, null, null, null, null, null));
 		
+		DataManager.storeBack(list, DataFileStack.FILE);
+		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);
+		
+		assertEquals(listRetrieved.size(), 2);
 	}
+	
+	@Test
+	public void testStoreAndRetriveTasksWithDeadline() {
+		TaskList list = new TaskList();
+		list.add(new Task("task 1", "02/07/2014", null, null, null, null, null));
+		list.add(new Task("task 2", "02/08/2014", null, null, null, null, null));
+		
+		DataManager.storeBack(list, DataFileStack.FILE);
+		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);
+		
+		assertEquals(listRetrieved.size(), 2);
+	}	
+	
+	@Test
+	public void testStoreAndRetriveTasksWithFixedTime() {	//to be finished
+		TaskList list = new TaskList();
+		list.add(new Task("task 1", null, "02/07/2014", null, null, null, null));
+		list.add(new Task("task 2", "02/08/2014", null, null, null, null, null));
+		
+		DataManager.storeBack(list, DataFileStack.FILE);
+		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);
+		
+		assertEquals(listRetrieved.size(), 2);
+	}	
 	
 }
