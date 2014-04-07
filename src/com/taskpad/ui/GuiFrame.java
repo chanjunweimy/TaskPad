@@ -48,6 +48,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
 	
+	private boolean _isVisible = false;
+	
 	protected GuiFrame(){
 		setupLogger();
 		initalizeGuiFrame();
@@ -218,16 +220,56 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	}
 	
 	private Runnable getVisibilityChanges() {
-		Runnable changeVisibility = new Runnable(){
+		Runnable show = showFrameAction();  
+		Runnable hide = hideFrameAction();  
+		
+		Runnable changeVisibility = getChangeVisibility(show, hide);
+		
+		return changeVisibility;
+	}
+
+	/**
+	 * @param show
+	 * @param hide
+	 * @return
+	 */
+	private Runnable getChangeVisibility(Runnable show, Runnable hide) {
+		Runnable changeVisibility;
+		if (_isVisible){
+			changeVisibility = hide;
+		} else {
+			changeVisibility = show;
+		}
+
+		_isVisible = !_isVisible;
+		return changeVisibility;
+	}
+
+	/**
+	 * @return
+	 */
+	private Runnable hideFrameAction() {
+		Runnable hide = new Runnable(){
 			@Override
 			public void run(){
-				boolean isShown = isVisible() == true;
-				boolean isHided = isVisible() == false;
-				if (isShown){
-				  	hide();
-				} else if (isHided){
-					show();
-				}
+				hide();
+			}
+			
+			private void hide() {
+				showWindow(false);
+			}
+		};
+		return hide;
+	}
+
+	/**
+	 * @return
+	 */
+	private Runnable showFrameAction() {
+		Runnable show = new Runnable(){
+			@Override
+			public void run(){
+				show();
 			}
  
 			private void show() {    
@@ -236,12 +278,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				
 				requestFocusOnInputBox();
 			}
-
-			private void hide() {
-				showWindow(false);
-			}
-		};  
-		return changeVisibility;
+		};
+		return show;
 	}
 
 	private Runnable getStateChanges() {
