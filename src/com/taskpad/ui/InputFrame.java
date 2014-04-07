@@ -57,6 +57,7 @@ public class InputFrame extends GuiFrame{
 		setLocation((int)(COMPUTER_WIDTH / 2 - INPUTFRAME_WIDTH / 2),
 					(int)(COMPUTER_HEIGHT / 2 + OutputFrame.getInitialHeight() / 2 - INPUTFRAME_HEIGHT / 2));
 		setVisible(true);
+		_isHiding = false;
 	}
 
 	private void initializeInputBox() {

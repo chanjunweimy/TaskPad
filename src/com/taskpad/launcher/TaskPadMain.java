@@ -22,7 +22,7 @@ public class TaskPadMain{
 		runProgram();
 	}
 	  
-	private static void runProgram() {		
+	private static void runProgram() {
 		Runnable runTaskPad = new TaskPadLauncher();
 		SwingUtilities.invokeLater(runTaskPad);
 	} 

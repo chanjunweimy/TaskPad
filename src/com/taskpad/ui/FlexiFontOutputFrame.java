@@ -44,7 +44,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	private JTextPane _outputBox = new JTextPane();	
 	private ComponentMover _moveOutputBox = new ComponentMover(this);
-
+	
 	protected FlexiFontOutputFrame()
 	{
 		super(true);
@@ -56,6 +56,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		initializeOutputBox();
 		setUpScrollBar();
 		getContentPane().add(_scrollBox);
+		_isHiding = false;
 	}
 
 	@Override
@@ -242,6 +243,5 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		//clear every listener before closing
 		_moveOutputBox.deregisterComponent(_outputBox);
 	}
-	
 	
 }

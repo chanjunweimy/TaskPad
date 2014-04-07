@@ -62,6 +62,8 @@ public class OutputTableFrame extends GuiFrame {
 		
 		//to make it movable
 		_moveOutputBox.registerComponent(_table);
+		
+		_isHiding = true;
 	}
 
 	/**

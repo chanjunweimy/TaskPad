@@ -46,17 +46,19 @@ public class GuiManager {
 	private static void swapFrame(GuiFrame firstFrame, GuiFrame secondFrame) {		
 		if (firstFrame.isVisible()){
 			_isTableCalled = !_isTableCalled;
-			firstFrame.showWindow(false);
+			firstFrame.hideWindow();
 			secondFrame.showUp(firstFrame);
 		}
 		
 		_inputFrame.requestFocusOnInputBox();
 	}
 	
+	
 	public static void showWindow(boolean isVisible){
 		_inputFrame.showWindow(isVisible);
-		_outputFrame.showWindow(isVisible);
+		swapFrame( _tableFrame, _outputFrame);	
 	}
+	
 
 	public static void callExit(){
 		closeAllWindows();
@@ -66,6 +68,7 @@ public class GuiManager {
 	private static void closeAllWindows() {
 		_inputFrame.close();
 		_outputFrame.close();
+		_tableFrame.close();
 	}
 
 	public static void callOutput(String out){
