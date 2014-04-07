@@ -13,6 +13,7 @@ import com.taskpad.input.Input;
 
 public class ExecutorManager {
 	private static final String MESSAGE_SHOWING_REMINDER = "Showing your tasks and reminders...\n";
+	private static final String MASSAGE_NOTHING_TO_SHOW = "Nothing to show.";
 	
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
@@ -24,9 +25,13 @@ public class ExecutorManager {
 		timer.schedule(new TimerTask() {
 			  @Override
 			  public void run() {
-					Reminder.showReminderForToday();
-					Reminder.showReminderForOverdue();
-					Reminder.showReminderTasks();
+				  	boolean haveTasksToShow = false;
+				  	haveTasksToShow = haveTasksToShow || Reminder.showReminderForToday();
+				  	haveTasksToShow = haveTasksToShow || Reminder.showReminderForOverdue();
+				  	haveTasksToShow = haveTasksToShow || Reminder.showReminderTasks();
+				  	if(!haveTasksToShow) {
+				  		OutputToGui.output(MASSAGE_NOTHING_TO_SHOW);
+				  	}
 			  }
 		}, 1*1000);
 		
