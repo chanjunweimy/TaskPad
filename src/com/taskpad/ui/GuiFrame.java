@@ -47,8 +47,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private final int ROOTPANE_BORDER_THICKNESS = 2;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
-	
-	private boolean _isVisible = false;
+	  
+	protected boolean _isHiding = false;
 	
 	protected GuiFrame(){
 		setupLogger();
@@ -91,11 +91,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		setSize(visibleFrame.getSize());
 		setLocation(visibleFrame.getLocation());
 		setVisible(true);
+		_isHiding = false;
 	}
 	     
 	protected void close(){ 
 		dispose();
 	}
+	
+	protected void hideWindow(){
+		setVisible  (false);
+		_isHiding = true;
+ 	}
 	
 	protected void showWindow(boolean isVisible){
 		setVisible(isVisible);
@@ -220,66 +226,34 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	}
 	
 	private Runnable getVisibilityChanges() {
-		Runnable show = showFrameAction();  
-		Runnable hide = hideFrameAction();  
-		
-		Runnable changeVisibility = getChangeVisibility(show, hide);
-		
-		return changeVisibility;
-	}
-
-	/**
-	 * @param show
-	 * @param hide
-	 * @return
-	 */
-	private Runnable getChangeVisibility(Runnable show, Runnable hide) {
-		Runnable changeVisibility;
-		if (_isVisible){
-			changeVisibility = hide;
-		} else {
-			changeVisibility = show;
-		}
-
-		_isVisible = !_isVisible;
-		return changeVisibility;
-	}
-
-	/**
-	 * @return
-	 */
-	private Runnable hideFrameAction() {
-		Runnable hide = new Runnable(){
+		Runnable changeVisibility = new Runnable(){
 			@Override
 			public void run(){
-				hide();
-			}
-			
-			private void hide() {
-				showWindow(false);
-			}
-		};
-		return hide;
-	}
-
-	/**
-	 * @return
-	 */
-	private Runnable showFrameAction() {
-		Runnable show = new Runnable(){
-			@Override
-			public void run(){
-				show();
+				if (_isHiding){
+					return;
+				}
+				
+				boolean isShown = isVisible() == true;
+				boolean isHided = isVisible() == false;
+				if (isShown){
+				  	hide();
+				} else if (isHided){
+					show();
+				}
 			}
  
-			private void show() {    
+			private void show() {
 				showWindow(true);
 				setState(Frame.NORMAL);
 				
 				requestFocusOnInputBox();
 			}
+
+			private void hide() {
+				showWindow(false);
+			}
 		};
-		return show;
+		return changeVisibility;
 	}
 
 	private Runnable getStateChanges() {
