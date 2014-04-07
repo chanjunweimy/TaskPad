@@ -44,27 +44,50 @@ public class GuiManager {
 	 */
 	
 	public static void callTable(Object[][] data){		
-		swapFrame(_outputFrame, _tableFrame);
-		_tableFrame.refresh(data);
+		final Object[][] userData = data;
+		Runnable runCall = new Runnable(){
+			@Override
+			public void run(){
+				swapFrame(_outputFrame, _tableFrame);
+				_tableFrame.refresh(userData);
+			}
+		};
+		SwingUtilities.invokeLater(runCall);
+		
 	}
 
 	/**
 	 * @param data
 	 */
-	private static void swapFrame(GuiFrame firstFrame, GuiFrame secondFrame) {		
-		if (firstFrame.isVisible()){
-			_isTableCalled = !_isTableCalled;
-			firstFrame.hideWindow();
-			secondFrame.showUp(firstFrame);
-		}
+	private static void swapFrame(final GuiFrame firstFrame, final GuiFrame secondFrame) {	
+		Runnable runSwap = new Runnable(){
+			@Override
+			public void run(){
+				if (firstFrame.isVisible()){
+					_isTableCalled = !_isTableCalled;
+					firstFrame.hideWindow();
+					secondFrame.showUp(firstFrame);
+				}
+				
+				_inputFrame.requestFocusOnInputBox();
+			}
+		};
+		SwingUtilities.invokeLater(runSwap);
 		
-		_inputFrame.requestFocusOnInputBox();
 	}
 	
 	
-	public static void showWindow(boolean isVisible){
-		_inputFrame.showWindow(isVisible);
-		swapFrame( _tableFrame, _outputFrame);	
+	public static void showWindow(final boolean isVisible){
+		Runnable runShow = new Runnable(){
+			@Override
+			public void run(){
+				_inputFrame.showWindow(isVisible);
+				swapFrame( _tableFrame, _outputFrame);	
+			}
+		};
+		SwingUtilities.invokeLater(runShow);
+		
+	
 	}
 	
 
@@ -74,27 +97,37 @@ public class GuiManager {
 	}
 
 	private static void closeAllWindows() {
-		_inputFrame.close();
-		_outputFrame.close();
-		_tableFrame.close();
+		Runnable runExit = new Runnable(){
+			@Override
+			public void run(){
+					_inputFrame.close();
+					_outputFrame.close();
+					_tableFrame.close();
+			}
+		};
+		SwingUtilities.invokeLater(runExit);
+		
 	}
 
-	public static void callOutput(String out){
-		if (!_isDebug){
-			swapFrame( _tableFrame, _outputFrame);
-			_outputFrame.addLine(out + NEWLINE);	
-		} else{
-			System.out.println(out + NEWLINE);
-		}
+	public static void callOutput(final String out){
+		callOutputNoLine(out + NEWLINE);
+		
 	}
 	
-	public static void callOutputNoLine(String out){
-		if (!_isDebug){
-			swapFrame( _tableFrame, _outputFrame);
-			_outputFrame.addLine(out);
-		} else{
-			System.out.println(out);
-		}
+	public static void callOutputNoLine(final String out){
+		Runnable runCall = new Runnable(){
+			@Override
+			public void run(){
+				if (!_isDebug){
+					swapFrame( _tableFrame, _outputFrame);
+					_outputFrame.addLine(out);
+				} else{
+					System.out.println(out);
+				}
+			}
+		};
+		SwingUtilities.invokeLater(runCall);
+		
 	}
 	
 	/**
@@ -107,35 +140,52 @@ public class GuiManager {
 
 	
 	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
-		if (!_isDebug){
-			swapFrame( _tableFrame, _outputFrame);
-			_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
-		} else{
-			System.out.println(out + NEWLINE);
-		}
+		showSelfDefinedMessageNoNewline(out + NEWLINE, c, isBold);
+		
 	}
 	
-	public static void showSelfDefinedMessageNoNewline(String out, Color c, boolean isBold){
-		if (!_isDebug){
-			swapFrame( _tableFrame, _outputFrame);
-			_outputFrame.addSelfDefinedLine(out, c, isBold);
-		} else{
-			System.out.println(out);
-		}
+	public static void showSelfDefinedMessageNoNewline(final String out, final Color c, final boolean isBold){
+		Runnable runShow = new Runnable(){
+			@Override
+			public void run(){
+				if (!_isDebug){
+					swapFrame( _tableFrame, _outputFrame);
+					_outputFrame.addSelfDefinedLine(out, c, isBold);
+				} else{
+					System.out.println(out);
+				}
+			}
+		};
+		SwingUtilities.invokeLater(runShow);
+		
 	}
 
 	public static void startRemindingUser(){
-		remindUser(MESSAGE_START_REMINDER);
+		remindUser(MESSAGE_START_REMINDER);		
 	}
 	
-	public static void remindUser(String out){
-		_outputFrame.addReminder(out + NEWLINE);	
+	public static void remindUser(final String out){
+		Runnable runRemind= new Runnable(){
+			@Override
+			public void run(){
+				_outputFrame.addReminder(out + NEWLINE);
+			}
+		};
+		SwingUtilities.invokeLater(runRemind);
+			
 		//_outputFrame.addReminder(NEWLINE + out + NEWLINE + NEWLINE);	--can i change this... TN
 		// ExecutorManager.showReminder();	--should not put here? TN
 	}
 
-	protected static void passInput(String in){
-		InputManager.receiveFromGui(in);
+	protected static void passInput(final String in){
+		Runnable runPass= new Runnable(){
+			@Override
+			public void run(){
+				InputManager.receiveFromGui(in);
+			}
+		};
+		SwingUtilities.invokeLater(runPass);
+		
 	}
 	
 	protected static void turnOffAlarm(){
@@ -173,7 +223,14 @@ public class GuiManager {
 	}
 	
 	public static void clearOutput(){
-		_outputFrame.clearOutputBox();
+		Runnable runClear = new Runnable() {
+			@Override
+			public void run() {
+				_outputFrame.clearOutputBox();
+			}
+		};
+		SwingUtilities.invokeLater(runClear);
+		
 	}
 	
 	//for debug

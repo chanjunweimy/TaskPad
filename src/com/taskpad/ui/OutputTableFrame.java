@@ -46,12 +46,10 @@ public class OutputTableFrame extends GuiFrame {
 		setUpFrame();
 		setVisible(false);
 
-		Runnable runInitialization = initializeAll();
-		SwingUtilities.invokeLater(runInitialization);
-
-		_table.setFillsViewportHeight(true);
-		add(_scrollBox);
-
+		_taskpadTableModel = new GuiTableModel();
+		_table = new JTable(_taskpadTableModel);
+		_scrollBox = new JScrollPane(_table);
+		
 		customizeHeaderStyle();
 		
 		_table.setBackground(COLOR_TABLE_BACKGROUND);
@@ -62,23 +60,16 @@ public class OutputTableFrame extends GuiFrame {
 		//to make it movable
 		_moveOutputBox.registerComponent(_table);
 		
+		_table.setFillsViewportHeight(true);
+		add(_scrollBox);
+
+
+
+		
+		
 		_isHiding = true;
 	}
 
-	/**
-	 * @return
-	 */
-	private Runnable initializeAll() {
-		Runnable runInitialization = new Runnable(){
-			@Override
-			public void run(){
-				_taskpadTableModel = new GuiTableModel();
-				_table = new JTable(_taskpadTableModel);
-				_scrollBox = new JScrollPane(_table);
-			}
-		};
-		return runInitialization;
-	}
 
 	/**
 	 * 
