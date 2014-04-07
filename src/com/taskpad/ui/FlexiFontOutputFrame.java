@@ -121,7 +121,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		append(line, c, isBold);
 	}
 	
-	/*
+	/**
 	 * Method to replace appendToPane()
 	 * this method is easier to write
 	 * and can handle setEditable(false)
@@ -152,7 +152,7 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	
 	
-	/*
+	/**
 	 * appendToPane() finally works
 	 * but it is obviously not the best way
 	 * so I implement another method

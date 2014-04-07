@@ -14,7 +14,6 @@ import org.jnativehook.NativeInputEvent;
 import org.jnativehook.keyboard.NativeKeyEvent;
 
 public class OutputTableFrame extends GuiFrame {
-	private static final Color COLOR_TABLE_BACKGROUND = new Color(240,248,255);
 
 	/**
 	 * generated
@@ -33,7 +32,11 @@ public class OutputTableFrame extends GuiFrame {
 	private final int FONT_HEADER_STYLE = Font.BOLD;
 	private final Font FONT_HEADER_DEFAULT = new Font(FONT_HEADER_TYPE,
 			FONT_HEADER_STYLE, FONT_HEADER_SIZE);
+	private static final Color COLOR_TABLE_BACKGROUND = new Color(240,248,255);
+	
+	private ComponentMover _moveOutputBox = new ComponentMover(this);
 
+	
 	protected OutputTableFrame() {
 		super();
 		intializeOutputTableFrame();
@@ -55,6 +58,10 @@ public class OutputTableFrame extends GuiFrame {
 		_table.setBackground(COLOR_TABLE_BACKGROUND);
 
 		setUpColumnWidth();
+		
+		
+		//to make it movable
+		_moveOutputBox.registerComponent(_table);
 	}
 
 	/**
@@ -64,6 +71,9 @@ public class OutputTableFrame extends GuiFrame {
 		_table.getTableHeader().setFont(FONT_HEADER_DEFAULT);
 		_table.getTableHeader().setBackground(Color.black);
 		_table.getTableHeader().setForeground(OutputTableFrame.COLOR_TABLE_BACKGROUND);
+		
+		//disable the reordering option
+		_table.getTableHeader().setReorderingAllowed(false);
 	}
 
 	protected void setUpFrame() {
@@ -93,10 +103,13 @@ public class OutputTableFrame extends GuiFrame {
 	private void setUpColumnWidth() {
 		TableColumn column = null;
 		int colNo = _table.getColumnCount();
+		
+		//_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
 		for (int i = 0; i < colNo; i++) {
 			column = _table.getColumnModel().getColumn(i);
-			int divider = 3;
-			int preferredWidthID = 1;
+			int preferredWidthID = 25;
 			int noOfColLeft = 2;
 			boolean isDesc = i == 1;
 			boolean isID = i == 0;
@@ -105,10 +118,11 @@ public class OutputTableFrame extends GuiFrame {
 				column.setPreferredWidth(preferredWidthID);
 			} else if (isDesc) {
 				column.setCellRenderer(new GuiCellRenderer());
-				column.setPreferredWidth((getWidth() - preferredWidthID) / divider);
+				column.setPreferredWidth((getWidth() - preferredWidthID -
+						noOfColLeft * (getWidth() - preferredWidthID) / (colNo - noOfColLeft)));
 			} else {
 				column.setCellRenderer(new GuiCellRenderer());
-				column.setPreferredWidth((getWidth() - preferredWidthID) / (divider * (colNo - noOfColLeft)));
+				column.setPreferredWidth((getWidth() - preferredWidthID) / (colNo - noOfColLeft));
 			}
 		}
 	}
@@ -146,6 +160,14 @@ public class OutputTableFrame extends GuiFrame {
 		Runnable upScroller = new BarScroller(true,
 				_scrollBox.getVerticalScrollBar());
 		SwingUtilities.invokeLater(upScroller);
+	}
+	
+	@Override
+	protected void endProgram() {
+		super.endProgram();
+		
+		//clear every listener before closing
+		_moveOutputBox.deregisterComponent(_table);
 	}
 
 	// /*
