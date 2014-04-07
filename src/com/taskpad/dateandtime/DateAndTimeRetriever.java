@@ -15,7 +15,7 @@ import java.util.Scanner;
  * String
  * 
  * Supposed to put all the protected methods from DateAndTimeManager here
- *  
+ * 
  */
 
 public class DateAndTimeRetriever {
@@ -28,46 +28,24 @@ public class DateAndTimeRetriever {
 	private static final String STRING_NULL = "null";
 
 	private static final String STRING_EMPTY = "";
-	
+
 	private static final String DEADLINE = "DEADLINE";
 	private static final String TIME_START = "STARTTIME";
 	private static final String TIME_END = "ENDTIME";
-	private static final String[] KEYWORD_DEADLINES = {
-		"BY",
-		"BEFORE",
-		"BEF"
-	};
-	private static final String[] KEYWORD_STARTTIME = {
-		"AT",
-		"AFTER",
-		"ON",
-		"IN",
-		"FROM",
-		"FRO"
-	};
-	private static final String[] KEYWORD_ENDTIME = {
-		"UNTIL",
-		"TILL",
-		"TO",
-		"TIL",
-		"~",
-		"FOR"
-	};
-	private static final String[] KEYWORD_TODAY = {
-		"TODAY",
-		"TDY",
-		"2DAY"
-	};
-	private static final String[] KEYWORD_NOW = {
-		"NOW"
-	};
+	private static final String[] KEYWORD_DEADLINES = { "BY", "BEFORE", "BEF" };
+	private static final String[] KEYWORD_STARTTIME = { "AT", "AFTER", "ON",
+			"IN", "FROM", "FRO" };
+	private static final String[] KEYWORD_ENDTIME = { "UNTIL", "TILL", "TO",
+			"TIL", "~", "FOR" };
+	private static final String[] KEYWORD_TODAY = { "TODAY", "TDY", "2DAY" };
+	private static final String[] KEYWORD_NOW = { "NOW" };
 	private static HashMap<String, String> _retrieverMap = new HashMap<String, String>();
 	private static DateAndTimeRetriever _retriever = new DateAndTimeRetriever();
-	
-	private DateAndTimeRetriever(){
+
+	private DateAndTimeRetriever() {
 		intializeRetrieverMap();
 	}
-	
+
 	private void intializeRetrieverMap() {
 		initializeStartTime();
 		initializeEndTime();
@@ -75,28 +53,28 @@ public class DateAndTimeRetriever {
 	}
 
 	private void initializeStartTime() {
-		for (String anyStartTime: KEYWORD_STARTTIME){
+		for (String anyStartTime : KEYWORD_STARTTIME) {
 			_retrieverMap.put(anyStartTime, TIME_START);
 		}
 	}
 
 	private void initializeEndTime() {
-		for (String anyEndTime: KEYWORD_ENDTIME){
+		for (String anyEndTime : KEYWORD_ENDTIME) {
 			_retrieverMap.put(anyEndTime, TIME_END);
 		}
-		
+
 	}
 
 	private void initializeDeadlines() {
-		for (String anyDeadline: KEYWORD_DEADLINES){
+		for (String anyDeadline : KEYWORD_DEADLINES) {
 			_retrieverMap.put(anyDeadline, DEADLINE);
 		}
 	}
 
-	protected static DateAndTimeRetriever getInstance(){
+	protected static DateAndTimeRetriever getInstance() {
 		return _retriever;
 	}
-	
+
 	/**
 	 * In an input string, check if there is valid time
 	 * 
@@ -124,8 +102,7 @@ public class DateAndTimeRetriever {
 		}
 	}
 
-	private TimeObject createNewTimeObject(String parsedTime,
-			String inputTime) {
+	private TimeObject createNewTimeObject(String parsedTime, String inputTime) {
 		return new TimeObject(parsedTime.trim(), inputTime.trim());
 	}
 
@@ -169,13 +146,14 @@ public class DateAndTimeRetriever {
 		return !parsedString.equals(STRING_EMPTY);
 	}
 
-	protected ArrayList<String> searchTimeAndDate(String desc) throws InvalidQuotesException{
+	protected ArrayList<String> searchTimeAndDate(String desc)
+			throws InvalidQuotesException {
 		String formattedString = convertStandardDateAndTime(desc);
-		
-		//System.err.println(formattedString);
-		
+
+		// System.err.println(formattedString);
+
 		ArrayList<String> searchResult = extractAllDateAndTime(formattedString);
-		
+
 		return searchResult;
 	}
 
@@ -185,19 +163,19 @@ public class DateAndTimeRetriever {
 	private ArrayList<String> extractAllDateAndTime(String formattedString) {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		String todayDate = datm.getTodayDate();
-		
+
 		String recordTime = null;
 		String recordDate = null;
-		
+
 		ArrayList<String> TimeAndDateRes = new ArrayList<String>();
-		
+
 		String[] formattedTokens = formattedString.split(" ");
-		for (int i = 0; i < formattedTokens.length; i++){
+		for (int i = 0; i < formattedTokens.length; i++) {
 			String token = formattedTokens[i];
-			if (isDate(token)){
-				if (recordDate != null){
+			if (isDate(token)) {
+				if (recordDate != null) {
 					String res;
-					if (recordTime == null){
+					if (recordTime == null) {
 						res = recordDate;
 						recordDate = null;
 					} else {
@@ -208,10 +186,10 @@ public class DateAndTimeRetriever {
 					TimeAndDateRes.add(res);
 				}
 				recordDate = token;
-			} else if (isTime(token)){
-				if (recordTime != null){
+			} else if (isTime(token)) {
+				if (recordTime != null) {
 					String res;
-					if (recordDate == null){
+					if (recordDate == null) {
 						res = recordTime + " " + todayDate;
 						recordTime = null;
 					} else {
@@ -224,17 +202,17 @@ public class DateAndTimeRetriever {
 				recordTime = token;
 			}
 		}
-		
+
 		String res = null;
-		if (recordTime != null && recordDate!= null){
+		if (recordTime != null && recordDate != null) {
 			res = recordTime + " " + recordDate;
-		} else if (recordTime != null && recordDate == null){
+		} else if (recordTime != null && recordDate == null) {
 			res = recordTime + " " + todayDate;
-		} else if (recordTime == null && recordDate != null){
+		} else if (recordTime == null && recordDate != null) {
 			res = recordDate;
 		}
-		
-		if (res != null){
+
+		if (res != null) {
 			TimeAndDateRes.add(res);
 		}
 		return TimeAndDateRes;
@@ -242,81 +220,87 @@ public class DateAndTimeRetriever {
 
 	/**
 	 * format all the date and time in a string to standard format
+	 * 
 	 * @param desc
 	 * @throws InvalidQuotesException
 	 */
 	private String convertStandardDateAndTime(String desc)
 			throws InvalidQuotesException {
 		String alphaNumericSpaceDesc = getAlphaNumericSpaceDesc(desc);
-		
+
 		String noQuoteDesc = removeParseFreeZone(alphaNumericSpaceDesc);
-		
+
 		String numberedInput = parseNumber(noQuoteDesc);
-		
+
 		String holidayString = parseHolidayDates(numberedInput);
-		
+
 		String dayString = parseDay(holidayString);
-		
+
 		String todayAndNowString = parseTodayAndNow(dayString);
-		
+
 		String dateString = parseDate(todayAndNowString);
-		
+
 		String timeString = parseTime(dateString);
-		//System.err.println(numberedInput);
-		
+		// System.err.println(numberedInput);
+
 		String timeWordString = parseTimeWord(timeString);
-	
+
 		return timeWordString;
 	}
-	
+
 	private String parseTodayAndNow(String dayString) {
 		String[] todayAndNowTokens = dayString.split(" ");
 		StringBuffer todayAndNowBuilder = new StringBuffer();
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		String todayDate = datm.getTodayDate();
 		String now = datm.getTodayDateAndTime();
-		
-		for (int i = 0; i < todayAndNowTokens.length; i++){
+
+		for (int i = 0; i < todayAndNowTokens.length; i++) {
 			String token = todayAndNowTokens[i];
-			if (isToday(token)){
+			if (isToday(token)) {
 				todayAndNowTokens[i] = todayDate;
-			} else if (isNow(token)){
+			} else if (isNow(token)) {
 				todayAndNowTokens[i] = now;
 			}
 		}
-		
+
 		todayAndNowBuilder = buildString(todayAndNowTokens, todayAndNowBuilder);
-		
+
 		return todayAndNowBuilder.toString().trim();
 	}
 
 	/**
 	 * format DateAndTime as Deadline, StartTime, EndTime
+	 * 
 	 * @param desc
-	 * @return desc | Deadline: | StartTime: Date then Time | EndTime: Date Then Time
-	 * @throws InvalidQuotesException 
+	 * @return desc | Deadline: | StartTime: Date then Time | EndTime: Date Then
+	 *         Time
+	 * @throws InvalidQuotesException
 	 */
-	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {			
-		
+	protected String formatDateAndTimeInString(String desc)
+			throws InvalidQuotesException {
+
 		String formattedString = convertStandardDateAndTime(desc);
-		
+
+		// System.err.println(formattedString);
+
 		ArrayList<String> allDateAndTime = extractDateAndTime(formattedString);
-		
-		//System.err.println(allDateAndTime.get(POSITION_DEADLINE));
-		//System.err.println(allDateAndTime.get(POSITION_STARTTIME));
-		//System.err.println(allDateAndTime.get(POSITION_ENDTIME));
-		
+
+		// System.err.println(allDateAndTime.get(POSITION_DEADLINE));
+		// System.err.println(allDateAndTime.get(POSITION_STARTTIME));
+		// System.err.println(allDateAndTime.get(POSITION_ENDTIME));
+
 		desc = allDateAndTime.remove(POSITION_DESCRIPTION);
-		
+
 		allDateAndTime = modifyAllDateAndTime(allDateAndTime);
 
 		String deadlineRes = allDateAndTime.get(POSITION_DEADLINE);
 		String startTimeRes = allDateAndTime.get(POSITION_STARTTIME);
 		String endTimeRes = allDateAndTime.get(POSITION_ENDTIME);
-		
+
 		// return that string to parse in respective Add/Addrem/Alarm classes -
 		// already done with return input
-		
+
 		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
 	}
 
@@ -326,51 +310,51 @@ public class DateAndTimeRetriever {
 	 */
 	private String parseTimeWord(String timeString) {
 		String[] timeWordTokens = timeString.split(" ");
-		
+
 		TimeWordParser twp = TimeWordParser.getInstance();
 		SpecialWordParser swp = SpecialWordParser.getInstance();
 		NumberParser np = NumberParser.getInstance();
-		
+
 		boolean[] isModified = new boolean[timeWordTokens.length];
-		
+
 		initializeArray(isModified);
-		
-		for (int i = 0; i < timeWordTokens.length; i++){
+
+		for (int i = 0; i < timeWordTokens.length; i++) {
 			String firstToken = timeWordTokens[i];
 			StringBuffer changedTokens = new StringBuffer();
 
 			if (twp.isTimeUnits(firstToken)) {
 				isModified[i] = true;
 				String secondToken = null;
-				
+
 				for (int j = i - 1; j >= 0; j--) {
 					if (isModified[j]) {
 						break;
 					}
-					
+
 					isModified[j] = true;
 					String token = timeWordTokens[j];
-					
+
 					if (swp.isSpecialWord(token)) {
 						changedTokens.append(token + " ");
 						timeWordTokens[j] = null;
-					} else if (j == i - 1 && np.isDigitString(token)){
+					} else if (j == i - 1 && np.isDigitString(token)) {
 						timeWordTokens[j] = null;
 						secondToken = token;
 					} else {
 						break;
 					}
-					
+
 				}
-				if (secondToken != null){
+				if (secondToken != null) {
 					changedTokens.append(secondToken + " ");
 				}
 				changedTokens.append(firstToken);
 
-
 				try {
-					timeWordTokens[i] = twp.parseTimeWordWithSpecialWord(changedTokens.toString()
-								.trim());
+					timeWordTokens[i] = twp
+							.parseTimeWordWithSpecialWord(changedTokens
+									.toString().trim());
 				} catch (NullTimeUnitException | NullTimeValueException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -378,54 +362,58 @@ public class DateAndTimeRetriever {
 
 			}
 		}
-		
+
 		StringBuffer timeWordString = new StringBuffer();
 		timeWordString = buildString(timeWordTokens, timeWordString);
-		
+
 		return timeWordString.toString().trim();
 	}
 
-	private String removeParseFreeZone(String alphaNumericSpaceDesc) throws InvalidQuotesException {
+	private String removeParseFreeZone(String alphaNumericSpaceDesc)
+			throws InvalidQuotesException {
 		boolean removeStat = false;
 		String[] descTokens = alphaNumericSpaceDesc.split(" ");
-		for (int i = 0; i < descTokens.length; i++){
-			if ("\"".equals(descTokens[i]) || "\'".equals(descTokens[i])){
-				if (!removeStat){
+		for (int i = 0; i < descTokens.length; i++) {
+			//don't allow ' ' for parse free zone because user might type it who's
+			if ("\"".equals(descTokens[i])) {
+				if (!removeStat) {
 					removeStat = true;
 				} else {
 					removeStat = false;
 				}
 				descTokens[i] = null;
 			} else {
-				if (removeStat){
+				if (removeStat) {
 					descTokens[i] = null;
 				}
 			}
 		}
-		
-		if (removeStat){
+
+		if (removeStat) {
 			throw new InvalidQuotesException();
 		}
-		
+
 		StringBuffer tokensBuilder = new StringBuffer();
-		
-		for (String token : descTokens){
-			if (token != null){
+
+		for (String token : descTokens) {
+			if (token != null) {
 				tokensBuilder.append(token + " ");
 			}
 		}
-		
+
 		return tokensBuilder.toString().trim();
 	}
 
 	/**
 	 * @param allDateAndTime
 	 */
-	private ArrayList<String> modifyAllDateAndTime(ArrayList<String> allDateAndTime) {
-		for (int i = 0; i < allDateAndTime.size(); i++){
-			if (allDateAndTime.get(i) == null || allDateAndTime.get(i).trim().isEmpty()){
+	private ArrayList<String> modifyAllDateAndTime(
+			ArrayList<String> allDateAndTime) {
+		for (int i = 0; i < allDateAndTime.size(); i++) {
+			if (allDateAndTime.get(i) == null
+					|| allDateAndTime.get(i).trim().isEmpty()) {
 				allDateAndTime.set(i, STRING_NULL + " " + STRING_NULL);
-			} else if (allDateAndTime.get(i).split(" ").length == 1){
+			} else if (allDateAndTime.get(i).split(" ").length == 1) {
 				String element = allDateAndTime.get(i);
 				allDateAndTime.set(i, element + " " + STRING_NULL);
 			}
@@ -440,156 +428,172 @@ public class DateAndTimeRetriever {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		String todayDate = datm.getTodayDate();
 		String now = datm.getTodayDateAndTime();
-		
+
 		String[] flexiTokens = timeString.split(" ");
-		
+
 		String startDateEarliest = null;
 		String startTimeEarliest = null;
 		String startEarliest = null;
-		
+
 		LinkedList<String> startDates = new LinkedList<String>();
 		LinkedList<String> startTimes = new LinkedList<String>();
-		
+
 		LinkedList<String> deadlineDates = new LinkedList<String>();
 		LinkedList<String> deadlineTimes = new LinkedList<String>();
-		
+
 		LinkedList<String> endDates = new LinkedList<String>();
 		LinkedList<String> endTimes = new LinkedList<String>();
-		
+
 		ArrayList<String> allDateAndTime = new ArrayList<String>();
 
 		StringBuffer descBuilder = new StringBuffer();
 		String desc;
-		
+
 		String recordDate = null;
 		String recordTime = null;
-		
-		for (int i = flexiTokens.length - 1; i >= 0; i--){
+
+		for (int i = flexiTokens.length - 1; i >= 0; i--) {
 			String token = flexiTokens[i];
-			
-			if (isDate(token)){
+
+			if (isDate(token)) {
 				token = parseDate(token);
-				
-				if (recordDate == null){
+
+				if (recordDate == null) {
 					recordDate = token;
 				} else {
 					startDates.add(recordDate);
 					startTimes.add(recordTime);
-					
+
 					recordDate = token;
 					recordTime = null;
 				}
-				
+
 				flexiTokens[i] = null;
-				
-			} else if (isTime(token)){
+
+			} else if (isTime(token)) {
 				token = parseTime(token);
-				
-				if (recordTime == null){
+
+				if (recordTime == null) {
 					recordTime = token;
 				} else {
 					startDates.add(recordDate);
 					startTimes.add(recordTime);
-					
+
 					recordDate = null;
 					recordTime = token;
 				}
-				
+
 				flexiTokens[i] = null;
 
-			} else if (isType(token)){
+			} else if (isType(token)) {
 				boolean useWrong = (recordDate == null && recordTime == null);
-				
-				if (!useWrong){
+
+				if (!useWrong) {
 					token = token.toUpperCase();
 					String type = _retrieverMap.get(token);
-					if (DEADLINE.equals(type)){
+					if (DEADLINE.equals(type)) {
 						deadlineDates.add(recordDate);
 						deadlineTimes.add(recordTime);
-					} else if (TIME_START.equals(type)){
+					} else if (TIME_START.equals(type)) {
 						startDates.add(recordDate);
 						startTimes.add(recordTime);
-					} else if (TIME_END.equals(type)){
+					} else if (TIME_END.equals(type)) {
 						endDates.add(recordDate);
 						endTimes.add(recordTime);
 					}
 					recordDate = null;
 					recordTime = null;
-					
+
 					flexiTokens[i] = null;
 
 				}
-			} 
+			} else {
+				if (recordDate != null || recordTime != null) {
+					startDates.add(recordDate);
+					startTimes.add(recordTime);
+
+					recordDate = null;
+					recordTime = null;
+				}
+			}
 		}
-		
-		if (recordDate != null || recordTime != null){
+
+		//System.err.println(timeString + "\n" + startDates.toString());
+
+		if (recordDate != null || recordTime != null) {
 			startDates.add(recordDate);
 			startTimes.add(recordTime);
 		}
 
-		startEarliest = retrieveStartEarliest(todayDate, now, startDateEarliest,
-				startTimeEarliest, startEarliest, startDates, startTimes);
-		
-		if (startEarliest == null){
+		startEarliest = retrieveStartEarliest(todayDate, now,
+				startDateEarliest, startTimeEarliest, startEarliest,
+				startDates, startTimes);
+
+		if (startEarliest == null) {
 			startDateEarliest = todayDate;
 		} else {
 			startDateEarliest = startEarliest.split(" ")[0];
 		}
-		
-		//System.out.println("DD: " + startDateEarliest);
-		
-		String deadlineLatest = retrieveNotStartLatest(deadlineDates, deadlineTimes, startDateEarliest);
-		String endLatest = retrieveNotStartLatest(endDates, endTimes, startDateEarliest);
-		
-		//System.err.println(deadlineLatest);
-		//System.err.println(startEarliest);
-		//System.err.println(endLatest);
-		
-		if (endLatest != null && startEarliest != null && compareDateAndTime(endLatest, startEarliest) <= 0){
+
+		// System.out.println("DD: " + startDateEarliest);
+
+		String deadlineLatest = retrieveNotStartLatest(deadlineDates,
+				deadlineTimes, startDateEarliest);
+		String endLatest = retrieveNotStartLatest(endDates, endTimes,
+				startDateEarliest);
+
+		// System.err.println(deadlineLatest);
+		// System.err.println(startEarliest);
+		// System.err.println(endLatest);
+
+		if (endLatest != null && startEarliest != null
+				&& compareDateAndTime(endLatest, startEarliest) <= 0) {
 			endLatest = null;
-		} else if (endLatest != null && compareDateAndTime(endLatest, now) <= 0){
+		} else if (endLatest != null && compareDateAndTime(endLatest, now) <= 0) {
 			endLatest = null;
 		}
-		
-		//System.err.println(deadlineLatest);
-		//System.err.println(startEarliest);
-		if (deadlineLatest != null && startEarliest != null && compareDateAndTime(deadlineLatest, startEarliest) <= 0){
+
+		// System.err.println(deadlineLatest);
+		// System.err.println(startEarliest);
+		if (deadlineLatest != null && startEarliest != null
+				&& compareDateAndTime(deadlineLatest, startEarliest) <= 0) {
 			deadlineLatest = null;
-		} else if (deadlineLatest != null && compareDateAndTime(deadlineLatest, now) <= 0){
+		} else if (deadlineLatest != null
+				&& compareDateAndTime(deadlineLatest, now) <= 0) {
 			deadlineLatest = null;
 		}
-		
+
 		descBuilder = buildString(flexiTokens, descBuilder);
 		desc = descBuilder.toString().trim();
-		
+
 		allDateAndTime.add(deadlineLatest);
 		allDateAndTime.add(startEarliest);
 		allDateAndTime.add(endLatest);
 		allDateAndTime.add(desc);
-		
+
 		return allDateAndTime;
 	}
-	
-	private boolean isToday(String input){
+
+	private boolean isToday(String input) {
 		input = input.toUpperCase();
-		for (int i = 0; i < KEYWORD_TODAY.length; i++){
-			if (KEYWORD_TODAY[i].equals(input)){
+		for (int i = 0; i < KEYWORD_TODAY.length; i++) {
+			if (KEYWORD_TODAY[i].equals(input)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean isNow(String input){
+	private boolean isNow(String input) {
 		input = input.toUpperCase();
-		for (int i = 0; i < KEYWORD_NOW.length; i++){
-			if (KEYWORD_NOW[i].equals(input)){
+		for (int i = 0; i < KEYWORD_NOW.length; i++) {
+			if (KEYWORD_NOW[i].equals(input)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param todayDate
 	 * @param now
@@ -605,45 +609,50 @@ public class DateAndTimeRetriever {
 			String startEarliest, LinkedList<String> startDates,
 			LinkedList<String> startTimes) {
 		assert (startDates.size() == startTimes.size());
-		
-		for (int i = 0; i < startDates.size(); i++){
-			if (startDates.get(i) != null && startTimes.get(i) != null){
+
+		for (int i = 0; i < startDates.size(); i++) {
+			if (startDates.get(i) != null && startTimes.get(i) != null) {
 				String start = startDates.get(i) + " " + startTimes.get(i);
-				if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+				if (startEarliest == null
+						|| compareDateAndTime(startEarliest, start) > 0) {
 					startEarliest = start;
 				}
-			} else if (startDates.get(i) != null && startTimes.get(i) == null){
+			} else if (startDates.get(i) != null && startTimes.get(i) == null) {
 				String startDate = startDates.get(i);
-				if (startDateEarliest == null || compareDate(startDateEarliest, startDate) > 0){
+				if (startDateEarliest == null
+						|| compareDate(startDateEarliest, startDate) > 0) {
 					startDateEarliest = startDate;
 				}
-			} else if (startDates.get(i) == null && startTimes.get(i) != null){
+			} else if (startDates.get(i) == null && startTimes.get(i) != null) {
 				String startTime = startTimes.get(i);
-				if (startTimeEarliest == null || compareTime(startTimeEarliest, startTime) > 0){
+				if (startTimeEarliest == null
+						|| compareTime(startTimeEarliest, startTime) > 0) {
 					startTimeEarliest = startTime;
 				}
 			} else {
-				//unreachable
+				// unreachable
 				assert (false);
 			}
 		}
-		
-		if (startDateEarliest != null){
-			if (startTimeEarliest == null){
+
+		if (startDateEarliest != null) {
+			if (startTimeEarliest == null) {
 				startTimeEarliest = "00:00";
 			}
-			
+
 			String start = startDateEarliest + " " + startTimeEarliest;
-			if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+			if (startEarliest == null
+					|| compareDateAndTime(startEarliest, start) > 0) {
 				startEarliest = start;
 			}
-		} else if (startTimeEarliest != null){
+		} else if (startTimeEarliest != null) {
 			String start = todayDate + " " + startTimeEarliest;
-			if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+			if (startEarliest == null
+					|| compareDateAndTime(startEarliest, start) > 0) {
 				startEarliest = start;
 			}
-		} else if (startEarliest == null){
-			//startEarliest = now;
+		} else if (startEarliest == null) {
+			// startEarliest = now;
 			return null;
 		}
 		return startEarliest.trim();
@@ -655,47 +664,47 @@ public class DateAndTimeRetriever {
 		String latest = null;
 		String dateLatest = null;
 		String timeLatest = null;
-		
-		for (int i = 0; i < Dates.size(); i++){
-			if (Dates.get(i) != null && Times.get(i) != null){
+
+		for (int i = 0; i < Dates.size(); i++) {
+			if (Dates.get(i) != null && Times.get(i) != null) {
 				String notStart = Dates.get(i) + " " + Times.get(i);
-				if (latest == null || compareDateAndTime(latest, notStart) < 0){
+				if (latest == null || compareDateAndTime(latest, notStart) < 0) {
 					latest = notStart;
 				}
-			} else if (Dates.get(i) != null && Times.get(i) == null){
+			} else if (Dates.get(i) != null && Times.get(i) == null) {
 				String dateGet = Dates.get(i);
-				if (dateLatest == null || compareDate(dateLatest, dateGet) < 0){
+				if (dateLatest == null || compareDate(dateLatest, dateGet) < 0) {
 					dateLatest = dateGet;
 				}
-			} else if (Dates.get(i) == null && Times.get(i) != null){
+			} else if (Dates.get(i) == null && Times.get(i) != null) {
 				String timeGet = Times.get(i);
-				if (timeLatest == null || compareTime(timeLatest, timeGet) < 0){
+				if (timeLatest == null || compareTime(timeLatest, timeGet) < 0) {
 					timeLatest = timeGet;
 				}
 			} else {
-				//unreachable
+				// unreachable
 				assert (false);
 			}
 		}
-		
-		if (dateLatest != null){
-			if (timeLatest == null){
+
+		if (dateLatest != null) {
+			if (timeLatest == null) {
 				timeLatest = "23:59";
 			}
 			String cur = dateLatest + " " + timeLatest;
-			if (latest == null || compareDateAndTime(latest, cur) < 0){
+			if (latest == null || compareDateAndTime(latest, cur) < 0) {
 				latest = cur;
 			}
-		} else if (timeLatest != null){
+		} else if (timeLatest != null) {
 			String cur = startDateEarliest + " " + timeLatest;
-			if (latest == null || compareDateAndTime(latest, cur) < 0){
+			if (latest == null || compareDateAndTime(latest, cur) < 0) {
 				latest = cur;
 			}
-		} 
-		if (latest != null){
+		}
+		if (latest != null) {
 			latest = latest.trim();
 		}
-		
+
 		return latest;
 	}
 
@@ -703,7 +712,7 @@ public class DateAndTimeRetriever {
 		return _retrieverMap.containsKey(token.toUpperCase());
 	}
 
-	protected int compareDate(String firstDateString, String secondDateString){
+	protected int compareDate(String firstDateString, String secondDateString) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date firstDate = new Date();
 		Date secondDate = new Date();
@@ -711,13 +720,13 @@ public class DateAndTimeRetriever {
 			firstDate = sdf.parse(firstDateString);
 			secondDate = sdf.parse(secondDateString);
 		} catch (ParseException e) {
-			//should not use this function if it hasn't been converted
+			// should not use this function if it hasn't been converted
 			assert (false);
 		}
 		return firstDate.compareTo(secondDate);
 	}
-	
-	protected int compareTime(String firstTimeString, String secondTimeString){
+
+	protected int compareTime(String firstTimeString, String secondTimeString) {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		Date firstTime = new Date();
 		Date secondTime = new Date();
@@ -725,13 +734,14 @@ public class DateAndTimeRetriever {
 			firstTime = sdf.parse(firstTimeString);
 			secondTime = sdf.parse(secondTimeString);
 		} catch (ParseException e) {
-			//should not use this function if it hasn't been converted
+			// should not use this function if it hasn't been converted
 			assert (false);
 		}
 		return firstTime.compareTo(secondTime);
 	}
-	
-	protected int compareDateAndTime(String firstDateString, String secondDateString){
+
+	protected int compareDateAndTime(String firstDateString,
+			String secondDateString) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Date firstDate = new Date();
 		Date secondDate = new Date();
@@ -739,27 +749,28 @@ public class DateAndTimeRetriever {
 			firstDate = sdf.parse(firstDateString);
 			secondDate = sdf.parse(secondDateString);
 		} catch (ParseException e) {
-			//should not use this function if it hasn't been converted
+			// should not use this function if it hasn't been converted
 			assert (false);
 		}
 		return firstDate.compareTo(secondDate);
 	}
-	
-	protected int compareDateAndTimeExecutor(String firstDateString, String secondDateString){
-		if (firstDateString == null || secondDateString == null){
+
+	protected int compareDateAndTimeExecutor(String firstDateString,
+			String secondDateString) {
+		if (firstDateString == null || secondDateString == null) {
 			return -2;
 		}
-		
+
 		firstDateString = firstDateString.trim();
 		secondDateString = secondDateString.trim();
-		
+
 		firstDateString = addTimeCap(firstDateString);
 		secondDateString = addTimeCap(secondDateString);
-		
-		if (firstDateString == null || secondDateString == null){
+
+		if (firstDateString == null || secondDateString == null) {
 			return -2;
 		}
-		
+
 		return compareDateAndTime(firstDateString, secondDateString);
 	}
 
@@ -768,10 +779,10 @@ public class DateAndTimeRetriever {
 	 * @return
 	 */
 	private String addTimeCap(String dateString) {
-		if (!isDateAndTime(dateString)){
-			if (isDate(dateString)){
+		if (!isDateAndTime(dateString)) {
+			if (isDate(dateString)) {
 				dateString = dateString + " 00:00";
-			} else if (isTimeAndDate(dateString)){
+			} else if (isTimeAndDate(dateString)) {
 				String[] tokens = dateString.split(" ");
 				dateString = tokens[1] + " " + tokens[0];
 			} else {
@@ -780,28 +791,28 @@ public class DateAndTimeRetriever {
 		}
 		return dateString;
 	}
-	
+
 	private boolean isTimeAndDate(String dateString) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd/MM/yyyy");		
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+
 		try {
 			sdf.parse(dateString);
 		} catch (ParseException e) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	private boolean isDateAndTime(String dateString) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");		
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
 		try {
 			sdf.parse(dateString);
 		} catch (ParseException e) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -825,8 +836,8 @@ public class DateAndTimeRetriever {
 	 * @param dateTokens
 	 * @param isModified
 	 */
-	private void changeNTimeWords(String[] timeTokens,
-			boolean[] isModified, int n) {
+	private void changeNTimeWords(String[] timeTokens, boolean[] isModified,
+			int n) {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		for (int i = n - 1; i < timeTokens.length; i++) {
 			String token = timeTokens[i];
@@ -842,17 +853,16 @@ public class DateAndTimeRetriever {
 				timeInput = wholeString.toString().trim();
 				// System.err.println(dateInput);
 				if (isTime(timeInput)) {
-				
+
 					try {
 						timeInput = datm.parseTimeInput(timeInput);
 					} catch (TimeErrorException | InvalidTimeException e) {
 						assert (false);
 					}
-					
+
 					allNWordsModified(isModified, i, n);
 					timeTokens[i] = timeInput;
-					
-					
+
 					for (int j = i - n + 1; j <= i - 1; j++) {
 						timeTokens[j] = null;
 					}
@@ -886,8 +896,8 @@ public class DateAndTimeRetriever {
 	 * @param dateTokens
 	 * @param isModified
 	 */
-	private void changeNDateWords(String[] dateTokens,
-			boolean[] isModified, int n) {
+	private void changeNDateWords(String[] dateTokens, boolean[] isModified,
+			int n) {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		for (int i = n - 1; i < dateTokens.length; i++) {
 			String token = dateTokens[i];
@@ -907,7 +917,7 @@ public class DateAndTimeRetriever {
 						dateInput = datm.parseDate(dateInput);
 					} catch (InvalidDateException e) {
 						assert (false);
-					} 
+					}
 					allNWordsModified(isModified, i, n);
 					dateTokens[i] = dateInput;
 					for (int j = i - n + 1; j <= i - 1; j++) {
@@ -1018,14 +1028,15 @@ public class DateAndTimeRetriever {
 
 	/**
 	 * not fully integrated yet
+	 * 
 	 * @param holidayString
 	 */
 	private String parseDay(String holidayString) {
-		
+
 		String dayString = getDayNtTmrYtd(holidayString);
 
 		dayString = getTmrYtd(dayString);
-		
+
 		return dayString;
 	}
 
@@ -1036,54 +1047,54 @@ public class DateAndTimeRetriever {
 	private String getTmrYtd(String dayString) {
 		String[] dayTokens = dayString.split(" ");
 		StringBuffer dayBuilder = new StringBuffer(" ");
-		
+
 		SpecialWordParser swp = SpecialWordParser.getInstance();
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		
+
 		String tmrTdyStr = STRING_EMPTY;
-		
+
 		boolean isStart = false;
-		
-		for (int i = 0; i < dayTokens.length; i++){
+
+		for (int i = 0; i < dayTokens.length; i++) {
 			String token = dayTokens[i];
 			boolean isTmrYtdVariation = swp.isTmrYtd(token);
-			if (isTmrYtdVariation && !isStart){
+			if (isTmrYtdVariation && !isStart) {
 				dayBuilder.append(token + " ");
 				dayTokens[i] = null;
 				isStart = true;
-			} else if (isTmrYtdVariation && isStart){
+			} else if (isTmrYtdVariation && isStart) {
 				dayTokens[i] = null;
 				dayBuilder.append(token + " ");
 			} else {
-				if (isStart){
+				if (isStart) {
 					isStart = false;
 					String passString = dayBuilder.toString().trim();
 					try {
 						dayTokens[i] = datm.parseDayToDate(passString);
 					} catch (InvalidDayException | DatePassedException e) {
-						//unreachable
+						// unreachable
 						assert (false);
 					}
 					dayBuilder = new StringBuffer();
 				}
 			}
 		}
-		
-		if (isStart){
+
+		if (isStart) {
 			String passString = dayBuilder.toString().trim();
 			try {
 				tmrTdyStr = datm.parseDayToDate(passString);
 			} catch (InvalidDayException | DatePassedException e) {
-				//unreachable
+				// unreachable
 				assert (false);
 			}
 		}
-		
+
 		dayBuilder = new StringBuffer();
 
 		dayBuilder = buildString(dayTokens, dayBuilder);
 		dayBuilder.append(tmrTdyStr);
-		
+
 		dayString = dayBuilder.toString().trim();
 		return dayString;
 	}
@@ -1106,7 +1117,7 @@ public class DateAndTimeRetriever {
 		boolean[] isModified = new boolean[dayTokens.length];
 
 		initializeArray(isModified);
-		
+
 		for (int i = 0; i < dayTokens.length; i++) {
 			String firstToken = dayTokens[i];
 			StringBuffer changedTokens = new StringBuffer();
@@ -1226,8 +1237,7 @@ public class DateAndTimeRetriever {
 	 * @param numberInputTokens
 	 * @param holidayString
 	 */
-	private StringBuffer buildString(String[] anyTokens,
-			StringBuffer anyString) {
+	private StringBuffer buildString(String[] anyTokens, StringBuffer anyString) {
 		for (String token : anyTokens) {
 			if (token != null) {
 				anyString.append(token + " ");
@@ -1256,11 +1266,11 @@ public class DateAndTimeRetriever {
 		StringBuffer changedString = new StringBuffer();
 		StringBuffer numberString = new StringBuffer();
 		boolean isNumberContinue = false;
-		
+
 		while (sc.hasNext()) {
 			String token = sc.next();
 			if (!datmParser.isNumber(token)) {
-				if (isNumberContinue ) {
+				if (isNumberContinue) {
 					String realNumber = datmParser.parseNumber(numberString
 							.toString().trim());
 					changedString.append(realNumber + " ");
@@ -1269,15 +1279,15 @@ public class DateAndTimeRetriever {
 
 				changedString.append(token + " ");
 				isNumberContinue = false;
-			} else if (np.isDigitString(token)){
+			} else if (np.isDigitString(token)) {
 				if (isNumberContinue) {
 					String realNumber = datmParser.parseNumber(numberString
 							.toString().trim());
 					changedString.append(realNumber + " ");
 					numberString = new StringBuffer();
 				}
-				
-				//System.err.println("AAA: " + token);
+
+				// System.err.println("AAA: " + token);
 				isNumberContinue = false;
 				String realNumber = datmParser.parseNumber(token, false);
 				changedString.append(realNumber + " ");
@@ -1322,40 +1332,37 @@ public class DateAndTimeRetriever {
 	public static void main(String[] args) {
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		/*
-		System.out
-				.println(datr.getAlphaNumericSpaceDesc("I am looking for Lynnette. She is going home on Monday."));
-		System.out
-				.println(datr.getAlphaNumericSpaceDesc("I am looking for Lynnette. She is going home on 1/4/15 12:00."));
-		System.out.println(datr.parseNumber("one one one aaa one one one"));
-		System.out.println(datr.parseNumber("one one one aaa"));
-		System.out.println(datr.parseNumber("aaa"));
-		System.out
-				.println(datr.parseHolidayDates("last Christmas I gave you my heart Christmas"));
-		System.out
-				.println(datr.parseHolidayDates("last New Year I gave you my heart Christmas"));
-		System.out
-				.println(datr.parseHolidayDates("last April Fool Day I gave you my heart Christmas"));
-		System.out.println(datr.parseDay("Monday I want to eat Monday"));
-		System.out
-				.println(datr.parseDay("next nxt NXT prev Monday I want to catch Pokemon!"));
-		System.out
-				.println(datr.parseDay("next ASH nxt Monday I want to catch Pokemon nxt Fri !"));
-		System.out
-				.println(datr.parseDate("1 / 11 / 2014 , I watch movie in 1 December"));
-		System.out.println(datr.parseTime("1 am"));
-		System.out.println(datr.parseDate("11/11/2015"));
-		System.out.println(datr.parseTime("11:00"));
-		System.out.println(datr.formatDateAndTimeInString("aaa"));
-		*/
+		 * System.out .println(datr.getAlphaNumericSpaceDesc(
+		 * "I am looking for Lynnette. She is going home on Monday."));
+		 * System.out .println(datr.getAlphaNumericSpaceDesc(
+		 * "I am looking for Lynnette. She is going home on 1/4/15 12:00."));
+		 * System.out.println(datr.parseNumber("one one one aaa one one one"));
+		 * System.out.println(datr.parseNumber("one one one aaa"));
+		 * System.out.println(datr.parseNumber("aaa")); System.out
+		 * .println(datr.
+		 * parseHolidayDates("last Christmas I gave you my heart Christmas"));
+		 * System.out .println(datr.parseHolidayDates(
+		 * "last New Year I gave you my heart Christmas")); System.out
+		 * .println(datr
+		 * .parseHolidayDates("last April Fool Day I gave you my heart Christmas"
+		 * )); System.out.println(datr.parseDay("Monday I want to eat Monday"));
+		 * System.out .println(datr.parseDay(
+		 * "next nxt NXT prev Monday I want to catch Pokemon!")); System.out
+		 * .println
+		 * (datr.parseDay("next ASH nxt Monday I want to catch Pokemon nxt Fri !"
+		 * )); System.out
+		 * .println(datr.parseDate("1 / 11 / 2014 , I watch movie in 1 December"
+		 * )); System.out.println(datr.parseTime("1 am"));
+		 * System.out.println(datr.parseDate("11/11/2015"));
+		 * System.out.println(datr.parseTime("11:00"));
+		 * System.out.println(datr.formatDateAndTimeInString("aaa"));
+		 */
 		/*
-		try {
-			System.out.println(datr.formatDateAndTimeInString("aaa at 11/3 by 3/4 11pm"));
-		} catch (InvalidQuotesException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
-		
+		 * try { System.out.println(datr.formatDateAndTimeInString(
+		 * "aaa at 11/3 by 3/4 11pm")); } catch (InvalidQuotesException e) { //
+		 * TODO Auto-generated catch block e.printStackTrace(); }
+		 */
+
 		try {
 			String noQuoteDesc = datr.removeParseFreeZone("\" aaaa \" bbbb ");
 			System.out.println(noQuoteDesc);
@@ -1363,53 +1370,53 @@ public class DateAndTimeRetriever {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		/*
+		 * try { System.out .println(datr.formatDateAndTimeInString(
+		 * "do cs2010 assignment by nxt nxt Wk")); } catch
+		 * (InvalidQuotesException e) { // TODO Auto-generated catch block
+		 * e.printStackTrace(); }
+		 */
+
 		try {
-			System.out
-			.println(datr.formatDateAndTimeInString("do cs2010 assignment by nxt nxt Wk"));
+			System.out.println(datr.formatDateAndTimeInString("11:00"));
 		} catch (InvalidQuotesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
-		
+
+		// VERY IMP TEST CASE
 		try {
-			System.out
-			.println(datr.formatDateAndTimeInString("11:00"));
+			System.out.println(datr.searchTimeAndDate("12:00 06/04/2014")
+					.toString());
 		} catch (InvalidQuotesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//VERY IMP TEST CASE
-		try {
-			System.out.println(datr.searchTimeAndDate("12:00 06/04/2014").toString());
-		} catch (InvalidQuotesException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
 		System.out.println(datr.parseTimeWord("1 hour"));
-		
+
 		System.out.println(datr.parseTodayAndNow("find Lynnette by Today"));
-		
+
 		try {
-			System.out.println(datr.formatDateAndTimeInString("find Lynnette by Today"));
+			System.out
+					.println(datr
+							.formatDateAndTimeInString("deliver potion to Ivy nxt nxt Tue"));
 		} catch (InvalidQuotesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//VERY IMP TEST CASE
-				try {
-					System.out.println(datr.searchTimeAndDate("20:14 05/04/2014 03/02/2014").toString());
-				} catch (InvalidQuotesException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-		
-		//System.out.println("AAA".split(" ").length);
+
+		// VERY IMP TEST CASE
+		try {
+			System.out.println(datr.searchTimeAndDate(
+					"20:14 05/04/2014 03/02/2014").toString());
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// System.out.println("AAA".split(" ").length);
 	}
 
 }
