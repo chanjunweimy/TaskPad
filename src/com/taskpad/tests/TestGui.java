@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.tests;
 
 import static org.junit.Assert.*;
@@ -14,7 +16,6 @@ import com.taskpad.ui.GuiManager;
 
 /**
  * ATTEMPT to test GUI!!! 
- * @author Jun
  *
  */
 public class TestGui {
