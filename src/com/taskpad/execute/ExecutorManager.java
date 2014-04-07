@@ -12,7 +12,7 @@ import com.taskpad.ui.GuiManager;
 import com.taskpad.input.Input;
 
 public class ExecutorManager {
-	private static final String MESSAGE_SHOWING_REMINDER = "Showing tasks due today, overdue tasks, and tasks with reminder...";
+	private static final String MESSAGE_SHOWING_REMINDER = "Showing your tasks and reminders...\n";
 	
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
