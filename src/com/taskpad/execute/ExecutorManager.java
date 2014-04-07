@@ -27,7 +27,7 @@ public class ExecutorManager {
 					Reminder.showReminderForToday();
 					Reminder.showReminderForOverdue();
 			  }
-		}, 2*1000);
+		}, 1*1000);
 		
 	}
 	public static void receiveFromInput(Input input, String command) {
