@@ -123,7 +123,7 @@ public class OutputToGui {
 			GuiManager.showSelfDefinedMessage(text, Color.pink, true);
 			*/
 			text = "Deadline:\t\t" + task.getDeadline();
-			GuiManager.showSelfDefinedMessage(text, Color.orange, false);
+			GuiManager.showSelfDefinedMessage(text, new Color(255,165,0), false);
 		}
 		
 		String start = "";

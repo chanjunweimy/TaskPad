@@ -59,7 +59,7 @@ public class Edit extends Command{
 			_desc = removeTaskID(fullInput, _taskID);
 		}
 		
-		System.out.println("Desc: " + _desc + "deadline: " + _deadline);
+		//System.out.println("Desc: " + _desc + "deadline: " + _deadline);
 		
 		putInputParameters();
 		return true;
@@ -72,10 +72,9 @@ public class Edit extends Command{
 		} catch (InvalidQuotesException e) {
 			InputManager.outputToGui(e.getMessage());
 		}
-		System.out.println(formatInput);
 		
 		String[] splitResult = formatInput.split(STRING_SPACE);
-		return splitResult[2];
+		return splitResult[4];
 	}
 
 	@Override
@@ -98,7 +97,6 @@ public class Edit extends Command{
 	 */
 	private String findTaskID(String input) throws TaskIDException{
 		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
-		System.out.println("NumInput: " + numberInput);
 
 		if (numberInput != null){
 			input = numberInput;
@@ -117,9 +115,7 @@ public class Edit extends Command{
 				}
 			}
 		}
-		
-		System.out.println("TaskID " + taskID);
-		
+				
 		if (taskID == -1){
 			throw new TaskIDException();
 		}
