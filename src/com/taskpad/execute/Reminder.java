@@ -13,42 +13,48 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class Reminder {
-	private static final String FEEDBACK_NO_REMINDER_FOR_TODAY = "No reminders for today.";
-	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No tasks due today.";
-	private static final String FEEDBACK_NO_OVERDUE = "No overdue tasks.";
+	private static final String FEEDBACK_NO_REMINDER_FOR_TODAY = "No reminders for today.\n";
+	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No tasks due today.\n";
+	private static final String FEEDBACK_NO_OVERDUE = "No overdue tasks.\n";
 	
-	protected static void showReminderForToday() {
+	protected static boolean showReminderForToday() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		LinkedList<Integer> tasks = getTasksDueToday();
 		if(tasks.size() == 0) {
-			OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
+			// OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
+			return false;
 		} else {
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
+			return true;
 		}
 	}
 	
-	protected static void showReminderForOverdue() {
+	protected static boolean showReminderForOverdue() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		LinkedList<Integer> tasks = getOverdueTasks();
 		
 		if(tasks.size() == 0) {
-			OutputToGui.output(FEEDBACK_NO_OVERDUE);
+			// OutputToGui.output(FEEDBACK_NO_OVERDUE);
+			return false;
 		} else {
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
+			return true;
 		}
 	}
 	
-	protected static void showReminderTasks() {
+	protected static boolean showReminderTasks() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		LinkedList<Integer> tasks = getReminderTasks();
 		
 		if(tasks.size() == 0) {
-			OutputToGui.output(FEEDBACK_NO_REMINDER_FOR_TODAY);
+			// OutputToGui.output(FEEDBACK_NO_REMINDER_FOR_TODAY);
+			return false;
 		} else {
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
+			return true;
 		}		
 	}
 

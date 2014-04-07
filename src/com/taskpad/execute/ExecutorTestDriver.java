@@ -49,5 +49,13 @@ public class ExecutorTestDriver {
 	public static void updateDataForUndo() throws NoPreviousFileException {
 		CommandFactoryBackend.updateDataForUndo();
 	}
+
+	public static void addInfo(String info, TaskList list, int index) {
+		CommandFactoryBackend.addInfoToTask(info, list, index);
+	}
+
+	public static LinkedList<Integer> search(TaskList list, String[] keywords, String[] times) {
+		return CommandFactoryBackend.getSearchResult(list, keywords, times);
+	}
 	
 }

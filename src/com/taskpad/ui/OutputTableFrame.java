@@ -24,7 +24,7 @@ public class OutputTableFrame extends GuiFrame {
 	private GuiTableModel _taskpadTableModel;
 	private JScrollPane _scrollBox;
 
-	private final static int TABLEFRAME_WIDTH = 480;
+	private final static int TABLEFRAME_WIDTH = 800;
 	private final static int TABLEFRAME_HEIGHT = 350;
 
 	private final String FONT_HEADER_TYPE = "Lucida Console";
