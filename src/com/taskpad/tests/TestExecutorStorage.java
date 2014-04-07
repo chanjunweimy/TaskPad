@@ -19,7 +19,7 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
-public class TestSystemTest {
+public class TestExecutorStorage {
 
 	@Test
 	public void testAddFloatingTask() {
