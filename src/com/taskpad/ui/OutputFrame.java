@@ -49,7 +49,7 @@ public abstract class OutputFrame extends GuiFrame{
 			//new Color(242, 242, 242);//light grey I think
 			new Color(240,248,255);		//Baby blue
 	
-	private final static int OUTPUTFRAME_WIDTH = 480;
+	private final static int OUTPUTFRAME_WIDTH = 500;
 	private final static int OUTPUTFRAME_HEIGHT = 350;
 	
 	private final Color DEFAULT_FONT_COLOR = Color.black;
@@ -59,7 +59,7 @@ public abstract class OutputFrame extends GuiFrame{
 	
 	//children should have scroll bar too
 	protected JScrollPane _scrollBox  = new JScrollPane();
-	
+		
 	protected OutputFrame(){
 		super();
 		initializeOutputFrame();

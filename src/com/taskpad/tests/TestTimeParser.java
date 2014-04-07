@@ -2,8 +2,6 @@
 
 package com.taskpad.tests;
 
-
-
 /**
  * This unit test class tests the Time Parser
  * 

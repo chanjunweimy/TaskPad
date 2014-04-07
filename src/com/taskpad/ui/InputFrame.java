@@ -27,8 +27,8 @@ public class InputFrame extends GuiFrame{
 	//inputTextBox
 	private static JTextField _input = new JTextField(15);
 	
-	private static final int INPUTFRAME_WIDTH = 480;
-	private static final int INPUTFRAME_HEIGHT = 30;
+	private static final int INPUTFRAME_WIDTH = 500;
+	private static final int INPUTFRAME_HEIGHT = 33;
 	private static final int HISTORY_LIMIT = 3000;
 	
 	private TextFieldListener _seeText = new TextFieldListener(this);
@@ -57,6 +57,7 @@ public class InputFrame extends GuiFrame{
 		setLocation((int)(COMPUTER_WIDTH / 2 - INPUTFRAME_WIDTH / 2),
 					(int)(COMPUTER_HEIGHT / 2 + OutputFrame.getInitialHeight() / 2 - INPUTFRAME_HEIGHT / 2));
 		setVisible(true);
+		_isHiding = false;
 	}
 
 	private void initializeInputBox() {

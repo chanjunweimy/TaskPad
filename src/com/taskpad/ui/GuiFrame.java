@@ -26,9 +26,6 @@ import org.jnativehook.keyboard.NativeKeyListener;
  * For implementing HotKeys for the GuiFrame
  */
 
-
-
-
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
 	
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
@@ -50,6 +47,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private final int ROOTPANE_BORDER_THICKNESS = 2;
 	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
 	private ComponentResizer _resizer = new ComponentResizer();
+	  
+	protected boolean _isHiding = false;
 	
 	protected GuiFrame(){
 		setupLogger();
@@ -92,11 +91,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		setSize(visibleFrame.getSize());
 		setLocation(visibleFrame.getLocation());
 		setVisible(true);
+		_isHiding = false;
 	}
 	     
 	protected void close(){ 
 		dispose();
 	}
+	
+	protected void hideWindow(){
+		setVisible  (false);
+		_isHiding = true;
+ 	}
 	
 	protected void showWindow(boolean isVisible){
 		setVisible(isVisible);
@@ -224,6 +229,10 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		Runnable changeVisibility = new Runnable(){
 			@Override
 			public void run(){
+				if (_isHiding){
+					return;
+				}
+				
 				boolean isShown = isVisible() == true;
 				boolean isHided = isVisible() == false;
 				if (isShown){
@@ -233,7 +242,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 				}
 			}
  
-			private void show() {    
+			private void show() {
 				showWindow(true);
 				setState(Frame.NORMAL);
 				
@@ -243,7 +252,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			private void hide() {
 				showWindow(false);
 			}
-		};  
+		};
 		return changeVisibility;
 	}
 

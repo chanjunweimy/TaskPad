@@ -1,3 +1,5 @@
+//@author A0112084U
+
 package com.taskpad.dateandtime;
 
 import java.text.ParseException;
@@ -15,8 +17,6 @@ import java.util.Scanner;
  * Supposed to put all the protected methods from DateAndTimeManager here
  *  
  */
-
-//@author A0112084U
 
 public class DateAndTimeRetriever {
 
