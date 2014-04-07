@@ -2,8 +2,6 @@
 
 package com.taskpad.tests;
 
-
-
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -93,6 +91,11 @@ public class TestStorage {
 		
 		/* partition: empty string as file name */
 		testList = DataManager.retrieve("");	// should throw SAXParseException
+		
+	}
+	
+	@Test
+	public void testStoreAndRetrive() {
 		
 	}
 	
