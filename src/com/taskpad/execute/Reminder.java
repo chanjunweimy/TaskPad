@@ -13,9 +13,9 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
 public class Reminder {
-	private static final String FEEDBACK_NO_REMINDER_FOR_TODAY = "No reminder for today.";
-	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No task due today.";
-	private static final String FEEDBACK_NO_OVERDUE = "No overdue task.";
+	private static final String FEEDBACK_NO_REMINDER_FOR_TODAY = "No reminders for today.";
+	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No tasks due today.";
+	private static final String FEEDBACK_NO_OVERDUE = "No overdue tasks.";
 	
 	protected static void showReminderForToday() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
