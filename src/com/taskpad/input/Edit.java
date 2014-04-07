@@ -74,7 +74,7 @@ public class Edit extends Command{
 		}
 		
 		String[] splitResult = formatInput.split(STRING_SPACE);
-		return splitResult[4];
+		return splitResult[4]+ " " + splitResult[5];
 	}
 
 	@Override
