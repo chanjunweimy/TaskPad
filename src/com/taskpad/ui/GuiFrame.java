@@ -76,7 +76,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		showWindow(true);	
 		
-		//setAlwaysOnTop(true);
+		setAlwaysOnTop(true);
 			   		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
