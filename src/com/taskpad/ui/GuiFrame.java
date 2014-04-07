@@ -85,6 +85,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	private void setUpResizer() {
 		_resizer.registerComponent(this);
 		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
+		
+		LOGGER.info("Have set up resizer");
 	}
 
 	protected void showUp(GuiFrame visibleFrame){
@@ -92,19 +94,27 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		setLocation(visibleFrame.getLocation());
 		setVisible(true);
 		_isHiding = false;
+		
+		LOGGER.info("showing GuiFrame");
 	}
 	     
 	protected void close(){ 
 		dispose();
+		
+		LOGGER.info("CLOSE!");
 	}
 	
 	protected void hideWindow(){
 		setVisible  (false);
 		_isHiding = true;
+		
+		LOGGER.info("hide!");
  	}
 	
 	protected void showWindow(boolean isVisible){
 		setVisible(isVisible);
+		
+		LOGGER.info("changed visibility: " + isVisible);
 	}
 
 	@Override
@@ -202,7 +212,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		}
 	}
 
-	private void hideOrShow() {
+	private void hideOrShow() {		
 		Runnable changeVisibility = getVisibilityChanges();
 		SwingUtilities.invokeLater(changeVisibility);
 	}
@@ -229,6 +239,9 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		Runnable changeVisibility = new Runnable(){
 			@Override
 			public void run(){
+				LOGGER.info(this.toString());
+				LOGGER.info("hiding? " + _isHiding);
+				
 				if (_isHiding){
 					return;
 				}
@@ -243,6 +256,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			}
  
 			private void show() {
+				LOGGER.info("SHOW!");
+				
 				showWindow(true);
 				setState(Frame.NORMAL);
 				
@@ -250,6 +265,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			}
 
 			private void hide() {
+				LOGGER.info("HIDE!");
+
 				showWindow(false);
 			}
 		};
@@ -260,6 +277,8 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		Runnable changeState = new Runnable(){
 			@Override
 			public void run(){
+				LOGGER.info(this.toString());
+				
 				boolean isMinimized = getExtendedState() == Frame.ICONIFIED;
 				boolean isRestored = getExtendedState() == Frame.NORMAL;
 				if (isMinimized){
@@ -270,10 +289,12 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			}
 
 			private void minimize() {
+				LOGGER.info("minimize!");
 				setState(Frame.ICONIFIED);
 			}
 
 			private void restore() {
+				LOGGER.info("restore!");
 				setState(Frame.NORMAL);
 			}
 		};
