@@ -8,7 +8,6 @@ package com.taskpad.ui;
  * 
  * This class is created to fix
  * the line wrap problem in JTextPane Java 1.7
- * Hope it works!
  * 
  * WrapColumnFactory creates view on JTexTPane Doucument
  * 
