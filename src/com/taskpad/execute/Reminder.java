@@ -93,7 +93,9 @@ public class Reminder {
 			Task task = list.get(i);
 			int compareToToday = InputManager.compareDateAndTime(task.getDeadline());
 			if(compareToToday == -1 || compareToToday == 0) {
-				result.add(i);
+				if(task.getDone() == 0) {
+					result.add(i);
+				}
 			}
 		}
 		
