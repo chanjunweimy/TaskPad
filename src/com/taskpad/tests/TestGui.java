@@ -27,6 +27,8 @@ public class TestGui {
 		
 		GuiManager.setDebug(true);
 		GuiManager.initialGuiManager();
+
+		/*
 		boolean hasReminder = GuiManager.isTableActive();
 
 		assertTrue(GuiManager.getInputFrameVisibility());
@@ -37,6 +39,7 @@ public class TestGui {
 			assertFalse(GuiManager.getTableVisibility());
 			assertTrue(GuiManager.getOutputFrameVisibility());
 		}
+		*/
 
 		try {
 			Robot bot = new Robot();
