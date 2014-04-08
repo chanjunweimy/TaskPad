@@ -4,8 +4,6 @@
  * Abstract class for processing the commands 
  */
 
-
-
 package com.taskpad.input;
 
 import java.util.HashMap;
