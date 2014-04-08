@@ -48,11 +48,10 @@ public class TimeParser {
 			time = decodeTime(input);
 			timeString = convertMillisecondsToTime(time);
 		}
-				
+	
 		if (isInvalidTime(timeString)){
 			throw new TimeErrorException(input);
 		}
-		
 		return timeString;
 	}
 	
@@ -60,13 +59,19 @@ public class TimeParser {
 		String timeString = EMPTY;
 		long time = 0;
 		
+		input = input.trim();
+		
+		if (input.isEmpty()){
+			throw new InvalidTimeException();
+		}
+		
 		if(isNotEmptyString(input)){
 			time = decodeTime(input);
 			timeString = convertMillisecondsToTime(time);
 		} else {
 			throw new TimeErrorException(input);
 		}
-				
+
 		if (isInvalidTime(timeString)){
 			throw new TimeErrorException(input);
 		}
@@ -92,7 +97,6 @@ public class TimeParser {
         long time = TIME_NEG;
         
         time = checkMornAftEvenWords(input);
-        //System.err.println(time);
         
         if (time != TIME_NEG){
         	return time;
@@ -112,6 +116,8 @@ public class TimeParser {
 	                checkIfInvalidTimeString(hours, minutes, input);
 
 	            } else if (input.contains(TIME_PM)) {
+	    	        System.err.println(input + " " + time);
+	            	
 	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
 	                minutes = TIME_ZERO;
 	                
@@ -130,7 +136,7 @@ public class TimeParser {
 	                
 	            }
 	        }
-	        
+	        	        
 	        if (input.contains(TIME_AM) && hours.equals(TIME_TWELVE)) {
 	            hours = TIME_ZERO;
 	            minutes = TIME_ZERO;
@@ -200,7 +206,7 @@ public class TimeParser {
 	private void checkIfInvalidTimeString(String hours, String minutes, String input) throws InvalidTimeException {
         int h = Integer.parseInt(hours);
         int m = Integer.parseInt(minutes);
-		if (h >= 12 || m > 60){
+		if (h > 12 || m > 60){
         	throw new InvalidTimeException(input);
         } else if (h < 0 || m < 0){
         	throw new InvalidTimeException(input);
@@ -317,7 +323,7 @@ public class TimeParser {
 	}
 	
 	public static void main(String[] args){
-		String input = "1am";
+		String input = "12pm";
 		
 		//System.out.println(checkMornAftEvenWords(input));
 		TimeParser tp = TimeParser.getInstance();

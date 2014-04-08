@@ -141,8 +141,6 @@ public class TimeWordParser{
 		int realTime = 0;
 		
 		realTime = calculateEachTimeValues(realTime, input);
-		
-		
 		return BLANK + realTime;
 	}
 
