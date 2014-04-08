@@ -22,15 +22,12 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
 	
-
+	//Private constructor to prevent instantiation by other classes
 	private DateAndTimeManager() {
 	}
 
 	/**
-	 * getInstance: get the instance of DateAndTimeManager to use dateandtime
-	 * api..
-	 * 
-	 * @return DateAndTimeManager
+	 * @return single instance of DateAndTimeManager
 	 */
 	public static DateAndTimeManager getInstance() {
 		return _managerInstance;
