@@ -68,7 +68,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		//to disable the titlebar
 		setUndecorated(true);
 		
-		getRootPane().setBorder(BORDER_ROOTPANE);
+		setupBorder();
 		
 		setUpResizer();
 				                  
@@ -80,11 +80,37 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 			   		
 		//to clear the memory
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	/**
+	 * all swing object should be invoke later
+	 */
+	private void setupBorder() {
+		Runnable runBorderSetup = new Runnable(){
+			@Override
+			public void run(){
+				LOGGER.info(this.toString());
+				
+				getRootPane().setBorder(BORDER_ROOTPANE);
+			}
+		};
+		SwingUtilities.invokeLater(runBorderSetup);
 	}      
 
 	private void setUpResizer() {
 		_resizer.registerComponent(this);
-		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
+
+		
+		Runnable runResizerSetup = new Runnable(){
+			@Override
+			public void run(){
+				LOGGER.info(this.toString());
+				
+				_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);  
+			}
+		};
+		SwingUtilities.invokeLater(runResizerSetup);
+		
 		
 		LOGGER.info("Have set up resizer");
 	}
@@ -231,8 +257,17 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	}
 	
 	private void exitProgram() {
-		System.runFinalization();
-	    System.exit(0);
+		Runnable runExit = new Runnable(){
+			@Override
+			public void run(){
+				LOGGER.info(this.toString());
+				LOGGER.severe("EXIT NOW!!!");
+				
+				System.runFinalization();
+			    System.exit(0);
+			}
+		};
+		SwingUtilities.invokeLater(runExit);
 	}
 	
 	private Runnable getVisibilityChanges() {

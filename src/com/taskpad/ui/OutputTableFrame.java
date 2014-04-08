@@ -49,10 +49,7 @@ public class OutputTableFrame extends GuiFrame {
 		_taskpadTableModel = new GuiTableModel();
 		_table = new JTable(_taskpadTableModel);
 		_scrollBox = new JScrollPane(_table);
-
-		_table.setFillsViewportHeight(true);
-		add(_scrollBox);
-
+		
 		customizeHeaderStyle();
 		
 		_table.setBackground(COLOR_TABLE_BACKGROUND);
@@ -63,8 +60,16 @@ public class OutputTableFrame extends GuiFrame {
 		//to make it movable
 		_moveOutputBox.registerComponent(_table);
 		
+		_table.setFillsViewportHeight(true);
+		add(_scrollBox);
+
+
+
+		
+		
 		_isHiding = true;
 	}
+
 
 	/**
 	 * 
@@ -103,30 +108,44 @@ public class OutputTableFrame extends GuiFrame {
 	}
 
 	private void setUpColumnWidth() {
-		TableColumn column = null;
-		int colNo = _table.getColumnCount();
+		final int colNo = _table.getColumnCount();
 		
 		//_table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		_table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+		
+		Runnable runColWidthSetup = setAllColumns(colNo);
+		SwingUtilities.invokeLater(runColWidthSetup);
+	}
 
-		for (int i = 0; i < colNo; i++) {
-			column = _table.getColumnModel().getColumn(i);
-			int preferredWidthID = 25;
-			int noOfColLeft = 2;
-			boolean isDesc = i == 1;
-			boolean isID = i == 0;
-			if (isID) {
-				column.setCellRenderer(new GuiCellRenderer());
-				column.setPreferredWidth(preferredWidthID);
-			} else if (isDesc) {
-				column.setCellRenderer(new GuiCellRenderer());
-				column.setPreferredWidth((getWidth() - preferredWidthID -
-						noOfColLeft * (getWidth() - preferredWidthID) / (colNo - noOfColLeft)));
-			} else {
-				column.setCellRenderer(new GuiCellRenderer());
-				column.setPreferredWidth((getWidth() - preferredWidthID) / (colNo - noOfColLeft));
+	/**
+	 * @param colNo
+	 * @return
+	 */
+	private Runnable setAllColumns(final int colNo) {
+		Runnable runColWidthSetup = new Runnable(){
+			@Override
+			public void run(){
+				for (int i = 0; i < colNo; i++) {
+					TableColumn column = _table.getColumnModel().getColumn(i);
+					int preferredWidthID = 25;
+					int noOfColLeft = 2;
+					boolean isDesc = i == 1;
+					boolean isID = i == 0;
+					if (isID) {
+						column.setCellRenderer(new GuiCellRenderer());
+						column.setPreferredWidth(preferredWidthID);
+					} else if (isDesc) {
+						column.setCellRenderer(new GuiCellRenderer());
+						column.setPreferredWidth((getWidth() - preferredWidthID -
+								noOfColLeft * (getWidth() - preferredWidthID) / (colNo - noOfColLeft)));
+					} else {
+						column.setCellRenderer(new GuiCellRenderer());
+						column.setPreferredWidth((getWidth() - preferredWidthID) / (colNo - noOfColLeft));
+					}
+				}
 			}
-		}
+		};
+		return runColWidthSetup;
 	}
 
 	private void reset() {
