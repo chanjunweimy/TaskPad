@@ -87,7 +87,7 @@ public class Add extends Command {
 
 	@Override
 	protected boolean commandSpecificRun() {		
-		if(checkIfDelimitedString()){
+		if (checkIfDelimitedString()){
 			//this line is only useful if it is delimited
 			String temp = putDescInQuotesFirst(input);
 			
