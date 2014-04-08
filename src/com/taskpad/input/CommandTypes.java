@@ -10,7 +10,7 @@ package com.taskpad.input;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
+ 
 public class CommandTypes {
 	
 	protected static Logger logger = Logger.getLogger("TaskPad");
@@ -140,7 +140,7 @@ public class CommandTypes {
 	}
 	
 	private static void putExitVariations(){
-		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN"};
+		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN", "QUT"};
 		commandVariations.put(CommandType.EXIT, exitVariations);
 	}
 

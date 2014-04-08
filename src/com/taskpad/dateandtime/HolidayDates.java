@@ -102,6 +102,7 @@ public class HolidayDates {
 		_holidays.put("NATIONAL DAY", "09/08");
 		_holidays.put("NEW YEAR", "01/01");
 		_holidays.put("NEW YEAR DAY", "01/01");
+		_holidays.put("XMAS", "25/12");
 	}
 	
 	///* Testing

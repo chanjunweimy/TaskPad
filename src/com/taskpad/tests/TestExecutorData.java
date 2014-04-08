@@ -26,7 +26,7 @@ import com.taskpad.storage.Task;
 
 
 
-public class TestExecutorDataForDebugging {
+public class TestExecutorData {
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, DataFileStack.FILE);
