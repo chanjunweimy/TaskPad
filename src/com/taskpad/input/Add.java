@@ -15,8 +15,6 @@ import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.InvalidTimeException;
-import com.taskpad.dateandtime.NullTimeUnitException;
-import com.taskpad.dateandtime.NullTimeValueException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 
@@ -716,13 +714,17 @@ public class Add extends Command {
 				
 		if (isValidTimeArgs(splitParam)){
 			for (int i=0; i<splitParam.length; i++){
-				startDate = checkIfIsDate(splitParam[i]);
+				//System.out.println(splitParam[i]);
+				
+				startDate = checkIfIsDate(splitParam[i].trim());
 				if (notEmptyDateString(startDate)){
-					inputDeadlineDate(startDate);
+					inputStartDate(startDate);
 				} else {
-					startTime = checkIfIsTime(splitParam[i]);
+					//System.out.println(splitParam[i]);
+					startTime = checkIfIsTime(splitParam[i].trim());
 					if (notEmptyTimeString(startTime)){
-						inputDeadlineTime(startTime);
+						inputStartTime(startTime);
+						System.out.println(startTime);
 					}
 				}
 			}
@@ -737,13 +739,13 @@ public class Add extends Command {
 
 		if (isValidTimeArgs(splitParam)){
 			for (int i=0; i<splitParam.length; i++){
-				endDate = checkIfIsDate(splitParam[i]);
+				endDate = checkIfIsDate(splitParam[i].trim());
 				if (notEmptyDateString(endDate)){
-					inputDeadlineDate(endDate);
+					inputEndDate(endDate);
 				} else {
-					endTime = checkIfIsTime(splitParam[i]);
+					endTime = checkIfIsTime(splitParam[i].trim());
 					if (notEmptyTimeString(endTime)){
-						inputDeadlineTime(endTime);
+						inputEndTime(endTime);
 					}
 				}
 			}
@@ -766,9 +768,8 @@ public class Add extends Command {
 		String timeString = STRING_EMPTY;
 		
 		try {
-			timeString = DateAndTimeManager.getInstance().parseTime(string);
-		} catch (NullTimeUnitException | NullTimeValueException
-				| TimeErrorException | InvalidTimeException e) {
+			timeString = DateAndTimeManager.getInstance().parseTimeInput(string);
+		} catch (TimeErrorException | InvalidTimeException e) {
 			//do nothing
 		}
 		
@@ -776,7 +777,7 @@ public class Add extends Command {
 	}
 	
 	private boolean notEmptyTimeString(String timeString){
-		return !timeString.equals(STRING_EMPTY);
+		return timeString == null || !timeString.trim().equals(STRING_EMPTY);
 	}
 
 	private String checkIfIsDate(String string){
@@ -792,7 +793,7 @@ public class Add extends Command {
 	}
 	
 	private boolean notEmptyDateString(String dateString){
-		return !dateString.equals(STRING_EMPTY);
+		return dateString == null || !dateString.trim().equals(STRING_EMPTY);
 	}
 	
 	private void checkEmptyDateTimeString(String date, String time, String param){
