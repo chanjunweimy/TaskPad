@@ -245,6 +245,8 @@ public class DateAndTimeRetriever {
 
 		String timeWordString = parseTimeWord(timeString);
 
+		timeWordString = timeWordString.replaceAll("\"", "").trim();
+		
 		return timeWordString;
 	}
 
@@ -382,8 +384,8 @@ public class DateAndTimeRetriever {
 				} else {
 					removeStat = false;
 				}
-				//descTokens[i] = null;
-				descTokens[i] = "\"" + descTokens[i];
+				descTokens[i] = null;
+				//descTokens[i] = "\"" + descTokens[i];
 			} else {
 				if (removeStat) {
 					//descTokens[i] = null;
@@ -403,6 +405,9 @@ public class DateAndTimeRetriever {
 	}
 	
 	private boolean isParseFree(String token){
+		if (token == null){
+			return false;
+		}
 		return token.startsWith("\"");
 	}
 
@@ -854,6 +859,11 @@ public class DateAndTimeRetriever {
 			StringBuffer wholeString = new StringBuffer();
 			String timeInput;
 
+			if (isParseFree(token)){
+				isModified[i] = true;
+				continue;
+			}
+			
 			// combine n words:
 			if (allNotModified(isModified, i, n)) {
 				for (int j = i - n + 1; j <= i - 1; j++) {
@@ -914,6 +924,11 @@ public class DateAndTimeRetriever {
 			StringBuffer wholeString = new StringBuffer();
 			String dateInput;
 
+			if (isParseFree(token)){
+				isModified[i] = true;
+				continue;
+			}
+			
 			// combine n words:
 			if (allNotModified(isModified, i, n)) {
 				for (int j = i - n + 1; j <= i - 1; j++) {
@@ -1068,7 +1083,20 @@ public class DateAndTimeRetriever {
 		for (int i = 0; i < dayTokens.length; i++) {
 			String token = dayTokens[i];
 			boolean isTmrYtdVariation = swp.isTmrYtd(token);
-			if (isTmrYtdVariation && !isStart) {
+			
+			if (isParseFree(token)){
+				if (isStart) {
+					isStart = false;
+					String passString = dayBuilder.toString().trim();
+					try {
+						dayTokens[i] = datm.parseDayToDate(passString);
+					} catch (InvalidDayException | DatePassedException e) {
+						// unreachable
+						assert (false);
+					}
+					dayBuilder = new StringBuffer();
+				}
+			} else if (isTmrYtdVariation && !isStart) {
 				dayBuilder.append(token + " ");
 				dayTokens[i] = null;
 				isStart = true;
@@ -1132,6 +1160,11 @@ public class DateAndTimeRetriever {
 			String firstToken = dayTokens[i];
 			StringBuffer changedTokens = new StringBuffer();
 
+			if (isParseFree(firstToken)){
+				isModified[i] = true;
+				continue;
+			}
+			
 			if (dp.isDay(firstToken) || swp.isWk(firstToken)) {
 				isModified[i] = true;
 				for (int j = i - 1; j >= 0; j--) {
@@ -1183,6 +1216,11 @@ public class DateAndTimeRetriever {
 
 			String holidayInput;
 			String pastOneToken, pastTwoToken;
+			
+			if (isParseFree(token)){
+				isModified[i] = true;
+				continue;
+			}
 
 			// search 3 words:
 			if (allNotModified(isModified, i, 3)) {
@@ -1207,6 +1245,11 @@ public class DateAndTimeRetriever {
 			String holidayInput;
 			String pastOneToken;
 
+			if (isParseFree(token)){
+				isModified[i] = true;
+				continue;
+			}
+			
 			// search 2 words:
 			if (allNotModified(isModified, i, 2)) {
 				pastOneToken = numberInputTokens[i - 1];
@@ -1228,6 +1271,12 @@ public class DateAndTimeRetriever {
 			if (isModified[i]) {
 				continue;
 			}
+			
+			if (isParseFree(token)){
+				isModified[i] = true;
+				continue;
+			}
+			
 			String holidayInput;
 			// search 1 word
 			holidayInput = holidayParser.replaceHolidayDate(token);
@@ -1279,7 +1328,7 @@ public class DateAndTimeRetriever {
 
 		while (sc.hasNext()) {
 			String token = sc.next();
-			if (!datmParser.isNumber(token)) {
+			if (isParseFree(token) || !datmParser.isNumber(token)) {
 				if (isNumberContinue) {
 					String realNumber = datmParser.parseNumber(numberString
 							.toString().trim());
@@ -1411,7 +1460,16 @@ public class DateAndTimeRetriever {
 		try {
 			System.out
 					.println(datr
-							.formatDateAndTimeInString("deliver potion to Ivy nxt nxt Tue"));
+							.formatDateAndTimeInString("\"FRIDAY\" asked me to deliver potion to Ivy nxt nxt Tue"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			System.out
+					.println(datr
+							.formatDateAndTimeInString("one one one 1 one one "));
 		} catch (InvalidQuotesException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
