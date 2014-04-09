@@ -2,6 +2,8 @@
 
 package com.taskpad.input;
 
+import java.util.logging.Logger;
+
 import com.taskpad.alarm.AlarmManager;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.NullTimeUnitException;
@@ -19,7 +21,7 @@ import com.taskpad.dateandtime.NullTimeValueException;
 
 
 public class Alarm{	
-
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 
 	private static final String SPACE = " ";
 
@@ -36,17 +38,29 @@ public class Alarm{
 		
 		numberString = findTimeUnit(input);
 		//numberString = successParseTime(input, numberString);
+		LOGGER.info("initializing alarm......");
+		LOGGER.info("numberString is : " + numberString);
+		
 		if (numberString == null){
+			LOGGER.severe("can't find time unit...");
 			return;
 		}
 		
 		time = successParseInt(numberString, time);
 		
 		if (time == -1){
+			LOGGER.severe("can't parse numberString to int... time = -1");
 			return;
 		}
 		
-		String desc = findDesc(fullInput);
+		LOGGER.info("time is " + time);
+		
+		//String desc = findDesc(fullInput);
+		int descPos = input.lastIndexOf(numberString);
+		String desc = input.substring(0, descPos);
+		
+		LOGGER.info("descPos is " + descPos);
+		LOGGER.info("desc is " + desc);
 		
 		InputManager.outputToGui("Creating alarm... " + fullInput);
 		
@@ -96,6 +110,12 @@ public class Alarm{
 		return time;
 	}
 
+	/**
+	 * @deprecated
+	 * @param fullInput
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	private String findDesc (String fullInput){
 		String inputString[] = fullInput.split(SPACE);
 		int length = inputString.length;

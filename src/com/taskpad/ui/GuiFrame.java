@@ -27,13 +27,14 @@ import org.jnativehook.keyboard.NativeKeyListener;
  */
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
-	
-	private final static Logger LOGGER = Logger.getLogger("TaskPad");
-	
+		
 	/**
 	 * generated
 	 */
-	private static final long serialVersionUID = 1179398807003068461L;
+	private static final long serialVersionUID = 1179398807003068461L; 
+	
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
+
 	  
 	protected final double COMPUTER_WIDTH = 
 			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -104,7 +105,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		Runnable runResizerSetup = new Runnable(){
 			@Override
 			public void run(){
-				LOGGER.info(this.toString());
+				LOGGER.info("ROOTPANE_BORDER_THICKNESS: " + ROOTPANE_BORDER_THICKNESS);
 				
 				_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);  
 			}
@@ -115,30 +116,51 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		LOGGER.info("Have set up resizer");
 	}
 
-	protected void showUp(GuiFrame visibleFrame){
-		setSize(visibleFrame.getSize());
-		setLocation(visibleFrame.getLocation());
-		setVisible(true);
-		_isHiding = false;
+	protected void showUp(final GuiFrame visibleFrame){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setSize(visibleFrame.getSize());
+				setLocation(visibleFrame.getLocation());
+				setVisible(true);
+				_isHiding = false;			
+			}
+		});
 		
 		LOGGER.info("showing GuiFrame");
 	}
 	     
 	protected void close(){ 
-		dispose();
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				dispose();		
+			}
+		});
 		
 		LOGGER.info("CLOSE!");
 	}
 	
 	protected void hideWindow(){
-		setVisible  (false);
-		_isHiding = true;
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setVisible  (false);
+				_isHiding = true;		
+			}
+		});
+		
 		
 		LOGGER.info("hide!");
  	}
 	
-	protected void showWindow(boolean isVisible){
-		setVisible(isVisible);
+	protected void showWindow(final boolean isVisible){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setVisible(isVisible);	
+			}
+		});
 		
 		LOGGER.info("changed visibility: " + isVisible);
 	}
@@ -180,12 +202,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
-		boolean isAltAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
-				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-				equals("Alt");
-		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
-				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-				equals("Alt");
+		
 		
 		/**
 		 * we will disable some keys when TaskPad is in
@@ -193,7 +210,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		 */
 		isEscapeKey = isEscapeKey && isVisible();
 		isAltEndKey = isAltEndKey && isVisible();
-		isAltCKey = isAltCKey && isVisible();
+		
 		
 		if (isAltEndKey) {
 			minimizeOrRestore();
@@ -202,12 +219,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		} else if (isEscapeKey){
 			endProgram();
 			exitProgram();
-		} else if (isAltAKey){
-			switchOffAlarm();
-		} else if (isAltCKey){
-			cancelAlarms();
-		} 
-		
+		} 		
 	}
 	
 	/**
@@ -216,27 +228,6 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	protected void requestFocusOnInputBox() {
 	}
 	
-
-	private void cancelAlarms() {
-		try {
-    		LOGGER.info("Canceling Alarm...");
-			
-			GuiManager.cancelAlarms();
-		} catch (Exception e) {
-			//do nothing
-		}
-	}
-
-	private void switchOffAlarm() {
-		try {
-    		LOGGER.info("Switching off Alarm...");
-			
-			GuiManager.turnOffAlarm();
-		} catch (Exception e) {
-			//System.err.println(e.getMessage());
-			//do nothing
-		}
-	}
 
 	private void hideOrShow() {		
 		Runnable changeVisibility = getVisibilityChanges();
