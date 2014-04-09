@@ -4,7 +4,6 @@ package com.taskpad.dateandtime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +34,9 @@ public class HolidayDatesParser {
 	 */
 	
 	protected String replaceHolidayDate(String input){	
+		if (input == null){
+			return null;
+		}
 		String holidayDate = _holidays.get(input.toUpperCase());
 		if (holidayDate != null){
 			holidayDate = parseHolidayDate(holidayDate);
@@ -69,7 +71,7 @@ public class HolidayDatesParser {
 	}
 	
 	private String addYear(String date) {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int year = getThisYear();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date holidayDate = null;
@@ -89,6 +91,16 @@ public class HolidayDatesParser {
 		
 		return date + "/" + year;
 	}
+
+	/**
+	 * @return
+	 */
+	private int getThisYear() {
+		String today = DateAndTimeManager.getInstance().getTodayDate();
+		String yearString = today.split("/")[2];
+		return Integer.parseInt(yearString);
+		//return Calendar.getInstance().get(Calendar.YEAR);
+	}
 	
 	private static void initialiseHolidayMap(){
 		_holidays.put("CHRISTMAS", "25/12");
@@ -104,7 +116,7 @@ public class HolidayDatesParser {
 		_holidays.put("NEW YEAR DAY", "01/01");
 	}
 	
-	///* Testing
+	/* Testing
 	public static void main(String[] args){
 		String input = "LABOUR DAY";
 		HolidayDatesParser holidayDates = HolidayDatesParser.getInstance();

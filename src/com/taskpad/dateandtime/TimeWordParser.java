@@ -21,7 +21,7 @@ public class TimeWordParser{
 	
 	private static Map<String, String[]> _timewordsMap = new HashMap<String, String[]>();
 	private static Map<String, Integer> _timeunitMap = new HashMap<String, Integer>();
-	private static DateAndTimeManager _numberparser = DateAndTimeManager.getInstance();
+	private static NumberParser _numberparser = NumberParser.getInstance();
 	
 	private static final String TIME_SEC = "SECOND";
 	private static final String TIME_MIN = "MIN";
@@ -223,7 +223,8 @@ public class TimeWordParser{
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
 			}
 			
-			_numberword = _numberparser.parseNumber(input);
+			boolean isStrict = false;
+			_numberword = _numberparser.parseTheNumbers(input, isStrict);
 			
 			//System.err.println("DE: " + _numberword + " " + input);
 			if (_numberword == null){
