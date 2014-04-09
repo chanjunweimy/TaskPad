@@ -99,12 +99,13 @@ public class AlarmManager extends JApplet{
 	}
 
 	public static void turnOffAlarm() throws Exception{
+		
 		if (_alarm == null){
 			GuiManager.callOutput(MESSAGE_NO_ALARM);
 			//throw EXCEPTION_ERROR;
 			return;
 		}
-		
+			
 		if (_isPlaying){
 			_alarm.stopSound();
 			_isPlaying = false;
@@ -116,10 +117,13 @@ public class AlarmManager extends JApplet{
 	}
 	
 	public static void cancelAlarms() throws Exception{
+		/*
 		if (_alarm == null){
 			//throw EXCEPTION_ERROR;
 			return;
 		}
+		*/
+
 				
 		if (_isPlaying){
 			_alarm.stopSound();

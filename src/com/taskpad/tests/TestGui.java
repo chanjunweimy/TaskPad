@@ -28,7 +28,7 @@ public class TestGui {
 		GuiManager.setDebug(true);
 		GuiManager.initialGuiManager();
 
-		/*
+		///*
 		boolean hasReminder = GuiManager.isTableActive();
 
 		assertTrue(GuiManager.getInputFrameVisibility());
@@ -39,7 +39,7 @@ public class TestGui {
 			assertFalse(GuiManager.getTableVisibility());
 			assertTrue(GuiManager.getOutputFrameVisibility());
 		}
-		*/
+		//*/
 
 		try {
 			Robot bot = new Robot();
@@ -47,7 +47,7 @@ public class TestGui {
 			bot.setAutoDelay(40);
 			bot.setAutoWaitForIdle(true);
  
-			bot.delay(3000);
+			//bot.delay(3000);
 			
 			//leftClick(bot);
 			
