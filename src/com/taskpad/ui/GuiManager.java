@@ -12,7 +12,7 @@ import com.taskpad.input.InputManager;
 
 public class GuiManager {
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
-	
+
 	private static final String NEWLINE = "\n\n";
 	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
 	private static InputFrame _inputFrame;
@@ -29,19 +29,19 @@ public class GuiManager {
 	public static void initialGuiManager() {
 		initializeTableFrame();
 		initializeFlexiFontOutputFrame();
-		initializeInputFrame();		
+		initializeInputFrame();
 	}
 
 	/**
 	 * 
 	 */
 	private static void initializeInputFrame() {
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				_inputFrame = new InputFrame();
 			}
-			
+
 		});
 	}
 
@@ -49,12 +49,12 @@ public class GuiManager {
 	 * 
 	 */
 	private static void initializeTableFrame() {
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				_tableFrame = new OutputTableFrame();			
+				_tableFrame = new OutputTableFrame();
 			}
-			
+
 		});
 	}
 
@@ -62,15 +62,14 @@ public class GuiManager {
 	 * 
 	 */
 	private static void initializeFlexiFontOutputFrame() {
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				_outputFrame = new FlexiFontOutputFrame();
 			}
-			
+
 		});
 	}
-
 
 	/*
 	 * deprecated public static void initialGuiManager(InputFrame inputFrame,
@@ -78,10 +77,16 @@ public class GuiManager {
 	 * setOutputFrame(outputFrame); }
 	 */
 
-	public static void callTable(Object[][] data) {
-		swapFrame(_outputFrame, _tableFrame);
-		_tableFrame.refresh(data);
-		_inputFrame.requestFocusOnInputBox();
+	public static void callTable(final Object[][] data) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				swapFrame(_outputFrame, _tableFrame);
+				_tableFrame.refresh(data);
+				_inputFrame.requestFocusOnInputBox();
+			}
+
+		});
 	}
 
 	/**
@@ -92,28 +97,39 @@ public class GuiManager {
 
 		boolean isShown = firstFrame.isVisible() == true;
 		boolean isHided = firstFrame.isVisible() == false;
-		
+
 		LOGGER.info("isShown is : " + isShown);
 		LOGGER.info("isHided is : " + isHided);
 
 		if (isHided) {
 			LOGGER.info("IS NOT SWAPPING!!! ");
+			
+			firstFrame.hideWindow();
+			secondFrame.showUp(secondFrame);
+			
 			return;
-		} else if (isShown){
+		} else if (isShown) {
 			LOGGER.info("IS SWAPPING!!! ");
+
 			firstFrame.hideWindow();
 			secondFrame.showUp(firstFrame);
 			_isTableCalled = !_isTableCalled;
-			
-			LOGGER.info("HAS SWAPPED ");	
+
+			LOGGER.info("HAS SWAPPED ");
 		}
 	}
 
 	public static void showWindow(final boolean isVisible) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				_inputFrame.showWindow(isVisible);
+				swapFrame(_tableFrame, _outputFrame);
+				_inputFrame.requestFocusOnInputBox();
+			}
 
-		_inputFrame.showWindow(isVisible);
-		swapFrame(_tableFrame, _outputFrame);
-		_inputFrame.requestFocusOnInputBox();
+		});
+
 	}
 
 	public static void callExit() {
@@ -136,8 +152,17 @@ public class GuiManager {
 
 	public static void callOutputNoLine(final String out) {
 		if (!_isDebug) {
-			swapFrame(_tableFrame, _outputFrame);
-			_outputFrame.addLine(out);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					swapFrame(_tableFrame, _outputFrame);
+					_outputFrame.addLine(out);
+
+					_inputFrame.requestFocusOnInputBox();
+				}
+
+			});
+
 		} else {
 			System.out.println(out);
 		}
@@ -161,8 +186,17 @@ public class GuiManager {
 	public static void showSelfDefinedMessageNoNewline(final String out,
 			final Color c, final boolean isBold) {
 		if (!_isDebug) {
-			swapFrame(_tableFrame, _outputFrame);
-			_outputFrame.addSelfDefinedLine(out, c, isBold);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					swapFrame(_tableFrame, _outputFrame);
+					_outputFrame.addSelfDefinedLine(out, c, isBold);
+
+					_inputFrame.requestFocusOnInputBox();
+				}
+
+			});
+
 		} else {
 			System.out.println(out);
 		}
@@ -170,16 +204,20 @@ public class GuiManager {
 	}
 
 	public static void startRemindingUser() {
-		remindUser(MESSAGE_START_REMINDER);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				swapFrame(_tableFrame, _outputFrame);
+				remindUser(MESSAGE_START_REMINDER);
+			}
+
+		});
+
 	}
 
-	public static void remindUser(final String out) {
-
+	private static void remindUser(final String out) {
+		// swapFrame(_tableFrame, _outputFrame);
 		_outputFrame.addReminder(out + NEWLINE);
-
-		// _outputFrame.addReminder(NEWLINE + out + NEWLINE + NEWLINE); --can i
-		// change this... TN
-		// ExecutorManager.showReminder(); --should not put here? TN
 	}
 
 	protected static void passInput(final String in) {
@@ -187,21 +225,33 @@ public class GuiManager {
 	}
 
 	protected static void turnOffAlarm() {
-		try {
-			AlarmManager.turnOffAlarm();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AlarmManager.turnOffAlarm();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		});
 	}
 
 	protected static void cancelAlarms() {
-		try {
-			AlarmManager.turnOffAlarm();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					AlarmManager.cancelAlarms();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		});
 	}
 
 	protected static OutputFrame getOutputFrame() {
@@ -209,9 +259,16 @@ public class GuiManager {
 	}
 
 	public static void clearOutput() {
-		swapFrame(_tableFrame, _outputFrame);
-		_outputFrame.clearOutputBox();
-		_inputFrame.requestFocusOnInputBox();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				swapFrame(_tableFrame, _outputFrame);
+				_outputFrame.clearOutputBox();
+				_inputFrame.requestFocusOnInputBox();
+			}
+
+		});
+		
 	}
 
 	// for debug

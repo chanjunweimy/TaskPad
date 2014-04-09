@@ -178,72 +178,101 @@ public class ComponentResizer extends MouseAdapter{
 	/**
 	 */
 	@Override
-	public void mouseMoved(MouseEvent e){
-		Component source = e.getComponent();
-		Point location = e.getPoint();
-		_direction = 0;
+	public void mouseMoved(final MouseEvent e){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				Component source = e.getComponent();
+				Point location = e.getPoint();
+				_direction = 0;
 
-		if (location.x < _dragInsets.left){
-			_direction += WEST;
-		}
+				if (location.x < _dragInsets.left){
+					_direction += WEST;
+				}
 
-		if (location.x > source.getWidth() - _dragInsets.right - 1){
-			_direction += EAST;
-		}
+				if (location.x > source.getWidth() - _dragInsets.right - 1){
+					_direction += EAST;
+				}
 
-		if (location.y < _dragInsets.top){
-			_direction += NORTH;
-		}
+				if (location.y < _dragInsets.top){
+					_direction += NORTH;
+				}
 
-		if (location.y > source.getHeight() - _dragInsets.bottom - 1){
-			_direction += SOUTH;
-		}
+				if (location.y > source.getHeight() - _dragInsets.bottom - 1){
+					_direction += SOUTH;
+				}
 
-		//  Mouse is no longer over a resizable border
+				//  Mouse is no longer over a resizable border
 
-		if (_direction == 0){
-			source.setCursor( sourceCursor );
-		}
-		else { // use the appropriate resizable cursor
-			int cursorType = _cursors.get( _direction );
-			Cursor cursor = Cursor.getPredefinedCursor( cursorType );
-			source.setCursor( cursor );
-		}
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e){
-		if (!_isResizing){
-			Component source = e.getComponent();
-			sourceCursor = source.getCursor();
-		}
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e){
-		if (!_isResizing){
-			Component source = e.getComponent();
-			source.setCursor( sourceCursor );
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e){
-		//	The mouseMoved event continually updates this variable
-
-		if (_direction == 0){
-			return;
-		}
-
-		Component source;
+				if (_direction == 0){
+					source.setCursor( sourceCursor );
+				}
+				else { // use the appropriate resizable cursor
+					int cursorType = _cursors.get( _direction );
+					Cursor cursor = Cursor.getPredefinedCursor( cursorType );
+					source.setCursor( cursor );
+				}
+			}
+			
+		});
 		
-		//  Setup for _isResizing. All future dragging calculations are done based
-		//  on the original _bounds of the component and mouse pressed location.
-		source = setupForResizing(e);
+	}
 
-		//  Making sure autoscrolls is false will allow for smoother resizing
-		//  of components
-		disableAutoScrolls(source);
+	@Override
+	public void mouseEntered(final MouseEvent e){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				if (!_isResizing){
+					Component source = e.getComponent();
+					sourceCursor = source.getCursor();
+				}
+			}
+			
+		});
+		
+	}
+
+	@Override
+	public void mouseExited(final MouseEvent e){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				if (!_isResizing){
+					Component source = e.getComponent();
+					source.setCursor( sourceCursor );
+				}
+			}
+			
+		});
+		
+	}
+
+	@Override
+	public void mousePressed(final MouseEvent e){
+		
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+//				The mouseMoved event continually updates this variable
+
+				if (_direction == 0){
+					return;
+				}
+
+				Component source;
+				
+				//  Setup for _isResizing. All future dragging calculations are done based
+				//  on the original _bounds of the component and mouse pressed location.
+				source = setupForResizing(e);
+
+				//  Making sure autoscrolls is false will allow for smoother resizing
+				//  of components
+				disableAutoScrolls(source);
+			}
+			
+		});
+		
 	}
 
 	private Component setupForResizing(MouseEvent e){
@@ -269,13 +298,20 @@ public class ComponentResizer extends MouseAdapter{
 	 *  Restore the original state of the Component
 	 */
 	@Override
-	public void mouseReleased(MouseEvent e){
-		_isResizing = false;
+	public void mouseReleased(final MouseEvent e){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				_isResizing = false;
 
-		Component source = e.getComponent();
-		source.setCursor( sourceCursor );
+				Component source = e.getComponent();
+				source.setCursor( sourceCursor );
 
-		restoreAutoScroll(source);
+				restoreAutoScroll(source);
+			}
+			
+		});
+		
 	}
 
 	private void restoreAutoScroll(Component source) {
@@ -293,16 +329,23 @@ public class ComponentResizer extends MouseAdapter{
 	 *  _isResizing started.
 	 */
 	@Override
-	public void mouseDragged(MouseEvent e){
-		if (!_isResizing){
-			return;
-		}
+	public void mouseDragged(final MouseEvent e){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				if (!_isResizing){
+					return;
+				}
 
-		Component source = e.getComponent();
-		Point dragged = e.getPoint();
-		SwingUtilities.convertPointToScreen(dragged, source);
+				Component source = e.getComponent();
+				Point dragged = e.getPoint();
+				SwingUtilities.convertPointToScreen(dragged, source);
 
-		changeBounds(source, _direction, _bounds, _pressed, dragged);
+				changeBounds(source, _direction, _bounds, _pressed, dragged);
+			}
+			
+		});
+		
 	}
 
 	protected void changeBounds(Component source, int _direction, Rectangle _bounds, Point _pressed, Point current){
