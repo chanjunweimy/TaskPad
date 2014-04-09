@@ -84,7 +84,7 @@ public class DateParser {
 		//"yyyy/dd/MM", "yyyy-dd-MM", "yyyy.dd.MM", "yyyy dd MM", 
 		//"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yyyy/dd/MMM",
 		//"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
-		 //"MMddyyyy", "yyyyMMMdd"锛�"ddMMyyyy", 
+		 //"MMddyyyy", "yyyyMMMdd", "ddMMyyyy", 
 		//"MMMddyyyy",
 		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
 		 "MMddyyyy", "yyyyMMMdd"
