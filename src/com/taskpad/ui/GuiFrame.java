@@ -27,13 +27,14 @@ import org.jnativehook.keyboard.NativeKeyListener;
  */
 
 public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
-	
-	private final static Logger LOGGER = Logger.getLogger("TaskPad");
-	
+		
 	/**
 	 * generated
 	 */
-	private static final long serialVersionUID = 1179398807003068461L;
+	private static final long serialVersionUID = 1179398807003068461L; 
+	
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
+
 	  
 	protected final double COMPUTER_WIDTH = 
 			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -201,12 +202,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
 				equals("Alt");
-		boolean isAltAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
-				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-				equals("Alt");
-		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
-				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
-				equals("Alt");
+		
 		
 		/**
 		 * we will disable some keys when TaskPad is in
@@ -214,7 +210,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		 */
 		isEscapeKey = isEscapeKey && isVisible();
 		isAltEndKey = isAltEndKey && isVisible();
-		isAltCKey = isAltCKey && isVisible();
+		
 		
 		if (isAltEndKey) {
 			minimizeOrRestore();
@@ -223,12 +219,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		} else if (isEscapeKey){
 			endProgram();
 			exitProgram();
-		} else if (isAltAKey){
-			switchOffAlarm();
-		} else if (isAltCKey){
-			cancelAlarms();
-		} 
-		
+		} 		
 	}
 	
 	/**
@@ -237,29 +228,6 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	protected void requestFocusOnInputBox() {
 	}
 	
-
-	private void cancelAlarms() {
-    	LOGGER.info("Canceling Alarm...");
-		
-    	Runnable runCancel = new Runnable(){
-			@Override
-			public void run(){
-				GuiManager.cancelAlarms();
-			}
-		};
-		SwingUtilities.invokeLater(runCancel);
-	}
-
-	private void switchOffAlarm() {
-		try {
-    		LOGGER.info("Switching off Alarm...");
-			
-			GuiManager.turnOffAlarm();
-		} catch (Exception e) {
-			//System.err.println(e.getMessage());
-			//do nothing
-		}
-	}
 
 	private void hideOrShow() {		
 		Runnable changeVisibility = getVisibilityChanges();
