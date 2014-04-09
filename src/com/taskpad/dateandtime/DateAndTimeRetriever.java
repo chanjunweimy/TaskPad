@@ -1504,6 +1504,7 @@ public class DateAndTimeRetriever {
 	 * @param dayString
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String parseTodayAndNow(String dayString) {
 		String[] todayAndNowTokens = dayString.split(" ");
 		StringBuffer todayAndNowBuilder = new StringBuffer();
@@ -1557,7 +1558,7 @@ public class DateAndTimeRetriever {
 		 * try { System.out.println(datr.formatDateAndTimeInString(
 		 * "aaa at 11/3 by 3/4 11pm")); } catch (InvalidQuotesException e) { //
 		 * TODO Auto-generated catch block e.printStackTrace(); }
-		 */
+		 
 
 		try {
 			String noQuoteDesc = datr.removeParseFreeZone("\" aaaa \" bbbb ");
@@ -1572,7 +1573,7 @@ public class DateAndTimeRetriever {
 		 * "do cs2010 assignment by nxt nxt Wk")); } catch
 		 * (InvalidQuotesException e) { // TODO Auto-generated catch block
 		 * e.printStackTrace(); }
-		 */
+		 
 
 		try {
 			System.out.println(datr.formatDateAndTimeInString("11:00"));
@@ -1629,6 +1630,7 @@ public class DateAndTimeRetriever {
 		}
 		
 		/*BUG HAPPENS when two numbers come together*/
+		
 		try {
 			System.out.println(datr
 					.formatDateAndTimeInString("use calculator 570 11/11/15"));

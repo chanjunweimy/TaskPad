@@ -55,11 +55,8 @@ public class Alarm{
 		
 		LOGGER.info("time is " + time);
 		
-		//String desc = findDesc(fullInput);
-		int descPos = input.lastIndexOf(numberString);
-		String desc = input.substring(0, descPos);
+		String desc = findDesc(fullInput);
 		
-		LOGGER.info("descPos is " + descPos);
 		LOGGER.info("desc is " + desc);
 		
 		InputManager.outputToGui("Creating alarm... " + fullInput);
@@ -72,7 +69,7 @@ public class Alarm{
 		String[] splitInput = input.split(SPACE);
 		
 		try {
-			numberString = successParseTime(splitInput[splitInput.length-1], numberString);
+			numberString = successParseTime(splitInput[splitInput.length - 1], numberString);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
 			String newNumberString = "";
 			//Currently alarm only supports 1m and 1s and not 1y etc.
@@ -111,11 +108,9 @@ public class Alarm{
 	}
 
 	/**
-	 * @deprecated
 	 * @param fullInput
 	 * @return
 	 */
-	@SuppressWarnings("unused")
 	private String findDesc (String fullInput){
 		String inputString[] = fullInput.split(SPACE);
 		int length = inputString.length;
