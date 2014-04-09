@@ -104,7 +104,7 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		Runnable runResizerSetup = new Runnable(){
 			@Override
 			public void run(){
-				LOGGER.info(this.toString());
+				LOGGER.info("ROOTPANE_BORDER_THICKNESS: " + ROOTPANE_BORDER_THICKNESS);
 				
 				_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);  
 			}
@@ -115,30 +115,51 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		LOGGER.info("Have set up resizer");
 	}
 
-	protected void showUp(GuiFrame visibleFrame){
-		setSize(visibleFrame.getSize());
-		setLocation(visibleFrame.getLocation());
-		setVisible(true);
-		_isHiding = false;
+	protected void showUp(final GuiFrame visibleFrame){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setSize(visibleFrame.getSize());
+				setLocation(visibleFrame.getLocation());
+				setVisible(true);
+				_isHiding = false;			
+			}
+		});
 		
 		LOGGER.info("showing GuiFrame");
 	}
 	     
 	protected void close(){ 
-		dispose();
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				dispose();		
+			}
+		});
 		
 		LOGGER.info("CLOSE!");
 	}
 	
 	protected void hideWindow(){
-		setVisible  (false);
-		_isHiding = true;
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setVisible  (false);
+				_isHiding = true;		
+			}
+		});
+		
 		
 		LOGGER.info("hide!");
  	}
 	
-	protected void showWindow(boolean isVisible){
-		setVisible(isVisible);
+	protected void showWindow(final boolean isVisible){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setVisible(isVisible);	
+			}
+		});
 		
 		LOGGER.info("changed visibility: " + isVisible);
 	}
@@ -218,13 +239,15 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 	
 
 	private void cancelAlarms() {
-		try {
-    		LOGGER.info("Canceling Alarm...");
-			
-			GuiManager.cancelAlarms();
-		} catch (Exception e) {
-			//do nothing
-		}
+    	LOGGER.info("Canceling Alarm...");
+		
+    	Runnable runCancel = new Runnable(){
+			@Override
+			public void run(){
+				GuiManager.cancelAlarms();
+			}
+		};
+		SwingUtilities.invokeLater(runCancel);
 	}
 
 	private void switchOffAlarm() {

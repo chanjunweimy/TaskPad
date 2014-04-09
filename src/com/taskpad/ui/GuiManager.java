@@ -3,11 +3,16 @@
 package com.taskpad.ui;
 
 import java.awt.Color;
+import java.util.logging.Logger;
+
+import javax.swing.SwingUtilities;
 
 import com.taskpad.alarm.AlarmManager;
 import com.taskpad.input.InputManager;
 
 public class GuiManager {
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
+	
 	private static final String NEWLINE = "\n\n";
 	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
 	private static InputFrame _inputFrame;
@@ -22,10 +27,50 @@ public class GuiManager {
 
 	// invoke all frames to a thread
 	public static void initialGuiManager() {
-		_outputFrame = new FlexiFontOutputFrame();
-		_inputFrame = new InputFrame();
-		_tableFrame = new OutputTableFrame();
+		initializeTableFrame();
+		initializeFlexiFontOutputFrame();
+		initializeInputFrame();		
 	}
+
+	/**
+	 * 
+	 */
+	private static void initializeInputFrame() {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				_inputFrame = new InputFrame();
+			}
+			
+		});
+	}
+
+	/**
+	 * 
+	 */
+	private static void initializeTableFrame() {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				_tableFrame = new OutputTableFrame();			
+			}
+			
+		});
+	}
+
+	/**
+	 * 
+	 */
+	private static void initializeFlexiFontOutputFrame() {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				_outputFrame = new FlexiFontOutputFrame();
+			}
+			
+		});
+	}
+
 
 	/*
 	 * deprecated public static void initialGuiManager(InputFrame inputFrame,
@@ -36,6 +81,7 @@ public class GuiManager {
 	public static void callTable(Object[][] data) {
 		swapFrame(_outputFrame, _tableFrame);
 		_tableFrame.refresh(data);
+		_inputFrame.requestFocusOnInputBox();
 	}
 
 	/**
@@ -44,21 +90,30 @@ public class GuiManager {
 	private static void swapFrame(final GuiFrame firstFrame,
 			final GuiFrame secondFrame) {
 
-		if (firstFrame.isVisible()) {
-			_isTableCalled = !_isTableCalled;
+		boolean isShown = firstFrame.isVisible() == true;
+		boolean isHided = firstFrame.isVisible() == false;
+		
+		LOGGER.info("isShown is : " + isShown);
+		LOGGER.info("isHided is : " + isHided);
+
+		if (isHided) {
+			LOGGER.info("IS NOT SWAPPING!!! ");
+			return;
+		} else if (isShown){
+			LOGGER.info("IS SWAPPING!!! ");
 			firstFrame.hideWindow();
 			secondFrame.showUp(firstFrame);
+			_isTableCalled = !_isTableCalled;
+			
+			LOGGER.info("HAS SWAPPED ");	
 		}
-
-		_inputFrame.requestFocusOnInputBox();
-
 	}
 
 	public static void showWindow(final boolean isVisible) {
 
 		_inputFrame.showWindow(isVisible);
 		swapFrame(_tableFrame, _outputFrame);
-
+		_inputFrame.requestFocusOnInputBox();
 	}
 
 	public static void callExit() {
@@ -154,7 +209,9 @@ public class GuiManager {
 	}
 
 	public static void clearOutput() {
+		swapFrame(_tableFrame, _outputFrame);
 		_outputFrame.clearOutputBox();
+		_inputFrame.requestFocusOnInputBox();
 	}
 
 	// for debug

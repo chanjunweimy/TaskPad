@@ -182,7 +182,14 @@ public class InputFrame extends GuiFrame{
 	}
 	
 	protected void reset(){
-		_input.setText(InputFrame.EMPTY);
+		Runnable resetBox = new Runnable(){
+			@Override
+			public void run(){
+				_input.setText(InputFrame.EMPTY);
+			}
+		};
+		SwingUtilities.invokeLater(resetBox);
+		
 	}
 	
 	protected JTextField getInputBox(){
