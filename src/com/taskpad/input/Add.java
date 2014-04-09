@@ -769,6 +769,7 @@ public class Add extends Command {
 		
 		try {
 			timeString = DateAndTimeManager.getInstance().parseTimeInput(string);
+			//timeString = DateAndTimeManager.getInstance().parseTime(string);
 		} catch (TimeErrorException | InvalidTimeException e) {
 			//do nothing
 		}

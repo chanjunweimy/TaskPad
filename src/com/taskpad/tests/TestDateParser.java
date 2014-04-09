@@ -12,6 +12,11 @@ import org.junit.Test;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidDateException;
 
+/**
+ * tested all possible paths in DateParser
+ * but not tested all the formats yet
+ *
+ */
 public class TestDateParser {
 	private static final String DATE_TEST = "01/04/2014 00:01";
 	private static final String DATE_INVALID = "Error: Invalid Date Entered";

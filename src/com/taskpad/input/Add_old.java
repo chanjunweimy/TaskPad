@@ -8,9 +8,14 @@ import java.util.regex.Pattern;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidDateException;
-import com.taskpad.dateandtime.InvalidTimeException;
-import com.taskpad.dateandtime.TimeErrorException;
+//import com.taskpad.dateandtime.InvalidTimeException;
+//import com.taskpad.dateandtime.TimeErrorException;
 
+
+/**
+ * @deprecated
+ *
+ */
 public class Add_old extends Command{
 	
 	private static final String QUOTE = "\"";
@@ -18,7 +23,7 @@ public class Add_old extends Command{
 	private static final String DASH = "-";
 	private static final String SPACE = " ";
 	private static final String EMPTY = "";
-	private static final String COMMA = ",";
+	//private static final String COMMA = ",";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -32,9 +37,9 @@ public class Add_old extends Command{
 	private static String PARAMETER_DESCRIPTION = "DESC";
 	private static String PARAMETER_VENUE = "VENUE";
 	
-	private static String MESSAGE_ERROR_TIME = "Error: Invalid variables for time: %d";
+	//private static String MESSAGE_ERROR_TIME = "Error: Invalid variables for time: %d";
 	
-	private static int LENGTH_TIME = 2;
+	//private static int LENGTH_TIME = 2;
 	
 	private static boolean _invalidParameters = false;
 	private static int _count;
@@ -258,8 +263,10 @@ public class Add_old extends Command{
 		putOneParameter(PARAMETER_VENUE, param);		
 	}
 
+	
 	//TODO: Check if splitParam[0] is valid time and splitParam[1] is valid Date
 	private void inputStartTime(String param) {
+		/*
 		String[] splitParam = param.split(COMMA);
 		
 		if (isValidTimeArgs(splitParam)){
@@ -275,6 +282,7 @@ public class Add_old extends Command{
 				_invalidParameters = true;
 				return;
 			}
+			
 			putOneParameter(PARAMETER_START_TIME, startTime);
 		
 			String startDate = EMPTY;
@@ -289,8 +297,10 @@ public class Add_old extends Command{
 				putOneParameter(PARAMETER_START_DATE, startDate);
 			}
 		}
+		*/
 	}
-
+	
+	
 	@SuppressWarnings("unused")
 	private void getDescInQuotes(){
 		Pattern pattern = Pattern.compile(".*(\\\"|\\\')(.*)(\\\"|\\\').*"); 
@@ -301,6 +311,7 @@ public class Add_old extends Command{
 	}
 
 	private void inputEndTime(String param) {
+		/*
 		String[] splitParam = param.split(",");
 		
 		if (isValidTimeArgs(splitParam)){
@@ -331,6 +342,7 @@ public class Add_old extends Command{
 				putOneParameter(PARAMETER_END_DATE, endDate);
 			}
 		}
+		*/
 	}
 
 	private void inputCategory(String param){
@@ -358,6 +370,7 @@ public class Add_old extends Command{
 		return firstChar;
 	}
 	
+	/*
 	private boolean isValidTimeArgs(String[] args){
 		if (args.length > LENGTH_TIME){
 			outputTimeArgsError(args.length);
@@ -366,12 +379,15 @@ public class Add_old extends Command{
 			return true;
 		}
 	}
+	*/
 	
+	/*
 	private String outputTimeArgsError(int length){
 		String errorMessage = String.format(MESSAGE_ERROR_TIME, length);
 		InputManager.outputToGui(errorMessage);
 		return errorMessage;
 	}
+	*/
 	
 	private String stripWhiteSpaces(String input){
 		return input.replaceAll(Add_old.SPACE, Add_old.BLANK);

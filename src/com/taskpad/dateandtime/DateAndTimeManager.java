@@ -1,4 +1,4 @@
-//@author A0119646X
+	//@author A0119646X
 
 /* Public API to call dates */
 
@@ -95,7 +95,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws DatePassedException 
 	 * @throws InvalidDayException 
 	 */
-	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
+	public String parseDayToDate(String input) throws InvalidDayException{
 		DayParser dayParser = DayParser.getInstance();
 		return dayParser.parseDayToDate(input);
 	}
@@ -152,17 +152,23 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * parseTime: parse different format of time
 	 * @param timeString
 	 * @return String
-	 * @throws NullTimeUnitException
-	 * @throws NullTimeValueException
 	 * @throws TimeErrorException
 	 * @throws InvalidTimeException 
 	 */
-	public String parseTime(String timeString) throws NullTimeUnitException,
-			NullTimeValueException, TimeErrorException, InvalidTimeException {
+	@SuppressWarnings("deprecation")
+	public String parseTime(String timeString) throws TimeErrorException, InvalidTimeException {
 		TimeParser tp = TimeParser.getInstance();
 		return tp.parseTime(timeString);
 	}
 
+	/**
+	 * only can parse normal time, such as 1am, 11:00 ......
+	 * but can parse next hour, 1 hour later......
+	 * @param timeString
+	 * @return
+	 * @throws TimeErrorException
+	 * @throws InvalidTimeException
+	 */
 	public String parseTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
 		TimeParser tp = TimeParser.getInstance();
 		return tp.parseTimeInput(timeString);
@@ -207,8 +213,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @return String
 	 */
 	public String parseNumber(String numberString) {
-		NumberParser parser = NumberParser.getInstance();
-		return parser.parseTheNumbers(numberString, true);
+		return parseNumber(numberString, true);
 	}
 	
 	/**
