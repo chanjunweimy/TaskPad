@@ -38,16 +38,15 @@ public class TestDateParser {
 	public void test3() {
 		testDateCommand("11.11.2015", "11/11/2015");
 	}
-		
 	
-	@Test 
+	@Test
 	public void test4(){
-		testDateCommand("Oct 18 15", "18/10/2015");
+		testDateCommand("20/03/14", "20/03/2014");
 	}
 	
 	@Test
 	public void test5(){
-		testDateCommand("October 18 14", "18/10/2014");
+		testDateCommand("1 January", "01/01/2014");
 	}
 	
 	@Test
@@ -251,15 +250,7 @@ public class TestDateParser {
 		testDateCommand("01-01", "01/01/2014");
 	}
 	
-	@Test
-	public void test46(){
-		testDateCommand("20/03/14", "20/03/2014");
-	}
 	
-	@Test
-	public void test47(){
-		testDateCommand("1 January", "01/01/2014");
-	}
 	
 	
 	
@@ -447,6 +438,16 @@ public class TestDateParser {
 	@Test
 	public void invalid36(){
 		testInvalidDateCommand("1 6 15", DATE_INVALID);
+	}
+	
+	@Test 
+	public void invalid37(){
+		testInvalidDateCommand("Oct 18 15", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid38(){
+		testInvalidDateCommand("October 18 14", DATE_INVALID);
 	}
 	
 	private void testDateCommand(String input, String expected){

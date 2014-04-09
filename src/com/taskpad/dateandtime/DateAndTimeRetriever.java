@@ -861,6 +861,7 @@ public class DateAndTimeRetriever {
 	private void changeNTimeWords(String[] timeTokens, boolean[] isModified,
 			int n) {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		NumberParser np = NumberParser.getInstance();
 		for (int i = n - 1; i < timeTokens.length; i++) {
 			String token = timeTokens[i];
 			StringBuffer wholeString = new StringBuffer();
@@ -873,9 +874,21 @@ public class DateAndTimeRetriever {
 
 			// combine n words:
 			if (allNotModified(isModified, i, n)) {
+				boolean twoNumTgt = false;
 				for (int j = i - n + 1; j <= i - 1; j++) {
 					wholeString.append(timeTokens[j]);
+					
+					if (np.isDigitString(timeTokens[j]) && np.isDigitString(timeTokens[j + 1])){
+						twoNumTgt = true;
+						isModified[j] = true;
+						break;
+					}
 				}
+				
+				if (twoNumTgt){
+					continue;
+				}
+				
 				wholeString.append(token);
 				timeInput = wholeString.toString().trim();
 
@@ -927,9 +940,10 @@ public class DateAndTimeRetriever {
 	 * @param isModified
 	 */
 	private void changeNDateWords(String[] dateTokens, boolean[] isModified,
-			int n) {
+			int numWordJoin) {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		for (int i = n - 1; i < dateTokens.length; i++) {
+		NumberParser np = NumberParser.getInstance();
+		for (int i = numWordJoin - 1; i < dateTokens.length; i++) {
 			String token = dateTokens[i];
 			StringBuffer wholeString = new StringBuffer();
 			String dateInput;
@@ -940,10 +954,21 @@ public class DateAndTimeRetriever {
 			}
 
 			// combine n words:
-			if (allNotModified(isModified, i, n)) {
-				for (int j = i - n + 1; j <= i - 1; j++) {
+			if (allNotModified(isModified, i, numWordJoin)) {
+				boolean twoNumTgt = false;
+				for (int j = i - numWordJoin + 1; j <= i - 1; j++) {
 					wholeString.append(dateTokens[j]);
+					if (np.isDigitString(dateTokens[j]) && np.isDigitString(dateTokens[j+1])){
+						twoNumTgt = true;
+						isModified[j] = true;
+						break;
+					}
 				}
+				
+				if (twoNumTgt){
+					continue;
+				}
+				
 				wholeString.append(token);
 				dateInput = wholeString.toString().trim();
 				// System.err.println(dateInput);
@@ -953,9 +978,9 @@ public class DateAndTimeRetriever {
 					} catch (InvalidDateException e) {
 						assert (false);
 					}
-					allNWordsModified(isModified, i, n);
+					allNWordsModified(isModified, i, numWordJoin);
 					dateTokens[i] = dateInput;
-					for (int j = i - n + 1; j <= i - 1; j++) {
+					for (int j = i - numWordJoin + 1; j <= i - 1; j++) {
 						dateTokens[j] = null;
 					}
 				}
@@ -1376,7 +1401,7 @@ public class DateAndTimeRetriever {
 
 		while (sc.hasNext()) {
 			String token = sc.next();
-			if (isParseFree(token) || isNumber(token)) {
+			if (!isParseFree(token) || isNumber(token)) {
 				if (isNumberContinue) {
 					String realNumber = parseOnlyNumber(numberString
 							.toString().trim());
@@ -1386,7 +1411,7 @@ public class DateAndTimeRetriever {
 
 				changedString.append(token + " ");
 				isNumberContinue = false;
-			} else if (np.isDigitString(token)) {
+			} else if (!isParseFree(token) || np.isDigitString(token)) {
 				if (isNumberContinue) {
 					String realNumber = parseOnlyNumber(numberString
 							.toString().trim());
@@ -1454,8 +1479,6 @@ public class DateAndTimeRetriever {
 		NumberParser parser = NumberParser.getInstance();
 		return parser.parseTheNumbers(numberString, true) != null;
 	}
-	
-	
 	
 	/**
 	 * @deprecated
@@ -1604,6 +1627,24 @@ public class DateAndTimeRetriever {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		/*BUG HAPPENS when two numbers come together*/
+		try {
+			System.out.println(datr
+					.formatDateAndTimeInString("use calculator 570 11/11/15"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			System.out.println(datr
+					.formatDateAndTimeInString("use calculator 570 11:11"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 
 		// System.out.println("AAA".split(" ").length);
 	}
