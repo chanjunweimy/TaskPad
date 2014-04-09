@@ -90,21 +90,28 @@ public class OutputTableFrame extends GuiFrame {
 						.getInitialHeight() / 2));
 	}
 
-	protected void refresh(Object[][] objects) {
-		reset();
+	protected void refresh(final Object[][] objects) {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				reset();
+				for (int i = 0; i < objects.length; i++) {
+					_taskpadTableModel.addRow(objects[i]);
+				}
+
+				setUpColumnWidth();
+				_table.repaint();
+			}
+			
+		});
+		
 		// _taskpadTableModel.refresh(objects);
 
 		/*
 		 * DEBUG for (int i = 0; i < objects.length; i++){ for (int j = 0; j <
 		 * objects[i].length; j++){ System.err.println(objects[i][j]); } }
+		 *
 		 */
-
-		for (int i = 0; i < objects.length; i++) {
-			_taskpadTableModel.addRow(objects[i]);
-		}
-
-		setUpColumnWidth();
-		_table.repaint();
 	}
 
 	private void setUpColumnWidth() {
