@@ -1368,7 +1368,6 @@ public class DateAndTimeRetriever {
 	 * @param datmParser
 	 */
 	protected String parseNumber(String input) {
-		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
 		NumberParser np = NumberParser.getInstance();
 		Scanner sc = new Scanner(input);
 		StringBuffer changedString = new StringBuffer();
@@ -1377,9 +1376,9 @@ public class DateAndTimeRetriever {
 
 		while (sc.hasNext()) {
 			String token = sc.next();
-			if (isParseFree(token) || !datmParser.isNumber(token)) {
+			if (isParseFree(token) || isNumber(token)) {
 				if (isNumberContinue) {
-					String realNumber = datmParser.parseNumber(numberString
+					String realNumber = parseOnlyNumber(numberString
 							.toString().trim());
 					changedString.append(realNumber + " ");
 					numberString = new StringBuffer();
@@ -1389,7 +1388,7 @@ public class DateAndTimeRetriever {
 				isNumberContinue = false;
 			} else if (np.isDigitString(token)) {
 				if (isNumberContinue) {
-					String realNumber = datmParser.parseNumber(numberString
+					String realNumber = parseOnlyNumber(numberString
 							.toString().trim());
 					changedString.append(realNumber + " ");
 					numberString = new StringBuffer();
@@ -1397,7 +1396,7 @@ public class DateAndTimeRetriever {
 
 				// System.err.println("AAA: " + token);
 				isNumberContinue = false;
-				String realNumber = datmParser.parseNumber(token, false);
+				String realNumber = parseOnlyNumber(token, false);
 				changedString.append(realNumber + " ");
 				numberString = new StringBuffer();
 			} else {
@@ -1408,7 +1407,7 @@ public class DateAndTimeRetriever {
 			}
 		}
 
-		String realNumber = datmParser.parseNumber(numberString.toString()
+		String realNumber = parseOnlyNumber(numberString.toString()
 				.trim(), false);
 		if (realNumber != null) {
 			changedString.append(realNumber + " ");
@@ -1417,7 +1416,47 @@ public class DateAndTimeRetriever {
 		sc.close();
 		return changedString.toString().trim();
 	}
+	
+	/**
+	 * parseOnlyHoliday only can parse holiday...
+	 * @param input
+	 * @return
+	 */
+	protected String parseOnlyHoliday(String input){
+		HolidayDatesParser hdp = HolidayDatesParser.getInstance();
+		return hdp.replaceHolidayDate(input);
+	}
+	
+	/**
+	 * parseNumber: parse a language number to a real number String, ex: one to
+	 * 1. It returns null when error occurs.
+	 * 
+	 * @param numberString
+	 *            : language number or normal number
+	 * @return String
+	 */
+	private String parseOnlyNumber(String numberString) {
+		return parseOnlyNumber(numberString, true);
+	}
+	
+	/**
+	 * can only parse one to 1
+	 * @param numberString
+	 * @param isStrict
+	 * @return
+	 */
+	private String parseOnlyNumber(String numberString, boolean isStrict) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, isStrict);
+	}
 
+	protected boolean isNumber(String numberString) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, true) != null;
+	}
+	
+	
+	
 	/**
 	 * @deprecated
 	 * @param input
@@ -1462,7 +1501,7 @@ public class DateAndTimeRetriever {
 
 		return todayAndNowBuilder.toString().trim();
 	}
-
+	
 	public static void main(String[] args) {
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		/*

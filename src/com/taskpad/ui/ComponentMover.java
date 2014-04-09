@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class ComponentMover extends MouseAdapter{
 	private Point _mouseDownPoint = null;
@@ -49,19 +50,38 @@ public class ComponentMover extends MouseAdapter{
 	}
 	
 	@Override
-	public void mousePressed(MouseEvent e) {
-		setMouseDownPoint(e.getPoint());
+	public void mousePressed(final MouseEvent e) {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setMouseDownPoint(e.getPoint());
+			}
+			
+		});
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		setMouseDownPoint(null);
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				setMouseDownPoint(null);
+			}
+			
+		});
 	}
 	
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		initializedPoints(e);
-		move();
+	public void mouseDragged(final MouseEvent e) {
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				initializedPoints(e);
+				move();
+			}
+			
+		});
+		
 	}
 	
 	@Override

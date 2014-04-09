@@ -21,6 +21,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	private static DateAndTime _dateAndTimeObject = new DateAndTime();
 
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
+	private static DateAndTimeRetriever _datr = DateAndTimeRetriever.getInstance();
 	
 	//Private constructor to prevent instantiation by other classes
 	private DateAndTimeManager() {
@@ -76,16 +77,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return _dateAndTimeObject.getCurrentTimeAndDate();
 	}
 
-	/**
-	 * parse a day (such as Monday to int)
-	 * @param dayString
-	 * @return int
-	 * @throws InvalidDayException
-	 */
-	public int parseDayToInt(String dayString) throws InvalidDayException{
-		DayParser dayParser = DayParser.getInstance();
-		return dayParser.parseDayToInt(dayString);
-	}
 	
 	/**
 	 * To parse day to date
@@ -98,22 +89,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	
 	/**
-	 * @deprecated
-	 * @param dayString
-	 * @return
-	 */
-	protected boolean isDay(String dayString){
-		DayParser dayParser = DayParser.getInstance();
-		try {
-			dayParser.parseDayToInt(dayString);
-		} catch (InvalidDayException e) {
-			//GuiManager.callOutput(e.getMessage());
-			return false;
-		}
-		return true;
-	}
-	
-	/**
 	 * parseDate: parse different formats of Date
 	 * 
 	 * @return timeString, in dd/mm/yyyy 
@@ -123,6 +98,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		DateParser dateParser = DateParser.getInstance();
 		return dateParser.parseDate(dateString);
 	}
+	
+	public String parseHolidayString(String holidayString){
+		return _datr.parseOnlyHoliday(holidayString);
+	}
 
 	/**
 	 * Check if there is a valid date in the string
@@ -131,8 +110,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 */
 	
 	public DateObject findDate(String input){
-		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return datr.findDate(input);
+		return _datr.findDate(input);
 	}
 	
 	/**
@@ -141,21 +119,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @returns TimeObject
 	 */
 	public TimeObject findTime(String input){
-		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return datr.findTime(input);
-	}
-	
-	/**
-	 * parseTime: parse different format of time
-	 * @param timeString
-	 * @return String
-	 * @throws TimeErrorException
-	 * @throws InvalidTimeException 
-	 */
-	@SuppressWarnings("deprecation")
-	public String parseTime(String timeString) throws TimeErrorException, InvalidTimeException {
-		TimeParser tp = TimeParser.getInstance();
-		return tp.parseTime(timeString);
+		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return _datr.findTime(input);
 	}
 
 	/**
@@ -187,42 +152,6 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		TimeWordParser twp = TimeWordParser.getInstance();
 		return twp.parseTimeWord(timeString);
 	}
-
-	protected boolean isSecondInstance(String timeString) {
-		TimeWordParser twp = TimeWordParser.getInstance();
-
-		try {
-			twp.parseTimeWord(timeString);
-		} catch (NullTimeUnitException | NullTimeValueException e) {
-			GuiManager.callOutput(e.getMessage());
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * parseNumber: parse a language number to a real number String, ex: one to
-	 * 1. It returns null when error occurs.
-	 * 
-	 * @param numberString
-	 *            : language number or normal number
-	 * @return String
-	 */
-	public String parseNumber(String numberString) {
-		return parseNumber(numberString, true);
-	}
-	
-	/**
-	 * 
-	 * @param numberString
-	 * @param isStrict
-	 * @return
-	 */
-	public String parseNumber(String numberString, boolean isStrict) {
-		NumberParser parser = NumberParser.getInstance();
-		return parser.parseTheNumbers(numberString, isStrict);
-	}
 	
 	
 	/**
@@ -232,13 +161,10 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @return string changed to numerics
 	 */
 	public String parseNumberString(String input){
-		return DateAndTimeRetriever.getInstance().parseNumber(input);
+		return _datr.parseNumber(input);
 	}
 
-	protected boolean isNumber(String numberString) {
-		NumberParser parser = NumberParser.getInstance();
-		return parser.parseTheNumbers(numberString, true) != null;
-	}
+	
 	
 	public String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{
 		return TimeWordParser.getInstance().parseTimeWordWithSpecialWord(input);
@@ -253,8 +179,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws InvalidQuotesException 
 	 */
 	public String formatDateAndTimeInString(String input) throws InvalidQuotesException{
-		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return datr.formatDateAndTimeInString(input);
+		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return _datr.formatDateAndTimeInString(input);
 	}
 	
 	/**
@@ -264,8 +190,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @throws InvalidQuotesException
 	 */
 	public ArrayList<String> searchTimeAndDate(String input) throws InvalidQuotesException{
-		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return datr.searchTimeAndDate(input);
+		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return _datr.searchTimeAndDate(input);
 	}
 	
 	
@@ -276,8 +202,8 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	 * @return
 	 */
 	public int compareDateAndTime(String firstDateString, String secondDateString){
-		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return datr.compareDateAndTimeExecutor(firstDateString, secondDateString);
+		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return _datr.compareDateAndTimeExecutor(firstDateString, secondDateString);
 	}
 	
 	/**
@@ -297,5 +223,106 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public void setDebug(String dateString) throws ParseException{
 		_dateAndTimeObject.setDebugDate(dateString);
 	}
+	
+	
+	/**
+	 * =================================BELOW ARE ALL DEPRECATED=================================================
+	 */
+	
+	
+	/**
+	 * parseNumber: parse a language number to a real number String, ex: one to
+	 * 1. It returns null when error occurs.
+	 * 
+	 * @deprecated
+	 * 
+	 * @param numberString
+	 *            : language number or normal number
+	 * @return String
+	 */
+	public String parseNumber(String numberString) {
+		return parseNumber(numberString, true);
+	}
+	
+	/**
+	 * can only parse one to 1
+	 * @deprecated
+	 * @param numberString
+	 * @param isStrict
+	 * @return
+	 */
+	public String parseNumber(String numberString, boolean isStrict) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, isStrict);
+	}
+	
+	
+	/**
+	 * @deprecated
+	 * @param numberString
+	 * @return
+	 */
+	protected boolean isNumber(String numberString) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, true) != null;
+	}
+	
+	/**
+	 * @deprecated
+	 * parse a day (such as Monday to int)
+	 * @param dayString
+	 * @return int
+	 * @throws InvalidDayException
+	 */
+	public int parseDayToInt(String dayString) throws InvalidDayException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToInt(dayString);
+	}
 
+	/**
+	 * @deprecated
+	 * @param timeString
+	 * @return
+	 */
+	protected boolean isSecondInstance(String timeString) {
+		TimeWordParser twp = TimeWordParser.getInstance();
+
+		try {
+			twp.parseTimeWord(timeString);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			GuiManager.callOutput(e.getMessage());
+			return false;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * @deprecated
+	 * @param dayString
+	 * @return
+	 */
+	protected boolean isDay(String dayString){
+		DayParser dayParser = DayParser.getInstance();
+		try {
+			dayParser.parseDayToInt(dayString);
+		} catch (InvalidDayException e) {
+			//GuiManager.callOutput(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * parseTime: parse different format of time
+	 * @deprecated
+	 * @param timeString
+	 * @return String
+	 * @throws TimeErrorException
+	 * @throws InvalidTimeException 
+	 */
+	public String parseTime(String timeString) throws TimeErrorException, InvalidTimeException {
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTime(timeString);
+	}
 }

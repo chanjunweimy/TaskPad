@@ -4,7 +4,6 @@ package com.taskpad.dateandtime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,18 +12,18 @@ import java.util.Map;
  * 
  */
 
-public class HolidayDates {
+public class HolidayDatesParser {
 	
 	private static Map<String, String> _holidays = new HashMap<String, String>();
-	private static HolidayDates _holidayDate = new HolidayDates();
+	private static HolidayDatesParser _holidayDate = new HolidayDatesParser();
 	
 	//private static final String STRING_NULL = "";
 	
-	private HolidayDates(){
+	private HolidayDatesParser(){
 		initialiseHolidayMap();
 	}
 	
-	protected static HolidayDates getInstance(){
+	protected static HolidayDatesParser getInstance(){
 		return _holidayDate;
 	}
 	
@@ -35,6 +34,9 @@ public class HolidayDates {
 	 */
 	
 	protected String replaceHolidayDate(String input){	
+		if (input == null){
+			return null;
+		}
 		String holidayDate = _holidays.get(input.toUpperCase());
 		if (holidayDate != null){
 			holidayDate = parseHolidayDate(holidayDate);
@@ -69,7 +71,7 @@ public class HolidayDates {
 	}
 	
 	private String addYear(String date) {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int year = getThisYear();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date holidayDate = null;
@@ -89,6 +91,16 @@ public class HolidayDates {
 		
 		return date + "/" + year;
 	}
+
+	/**
+	 * @return
+	 */
+	private int getThisYear() {
+		String today = DateAndTimeManager.getInstance().getTodayDate();
+		String yearString = today.split("/")[2];
+		return Integer.parseInt(yearString);
+		//return Calendar.getInstance().get(Calendar.YEAR);
+	}
 	
 	private static void initialiseHolidayMap(){
 		_holidays.put("CHRISTMAS", "25/12");
@@ -102,13 +114,12 @@ public class HolidayDates {
 		_holidays.put("NATIONAL DAY", "09/08");
 		_holidays.put("NEW YEAR", "01/01");
 		_holidays.put("NEW YEAR DAY", "01/01");
-		_holidays.put("XMAS", "25/12");
 	}
 	
-	///* Testing
+	/* Testing
 	public static void main(String[] args){
 		String input = "LABOUR DAY";
-		HolidayDates holidayDates = HolidayDates.getInstance();
+		HolidayDatesParser holidayDates = HolidayDatesParser.getInstance();
 		System.out.println(holidayDates.replaceHolidayDate(input));
 		System.out.println(holidayDates.replaceHolidayDate("RANDOM"));
 

@@ -89,6 +89,7 @@ public class TestDayParser {
 		testInvalidDay(null);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void testValidDay(String input, int expected){
 		try {
 			assertEquals(DateAndTimeManager.getInstance().parseDayToInt(input), expected);
@@ -97,6 +98,7 @@ public class TestDayParser {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void testInvalidDay(String input){
 		try {
 			DateAndTimeManager.getInstance().parseDayToInt(input);

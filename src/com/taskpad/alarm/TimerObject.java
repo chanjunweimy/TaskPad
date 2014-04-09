@@ -4,6 +4,7 @@ package com.taskpad.alarm;
 
 import java.util.LinkedList;
 import java.util.Timer;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -13,6 +14,7 @@ import java.util.Timer;
  */
 
 public class TimerObject {
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	private static LinkedList<Timer> _timers = new LinkedList<Timer>();
 
 	protected TimerObject(){
@@ -44,10 +46,14 @@ public class TimerObject {
 	}
 	
 	protected static void cancelAlarms(){
-		for (Timer timer: _timers){
-			timer.cancel();
-			timer.purge();
+		LOGGER.info("cancelling...");
+		LOGGER.info("timers number: " + _timers.size());
+		for (int i = 0; i < _timers.size(); i++){
+			_timers.get(i).cancel();
+			_timers.get(i).purge();
+			LOGGER.info("timer " + i + " " + _timers.get(i).toString());
 		}
+		_timers.clear();
 	}
     
 }
