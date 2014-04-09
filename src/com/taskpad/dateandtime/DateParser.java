@@ -38,20 +38,20 @@ public class DateParser {
 	private static final String[] _dateFormats = {
 		"d/MM/yy", "d-MM-yy", "d.MM.yy", //"d MM yy", 
 		"d/M/yy", "d-M-yy", "d.M.yy", //"d M yy",
-		"MMMM d yy", "MMMM d , yy", "MMMM d, yy", "MMMM d,yy",  
+		"MMMM d , yy", "MMMM d, yy", "MMMM d,yy",  
 		"d MMMM yy", "d MMMM , yy", "d MMMM, yy", "d MMMM,yy", 
 		"d-MMMM-yy", "dMMMMyy",
-		"MMM d yy", "MMM d , yy", "MMM d, yy", "MMM d,yy",  
+		"MMM d , yy", "MMM d, yy", "MMM d,yy",  
 		"d MMM yy", "d MMM , yy", "d MMM, yy", "d MMM,yy", 
 		"d-MMM-yy", "d MM , yy", "d MM, yy", "d MM,yy", 
 		"d M , yy", "d M, yy", "d M,yy", "dMMMyy", 
 		
 		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", //"dd MM yy", 
 		"dd/M/yy", "dd-M-yy", "dd.M.yy", //"dd M yy",
-		"MMMM dd yy", "MMMM dd , yy", "MMMM dd, yy", "MMMM dd,yy",  
+		"MMMM dd , yy", "MMMM dd, yy", "MMMM dd,yy",  
 		"dd MMMM yy", "dd MMMM , yy", "dd MMMM, yy", "dd MMMM,yy", 
 		"dd-MMMM-yy", "ddMMMMyy",
-		"MMM dd yy", "MMM dd , yy", "MMM dd, yy", "MMM dd,yy",  
+		"MMM dd , yy", "MMM dd, yy", "MMM dd,yy",  
 		"dd MMM yy", "dd MMM , yy", "dd MMM, yy", "dd MMM,yy", 
 		"dd-MMM-yy", "dd MM , yy", "dd MM, yy", "dd MM,yy", 
 		"dd M , yy", "dd M, yy", "dd M,yy", "ddMMMyy", 
@@ -61,20 +61,27 @@ public class DateParser {
 		"yy/dd/MM", "yy-dd-MM", 
 		"yy.dd.MM", "yy dd MM", "yy-dd-MMM",  "yy/dd/MMM",
 		"yy/d/M", "yy-d-M", "yy.d.M", "yy d M", 
-		, "MMddyy", "yyMMMdd", "ddMMyy", 	
+		, "MMddyy", "yyMMMdd", "ddMMyy", 
+		"MMMM d yy", "MMM d yy", "MMMM dd yy", "MMM dd yy", 
 		*/
 		//"MMMddyy",
 		
 		"d/MM/yyyy", "d-MM-yyyy", "d.MM.yyyy", //"d MM yyyy", 
 		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", //"d M yyyy",
-		"MMM d yyyy", "MMM d , yyyy", "MMM d, yyyy", "MMM d,yyyy",  
+		"MMMM d , yyyy", "MMMM d, yyyy", "MMMM d,yyyy",  
+		"d MMMM yyyy", "d MMMM , yyyy", "d MMMM, yyyy", "d MMMM,yyyy", 
+		"d-MMMM-yyyy", "dMMMMyyyy",
+		"MMM d , yyyy", "MMM d, yyyy", "MMM d,yyyy",  
 		"d MMM yyyy", "d MMM , yyyy", "d MMM, yyyy", "d MMM,yyyy", 
 		"d-MMM-yyyy", "d MM , yyyy", "d MM, yyyy", "d MM,yyyy", 
 		"d M , yyyy", "d M, yyyy", "d M,yyyy", "dMMMyyyy", 
 		
 		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", //"dd MM yyyy", 
 		"dd/M/yyyy", "dd-M-yyyy", "dd.M.yyyy", //"dd M yyyy",
-		"MMM dd yyyy", "MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy",  
+		"MMMM dd , yyyy", "MMMM dd, yyyy", "MMMM dd,yyyy",  
+		"dd MMMM yyyy", "dd MMMM , yyyy", "dd MMMM, yyyy", "dd MMMM,yyyy", 
+		"dd-MMMM-yyyy", "ddMMMMyyyy",
+		"MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy",  
 		"dd MMM yyyy", "dd MMM , yyyy", "dd MMM, yyyy", "dd MMM,yyyy", 
 		"dd-MMM-yyyy", "dd MM , yyyy", "dd MM, yyyy", "dd MM,yyyy", 
 		"dd M , yyyy", "dd M, yyyy", "dd M,yyyy", "ddMMMyyyy"
@@ -87,7 +94,7 @@ public class DateParser {
 		 //"MMddyyyy", "yyyyMMMdd", "ddMMyyyy", 
 		//"MMMddyyyy",
 		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
-		 "MMddyyyy", "yyyyMMMdd"
+		 "MMddyyyy", "yyyyMMMdd" "MMM d yyyy""MMM dd yyyy", 
 		 */
 	};
 	
