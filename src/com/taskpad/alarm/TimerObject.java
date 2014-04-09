@@ -46,6 +46,7 @@ public class TimerObject {
 	protected static void cancelAlarms(){
 		for (Timer timer: _timers){
 			timer.cancel();
+			timer.purge();
 		}
 	}
     
