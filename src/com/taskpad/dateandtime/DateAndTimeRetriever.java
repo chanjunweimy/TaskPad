@@ -53,6 +53,8 @@ public class DateAndTimeRetriever {
 	 */
 	private static final String[] KEYWORD_NOW = { "NOW" };
 
+	private DateAndTime _dateAndTimeObject = new DateAndTime();
+
 	private DateAndTimeRetriever() {
 		intializeRetrieverMap();
 	}
@@ -1484,6 +1486,115 @@ public class DateAndTimeRetriever {
 		NumberParser parser = NumberParser.getInstance();
 		return parser.parseTheNumbers(numberString, true) != null;
 	}
+	
+	/**
+	 * To parse day to date
+	 * @throws DatePassedException 
+	 * @throws InvalidDayException 
+	 */
+	protected String parseOnlyDayToDate(String input) throws InvalidDayException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToDate(input);
+	}
+	
+	/**
+	 * convertToSecond: convert time from any unit to second
+	 * 
+	 * @param timeString
+	 *            : time value + time unit, ex: 1 min, one min, 1s
+	 * @return: String
+	 * @throws NullTimeUnitException
+	 *             : User did not key in time unit
+	 * @throws NullTimeValueException
+	 *             : User did not key in time value / not valid time value
+	 */
+	protected String convertToSecond(String timeString)
+			throws NullTimeUnitException, NullTimeValueException {
+		TimeWordParser twp = TimeWordParser.getInstance();
+		return twp.parseTimeWord(timeString);
+	}
+	
+	/**
+	 * parseOnlyDate: parse different formats of Date
+	 * 
+	 * @return timeString, in dd/mm/yyyy 
+	 * @throws InvalidDateException 
+	 */
+	protected String parseOnlyDate(String dateString) throws InvalidDateException{
+		DateParser dateParser = DateParser.getInstance();
+		return dateParser.parseDate(dateString);
+	}
+	
+	/**
+	 * only can parse normal time, such as 1am, 11:00 ......
+	 * but can parse next hour, 1 hour later......
+	 * @param timeString
+	 * @return
+	 * @throws TimeErrorException
+	 * @throws InvalidTimeException
+	 */
+	protected String parseOnlyTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTimeInput(timeString);
+	}
+	
+	protected String parseOnlyTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{
+		return TimeWordParser.getInstance().parseTimeWordWithSpecialWord(input);
+	}
+	
+	/**
+	 * getTodayTime: return the current time.
+	 * 
+	 * @return String
+	 */
+	protected String getTodayTime() {
+		//_dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentTime();
+	}
+
+	/**
+	 * getTodayDate: return today's date
+	 * 
+	 * @return String
+	 */
+	protected String getTodayDate() {
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentDate();
+	}
+
+	/**
+	 * getTodayDay: return today's day
+	 * 
+	 * @return String
+	 */
+	protected String getTodayDay() {
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject .getCurrentDay();
+	}
+
+	/**
+	 * getTodayDateAndTime: to get today's date and the current time
+	 * 
+	 * @return String
+	 */
+	protected String getTodayDateAndTime() {
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentTimeAndDate();
+	}
+	
+	/**
+	 * format: dd/MM/yyyy HH:mm
+	 * @param dateString
+	 * @throws ParseException
+	 */
+	protected void setDebug(String dateString) throws ParseException{
+		_dateAndTimeObject.setDebugDate(dateString);
+	}
+	
+	/**
+	 * ==================BELOW is deprecated================================================================ 
+	 */
+	
 	
 	/**
 	 * @deprecated
