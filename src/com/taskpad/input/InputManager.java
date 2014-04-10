@@ -75,7 +75,7 @@ public class InputManager {
 	 * @param dateLatest
 	 * @return Date: null if smaller or equal, original date if bigger
 	 */
-	protected String checkDateAndTimeWithStart(String startEarliest,
+	protected static String checkDateAndTimeWithStart(String startEarliest,
 			String dateLatest) {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		return datm.checkDateAndTimeWithStart(startEarliest, dateLatest);
