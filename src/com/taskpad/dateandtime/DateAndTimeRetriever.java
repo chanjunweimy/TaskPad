@@ -235,7 +235,7 @@ public class DateAndTimeRetriever {
 	 * @param desc
 	 * @throws InvalidQuotesException
 	 */
-	private String convertStandardDateAndTime(String desc)
+	protected String convertStandardDateAndTime(String desc)
 			throws InvalidQuotesException {
 		String alphaNumericSpaceDesc = getAlphaNumericSpaceDesc(desc);
 
@@ -1090,7 +1090,6 @@ public class DateAndTimeRetriever {
 	}
 
 	/**
-	 * not fully integrated yet
 	 * 
 	 * @param holidayString
 	 */

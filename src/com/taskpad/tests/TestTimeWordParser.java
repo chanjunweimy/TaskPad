@@ -20,7 +20,6 @@ public class TestTimeWordParser {
 
 	DateAndTimeManager parser = DateAndTimeManager.getInstance();
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test1() {
 		try {
@@ -32,7 +31,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test2() {
 		try {
@@ -42,7 +40,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test3() {
 		try {
@@ -52,7 +49,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test4() {
 		try {
@@ -64,7 +60,6 @@ public class TestTimeWordParser {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test5() {
 		try {
@@ -74,7 +69,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test6() {
 		try {
@@ -84,7 +78,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test7() {
 		try {
@@ -94,7 +87,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test8() {
 		try {
@@ -104,7 +96,6 @@ public class TestTimeWordParser {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test9() {
 		try {
@@ -114,7 +105,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test10() {
 		try {
@@ -124,7 +114,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test11() {
 		try {
@@ -134,7 +123,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test12() {
 		try {
@@ -144,7 +132,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test13() {
 		try {
@@ -154,7 +141,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test14() {
 		try {
@@ -164,7 +150,6 @@ public class TestTimeWordParser {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test15() {
 		try {
