@@ -2,12 +2,7 @@
 
 package com.taskpad.input;
 
-
-
 import java.util.logging.Logger;
-
-import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Edit extends Command{
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
@@ -41,7 +36,6 @@ public class Edit extends Command{
 	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
-	private static final String STRING_NULL = "null";
 	private static final String STRING_EMPTY = "";
 
 	private static final String KEYWORD_ENDTiME = "TO";
@@ -266,54 +260,6 @@ public class Edit extends Command{
 		
 		return tag;		
 	}
-	
-	/**
-	 * getDateAndTimeValue: is called by main functions when finding
-	 * deadlines/starttimes/endtimes and it returns the date and time of them
-	 * @param token
-	 * @param datePos
-	 * @param timePos
-	 * @return date and time if parsed correctly or null if got error
-	 */
-	private String getDateAndTimeValue(String token, int datePos, int timePos) {
-		assert (token != null && token.trim().isEmpty());
-		
-		String formatInput = findDateOrTime(token);
-		
-		String[] splitResult = formatInput.split(STRING_SPACE);
-		int arrDatePos = splitResult.length - datePos;
-		int arrTimePos = splitResult.length - timePos;
-
-		return getDateAndTime(token, splitResult, arrDatePos, arrTimePos);
-	}
-
-	/**
-	 * helper method of getDateAndTimeValue
-	 * main logic of getting date and time is at here
-	 * @param token
-	 * @param splitResult
-	 * @param datePos
-	 * @param timePos
-	 * @return
-	 */
-	private String getDateAndTime(String token, String[] splitResult, int datePos, int timePos) {
-		String dateString = splitResult[datePos];
-		String timeString = splitResult[timePos];
-		
-		LOGGER.info("getting date and time...");
-		LOGGER.info("dateString is: " + dateString);
-		LOGGER.info("timeString is: " + timeString);
-		LOGGER.info("description is: " + splitResult[0]);
-		
-		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
-		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
-			InputManager.outputToGui(token + " is not a valid date!");
-			LOGGER.severe(token + " is not a valid date!");
-			return null;
-		}
-		
-		return dateString + " " + timeString;
-	}
 
 	@Override
 	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
@@ -326,49 +272,6 @@ public class Edit extends Command{
 		}
 			
 		return false;
-	}
-	
-	/**
-	 * Takes in input string and finds the first integer as taskID
-	 * @param input
-	 * @return
-	 * @throws TaskIDException 
-	 */
-	private String findTaskID(String input) throws TaskIDException{
-		boolean isDateAndTimePreserved = true;
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
-
-		LOGGER.info("finding TaskID. Converted to numberInput");
-		LOGGER.info("numberInput is " + numberInput);
-		
-		input = numberInput;
-		fullInput = numberInput;
-	
-		LOGGER.info("input is " + input);
-		LOGGER.info("fullInput is " + fullInput);
-		
-		int taskID = -1;
-		String[] splitInput = input.split(STRING_SPACE);
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (taskID == -1){
-				try{
-					taskID = Integer.parseInt(splitInput[i]);
-				} catch (NumberFormatException e){
-					//do nothing
-				}
-			}
-		}
-				
-		LOGGER.info("taskID is " + taskID);
-		
-		if (taskID == -1){
-			LOGGER.severe("TASK ID is invalid!");
-			throw new TaskIDException();
-		}
-		
-		
-		return "" + taskID;
 	}
 
 	@Override
@@ -518,26 +421,6 @@ public class Edit extends Command{
 	private boolean isNotEndWord(String string) {
 		return !string.toUpperCase().equals("END");
 	}
-
-	/**
-	 * findDateOrTime: helper method of getDateAndTimeValue,
-	 * it uses formatDateAndTimeInString to get all the date and time
-	 * @param fullInput
-	 * @return
-	 */
-	private String findDateOrTime(String fullInput) {
-		LOGGER.info("findDateOrTime...");
-		String formatInput = null;
-		try {
-			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
-		} catch (InvalidQuotesException e) {
-			LOGGER.severe("ERROR!! " + e.getMessage());
-			InputManager.outputToGui(e.getMessage());
-		}
-
-		LOGGER.info("format input is: " + formatInput);
-		return formatInput;
-	}
 	
 	private void inputStartTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
@@ -545,7 +428,7 @@ public class Edit extends Command{
 		_startTime = splitResult[1];
 	}
 	
-	private void inputEndTimeDate(String result){
+	protected void inputEndTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
 		_endDate = splitResult[0];
 		_endTime = splitResult[1];
