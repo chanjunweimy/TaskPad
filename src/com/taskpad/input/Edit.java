@@ -80,6 +80,7 @@ public class Edit extends Command{
 			_taskID = findTaskID(fullInput);
 		} catch (TaskIDException e) {
 			InputManager.outputToGui(e.getMessage());
+			LOGGER.severe(e.getMessage());
 			return false;
 		}
 		
@@ -88,8 +89,9 @@ public class Edit extends Command{
 		try {
 			getOtherKeysValue();
 		} catch (InvalidTaskIdException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			InputManager.outputToGui("Not a valid TaskID!");
+			LOGGER.severe("Not a valid TaskID!");
+			return false;
 		}
 		
 		/*
@@ -227,6 +229,17 @@ public class Edit extends Command{
 			}
 		}
 		
+		checkDesc();
+		
+		showErrorWhenActionRepeated(startNo, deadNo, endNo);
+		
+		checkDeadLineAndEndTime();
+	}
+
+	/**
+	 * 
+	 */
+	private void checkDesc() {
 		if (_desc != null){
 			_desc = _desc.trim();
 			LOGGER.info("At last, desc is " + _desc);
@@ -235,15 +248,33 @@ public class Edit extends Command{
 				_desc = null;
 			} 
 		}
-		
-		showErrorWhenActionRepeated(startNo, deadNo, endNo);
-		
+	}
+
+	/**
+	 * @throws InvalidTaskIdException
+	 */
+	private void checkDeadLineAndEndTime() throws InvalidTaskIdException {
 		String startEarliest;
 		if (_startTime != null && _startDate != null){
-			startEarliest = _startDate + " " + _startTime;
+			startEarliest = _startDate + STRING_SPACE + _startTime;
 		} else {
 			startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(_taskID));
-			
+		}
+		
+		_deadline = InputManager.checkDateAndTimeWithStart(startEarliest, _deadline);
+		
+		String endLatest = null;
+		if (_endTime != null && _endDate != null){
+			endLatest = _endDate + STRING_SPACE + _endTime;
+		}
+		endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
+		if (endLatest != null){
+			String[] endTokens = endLatest.split(STRING_SPACE);
+			int datePos = 0;
+			int timePos = 1;
+
+			_endDate = endTokens[datePos];
+			_endTime = endTokens[timePos];
 		}
 	}
 
@@ -465,7 +496,7 @@ public class Edit extends Command{
 		int count = 0;	//Just replace only one occurrence of description
 		
 		String[] inputSplit = inputCopy.split(" ");
-		for (int i=0; i<inputSplit.length; i++){
+		for (int i = 0; i < inputSplit.length; i++){
 			if (isNotStartWord(inputSplit[i].trim())){
 				newString += inputSplit[i] + " ";
 			} else if (count > 0) {
