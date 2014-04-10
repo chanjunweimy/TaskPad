@@ -48,7 +48,7 @@ public abstract class Command {
 		}
 		
 		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
-		System.out.println(numberInput);
+		//System.out.println(numberInput);
 		checkIfNumberInputEmpty(numberInput);
 				
 		try {

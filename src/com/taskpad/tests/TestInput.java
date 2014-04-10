@@ -70,7 +70,32 @@ public class TestInput {
 	@Test
 	public void testEdit(){
 		setUpStream();
-		testInputString("DESC new description\r\nTASKID 1", "Edit 1 new description");
+		testInputString("END TIME \r\n"
+				+ "START TIME \r\n"
+				+ "DEADLINE \r\n"
+				+ "START DATE \r\n"
+				+ "DESC new\r\n"
+				+ "TASKID 1\r\n"
+				+ "END DATE "
+				, "Edit 1 new description");
+		
+		testInputString("END TIME \r\n"
+				+ "START TIME \r\n"
+				+ "DEADLINE \r\n"
+				+ "START DATE \r\n"
+				+ "DESC new\r\n"
+				+ "TASKID 1\r\n"
+				+ "END DATE "
+				, "Edit one new description");
+		
+		testInputString("END TIME \r\n"
+				+ "START TIME \r\n"
+				+ "DEADLINE \r\n"
+				+ "START DATE \r\n"
+				+ "DESC new , a\r\n"
+				+ "TASKID 11\r\n"
+				+ "END DATE "
+				, "Edit one one new description, a, dead 10/04/2014");
 	}
 	
 	@Test

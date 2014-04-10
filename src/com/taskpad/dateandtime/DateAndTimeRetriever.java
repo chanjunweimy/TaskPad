@@ -1401,7 +1401,7 @@ public class DateAndTimeRetriever {
 
 		while (sc.hasNext()) {
 			String token = sc.next();
-			if (!isParseFree(token) || isNumber(token)) {
+			if (isParseFree(token) || !isNumber(token)) {
 				if (isNumberContinue) {
 					String realNumber = parseOnlyNumber(numberString
 							.toString().trim());
@@ -1411,7 +1411,7 @@ public class DateAndTimeRetriever {
 
 				changedString.append(token + " ");
 				isNumberContinue = false;
-			} else if (!isParseFree(token) || np.isDigitString(token)) {
+			} else if (np.isDigitString(token)) {
 				if (isNumberContinue) {
 					String realNumber = parseOnlyNumber(numberString
 							.toString().trim());
@@ -1631,6 +1631,7 @@ public class DateAndTimeRetriever {
 		
 		/*BUG HAPPENS when two numbers come together*/
 		
+		/*
 		try {
 			System.out.println(datr
 					.formatDateAndTimeInString("use calculator 570 11/11/15"));
@@ -1646,7 +1647,11 @@ public class DateAndTimeRetriever {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		*
+		*/
+		
+		System.out.println(datr.parseNumber("one one one 1 aaa one one one"));
+		System.out.println(datr.parseNumber("one one one aaa"));
 
 		// System.out.println("AAA".split(" ").length);
 	}

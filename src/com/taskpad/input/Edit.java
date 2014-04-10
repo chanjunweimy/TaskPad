@@ -4,10 +4,14 @@ package com.taskpad.input;
 
 
 
+import java.util.logging.Logger;
+
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Edit extends Command{
+	
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	private static final String COMMAND_EDIT = "EDIT";
 	private static final int NUMBER_ARGUMENTS = 2;
@@ -30,6 +34,8 @@ public class Edit extends Command{
 	private String _endTime;
 	
 	private static final String STRING_SPACE = " ";
+	private static final String STRING_COMMA = ",";
+
 
 	public Edit(String input, String fullInput) {
 		super(input, fullInput);
@@ -37,6 +43,10 @@ public class Edit extends Command{
 	
 	@Override
 	protected void initialiseOthers(){
+		LOGGER.info("initializing...");
+		LOGGER.info("NUMBER_ARGUMENTS: " + NUMBER_ARGUMENTS);
+		LOGGER.info("COMMAND_EDIT: " + COMMAND_EDIT);
+		
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_EDIT);
 		
@@ -55,37 +65,17 @@ public class Edit extends Command{
 		
 		//_taskID = splitParams[0].trim();
 		
+		LOGGER.info("Got in commandSpecificRun ... ");
+		
 		try {
 			_taskID = findTaskID(fullInput);
 		} catch (TaskIDException e) {
 			InputManager.outputToGui(e.getMessage());
 		}
 		
-		String tag = findTag(fullInput);
+		LOGGER.info("taskID is " + _taskID);
 		
-		switch(tag){
-			case "DESC":
-				fullInput = removeWordDesc(fullInput);
-				_desc = removeTaskID(fullInput, _taskID);
-				break;
-			case "DEADLINE":
-				fullInput = removeWordDeadline(fullInput);
-				_deadline = findDeadline(fullInput);
-				break;
-			case "START":
-				fullInput = removeWordStart(fullInput);
-				String startResult = findDateOrTime(fullInput);
-				inputStartTimeDate(startResult);
-				break;
-			case "END":
-				fullInput = removeWordEnd(fullInput);
-				String endResult = findDateOrTime(fullInput);
-				inputEndTimeDate(endResult);
-				break;
-			default:
-				_desc = removeTaskID(fullInput, _taskID);
-				break;
-		}
+		getOtherKeysValue();
 		
 		/*
 		if (isDesc()){
@@ -104,6 +94,48 @@ public class Edit extends Command{
 		
 		putInputParameters();
 		return true;
+	}
+
+	/**
+	 * 
+	 */
+	private void getOtherKeysValue() {
+		String inputString = fullInput;
+		inputString = removeTaskID(inputString, _taskID);
+		String[] fullInputTokens = inputString.split(STRING_COMMA);
+		
+		for (String token : fullInputTokens){
+			String tag = findTag(token);
+			
+			switch(tag){
+				case "DESC":
+					token = removeWordDesc(token);
+					//_desc = removeTaskID(token, _taskID);
+					_desc = _desc + STRING_COMMA + token;
+					break;
+				case "DEADLINE":
+					token = removeWordDeadline(token);
+					_deadline = findDeadline(token);
+					break;
+				case "START":
+					token = removeWordStart(token);
+					String startResult = findDateOrTime(token);
+					inputStartTimeDate(startResult);
+					break;
+				case "END":
+					token = removeWordEnd(token);
+					String endResult = findDateOrTime(token);
+					inputEndTimeDate(endResult);
+					break;
+				default:
+					//_desc = removeTaskID(token, _taskID);
+					_desc = _desc + STRING_COMMA + token;
+					break;
+			}
+		}
+		
+		_desc = _desc.trim();
+		_desc = _desc.replaceFirst(STRING_COMMA, STRING_EMPTY);
 	}
 
 	private String findTag(String fullInput){
@@ -139,7 +171,8 @@ public class Edit extends Command{
 		String inputString[] = input.split(STRING_SPACE);
 		
 		if (isNotNumberArgs(inputString)){
-			System.out.println("Throw");
+			LOGGER.severe("Throw");
+			LOGGER.severe("inputString is " + inputString);
 			throw new InvalidParameterException();
 		}
 			
@@ -155,10 +188,16 @@ public class Edit extends Command{
 	private String findTaskID(String input) throws TaskIDException{
 		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
 
+		LOGGER.info("finding TaskID. Converted to numberInput");
+		LOGGER.info("numberInput is " + numberInput);
+		
 		if (numberInput != null){
 			input = numberInput;
 			fullInput = numberInput;
 		}
+		
+		LOGGER.info("input is " + input);
+		LOGGER.info("fullInput is " + fullInput);
 		
 		int taskID = -1;
 		String[] splitInput = input.split(STRING_SPACE);
@@ -173,12 +212,15 @@ public class Edit extends Command{
 			}
 		}
 				
+		LOGGER.info("taskID is " + taskID);
+		
 		if (taskID == -1){
+			LOGGER.severe("TASK ID is invalid!");
 			throw new TaskIDException();
 		}
 		
 		
-		return ""+taskID;
+		return "" + taskID;
 	}
 
 	@Override
@@ -212,7 +254,7 @@ public class Edit extends Command{
 	}
 	
 	private String removeTaskID(String input, String taskID){
-		input = input.replaceFirst("(?i)"+COMMAND_EDIT, "").trim();
+		input = input.replaceFirst("(?i)" + COMMAND_EDIT, "").trim();
 		return input.replaceFirst(taskID, "").trim();
 	}
 	
@@ -226,7 +268,7 @@ public class Edit extends Command{
 	}
 	
 	private boolean containsDesc(String input){
-		String inputCopy = input.toUpperCase();
+		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
 		if (inputCopy.contains(" DESC ") || inputCopy.contains(" DESCRIPTION ")){
 			return true;
 		} 
@@ -234,7 +276,7 @@ public class Edit extends Command{
 	}
 	
 	private boolean containsStart(String input){
-		String inputCopy = input.toUpperCase();
+		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
 		if (inputCopy.contains(" START ")){
 			return true;
 		} 
@@ -242,7 +284,7 @@ public class Edit extends Command{
 	}
 	
 	private boolean containsEnd(String input){
-		String inputCopy = input.toUpperCase();
+		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
 		if (inputCopy.contains(" END ")){
 			return true;
 		} 
@@ -272,8 +314,8 @@ public class Edit extends Command{
 	}
 	
 	private boolean containsDeadline(String input){
-		String inputCopy = input.toUpperCase();
-		if (inputCopy.contains("DEADLINE") || inputCopy.contains("DEAD") || inputCopy.contains("DATE")){
+		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
+		if (inputCopy.contains(" DEADLINE ") || inputCopy.contains(" DEAD ") || inputCopy.contains(" DATE ")){
 			return true;
 		} 
 		return false;
@@ -365,6 +407,5 @@ public class Edit extends Command{
 	private boolean isNotStartWord(String string) {
 		return !string.toUpperCase().equals("START");
 	}
-
 
 }
