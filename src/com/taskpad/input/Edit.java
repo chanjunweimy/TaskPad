@@ -397,7 +397,8 @@ public class Edit extends Command{
 	
 	private boolean containsDeadline(String input){
 		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
-		if (inputCopy.contains(" DEADLINE ") || inputCopy.contains(" DEAD ") || inputCopy.contains(" DATE ")){
+		if (inputCopy.contains(" DEADLINE ") || inputCopy.contains(" DEAD ") || 
+				inputCopy.contains(" DATE ") || inputCopy.contains(" -D ")){
 			return true;
 		} 
 		return false;
@@ -422,7 +423,8 @@ public class Edit extends Command{
 	private boolean isDeadlineWord(String string) {
 		return string.toUpperCase().equals("DEADLINE") || 
 				string.toUpperCase().equals("DATE") || 
-				string.toUpperCase().equals("DEAD");
+				string.toUpperCase().equals("DEAD") ||
+				string.toUpperCase().equals("-D");
 	}
 
 	private String removeWordEnd(String inputCopy) {
@@ -443,7 +445,7 @@ public class Edit extends Command{
 	}
 	
 	private boolean isNotEndWord(String string) {
-		return !string.toUpperCase().equals("END");
+		return !string.toUpperCase().equals("END") || !string.toUpperCase().equals("-E");
 	}
 	
 	private void inputStartTimeDate(String result){
@@ -476,7 +478,7 @@ public class Edit extends Command{
 	}
 	
 	private boolean isNotStartWord(String string) {
-		return !string.toUpperCase().equals("START");
+		return !string.toUpperCase().equals("START") || !string.toUpperCase().equals("-S");
 	}
 
 }
