@@ -219,15 +219,29 @@ public class CommandFactoryBackend {
 	}
 	
 	protected static Task editTask(String taskIdString,
-			String description, String deadline, TaskList listOfTasks) {
+			String description, String deadline,
+			String startTime, String startDate, String endTime,
+			String endDate, TaskList listOfTasks) {
 		Task task = getTaskById(listOfTasks, taskIdString);
 		// String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
 		
 		if(description != null && !description.equals("")) {
 			task.setDescription(description);
 		}
-		if(deadline != null && !deadline.equals("")) {
+		if(deadline != null) {
 			task.setDeadline(deadline);
+		}
+		if(startTime != null) {
+			task.setStartTime(startTime);
+		}
+		if(startDate != null) {
+			task.setStartDate(startDate);
+		}
+		if(endTime != null) {
+			task.setEndTime(endTime);
+		}
+		if(endDate != null) {
+			task.setEndDate(endDate);
 		}
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);

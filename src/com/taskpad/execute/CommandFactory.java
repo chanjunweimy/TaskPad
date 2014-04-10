@@ -157,11 +157,12 @@ public class CommandFactory {
 		
 	}
 
-	protected static void edit(String taskIdString, String description, String deadline) {
+	protected static void edit(String taskIdString, String description, String deadline,
+			String startTime, String startDate, String endTime, String endDate) {
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 		
 		Task task = CommandFactoryBackend.editTask(taskIdString, description, deadline,
-				listOfTasks);
+				startTime, startDate, endTime, endDate, listOfTasks);
 		
 		// pass feedback to gui
 		OutputToGui.output(STRING_NEWLINE + "TASK " + taskIdString + " EDITED: " + STRING_NEWLINE);

@@ -107,5 +107,21 @@ public class Task{
 	public void setReminderDate(String date) {
 		this.reminderDate = date;
 	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
 	
 }

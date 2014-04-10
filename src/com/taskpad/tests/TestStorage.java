@@ -121,8 +121,8 @@ public class TestStorage {
 	@Test
 	public void testStoreAndRetriveTasksWithFixedTime() {	//to be finished
 		TaskList list = new TaskList();
-		list.add(new Task("task 1", null, "02/07/2014", null, null, null, null));
-		list.add(new Task("task 2", "02/08/2014", null, null, null, null, null));
+		list.add(new Task("task 1", null, "02/07/2014", "16:00", "03/07/2014", "18:00", null));
+		list.add(new Task("task 2", null, "02/08/2014", "18:00", "04/07/2014", "20:00", null));
 		
 		DataManager.storeBack(list, DataFileStack.FILE);
 		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);

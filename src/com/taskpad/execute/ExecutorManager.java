@@ -8,6 +8,10 @@ import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import com.taskpad.storage.CommandRecord;
+import com.taskpad.storage.DataFileStack;
+import com.taskpad.storage.DataManager;
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
 import com.taskpad.ui.GuiManager;
 import com.taskpad.input.Input;
 
@@ -68,7 +72,8 @@ public class ExecutorManager {
 			break;
 		case "EDIT":
 			CommandFactory.edit(parameters.get("TASKID"), parameters.get("DESC"),
-					parameters.get("DEADLINE"));
+					parameters.get("DEADLINE"), parameters.get("START TIME"), parameters.get("START DATE"),
+					parameters.get("END TIME"), parameters.get("END DATE"));
 			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":
@@ -110,6 +115,18 @@ public class ExecutorManager {
 			CommandFactory.listUndone();
 			break;
 		}	
+	}
+	
+	public String getStartTimeForTask(int taskId) throws InvalidTaskIdException {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		if (taskId > listOfTasks.size()) {
+			throw new InvalidTaskIdException();
+		}
+		
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task.getStartTime();
 	}
 
 }
