@@ -72,6 +72,8 @@ public class Edit extends Command{
 
 	@Override
 	protected boolean commandSpecificRun() {
+		clearInputParameters();
+
 		//String[] splitParams = input.split(" ");
 		
 		//_taskID = splitParams[0].trim();
@@ -113,10 +115,17 @@ public class Edit extends Command{
 	private void getOtherKeysValue() {
 		String inputString = fullInput;
 		inputString = removeTaskID(inputString, _taskID);
+		
+		LOGGER.info("getting other parameters value (exclude ID).");
+		LOGGER.info("inputString is " + inputString);
+		
 		String[] fullInputTokens = inputString.split(STRING_COMMA);
 		
 		for (String token : fullInputTokens){
 			String tag = findTag(token);
+			
+			LOGGER.info("token is " + token);
+			LOGGER.info("tag is " + tag);
 			
 			switch(tag){
 				case "DESC":
@@ -124,41 +133,61 @@ public class Edit extends Command{
 					//_desc = removeTaskID(token, _taskID);
 					if (_desc == null){
 						_desc = token;
+						LOGGER.info("description is " + _desc);
 					} else {
 						_desc = _desc + STRING_COMMA + token;
+						LOGGER.info("description is " + _desc);
 					}
 					break;
 				case "DEADLINE":
 					token = KEYWORD_DEADLINE + STRING_SPACE + removeWordDeadline(token);
+					
+					LOGGER.info("after editing, token is " + token);
 					_deadline = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+					
+					LOGGER.info("deadline is " + _deadline);
 					break;
 				case "START":
 					token = KEYWORD_STARTTIME + STRING_SPACE + removeWordStart(token);
+					
+					LOGGER.info("after editing, token is " + token);
 					String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
 					if (!startResult.isEmpty()){
 						inputStartTimeDate(startResult);
 					}
+					
+					LOGGER.info("startResult is " + startResult);
 					break;
 				case "END":
 					token = KEYWORD_ENDTiME + STRING_SPACE + removeWordEnd(token);
+					
+					LOGGER.info("after editing, token is " + token);
 					String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
 					if (!endResult.isEmpty()){
 						inputEndTimeDate(endResult);
 					}
+					LOGGER.info("endResult is " + endResult);
 					break;
 				default:
 					//_desc = removeTaskID(token, _taskID);
 					if (_desc == null){
 						_desc = token;
+						LOGGER.info("description is " + _desc);
 					} else {
 						_desc = _desc + STRING_COMMA + token;
+						LOGGER.info("description is " + _desc);
 					}
 					break;
 			}
 		}
 		
 		_desc = _desc.trim();
-		_desc = _desc.replaceFirst(STRING_COMMA, STRING_EMPTY);
+		
+		LOGGER.info("At last, desc is " + _desc);
+		
+		if (_desc.isEmpty()){
+			_desc = null;
+		}
 	}
 
 	private String findTag(String fullInput){
