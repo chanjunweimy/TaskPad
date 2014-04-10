@@ -95,10 +95,27 @@ public class DateAndTimeManager{
 		return _datr.searchTimeAndDate(input);
 	}
 	
+	/**
+	 * Takes in a string and formats date and time to TaskPad standards .
+	 * It changes words to numbers as well
+	 * dd/mm/yyyy and hh:mm
+	 * @param input
+	 * @return
+	 * @throws InvalidQuotesException
+	 */
 	public String convertDateAndTimeString(String input) throws InvalidQuotesException{
 		return _datr.convertStandardDateAndTime(input);
 	}
 	
+	/**
+	 * Takes in a string and changes number words to numbers
+	 * i.e. "one day in forever" changes to "1 day in forever"
+	 * @param input
+	 * @return string changed to numerics
+	 */
+	public String parseNumberString(String input){
+		return _datr.parseNumber(input);
+	}	
 	
 	/**
 	 * 
@@ -146,15 +163,6 @@ public class DateAndTimeManager{
 		return _datr.parseOnlyHoliday(holidayString);
 	}	
 	
-	/**
-	 * Takes in a string and changes number words to numbers
-	 * i.e. "one day in forever" changes to "1 day in forever"
-	 * @param input
-	 * @return string changed to numerics
-	 */
-	public String parseNumberString(String input){
-		return _datr.parseNumber(input);
-	}	
 	
 	/**
 	 * only can parse normal time, such as 1am, 11:00 ......
@@ -225,6 +233,7 @@ public class DateAndTimeManager{
 	 * =================================BELOW ARE ALL DEPRECATED=================================================
 	 */
 	
+
 	
 	
 	/**

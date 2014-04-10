@@ -95,11 +95,9 @@ public class GuiManager {
 	private static void swapFrame(final GuiFrame firstFrame,
 			final GuiFrame secondFrame) {
 
-		boolean isShown = firstFrame.isVisible() == true;
-		boolean isHided = firstFrame.isVisible() == false;
+		boolean isHided = firstFrame.isHiding();
 
-		LOGGER.info("isShown is : " + isShown);
-		LOGGER.info("isHided is : " + isHided);
+   		LOGGER.info("isHided is : " + isHided);
 
 		if (isHided) {
 			LOGGER.info("IS NOT SWAPPING!!! ");
@@ -108,7 +106,7 @@ public class GuiManager {
 			secondFrame.showUp(secondFrame);
 			
 			return;
-		} else if (isShown) {
+		} else {
 			LOGGER.info("IS SWAPPING!!! ");
 
 			firstFrame.hideWindow();
