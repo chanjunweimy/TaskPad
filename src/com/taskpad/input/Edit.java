@@ -10,12 +10,18 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class Edit extends Command{
-	
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
-	
-	private static final String COMMAND_EDIT = "EDIT";
+		
 	private static final int NUMBER_ARGUMENTS = 2;
-	private static final String STRING_EMPTY = "";
+	
+	private static final int POSITION_TIME_ENDTIME = 1;
+	private static final int POSITION_DATE_ENDTIME = 2;
+	private static final int POSITION_TIME_STARTTIME = 3;
+	private static final int POSITION_DATE_STARTTIME = 4;
+	private static final int POSITION_TIME_DEADLINE = 5;
+	private static final int POSITION_DATE_DEADLINE = 6;
+
+	private static final String COMMAND_EDIT = "EDIT";
 	
 	private static String PARAMETER_TASK_ID = "TASKID";
 	private static String PARAMETER_DESC = "DESC";
@@ -35,7 +41,12 @@ public class Edit extends Command{
 	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
+	private static final String STRING_NULL = "null";
+	private static final String STRING_EMPTY = "";
 
+	private static final String KEYWORD_ENDTiME = "TO";
+	private static final String KEYWORD_STARTTIME = "FROM";
+	private static final String KEYWORD_DEADLINE = "BY";
 
 	public Edit(String input, String fullInput) {
 		super(input, fullInput);
@@ -50,13 +61,13 @@ public class Edit extends Command{
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_EDIT);
 		
-		_taskID = STRING_EMPTY;
-		_desc = STRING_EMPTY;
-		_deadline = STRING_EMPTY;
-		_startDate = STRING_EMPTY;
-		_startTime = STRING_EMPTY;
-		_endDate = STRING_EMPTY;
-		_endTime = STRING_EMPTY;
+		_taskID = null;
+		_desc = null;
+		_deadline = null;
+		_startDate = null;
+		_startTime = null;
+		_endDate = null;
+		_endTime = null;
 	}
 
 	@Override
@@ -111,25 +122,37 @@ public class Edit extends Command{
 				case "DESC":
 					token = removeWordDesc(token);
 					//_desc = removeTaskID(token, _taskID);
-					_desc = _desc + STRING_COMMA + token;
+					if (_desc == null){
+						_desc = token;
+					} else {
+						_desc = _desc + STRING_COMMA + token;
+					}
 					break;
 				case "DEADLINE":
-					token = removeWordDeadline(token);
-					_deadline = findDeadline(token);
+					token = KEYWORD_DEADLINE + STRING_SPACE + removeWordDeadline(token);
+					_deadline = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
 					break;
 				case "START":
-					token = removeWordStart(token);
-					String startResult = findDateOrTime(token);
-					inputStartTimeDate(startResult);
+					token = KEYWORD_STARTTIME + STRING_SPACE + removeWordStart(token);
+					String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
+					if (!startResult.isEmpty()){
+						inputStartTimeDate(startResult);
+					}
 					break;
 				case "END":
-					token = removeWordEnd(token);
-					String endResult = findDateOrTime(token);
-					inputEndTimeDate(endResult);
+					token = KEYWORD_ENDTiME + STRING_SPACE + removeWordEnd(token);
+					String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
+					if (!endResult.isEmpty()){
+						inputEndTimeDate(endResult);
+					}
 					break;
 				default:
 					//_desc = removeTaskID(token, _taskID);
-					_desc = _desc + STRING_COMMA + token;
+					if (_desc == null){
+						_desc = token;
+					} else {
+						_desc = _desc + STRING_COMMA + token;
+					}
 					break;
 			}
 		}
@@ -154,16 +177,42 @@ public class Edit extends Command{
 		return tag;		
 	}
 	
-	private String findDeadline(String fullInput) {
-		String formatInput = null;
-		try {
-			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
-		} catch (InvalidQuotesException e) {
-			InputManager.outputToGui(e.getMessage());
+	private String getDateAndTimeValue(String token, int datePos, int timePos) {
+		if (token == null){
+			return null;
+		}
+		
+		if (token.trim().isEmpty()){
+			return STRING_EMPTY;
+		}
+		
+		String formatInput = findDateOrTime(token);
+		
+		if (formatInput == null){
+			return null;
 		}
 		
 		String[] splitResult = formatInput.split(STRING_SPACE);
-		return splitResult[4]+ " " + splitResult[5];
+		int arrDatePos = splitResult.length - datePos;
+		int arrTimePos = splitResult.length - timePos;
+
+		return getDateAndTime(splitResult, arrDatePos, arrTimePos);
+	}
+
+	/**
+	 * retrieve date and time from the splitArray of formatString from DateAndTimeManager
+	 * @param formatInput
+	 * @return
+	 */
+	private String getDateAndTime(String[] splitResult, int datePos, int timePos) {
+		String dateString = splitResult[datePos];
+		String timeString = splitResult[timePos];
+		
+		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString)){
+			return STRING_EMPTY;
+		}
+		
+		return dateString + " " + timeString;
 	}
 
 	@Override
@@ -243,6 +292,13 @@ public class Edit extends Command{
 		putOneParameter(PARAMETER_START_DATE, _startDate);
 		putOneParameter(PARAMETER_END_TIME, _endTime);
 		putOneParameter(PARAMETER_END_DATE, _endDate);
+	}
+	
+	@Override
+	protected void putOneParameter(String parameter, String input){
+		if (input != null){
+			inputParameters.put(parameter, input);
+		}
 	}
 	
 	@Override
@@ -377,14 +433,14 @@ public class Edit extends Command{
 	
 	private void inputStartTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
-		_startDate = splitResult[4];
-		_startTime = splitResult[5];
+		_startDate = splitResult[0];
+		_startTime = splitResult[1];
 	}
 	
 	private void inputEndTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
-		_endDate = splitResult[4];
-		_endTime = splitResult[5];
+		_endDate = splitResult[0];
+		_endTime = splitResult[1];
 	}
 
 	private String removeWordStart(String inputCopy) {

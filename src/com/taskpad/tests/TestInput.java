@@ -12,13 +12,16 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.text.ParseException;
 
 import org.junit.Test;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.input.InputManager;
 
 public class TestInput {
 
+	private static final String DEBUG_DATE = "10/04/2014 00:00";
 	private final ByteArrayOutputStream _outContent = new ByteArrayOutputStream();
 	
 	
@@ -90,7 +93,7 @@ public class TestInput {
 		
 		testInputString("END TIME \r\n"
 				+ "START TIME \r\n"
-				+ "DEADLINE \r\n"
+				+ "DEADLINE 10/04/2014 23:59\r\n"
 				+ "START DATE \r\n"
 				+ "DESC new , a\r\n"
 				+ "TASKID 11\r\n"
@@ -133,11 +136,23 @@ public class TestInput {
 	
 	
 	private void testInputString(String expected, String input){
+		setupDebugDate(DEBUG_DATE);
 		InputManager.setDebug(true);
 		//assertEquals(description, expected, InputManager.receiveFromGui(input));
 		InputManager.receiveFromGui(input);
 		assertEquals(expected + "\r\n", _outContent.toString());
 		cleanUpStreams();
+	}
+
+	/**
+	 * @throws ParseException
+	 */
+	private void setupDebugDate(String dateString) {
+		try {
+			DateAndTimeManager.getInstance().setDebug(dateString);
+		} catch (ParseException e) {
+			fail();
+		}
 	}
 	
 	private void setUpStream(){
