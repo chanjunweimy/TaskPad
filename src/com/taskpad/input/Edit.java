@@ -267,7 +267,8 @@ public class Edit extends Command{
 	 * @throws TaskIDException 
 	 */
 	private String findTaskID(String input) throws TaskIDException{
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		boolean isDateAndTimePreserved = true;
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
 
 		LOGGER.info("finding TaskID. Converted to numberInput");
 		LOGGER.info("numberInput is " + numberInput);
