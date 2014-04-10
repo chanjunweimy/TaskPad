@@ -36,7 +36,8 @@ public class Alarm{
 		String numberString = null;
 		int time = -1;
 		
-		numberString = findTimeUnit(input);
+		String[] splitInput = input.split(SPACE);
+		numberString = findTimeUnit(splitInput);
 		//numberString = successParseTime(input, numberString);
 		LOGGER.info("initializing alarm......");
 		LOGGER.info("numberString is : " + numberString);
@@ -46,7 +47,7 @@ public class Alarm{
 			return;
 		}
 		
-		time = successParseInt(numberString, time);
+		time = successParseInt(numberString);
 		
 		if (time == -1){
 			LOGGER.severe("can't parse numberString to int... time = -1");
@@ -55,7 +56,8 @@ public class Alarm{
 		
 		LOGGER.info("time is " + time);
 		
-		String desc = findDesc(fullInput);
+		//String desc = findDesc(fullInput);
+		String desc = findDesc(splitInput);
 		
 		LOGGER.info("desc is " + desc);
 		
@@ -63,11 +65,76 @@ public class Alarm{
 		
 		AlarmManager.initializeAlarm(desc, time);		
 	}
+	
 
-	private String findTimeUnit(String input) {
-		String numberString = "";
-		String[] splitInput = input.split(SPACE);
+
+	/**
+	 * @param numberString
+	 * @param time
+	 * @return
+	 */
+	//error happens when time = -1 
+	public int successParseInt(String numberString) {
+		int time = -1;
+		try{
+			time = Integer.parseInt(numberString);
+		} catch (NumberFormatException e){
+			InputManager.outputToGui(String.format(MESSAGE_NUMBER_ERROR, numberString));
+			time = -1;
+		}
+		return time;
+	}
+
+	/**
+	 * @param splitInput
+	 * @return
+	 */
+	private String findTimeUnit(String[] splitInput) {
+		int sec = 0;
 		
+		LOGGER.info("findTimeUnit returns seconds...... Now starting to find! ");
+		
+		for (int i = splitInput.length - 1; i >= 0; i--){
+			String numberString = successParseTime(splitInput[i]);
+			
+			LOGGER.info("1st: numberString is " + numberString);
+			
+			if (i == 0 && numberString == null){
+				break;
+			}
+			
+			if (numberString == null){
+				String newNumberString = splitInput[i - 1] + " " + splitInput[i];
+				numberString = successParseTime(newNumberString);
+				
+				LOGGER.info("2nd: numberString is " + numberString);
+				
+				if (numberString == null){
+					LOGGER.info("has ntg");
+					continue;
+				} else {
+					int num = successParseInt(numberString);
+					sec += num;
+					
+					splitInput[i] = null;
+					splitInput[i - 1] = null;
+					
+					LOGGER.info("num is " + num);
+					LOGGER.info("sec is " + sec);
+					i--;
+				}
+			} else {
+				splitInput[i] = null;
+				int num = successParseInt(numberString);
+				sec += num;
+				LOGGER.info("num is " + num);
+				LOGGER.info("sec is " + sec);
+			}
+			
+		}
+
+		LOGGER.info("Overall time is " + sec);
+		/* DEPRECATED
 		try {
 			numberString = successParseTime(splitInput[splitInput.length - 1], numberString);
 		} catch (NullTimeUnitException | NullTimeValueException e) {
@@ -85,35 +152,64 @@ public class Alarm{
 				InputManager.outputToGui(e.getMessage());
 			}
 		}
+		*/
 		
-		return numberString;
-	}
-
-	private String successParseTime(String input, String numberString) throws NullTimeUnitException, NullTimeValueException {
-		DateAndTimeManager parser = DateAndTimeManager.getInstance();
-		numberString = parser.convertToSecond(input);
-
-		return numberString;
-	}
-
-	//error happens when time = -1 
-	public int successParseInt(String numberString, int time) {
-		try{
-			time = Integer.parseInt(numberString);
-		} catch (NumberFormatException e){
-			InputManager.outputToGui(String.format(MESSAGE_NUMBER_ERROR, numberString));
-			time = -1;
-		}
-		return time;
+		return "" + sec;
 	}
 
 	/**
+	 * 
+	 * @param input
+	 * @param numberString
+	 * @return
+	 * @throws NullTimeUnitException
+	 * @throws NullTimeValueException
+	 */
+	private String successParseTime(String input){
+		DateAndTimeManager parser = DateAndTimeManager.getInstance();
+		String numberString = "";
+		try {
+			LOGGER.info("parsing time word. Input is " + input);
+			numberString = parser.convertToSecond(input);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			LOGGER.severe("Parse failed! :( return null!");
+			return null;
+		}
+		LOGGER.info("PARSED! numberString is " + numberString);
+
+		return numberString;
+	}
+	
+	/**
+	 * findDesc(String[]) replaced findDesc(String)
+	 * @param splitInput
+	 * @return
+	 */
+	private String findDesc(String[] splitInput) {
+		StringBuffer descBuilder = new StringBuffer();
+		
+		for (String token : splitInput){
+			if (token != null){
+				descBuilder.append(token + SPACE);			
+			}
+		}
+		return descBuilder.toString().trim();
+	}
+
+	/**
+	 * replaced by findDesc(String[])
+	 * @deprecated
 	 * @param fullInput
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private String findDesc (String fullInput){
+		LOGGER.info("finding description in... " + fullInput);
+		
 		String inputString[] = fullInput.split(SPACE);
 		int length = inputString.length;
+		
+		LOGGER.info("Size of InputString[] is " + inputString.length);
 		
 		String description = "";
 		if (length == 4){
@@ -125,6 +221,8 @@ public class Alarm{
 				description = description + inputString[i] + SPACE;
 			}
 		} 
+		
+		LOGGER.info("description is " + description);
 
 		description = description.trim(); 
 		return description;
