@@ -107,4 +107,13 @@ public class InputManager {
 		return datm.compareDateAndTime(dateString);
 	}
 	
+	/**
+	 * getNow(): return the time and date in the current time
+	 * @return String: now (dd/MM/yyyy HH:mm)
+	 */
+	public static String getNow(){
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		return datm.getTodayDateAndTime();
+	}
+	
 }

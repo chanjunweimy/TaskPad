@@ -59,6 +59,7 @@ public class DateAndTime {
 	
 	/**
 	 * setDebugDate: setup a date for debugging. Used when debugging
+	 * FORMAT : dd/MM/yyyy HH:mm
 	 * @param dateString
 	 * @throws ParseException
 	 */

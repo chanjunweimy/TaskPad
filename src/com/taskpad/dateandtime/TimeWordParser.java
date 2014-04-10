@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,10 +17,11 @@ import java.util.Scanner;
  */
 
 public class TimeWordParser{
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	private static Map<String, String[]> _timewordsMap = new HashMap<String, String[]>();
 	private static Map<String, Integer> _timeunitMap = new HashMap<String, Integer>();
-	private static DateAndTimeManager _numberparser = DateAndTimeManager.getInstance();
+	private static NumberParser _numberparser = NumberParser.getInstance();
 	
 	private static final String TIME_SEC = "SECOND";
 	private static final String TIME_MIN = "MIN";
@@ -76,6 +78,13 @@ public class TimeWordParser{
 	}
 	*/
 	
+	/**
+	 * use to add time, but not parsing time! 
+	 * @param input
+	 * @return
+	 * @throws NullTimeUnitException
+	 * @throws NullTimeValueException
+	 */
 	protected String timeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
 		String time = parseTimeWord(input);
 		Date futureDate = addTime(time, TIME_SEC);
@@ -97,7 +106,8 @@ public class TimeWordParser{
 	 */
 	
 	protected String parseTimeWordWithSpecialWord(String input) throws NullTimeUnitException, NullTimeValueException{	
-		if (input == null || input.equals(SPACE)){
+		if (input == null || input.trim().isEmpty()){
+			LOGGER.severe(input + " is null or empty!");
 			throw new NullTimeUnitException(ERROR_NULL_UNIT);
 		}
 		
@@ -107,29 +117,57 @@ public class TimeWordParser{
 		SpecialWordParser swp = SpecialWordParser.getInstance();
 		
 		String splitWord = swp.getTimeWordWithoutSpecialWords(input);
+		LOGGER.info("splitWord is " + splitWord);
+		
 		if (splitWord == null){
 			splitWord = parseTimeWord(input);
 			timeWord = splitWord + SPACE + TIME_SEC;
+			
+			LOGGER.info("No special word ex nxt!");
+			LOGGER.info("input is " + input);
+			LOGGER.info("timeWord is " + timeWord);
 			return timeWord(timeWord);
 		}
 		
 		int splitPlace = input.lastIndexOf(splitWord) + splitWord.length() + 1;
 		int num = 0;
 		
+		LOGGER.info("splitPlace is " + splitPlace);
+		
 		specialWord = input.substring(0, splitPlace).trim();
 		timeWord = input.substring(splitPlace, input.length()).trim();
+		
+		LOGGER.info("specialWord is " + specialWord);
+		LOGGER.info("timeWord is " + timeWord);
 		
 		try {
 			timeWord = parseTimeWord(timeWord);
 			num = Integer.parseInt(timeWord);
+			
+			LOGGER.info("PARSED TIME WORD!");
+			LOGGER.info("timeWord is " + timeWord);
+			LOGGER.info("num is " + num);
+			
 			timeWord = swp.parseSpecialWord(specialWord, num);
 			
+			LOGGER.info("PARSED SPECIAL WORD!");
+			LOGGER.info("timeWord is " + timeWord);
 		} catch (NullTimeValueException e) {
-
+			LOGGER.info("Caught NullTimeValueException!");
+			LOGGER.warning(e.getMessage());
+			
 			num = calculateTimeWord(input);
 			timeWord = swp.parseSpecialWord(specialWord, num);
+			
+			LOGGER.info("PARSED SPECIAL WORD!");
+			LOGGER.info("timeWord is " + timeWord);
+			LOGGER.info("num is " + num);
 		}
 		timeWord = timeWord + SPACE + TIME_SEC;
+		
+		LOGGER.info("Ready to return!!");
+		LOGGER.info("timeWord is " + timeWord);
+
 		return timeWord(timeWord);
 	}
 	
@@ -141,8 +179,6 @@ public class TimeWordParser{
 		int realTime = 0;
 		
 		realTime = calculateEachTimeValues(realTime, input);
-		
-		
 		return BLANK + realTime;
 	}
 
@@ -187,7 +223,8 @@ public class TimeWordParser{
 				throw new NullTimeValueException(ERROR_NULL_VALUE);
 			}
 			
-			_numberword = _numberparser.parseNumber(input);
+			boolean isStrict = false;
+			_numberword = _numberparser.parseTheNumbers(input, isStrict);
 			
 			//System.err.println("DE: " + _numberword + " " + input);
 			if (_numberword == null){
@@ -212,7 +249,7 @@ public class TimeWordParser{
 
 		for (Map.Entry<String, String[]> entry : _timewordsMap.entrySet()){
 			variations = entry.getValue();
-			for (int i=0; i<variations.length; i++){
+			for (int i = 0; i < variations.length; i++){
 				if (isValueFound(variations[i], input)){
 					_timeword = entry.getKey();
 					
@@ -308,8 +345,8 @@ public class TimeWordParser{
 		return true;
 	}
 	
-	private  boolean isValueFound(String value, String input) {
-		if (input == BLANK || input == null){
+	private boolean isValueFound(String value, String input) {
+		if (input == null || input.trim() == BLANK){
 			return false;
 		}
 		
@@ -326,7 +363,7 @@ public class TimeWordParser{
 		 */
 		for (int i = numArr.length - 1; i >= 0; i--){
 			
-			if (numArr[i].equals(TimeWordParser.BLANK)){
+			if (numArr[i].equals(BLANK)){
 				continue;
 			} else {
 				if (numArr[i].equals(value)){

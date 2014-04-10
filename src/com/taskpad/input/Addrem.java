@@ -282,6 +282,7 @@ public class Addrem extends Command{
 		//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
 		try {
 			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
+			//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
 		} catch (TimeErrorException | InvalidTimeException e) {
 			//ErrorMessages.timeErrorMessage(_remTime);
 			InputManager.outputToGui(e.getMessage());

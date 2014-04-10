@@ -12,7 +12,7 @@ public class AlarmManager extends JApplet{
 
 	
 	private static final long serialVersionUID = 4348001564533802036L;		//Randomly generated
-	private static final Exception EXCEPTION_ERROR = new Exception();
+	//private static final Exception EXCEPTION_ERROR = new Exception();
 	private final static String SONG_DEFAULT = "pokemon.mid";
 	private static Sound _alarm = null;
 	private final static int ALARM_DURATION = 60;
@@ -75,7 +75,8 @@ public class AlarmManager extends JApplet{
 		
 		if (_alarm == null){
 			GuiManager.callOutput(MESSAGE_UNABLE_SET_ALARM);
-			throw EXCEPTION_ERROR;
+			return;
+			//throw EXCEPTION_ERROR;
 		}
 		
 		if (!_isPlaying){
@@ -98,24 +99,31 @@ public class AlarmManager extends JApplet{
 	}
 
 	public static void turnOffAlarm() throws Exception{
+		
 		if (_alarm == null){
 			GuiManager.callOutput(MESSAGE_NO_ALARM);
-			throw EXCEPTION_ERROR;
+			//throw EXCEPTION_ERROR;
+			return;
 		}
-		
+			
 		if (_isPlaying){
 			_alarm.stopSound();
 			_isPlaying = false;
 		} else{
-			throw EXCEPTION_ERROR;
+			//throw EXCEPTION_ERROR;
+			return;
 		}
 		GuiManager.callOutput(MESSAGE_STOP_ALARM);
 	}
 	
 	public static void cancelAlarms() throws Exception{
+		/*
 		if (_alarm == null){
-			throw EXCEPTION_ERROR;
+			//throw EXCEPTION_ERROR;
+			return;
 		}
+		*/
+
 				
 		if (_isPlaying){
 			_alarm.stopSound();

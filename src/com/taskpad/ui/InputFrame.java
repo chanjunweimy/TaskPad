@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -19,6 +20,9 @@ public class InputFrame extends GuiFrame{
 	 * generated
 	 */
 	private static final long serialVersionUID = 6500266679828724479L;
+	
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
+
 
 	private static final Color INPUTBOX_BACKGROUND_COLOR = 
 			//new Color(219, 219, 219); //this is grey color
@@ -92,12 +96,47 @@ public class InputFrame extends GuiFrame{
 		boolean isCtrlI = arg0.getKeyCode() == NativeKeyEvent.VK_I
 	            && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
 	                    "Ctrl");
+		boolean isAltAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
+		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
 		
+		isAltCKey = isAltCKey && isVisible();
 		
 		if (isCtrlI){
 			requestFocusOnInputBox();
+		} else if (isAltAKey){
+			switchOffAlarm();
+		} else if (isAltCKey){
+			cancelAlarms();
+		} 
+	}
+	
+	private void cancelAlarms() {
+    	LOGGER.info("Canceling Alarm...");
+		
+    	Runnable runCancel = new Runnable(){
+			@Override
+			public void run(){
+				GuiManager.cancelAlarms();
+			}
+		};
+		SwingUtilities.invokeLater(runCancel);
+	}
+
+	private void switchOffAlarm() {
+		try {
+    		LOGGER.info("Switching off Alarm...");
+			
+			GuiManager.turnOffAlarm();
+		} catch (Exception e) {
+			//System.err.println(e.getMessage());
+			//do nothing
 		}
 	}
+
 	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
@@ -182,7 +221,14 @@ public class InputFrame extends GuiFrame{
 	}
 	
 	protected void reset(){
-		_input.setText(InputFrame.EMPTY);
+		Runnable resetBox = new Runnable(){
+			@Override
+			public void run(){
+				_input.setText(InputFrame.EMPTY);
+			}
+		};
+		SwingUtilities.invokeLater(resetBox);
+		
 	}
 	
 	protected JTextField getInputBox(){

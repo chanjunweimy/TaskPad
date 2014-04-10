@@ -14,9 +14,10 @@ public class GuiTableModel extends DefaultTableModel {
 	private static final String[] _columnNames = { "ID", "Description",
 			"Deadline", "Start", "End", "Info", "Status" };
 
-	private static Object[][] _data = {
+	/*private static Object[][] _data = {
 		{"1", "Hi Lynnette!", "06/04/2014", "01:00 05/04/2014", "12:00 05/04/2014", "JUST FOR FUN", "DONE"}
-	};
+	};*/
+	private static Object[][] _data = {};
 	
 	protected GuiTableModel(){
 		super(_data, _columnNames);
