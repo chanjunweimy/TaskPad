@@ -996,25 +996,39 @@ public class DateAndTimeRetriever {
 		return true;
 	}
 
+	private String getAlphaNumericSpaceDesc(String input){
+		boolean isDateAndTimePreserved = false;
+		return getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
+	}
+	
 	/**
 	 * @param input
 	 */
-	private String getAlphaNumericSpaceDesc(String input) {
+	protected String getAlphaNumericSpaceDesc(String input, boolean isDateAndTimePreserved) {
 		Scanner sc = new Scanner(input);
 		StringBuffer alphaNumericSpaceString = new StringBuffer();
 		while (sc.hasNext()) {
 			String token = sc.next();
-			token = splitNonAlphaNumericCharacter(token);
+			token = splitNonAlphaNumericCharacter(token, isDateAndTimePreserved);
 			alphaNumericSpaceString.append(token + " ");
 		}
 		sc.close();
 		return alphaNumericSpaceString.toString().trim();
 	}
-
+	
 	/**
+	 * split all the non numeric or alphaberts!
+	 * by default: isDateAndTimePreserved is false. 
 	 * @param token
+	 * @param isDateAndTimePreserved
+	 * @return
 	 */
-	private String splitNonAlphaNumericCharacter(String token) {
+	private String splitNonAlphaNumericCharacter(String token, boolean isDateAndTimePreserved) {
+		if (isDateAndTimePreserved){
+			if (isDate(token) || isTime(token)){
+				return token;
+			}
+		}
 		// token = token.replaceAll("!", "");
 		// token = token.replaceAll(".", "");
 		// token = token.replaceAll(",", " ");

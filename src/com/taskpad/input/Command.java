@@ -47,7 +47,8 @@ public abstract class Command {
 			return;
 		}
 		
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		boolean isDateAndTimePreserved = true;
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
 		//System.out.println(numberInput);
 		checkIfNumberInputEmpty(numberInput);
 				

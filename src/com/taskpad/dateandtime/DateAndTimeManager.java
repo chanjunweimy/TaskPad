@@ -113,7 +113,8 @@ public class DateAndTimeManager{
 	 * @param input
 	 * @return string changed to numerics
 	 */
-	public String parseNumberString(String input){
+	public String parseNumberString(String input, boolean isDateAndTimePreserved){
+		input = _datr.getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
 		return _datr.parseNumber(input);
 	}	
 	
