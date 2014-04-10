@@ -136,22 +136,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 		return tp.parseTimeInput(timeString);
 	}
 
-	/**
-	 * convertToSecond: convert time from any unit to second
-	 * 
-	 * @param timeString
-	 *            : time value + time unit, ex: 1 min, one min, 1s
-	 * @return: String
-	 * @throws NullTimeUnitException
-	 *             : User did not key in time unit
-	 * @throws NullTimeValueException
-	 *             : User did not key in time value / not valid time value
-	 */
-	public String convertToSecond(String timeString)
-			throws NullTimeUnitException, NullTimeValueException {
-		TimeWordParser twp = TimeWordParser.getInstance();
-		return twp.parseTimeWord(timeString);
-	}
+	
 	
 	
 	/**
@@ -214,6 +199,23 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	public int compareDateAndTime(String dateString){
 		return compareDateAndTime(dateString, getTodayDate() + " 23:59");
 	}
+
+	/**
+	 * convertToSecond: convert time from any unit to second
+	 * 
+	 * @param timeString
+	 *            : time value + time unit, ex: 1 min, one min, 1s
+	 * @return: String
+	 * @throws NullTimeUnitException
+	 *             : User did not key in time unit
+	 * @throws NullTimeValueException
+	 *             : User did not key in time value / not valid time value
+	 */
+	public String convertToSecond(String timeString)
+			throws NullTimeUnitException, NullTimeValueException {
+		TimeWordParser twp = TimeWordParser.getInstance();
+		return twp.parseTimeWord(timeString);
+	}
 	
 	/**
 	 * 
@@ -228,6 +230,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	/**
 	 * =================================BELOW ARE ALL DEPRECATED=================================================
 	 */
+	
 	
 	
 	/**

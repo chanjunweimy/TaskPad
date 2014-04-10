@@ -196,7 +196,7 @@ public class TestSpecialWordParser {
 	public void validTestTimeWord14(){
 		testTimeWordCommand("23/03/2014 02:01", " next nxt prev next 0  d 1 h 1m -60s", "23/03/2014 00:01");
 	}
-
+	
 	@Test
 	public void invalidTestTimeWord1(){
 		testInvalidTimeWordCommand(MESSAGE_INVALID_TIME, null, "23/03/2014 00:01");
@@ -211,6 +211,12 @@ public class TestSpecialWordParser {
 	public void invalidTestTimeWord3(){
 		testInvalidTimeWordCommand(MESSAGE_INVALID_TIME, "   ", "23/03/2014 00:01");
 	}
+	
+	@Test
+	public void invalidTestTimeWord15(){
+		testInvalidTimeWordCommand(MESSAGE_INVALID_TIME, " 1s1m1h", "23/03/2014 00:01");
+	}
+
 	/*above is Time Word Parser*/
 	
 	
