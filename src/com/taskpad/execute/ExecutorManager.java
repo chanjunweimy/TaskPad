@@ -126,7 +126,7 @@ public class ExecutorManager {
 		
 		int index = taskId - 1;
 		Task task = listOfTasks.get(index);
-		return task.getStartTime();
+		return task.getStartDate() + " " + task.getStartTime();
 	}
 
 }
