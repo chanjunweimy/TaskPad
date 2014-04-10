@@ -106,6 +106,15 @@ public class TestInput {
 				+ "TASKID 1\r\n"
 				+ "END DATE 14/04/2014"
 				, "Edit 1 desc a, end Monday, start today, dead Sunday, dead Monday");
+		
+		testInputString("Output to GUI: BY  a Sunday  is not a valid date!\r\n"
+				+ "END TIME 23:59\r\n"
+				+ "START TIME 00:00\r\n"
+				+ "START DATE 10/04/2014\r\n"
+				+ "DESC a\r\n"
+				+ "TASKID 1\r\n"
+				+ "END DATE 14/04/2014"
+				, "Edit 1 desc a, end Monday, start today, dead a Sunday");
 	}
 	
 	@Test

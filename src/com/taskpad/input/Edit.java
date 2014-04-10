@@ -217,15 +217,11 @@ public class Edit extends Command{
 		
 		String formatInput = findDateOrTime(token);
 		
-		if (formatInput == null){
-			return null;
-		}
-		
 		String[] splitResult = formatInput.split(STRING_SPACE);
 		int arrDatePos = splitResult.length - datePos;
 		int arrTimePos = splitResult.length - timePos;
 
-		return getDateAndTime(splitResult, arrDatePos, arrTimePos);
+		return getDateAndTime(token, splitResult, arrDatePos, arrTimePos);
 	}
 
 	/**
@@ -233,12 +229,19 @@ public class Edit extends Command{
 	 * @param formatInput
 	 * @return
 	 */
-	private String getDateAndTime(String[] splitResult, int datePos, int timePos) {
+	private String getDateAndTime(String token, String[] splitResult, int datePos, int timePos) {
 		String dateString = splitResult[datePos];
 		String timeString = splitResult[timePos];
 		
-		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString)){
-			return STRING_EMPTY;
+		LOGGER.info("getting date and time...");
+		LOGGER.info("dateString is: " + dateString);
+		LOGGER.info("timeString is: " + timeString);
+		
+		boolean isDescNotNull = splitResult.length > 6 && STRING_NULL.equals(splitResult[0]);
+		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
+			InputManager.outputToGui(token + " is not a valid date!");
+			LOGGER.severe(token + " is not a valid date!");
+			return null;
 		}
 		
 		return dateString + " " + timeString;
@@ -450,13 +453,16 @@ public class Edit extends Command{
 	}
 
 	private String findDateOrTime(String fullInput) {
+		LOGGER.info("findDateOrTime...");
 		String formatInput = null;
 		try {
 			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
 		} catch (InvalidQuotesException e) {
+			LOGGER.severe("ERROR!! " + e.getMessage());
 			InputManager.outputToGui(e.getMessage());
 		}
-		
+
+		LOGGER.info("format input is: " + formatInput);
 		return formatInput;
 	}
 	
