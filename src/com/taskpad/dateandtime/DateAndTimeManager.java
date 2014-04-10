@@ -157,10 +157,9 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	
 	/**
 	 * Takes in a string and formats date and time to TaskPad standards 
-	 * dd/mm/yyyy and hh:mm
+	 * dd/mm/yyyy and hh:mm then retrieve all types of date and time
 	 * @param input
-	 * @return string with date and time replaced by standard date and time 
-	 * or input string if no date and time exists
+	 * @return desc | Deadline: | StartTime: Date then Time | EndTime: Date Then Time
 	 * @throws InvalidQuotesException 
 	 */
 	public String formatDateAndTimeInString(String input) throws InvalidQuotesException{
@@ -218,7 +217,7 @@ public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
 	}
 	
 	/**
-	 * 
+	 * format: dd/MM/yyyy HH:mm
 	 * @param dateString
 	 * @throws ParseException
 	 */
