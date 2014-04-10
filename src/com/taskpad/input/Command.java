@@ -25,7 +25,7 @@ public abstract class Command {
 	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
-	    
+		
 	protected static Logger logger = Logger.getLogger("TaskPad");
 	
 	public Command(String input, String fullInput){
@@ -48,9 +48,8 @@ public abstract class Command {
 		}
 		
 		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
-		if (numberInput != null){
-			input = numberInput;
-		}
+		System.out.println(numberInput);
+		checkIfNumberInputEmpty(numberInput);
 				
 		try {
 			checkIfIncorrectArguments();
@@ -68,6 +67,13 @@ public abstract class Command {
 			passObjectToExecutor();
 		} else {
 			return;
+		}
+	}
+
+	private void checkIfNumberInputEmpty(String numberInput) {
+		numberInput = numberInput.trim();
+		if (!numberInput.equals("") || numberInput != null){
+			input = numberInput;
 		}
 	}
 	
