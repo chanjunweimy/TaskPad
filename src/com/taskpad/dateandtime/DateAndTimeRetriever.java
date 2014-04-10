@@ -596,26 +596,8 @@ public class DateAndTimeRetriever {
 
 		return allDateAndTime;
 	}
+	
 
-	private boolean isToday(String input) {
-		input = input.toUpperCase();
-		for (int i = 0; i < KEYWORD_TODAY.length; i++) {
-			if (KEYWORD_TODAY[i].equals(input)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isNow(String input) {
-		input = input.toUpperCase();
-		for (int i = 0; i < KEYWORD_NOW.length; i++) {
-			if (KEYWORD_NOW[i].equals(input)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * @param todayDate
@@ -1523,6 +1505,36 @@ public class DateAndTimeRetriever {
 		todayAndNowBuilder = buildString(todayAndNowTokens, todayAndNowBuilder);
 
 		return todayAndNowBuilder.toString().trim();
+	}
+	
+	/**
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private boolean isToday(String input) {
+		input = input.toUpperCase();
+		for (int i = 0; i < KEYWORD_TODAY.length; i++) {
+			if (KEYWORD_TODAY[i].equals(input)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private boolean isNow(String input) {
+		input = input.toUpperCase();
+		for (int i = 0; i < KEYWORD_NOW.length; i++) {
+			if (KEYWORD_NOW[i].equals(input)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static void main(String[] args) {

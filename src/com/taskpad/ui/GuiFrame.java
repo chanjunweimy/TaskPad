@@ -115,6 +115,10 @@ public abstract class GuiFrame extends JFrame implements NativeKeyListener, Wind
 		
 		LOGGER.info("Have set up resizer");
 	}
+	
+	protected boolean isHiding(){
+		return _isHiding;
+	}
 
 	protected void showUp(final GuiFrame visibleFrame){
 		SwingUtilities.invokeLater(new Runnable(){
