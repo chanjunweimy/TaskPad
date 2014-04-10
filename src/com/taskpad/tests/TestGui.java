@@ -10,6 +10,8 @@ import java.awt.event.InputEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import javax.swing.SwingUtilities;
+
 import org.junit.Test;
 
 import com.taskpad.ui.GuiManager;
@@ -28,18 +30,27 @@ public class TestGui {
 		GuiManager.setDebug(true);
 		GuiManager.initialGuiManager();
 
-		///*
-		boolean hasReminder = GuiManager.isTableActive();
+		SwingUtilities.invokeLater(new Runnable(){
 
-		assertTrue(GuiManager.getInputFrameVisibility());
-		if (hasReminder) {
-			assertTrue(GuiManager.getTableVisibility());
-			assertFalse(GuiManager.getOutputFrameVisibility());
-		} else {
-			assertFalse(GuiManager.getTableVisibility());
-			assertTrue(GuiManager.getOutputFrameVisibility());
-		}
-		//*/
+			@Override
+			public void run() {
+				///*
+				boolean hasReminder = GuiManager.isTableActive();
+
+				assertTrue(GuiManager.getInputFrameVisibility());
+				if (hasReminder) {
+					assertTrue(GuiManager.getTableVisibility());
+					assertFalse(GuiManager.getOutputFrameVisibility());
+				} else {
+					assertFalse(GuiManager.getTableVisibility());
+					assertTrue(GuiManager.getOutputFrameVisibility());
+				}
+				//*/
+				
+			}
+			
+		});
+		
 
 		try {
 			Robot bot = new Robot();

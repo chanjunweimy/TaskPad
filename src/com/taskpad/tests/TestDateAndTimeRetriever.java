@@ -14,7 +14,7 @@ public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
-
+	/*below is testCompareDateAndTimeExecutor*/
 	@Test
 	public void testCompareDateAndTimeExecutorValidBigger1() {
 		testCompareDateAndTimeExecutor(1, "10/12/2014", "18/10/2014 00:00");
@@ -96,6 +96,7 @@ public class TestDateAndTimeRetriever {
 		assertEquals(expected, _datm.compareDateAndTime(input1, input2));
 
 	}
+	/*above is testCompareDateAndTimeExecutor*/
 	
 	private void setupDebugEnvironment(String dateString){
 		try {
