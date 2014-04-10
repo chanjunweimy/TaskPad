@@ -121,7 +121,13 @@ public class FlexiFontOutputFrame extends OutputFrame {
 	
 	@Override
 	protected void clearOutputBox() {
-		_outputBox.setText("");
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				_outputBox.setText("");
+			}
+			
+		});
 	}
 
 	@Override
@@ -153,13 +159,20 @@ public class FlexiFontOutputFrame extends OutputFrame {
 		append(msg, c, isBold);
 	}
 	
-	private void append(String msg, Color c, boolean isBold){
-		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = setUpAttributeSet(c, sc, isBold);
-		StyledDocument doc = _outputBox.getStyledDocument();
-		int len = doc.getLength();
-		printMessage(msg, aset, doc, len);
+	private void append(final String msg, final Color c, final boolean isBold){
+		SwingUtilities.invokeLater(new Runnable(){
+			@Override
+			public void run() {
+				StyleContext sc = StyleContext.getDefaultStyleContext();
+				AttributeSet aset = setUpAttributeSet(c, sc, isBold);
+				StyledDocument doc = _outputBox.getStyledDocument();
+				int len = doc.getLength();
+				printMessage(msg, aset, doc, len);
+			}
+			
+		});
 		resetScrollBarPosition();
+		
 	}
 
 	private void printMessage(String msg, AttributeSet aset,

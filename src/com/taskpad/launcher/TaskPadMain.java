@@ -1,9 +1,11 @@
-//@author A0112084U
+ //@author A0112084U
 
 package com.taskpad.launcher;
 
 
 import javax.swing.SwingUtilities;
+
+import com.taskpad.ui.GuiManager;
  
 /**
  * 
@@ -23,6 +25,8 @@ public class TaskPadMain{
 	}
 	  
 	private static void runProgram() {
+		GuiManager.initialGuiManager();
+		
 		Runnable runTaskPad = new TaskPadLauncher();
 		SwingUtilities.invokeLater(runTaskPad);
 	} 

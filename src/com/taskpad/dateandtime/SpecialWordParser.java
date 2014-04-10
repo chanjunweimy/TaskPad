@@ -59,7 +59,7 @@ public class SpecialWordParser {
 		return _specialWordParser;
 	}
 	
-	protected String parseSpecialDay(String specialDay, String lastWord) throws DatePassedException, InvalidDayException{
+	protected String parseSpecialDay(String specialDay, String lastWord) throws InvalidDayException{
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		String todayDay = datm.getTodayDay();
 		int userDay = -1;
@@ -115,9 +115,12 @@ public class SpecialWordParser {
 			day += value.intValue();
 			
 		}
+		
+		/*
 		if (day < 0){
 			throw new InvalidDayException();
 		}
+		*/
 		
 		TimeWordParser twp = TimeWordParser.getInstance();
 		String ans = null;
@@ -136,7 +139,7 @@ public class SpecialWordParser {
 		
 	}
 	
-	protected String parseSpecialDay(String specialDay, int userDay) throws DatePassedException{
+	protected String parseSpecialDay(String specialDay, int userDay){
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		TimeWordParser twp = TimeWordParser.getInstance();
 		
@@ -157,9 +160,11 @@ public class SpecialWordParser {
 		
 		nxt = calculateNext(specialDay, nxt);
 		
+		/*
 		if (nxt <= 0){
 			throw new DatePassedException();
 		}
+		*/
 		
 		return getNextDay(userDay, twp, todayDayStat, nxt, "d");
 	}

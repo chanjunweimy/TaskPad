@@ -4,8 +4,6 @@
  * Abstract class for processing the commands 
  */
 
-
-
 package com.taskpad.input;
 
 import java.util.HashMap;
@@ -13,6 +11,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidQuotesException;
 
 public abstract class Command {
 
@@ -27,8 +26,11 @@ public abstract class Command {
 	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
-	    
-	protected static Logger logger = Logger.getLogger("TaskPad");
+		
+	protected static Logger _logger = Logger.getLogger("TaskPad");
+	
+	private static final String STRING_SPACE = " ";
+	private static final String STRING_NULL = "null";
 	
 	public Command(String input, String fullInput){
 		Command.fullInput = fullInput;
@@ -49,10 +51,10 @@ public abstract class Command {
 			return;
 		}
 		
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
-		if (numberInput != null){
-			input = numberInput;
-		}
+		boolean isDateAndTimePreserved = true;
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+		//System.out.println(numberInput);
+		checkIfNumberInputEmpty(numberInput);
 				
 		try {
 			checkIfIncorrectArguments();
@@ -70,6 +72,13 @@ public abstract class Command {
 			passObjectToExecutor();
 		} else {
 			return;
+		}
+	}
+
+	private void checkIfNumberInputEmpty(String numberInput) {
+		numberInput = numberInput.trim();
+		if (!numberInput.equals("") || numberInput != null){
+			input = numberInput;
 		}
 	}
 	
@@ -126,7 +135,7 @@ public abstract class Command {
 		
 		//inputObject.showAll();
 		
-		logger.info("Input object created, command: " + inputObject.getCommand());
+		_logger.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;
 	}
 
@@ -143,7 +152,7 @@ public abstract class Command {
 		return false;
 	}
 	
-	protected static void putOneParameter(String parameter, String input){
+	protected void putOneParameter(String parameter, String input){
 		inputParameters.put(parameter, input);
 	}
 	
@@ -153,7 +162,7 @@ public abstract class Command {
 		
 		clearInputParameters();
 		
-		logger.info("Input object passed to executor");
+		_logger.info("Input object passed to executor");
 	}
 	
 	protected boolean isNotInteger(String input){
@@ -205,6 +214,117 @@ public abstract class Command {
 
 	protected void setCOMMAND(String cOMMAND) {
 		COMMAND = cOMMAND;
+	}
+	
+	/* Helper methods to process date and times in strings */
+	/**
+	 * findDateOrTime: helper method of getDateAndTimeValue,
+	 * it uses formatDateAndTimeInString to get all the date and time
+	 * @param fullInput
+	 * @return
+	 */
+	protected String findDateOrTime(String fullInput) {
+		_logger.info("findDateOrTime...");
+		String formatInput = null;
+		try {
+			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
+		} catch (InvalidQuotesException e) {
+			_logger.severe("ERROR!! " + e.getMessage());
+			InputManager.outputToGui(e.getMessage());
+		}
+
+		_logger.info("format input is: " + formatInput);
+		return formatInput;
+	}
+	
+	/**
+	 * Takes in input string and finds the first integer as taskID
+	 * @param input
+	 * @return taskID
+	 * @throws TaskIDException 
+	 */
+	protected String findTaskID(String input) throws TaskIDException{
+		boolean isDateAndTimePreserved = true;
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+
+		_logger.info("finding TaskID. Converted to numberInput");
+		_logger.info("numberInput is " + numberInput);
+		
+		input = numberInput;
+		fullInput = numberInput;
+	
+		_logger.info("input is " + input);
+		_logger.info("fullInput is " + fullInput);
+		
+		int taskID = -1;
+		String[] splitInput = input.split(STRING_SPACE);
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (taskID == -1){
+				try{
+					taskID = Integer.parseInt(splitInput[i]);
+				} catch (NumberFormatException e){
+					//do nothing
+				}
+			}
+		}
+				
+		_logger.info("taskID is " + taskID);
+		
+		if (taskID == -1){
+			_logger.severe("TASK ID is invalid!");
+			throw new TaskIDException();
+		}
+		
+		
+		return "" + taskID;
+	}
+	
+	/**
+	 * Main logic of getting date and time
+	 * @param token
+	 * @param splitResult
+	 * @param datePos
+	 * @param timePos
+	 * @return dateString and timeString
+	 */
+	protected String getDateAndTime(String token, String[] splitResult, int datePos, int timePos) {
+		String dateString = splitResult[datePos];
+		String timeString = splitResult[timePos];
+		
+		_logger.info("getting date and time...");
+		_logger.info("dateString is: " + dateString);
+		_logger.info("timeString is: " + timeString);
+		_logger.info("description is: " + splitResult[0]);
+		
+		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
+		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
+			InputManager.outputToGui(token + " is not a valid date!");
+			_logger.severe(token + " is not a valid date!");
+			return null;
+		}
+		
+		return dateString + " " + timeString;
+	}
+	
+	/**
+	 * getDateAndTimeValue: is called by main function when finding
+	 * deadlines/starttimes/endtimes and it returns the date and time
+	 * @param token
+	 * @param datePos
+	 * @param timePos
+	 * @return date and time if parsed correctly or null there error
+	 */
+	protected String getDateAndTimeValue(String token, int datePos, int timePos) {
+		assert (token != null && token.trim().isEmpty());
+		
+		String formatInput = findDateOrTime(token);
+		
+		String[] splitResult = formatInput.split(STRING_SPACE);
+		int arrDatePos = splitResult.length - datePos;
+		int arrTimePos = splitResult.length - timePos;
+
+		return getDateAndTime(token, splitResult, arrDatePos, arrTimePos);
 	}
 	
 }

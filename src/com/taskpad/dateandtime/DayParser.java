@@ -23,7 +23,12 @@ public class DayParser {
 	private static final String[] DAY_TODAY = {
 		"today", 
 		"tdy",
-		"now"
+		"2day"
+	};
+	
+	private static final String[] DAY_NOW = { 
+		"now",
+		"nw"
 	};
 	
 	private static final String[] DAY_IN_WEEK = {
@@ -67,9 +72,45 @@ public class DayParser {
 	}
 	
 	protected boolean isDay(String input){
-		return _mapWeek.containsKey(input.toLowerCase());
+		if( _mapWeek.containsKey(input.toLowerCase())){
+			return true;
+		} else {
+			for (String todayVariation : DAY_TODAY){
+				if (todayVariation.equals(input)){
+					return true;
+				}
+			}
+			
+			for (String nowVariation : DAY_NOW){
+				if (nowVariation.equals(input)){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	protected boolean isTdy(String input) {
+		for (String nowVariation : DAY_NOW){
+			if (nowVariation.equals(input)){
+				return true;
+			}
+		}
+
+		return false;
 	}
 	
+	protected boolean isNow(String input) {
+		for (String todayVariation : DAY_TODAY) {
+			if (todayVariation.equals(input)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private void initializeMapWeek() {		
 		for (int i = 0; i < DAY_IN_WEEK.length; i++){
 			_mapWeek.put(DAY_IN_WEEK[i], i % 7);
@@ -88,12 +129,23 @@ public class DayParser {
 	 * @throws InvalidDayException 
 	 * @throws DatePassedException 
 	 */
-	protected String parseDayToDate(String input) throws DatePassedException, InvalidDayException{
+	protected String parseDayToDate(String input) throws InvalidDayException{
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		
+		if (input == null || input.trim().isEmpty()){
+			throw new InvalidDayException();
+		}
+		
+		input = input.toLowerCase();
 		for (String todayVariation : DAY_TODAY){
 			if (todayVariation.equals(input)){
 				return datm.getTodayDate();
+			}
+		}
+		
+		for (String nowVariation : DAY_NOW){
+			if (nowVariation.equals(input)){
+				return datm.getTodayDateAndTime();
 			}
 		}
 		
@@ -179,7 +231,7 @@ public class DayParser {
 		
 		try {
 			System.out.println(a.parseDayToDate("MAN"));
-		} catch (InvalidDayException | DatePassedException e) {
+		} catch (InvalidDayException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 		}
