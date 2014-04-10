@@ -316,7 +316,8 @@ public abstract class Command {
 	 * @return date and time if parsed correctly or null there error
 	 */
 	protected String getDateAndTimeValue(String token, int datePos, int timePos) {
-		assert (token != null && token.trim().isEmpty());
+		assert (token != null);
+		assert (!token.trim().isEmpty());
 		
 		String formatInput = findDateOrTime(token);
 		
