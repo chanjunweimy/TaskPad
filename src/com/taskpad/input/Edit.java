@@ -233,7 +233,7 @@ public class Edit extends Command{
 		
 		showErrorWhenActionRepeated(startNo, deadNo, endNo);
 		
-		checkDeadLineAndEndTime();
+		checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate);
 	}
 
 	/**
@@ -247,69 +247,6 @@ public class Edit extends Command{
 			if (_desc.isEmpty()){
 				_desc = null;
 			} 
-		}
-	}
-
-	/**
-	 * @throws InvalidTaskIdException
-	 */
-	private void checkDeadLineAndEndTime() throws InvalidTaskIdException {
-		String startEarliest;
-		if (_startTime != null && _startDate != null){
-			startEarliest = _startDate + STRING_SPACE + _startTime;
-		} else {
-			startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(_taskID));
-		}
-		
-		if (_deadline != null){
-			String tempDeadline = _deadline;
-			_deadline = InputManager.checkDateAndTimeWithStart(startEarliest, _deadline);
-			
-			if (_deadline == null){
-				InputManager.outputToGui(tempDeadline + " should be later than start time"); 
-			}
-		}
-		
-		String endLatest = null;
-		if (_endTime != null && _endDate != null){
-			endLatest = _endDate + STRING_SPACE + _endTime;
-			endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
-			
-			if (endLatest != null){
-				String[] endTokens = endLatest.split(STRING_SPACE);
-				int datePos = 0;
-				int timePos = 1;
-
-				_endDate = endTokens[datePos];
-				_endTime = endTokens[timePos];
-			} else {
-				InputManager.outputToGui(_endDate + STRING_SPACE + _endTime + " should be later than start time"); 
-				_endDate = null;
-				_endTime = null;
-			}
-		}
-		
-	}
-
-	/**
-	 * @param startNo
-	 * @param deadNo
-	 * @param endNo
-	 */
-	private void showErrorWhenActionRepeated(int startNo, int deadNo, int endNo) {
-		if (startNo > 1){
-			InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
-			LOGGER.warning("WARNING: has " + startNo + " start date and time");
-		}
-		
-		if (endNo > 1){
-			InputManager.outputToGui("WARNING: has " + endNo + " end date and time");
-			LOGGER.warning("WARNING: has " + endNo + " end date and time");
-		}
-		
-		if (deadNo > 1){
-			InputManager.outputToGui("WARNING: has " + deadNo + " deadline date and time");
-			LOGGER.warning("WARNING: has " + deadNo + " deadline date and time");
 		}
 	}
 
