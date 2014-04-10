@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.InvalidQuotesException;
+import com.taskpad.execute.InvalidTaskIdException;
 
 public abstract class Command {
 
@@ -327,5 +328,72 @@ public abstract class Command {
 
 		return getDateAndTime(token, splitResult, arrDatePos, arrTimePos);
 	}
+	
+	/**
+	 * @param startNo
+	 * @param deadNo
+	 * @param endNo
+	 */
+	protected void showErrorWhenActionRepeated(int startNo, int deadNo, int endNo) {
+		if (startNo > 1){
+			InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
+			_logger.warning("WARNING: has " + startNo + " start date and time");
+		}
+		
+		if (endNo > 1){
+			InputManager.outputToGui("WARNING: has " + endNo + " end date and time");
+			_logger.warning("WARNING: has " + endNo + " end date and time");
+		}
+		
+		if (deadNo > 1){
+			InputManager.outputToGui("WARNING: has " + deadNo + " deadline date and time");
+			_logger.warning("WARNING: has " + deadNo + " deadline date and time");
+		}
+	}
+	
+	/**
+	 * Check the deadline and end times are after start times
+	 * @throws InvalidTaskIdException
+	 */
+	protected void checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
+			String deadline, String endTime, String endDate) 
+			throws InvalidTaskIdException {
+		String startEarliest;
+		if (startTime != null && startDate != null){
+			startEarliest = startDate + STRING_SPACE + startTime;
+		} else {
+			startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(taskID));
+		}
+		
+		if (deadline != null){
+			String tempDeadline = deadline;
+			deadline = InputManager.checkDateAndTimeWithStart(startEarliest, deadline);
+			
+			if (deadline == null){
+				InputManager.outputToGui(tempDeadline + " should be later than start time"); 
+			}
+		}
+		
+		String endLatest = null;
+		if (endTime != null && endDate != null){
+			endLatest = endDate + STRING_SPACE + endTime;
+			endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
+			
+			if (endLatest != null){
+				String[] endTokens = endLatest.split(STRING_SPACE);
+				int datePos = 0;
+				int timePos = 1;
+
+				endDate = endTokens[datePos];
+				endTime = endTokens[timePos];
+			} else {
+				InputManager.outputToGui(endDate + STRING_SPACE + endTime + " should be later than start time"); 
+				endDate = null;
+				endTime = null;
+			}
+		}
+		
+	}
+
 	
 }
