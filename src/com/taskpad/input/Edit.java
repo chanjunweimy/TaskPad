@@ -261,21 +261,34 @@ public class Edit extends Command{
 			startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(_taskID));
 		}
 		
-		_deadline = InputManager.checkDateAndTimeWithStart(startEarliest, _deadline);
+		if (_deadline != null){
+			String tempDeadline = _deadline;
+			_deadline = InputManager.checkDateAndTimeWithStart(startEarliest, _deadline);
+			
+			if (_deadline == null){
+				InputManager.outputToGui(tempDeadline + " should be later than start time"); 
+			}
+		}
 		
 		String endLatest = null;
 		if (_endTime != null && _endDate != null){
 			endLatest = _endDate + STRING_SPACE + _endTime;
-		}
-		endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
-		if (endLatest != null){
-			String[] endTokens = endLatest.split(STRING_SPACE);
-			int datePos = 0;
-			int timePos = 1;
+			endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
+			
+			if (endLatest != null){
+				String[] endTokens = endLatest.split(STRING_SPACE);
+				int datePos = 0;
+				int timePos = 1;
 
-			_endDate = endTokens[datePos];
-			_endTime = endTokens[timePos];
+				_endDate = endTokens[datePos];
+				_endTime = endTokens[timePos];
+			} else {
+				InputManager.outputToGui(_endDate + STRING_SPACE + _endTime + " should be later than start time"); 
+				_endDate = null;
+				_endTime = null;
+			}
 		}
+		
 	}
 
 	/**
@@ -422,8 +435,8 @@ public class Edit extends Command{
 	}
 
 	private boolean isNotDescWord(String string) {
-		return !(string.toUpperCase().equals("DESC") || 
-				string.toUpperCase().equals("DESCRIPTION"));
+		return !(string.toUpperCase().equals("DESC") &&
+				!string.toUpperCase().equals("DESCRIPTION"));
 	}
 	
 	private boolean containsDeadline(String input){
@@ -476,7 +489,7 @@ public class Edit extends Command{
 	}
 	
 	private boolean isNotEndWord(String string) {
-		return !string.toUpperCase().equals("END") || !string.toUpperCase().equals("-E");
+		return !string.toUpperCase().equals("END") && !string.toUpperCase().equals("-E");
 	}
 	
 	private void inputStartTimeDate(String result){
@@ -497,19 +510,26 @@ public class Edit extends Command{
 		
 		String[] inputSplit = inputCopy.split(" ");
 		for (int i = 0; i < inputSplit.length; i++){
+			LOGGER.info("remove " + inputSplit[i] + "?");
 			if (isNotStartWord(inputSplit[i].trim())){
 				newString += inputSplit[i] + " ";
+				LOGGER.info("NO");
+				LOGGER.info("newString is " + newString);
 			} else if (count > 0) {
 				newString += inputSplit[i] + " ";
+				LOGGER.info("count is " + count);
+				LOGGER.info("NO");
+				LOGGER.info("newString is " + newString);
 			} else {
 				count ++;
+				LOGGER.info("YES");
 			}
 		}
 		return newString;
 	}
 	
 	private boolean isNotStartWord(String string) {
-		return !string.toUpperCase().equals("START") || !string.toUpperCase().equals("-S");
+		return !string.toUpperCase().equals("START") && !string.toUpperCase().equals("-S");
 	}
 
 }
