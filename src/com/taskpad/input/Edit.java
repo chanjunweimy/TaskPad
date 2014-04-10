@@ -84,6 +84,7 @@ public class Edit extends Command{
 			_taskID = findTaskID(fullInput);
 		} catch (TaskIDException e) {
 			InputManager.outputToGui(e.getMessage());
+			return false;
 		}
 		
 		LOGGER.info("taskID is " + _taskID);
@@ -121,6 +122,10 @@ public class Edit extends Command{
 		
 		String[] fullInputTokens = inputString.split(STRING_COMMA);
 		
+		int startNo = 0;
+		int deadNo = 0;
+		int endNo = 0;
+		
 		for (String token : fullInputTokens){
 			String tag = findTag(token);
 			
@@ -139,34 +144,73 @@ public class Edit extends Command{
 						LOGGER.info("description is " + _desc);
 					}
 					break;
-				case "DEADLINE":
-					token = KEYWORD_DEADLINE + STRING_SPACE + removeWordDeadline(token);
+				case "DEADLINE":	
+					deadNo++;
+					
+					token = removeWordDeadline(token);
+					if (token.trim().isEmpty()){
+						_deadline = STRING_EMPTY;
+						LOGGER.info("deadline is " + _deadline);
+						continue;
+					}
+
+					token = KEYWORD_DEADLINE + STRING_SPACE + token.trim();
 					
 					LOGGER.info("after editing, token is " + token);
-					_deadline = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+					String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+					
+					if (tempDead == null){
+						continue;
+					}
+					_deadline = tempDead;
 					
 					LOGGER.info("deadline is " + _deadline);
 					break;
-				case "START":
-					token = KEYWORD_STARTTIME + STRING_SPACE + removeWordStart(token);
+				case "START":	
+					startNo++;
+					
+					token = removeWordStart(token);
+					if (token.trim().isEmpty()){
+						_startDate = STRING_EMPTY;
+						_startTime = STRING_EMPTY;
+						LOGGER.info("_startDate and _startTime is " + STRING_EMPTY);
+						continue;
+					}
+
+					token = KEYWORD_STARTTIME + STRING_SPACE + token.trim();
 					
 					LOGGER.info("after editing, token is " + token);
 					String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
-					if (!startResult.isEmpty()){
-						inputStartTimeDate(startResult);
+					LOGGER.info("startResult is " + startResult);
+
+					if (startResult == null){
+						continue;
 					}
 					
-					LOGGER.info("startResult is " + startResult);
+					inputStartTimeDate(startResult);
 					break;
 				case "END":
-					token = KEYWORD_ENDTiME + STRING_SPACE + removeWordEnd(token);
+					endNo++;
 					
+					token = removeWordEnd(token);
+					if (token.trim().isEmpty()){
+						_endDate = STRING_EMPTY;
+						_endTime = STRING_EMPTY;
+						LOGGER.info("_endDate and _endTime is " + STRING_EMPTY);
+						continue;
+					}
+					
+					token = KEYWORD_ENDTiME + STRING_SPACE + token.trim();
+						
 					LOGGER.info("after editing, token is " + token);
 					String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
-					if (!endResult.isEmpty()){
-						inputEndTimeDate(endResult);
-					}
 					LOGGER.info("endResult is " + endResult);
+
+					if (endResult == null){
+						continue;
+					}
+					
+					inputEndTimeDate(endResult);
 					break;
 				default:
 					//_desc = removeTaskID(token, _taskID);
@@ -181,12 +225,29 @@ public class Edit extends Command{
 			}
 		}
 		
-		_desc = _desc.trim();
+		if (_desc != null){
+			_desc = _desc.trim();
+			LOGGER.info("At last, desc is " + _desc);
+			
+			if (_desc.isEmpty()){
+				_desc = null;
+			} 
+		}
 		
-		LOGGER.info("At last, desc is " + _desc);
+		if (startNo > 1){
+			InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
+			LOGGER.warning("WARNING: has " + startNo + " start date and time");
+		}
 		
-		if (_desc.isEmpty()){
-			_desc = null;
+		if (endNo > 1){
+			InputManager.outputToGui("WARNING: has " + endNo + " end date and time");
+			LOGGER.warning("WARNING: has " + endNo + " end date and time");
+		}
+		
+		if (deadNo > 1){
+			InputManager.outputToGui("WARNING: has " + deadNo + " deadline date and time");
+			LOGGER.warning("WARNING: has " + deadNo + " deadline date and time");
+
 		}
 	}
 
@@ -206,14 +267,15 @@ public class Edit extends Command{
 		return tag;		
 	}
 	
+	/**
+	 * retrieve date and time from the splitArray of formatString from DateAndTimeManager
+	 * @param token
+	 * @param datePos
+	 * @param timePos
+	 * @return
+	 */
 	private String getDateAndTimeValue(String token, int datePos, int timePos) {
-		if (token == null){
-			return null;
-		}
-		
-		if (token.trim().isEmpty()){
-			return STRING_EMPTY;
-		}
+		assert (token != null && token.trim().isEmpty());
 		
 		String formatInput = findDateOrTime(token);
 		
@@ -224,11 +286,7 @@ public class Edit extends Command{
 		return getDateAndTime(token, splitResult, arrDatePos, arrTimePos);
 	}
 
-	/**
-	 * retrieve date and time from the splitArray of formatString from DateAndTimeManager
-	 * @param formatInput
-	 * @return
-	 */
+
 	private String getDateAndTime(String token, String[] splitResult, int datePos, int timePos) {
 		String dateString = splitResult[datePos];
 		String timeString = splitResult[timePos];
@@ -236,8 +294,9 @@ public class Edit extends Command{
 		LOGGER.info("getting date and time...");
 		LOGGER.info("dateString is: " + dateString);
 		LOGGER.info("timeString is: " + timeString);
+		LOGGER.info("description is: " + splitResult[0]);
 		
-		boolean isDescNotNull = splitResult.length > 6 && STRING_NULL.equals(splitResult[0]);
+		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
 		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
 			InputManager.outputToGui(token + " is not a valid date!");
 			LOGGER.severe(token + " is not a valid date!");
@@ -273,11 +332,9 @@ public class Edit extends Command{
 		LOGGER.info("finding TaskID. Converted to numberInput");
 		LOGGER.info("numberInput is " + numberInput);
 		
-		if (numberInput != null){
-			input = numberInput;
-			fullInput = numberInput;
-		}
-		
+		input = numberInput;
+		fullInput = numberInput;
+	
 		LOGGER.info("input is " + input);
 		LOGGER.info("fullInput is " + fullInput);
 		

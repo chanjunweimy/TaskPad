@@ -1675,8 +1675,17 @@ public class DateAndTimeRetriever {
 		*
 		*/
 		
-		System.out.println(datr.parseNumber("one one one 1 aaa one one one"));
-		System.out.println(datr.parseNumber("one one one aaa"));
+		//System.out.println(datr.parseNumber("one one one 1 aaa one one one"));
+		//System.out.println(datr.parseNumber("one one one aaa"));
+		//System.out.println(datr.parseDay("a today"));
+		
+		try {
+			System.out.println(datr
+					.formatDateAndTimeInString("a today"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// System.out.println("AAA".split(" ").length);
 	}

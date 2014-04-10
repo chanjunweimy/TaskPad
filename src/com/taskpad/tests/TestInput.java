@@ -98,16 +98,23 @@ public class TestInput {
 				+ "END DATE 14/04/2014"
 				, "Edit 1 desc a, end Monday, start today, dead Sunday");
 		
-		testInputString("END TIME 23:59\r\n"
-				+ "START TIME 00:00\r\n"
+		testInputString("Output to GUI: TO a Monday is not a valid date!\r\n"
+				+ "Output to GUI: BY a that day is not a valid date!\r\n"
+				+ "Output to GUI: FROM a today is not a valid date!\r\n"
+				+ "Output to GUI: WARNING: has 3 start date and time\r\n"
+				+ "Output to GUI: WARNING: has 3 end date and time\r\n"
+				+ "Output to GUI: WARNING: has 3 deadline date and time\r\n"
+				+ "END TIME \r\n"
+				+ "START TIME \r\n"
 				+ "DEADLINE 14/04/2014 23:59\r\n"
-				+ "START DATE 10/04/2014\r\n"
+				+ "START DATE \r\n"
 				+ "DESC a\r\n"
 				+ "TASKID 1\r\n"
-				+ "END DATE 14/04/2014"
-				, "Edit 1 desc a, end Monday, start today, dead Sunday, dead Monday");
+				+ "END DATE "
+				, "Edit 1 desc a, end Monday, start today, start ,end ,dead Sunday, dead Monday"
+						+ ", end a Monday, dead a that day, start a today");
 		
-		testInputString("Output to GUI: BY  a Sunday  is not a valid date!\r\n"
+		testInputString("Output to GUI: BY a Sunday is not a valid date!\r\n"
 				+ "END TIME 23:59\r\n"
 				+ "START TIME 00:00\r\n"
 				+ "START DATE 10/04/2014\r\n"
@@ -115,6 +122,24 @@ public class TestInput {
 				+ "TASKID 1\r\n"
 				+ "END DATE 14/04/2014"
 				, "Edit one. desc a, end Monday, start today, dead a Sunday");
+		
+		testInputString("Output to GUI: Error: Empty Input"
+				, "Edit");
+		
+		testInputString("Output to GUI: Error: Invalid Number of Parameters. Type Help if you need! :) "
+				, "Edit aa");
+		
+		testInputString("Output to GUI: Error: Invalid TaskID"
+				, "Edit aa nn");
+		
+		testInputString("DESC nn\r\n" 
+				+ "TASKID 1"
+				, "Edit 1 nn");
+		
+		testInputString("START TIME 19:00\r\n"
+				+ "START DATE 03/08/2014\r\n"
+				+ "TASKID 1"
+				, "Edit 1 start 19:00 03/08/2014");
 	}
 	
 	@Test
