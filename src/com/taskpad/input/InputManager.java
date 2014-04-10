@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.taskpad.storage.DataManager;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.execute.ExecutorManager;
+import com.taskpad.execute.InvalidTaskIdException;
 import com.taskpad.ui.GuiManager;
 
 
@@ -63,6 +64,23 @@ public class InputManager {
 		return STATUS_CLEAR;
 	}
 	
+	protected static String getStartTimeForTask(int taskId) throws InvalidTaskIdException{
+		return ExecutorManager.getStartTimeForTask(taskId);
+	}
+	
+	/**
+	 * compare the input date with startTime and now
+	 * @param now
+	 * @param startEarliest
+	 * @param dateLatest
+	 * @return Date: null if smaller or equal, original date if bigger
+	 */
+	protected String checkDateAndTimeWithStart(String startEarliest,
+			String dateLatest) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		return datm.checkDateAndTimeWithStart(startEarliest, dateLatest);
+	}
+	
 	public static void passToExecutor(Input input, String fullInput){
 		if (!debug){
 			ExecutorManager.receiveFromInput(input, fullInput);
@@ -105,15 +123,6 @@ public class InputManager {
 	public static int compareDateAndTime(String dateString){
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		return datm.compareDateAndTime(dateString);
-	}
-	
-	/**
-	 * getNow(): return the time and date in the current time
-	 * @return String: now (dd/MM/yyyy HH:mm)
-	 */
-	public static String getNow(){
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		return datm.getTodayDateAndTime();
 	}
 	
 }

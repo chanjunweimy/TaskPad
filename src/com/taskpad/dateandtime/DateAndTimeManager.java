@@ -108,6 +108,18 @@ public class DateAndTimeManager{
 	}
 	
 	/**
+	 * compare the input date with startTime and now
+	 * @param now
+	 * @param startEarliest
+	 * @param dateLatest
+	 * @return Date: null if smaller or equal, original date if bigger
+	 */
+	public String checkDateAndTimeWithStart(String startEarliest,
+			String dateLatest) {
+		return _datr.checkDateAndTimeWithStart(startEarliest, dateLatest);
+	}
+	
+	/**
 	 * Takes in a string and changes number words to numbers
 	 * i.e. "one day in forever" changes to "1 day in forever"
 	 * @param input

@@ -117,7 +117,7 @@ public class ExecutorManager {
 		}	
 	}
 	
-	public String getStartTimeForTask(int taskId) throws InvalidTaskIdException {
+	public static String getStartTimeForTask(int taskId) throws InvalidTaskIdException {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
 		if (taskId > listOfTasks.size()) {

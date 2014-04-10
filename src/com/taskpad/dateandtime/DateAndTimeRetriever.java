@@ -569,22 +569,12 @@ public class DateAndTimeRetriever {
 		// System.err.println(startEarliest);
 		// System.err.println(endLatest);
 
-		if (endLatest != null && startEarliest != null
-				&& compareDateAndTime(endLatest, startEarliest) <= 0) {
-			endLatest = null;
-		} else if (endLatest != null && compareDateAndTime(endLatest, now) <= 0) {
-			endLatest = null;
-		}
+		endLatest = checkDateAndTimeWithStart(startEarliest, endLatest);
 
 		// System.err.println(deadlineLatest);
 		// System.err.println(startEarliest);
-		if (deadlineLatest != null && startEarliest != null
-				&& compareDateAndTime(deadlineLatest, startEarliest) <= 0) {
-			deadlineLatest = null;
-		} else if (deadlineLatest != null
-				&& compareDateAndTime(deadlineLatest, now) <= 0) {
-			deadlineLatest = null;
-		}
+		deadlineLatest = checkDateAndTimeWithStart(startEarliest,
+				deadlineLatest);
 
 		descBuilder = buildString(flexiTokens, descBuilder);
 		desc = descBuilder.toString().trim();
@@ -595,6 +585,26 @@ public class DateAndTimeRetriever {
 		allDateAndTime.add(desc);
 
 		return allDateAndTime;
+	}
+
+	/**
+	 * @param startEarliest
+	 * @param dateLatest
+	 * @return
+	 */
+	protected String checkDateAndTimeWithStart(String startEarliest,
+			String dateLatest) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String now = datm.getTodayDateAndTime();
+
+		if (dateLatest != null && startEarliest != null
+				&& compareDateAndTime(dateLatest, startEarliest) <= 0) {
+			dateLatest = null;
+		} else if (dateLatest != null
+				&& compareDateAndTime(dateLatest, now) <= 0) {
+			dateLatest = null;
+		}
+		return dateLatest;
 	}
 	
 

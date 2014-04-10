@@ -4,6 +4,8 @@ package com.taskpad.input;
 
 import java.util.logging.Logger;
 
+import com.taskpad.execute.InvalidTaskIdException;
+
 public class Edit extends Command{
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 		
@@ -83,7 +85,12 @@ public class Edit extends Command{
 		
 		LOGGER.info("taskID is " + _taskID);
 		
-		getOtherKeysValue();
+		try {
+			getOtherKeysValue();
+		} catch (InvalidTaskIdException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/*
 		if (isDesc()){
@@ -105,9 +112,10 @@ public class Edit extends Command{
 	}
 
 	/**
+	 * @throws InvalidTaskIdException 
 	 * 
 	 */
-	private void getOtherKeysValue() {
+	private void getOtherKeysValue() throws InvalidTaskIdException {
 		String inputString = fullInput;
 		inputString = removeTaskID(inputString, _taskID);
 		
@@ -228,6 +236,23 @@ public class Edit extends Command{
 			} 
 		}
 		
+		showErrorWhenActionRepeated(startNo, deadNo, endNo);
+		
+		String startEarliest;
+		if (_startTime != null && _startDate != null){
+			startEarliest = _startDate + " " + _startTime;
+		} else {
+			startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(_taskID));
+			
+		}
+	}
+
+	/**
+	 * @param startNo
+	 * @param deadNo
+	 * @param endNo
+	 */
+	private void showErrorWhenActionRepeated(int startNo, int deadNo, int endNo) {
 		if (startNo > 1){
 			InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
 			LOGGER.warning("WARNING: has " + startNo + " start date and time");
@@ -241,7 +266,6 @@ public class Edit extends Command{
 		if (deadNo > 1){
 			InputManager.outputToGui("WARNING: has " + deadNo + " deadline date and time");
 			LOGGER.warning("WARNING: has " + deadNo + " deadline date and time");
-
 		}
 	}
 
