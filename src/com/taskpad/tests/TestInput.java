@@ -145,6 +145,11 @@ public class TestInput {
 				+ "START DATE 11/04/2014\r\n"
 				+ "TASKID 1"
 				, "Edit 1 start 1 day");
+		
+		testInputString("START TIME 16:00\r\n"
+				+ "START DATE 11/04/2014\r\n"
+				+ "TASKID 1"
+				, "Edit 1 start 4pm tmr");
 	}
 	
 	@Test

@@ -268,11 +268,12 @@ public class Edit extends Command{
 	}
 	
 	/**
-	 * retrieve date and time from the splitArray of formatString from DateAndTimeManager
+	 * getDateAndTimeValue: is called by main functions when finding
+	 * deadlines/starttimes/endtimes and it returns the date and time of them
 	 * @param token
 	 * @param datePos
 	 * @param timePos
-	 * @return
+	 * @return date and time if parsed correctly or null if got error
 	 */
 	private String getDateAndTimeValue(String token, int datePos, int timePos) {
 		assert (token != null && token.trim().isEmpty());
@@ -286,7 +287,15 @@ public class Edit extends Command{
 		return getDateAndTime(token, splitResult, arrDatePos, arrTimePos);
 	}
 
-
+	/**
+	 * helper method of getDateAndTimeValue
+	 * main logic of getting date and time is at here
+	 * @param token
+	 * @param splitResult
+	 * @param datePos
+	 * @param timePos
+	 * @return
+	 */
 	private String getDateAndTime(String token, String[] splitResult, int datePos, int timePos) {
 		String dateString = splitResult[datePos];
 		String timeString = splitResult[timePos];
@@ -510,6 +519,12 @@ public class Edit extends Command{
 		return !string.toUpperCase().equals("END");
 	}
 
+	/**
+	 * findDateOrTime: helper method of getDateAndTimeValue,
+	 * it uses formatDateAndTimeInString to get all the date and time
+	 * @param fullInput
+	 * @return
+	 */
 	private String findDateOrTime(String fullInput) {
 		LOGGER.info("findDateOrTime...");
 		String formatInput = null;
