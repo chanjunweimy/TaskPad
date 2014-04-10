@@ -73,32 +73,39 @@ public class TestInput {
 	@Test
 	public void testEdit(){
 		setUpStream();
-		testInputString("END TIME \r\n"
-				+ "START TIME \r\n"
-				+ "DEADLINE \r\n"
-				+ "START DATE \r\n"
-				+ "DESC new\r\n"
-				+ "TASKID 1\r\n"
-				+ "END DATE "
+		testInputString("DESC new\r\n"
+				+ "TASKID 1"
 				, "Edit 1 new description");
 		
-		testInputString("END TIME \r\n"
-				+ "START TIME \r\n"
-				+ "DEADLINE \r\n"
-				+ "START DATE \r\n"
-				+ "DESC new\r\n"
-				+ "TASKID 1\r\n"
-				+ "END DATE "
+		testInputString("DESC new\r\n"
+				+ "TASKID 1"
 				, "Edit one new description");
 		
-		testInputString("END TIME \r\n"
-				+ "START TIME \r\n"
-				+ "DEADLINE 10/04/2014 23:59\r\n"
-				+ "START DATE \r\n"
+		testInputString("DEADLINE 10/04/2014 23:59\r\n"
 				+ "DESC new , a\r\n"
-				+ "TASKID 11\r\n"
-				+ "END DATE "
+				+ "TASKID 11"
 				, "Edit one one new description, a, dead 10/04/2014");
+		
+		testInputString("TASKID 1"
+				, "Edit 1 desc");
+		
+		testInputString("END TIME 23:59\r\n"
+				+ "START TIME 00:00\r\n"
+				+ "DEADLINE 13/04/2014 23:59\r\n"
+				+ "START DATE 10/04/2014\r\n"
+				+ "DESC a\r\n"
+				+ "TASKID 1\r\n"
+				+ "END DATE 14/04/2014"
+				, "Edit 1 desc a, end Monday, start today, dead Sunday");
+		
+		testInputString("END TIME 23:59\r\n"
+				+ "START TIME 00:00\r\n"
+				+ "DEADLINE 14/04/2014 23:59\r\n"
+				+ "START DATE 10/04/2014\r\n"
+				+ "DESC a\r\n"
+				+ "TASKID 1\r\n"
+				+ "END DATE 14/04/2014"
+				, "Edit 1 desc a, end Monday, start today, dead Sunday, dead Monday");
 	}
 	
 	@Test
