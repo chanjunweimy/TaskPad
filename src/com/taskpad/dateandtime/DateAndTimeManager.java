@@ -74,7 +74,7 @@ public class DateAndTimeManager{
 	
 	/**
 	 * Takes in a string and formats date and time to TaskPad standards 
-	 * dd/mm/yyyy and hh:mm then retrieve all types of date and time
+	 * dd/MM/yyyy and HH:mm then retrieve all types of date and time
 	 * @param input
 	 * @return desc | Deadline: | StartTime: Date then Time | EndTime: Date Then Time
 	 * @throws InvalidQuotesException 
@@ -98,7 +98,7 @@ public class DateAndTimeManager{
 	/**
 	 * Takes in a string and formats date and time to TaskPad standards .
 	 * It changes words to numbers as well
-	 * dd/mm/yyyy and hh:mm
+	 * dd/MM/yyyy and HH:mm
 	 * @param input
 	 * @return
 	 * @throws InvalidQuotesException
