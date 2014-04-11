@@ -15,6 +15,8 @@ public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
+	/*below is to test checkDateAndTimeWithStart*/
+	
 	/*below is to test parseNumberString*/
 	@Test
 	public void testValidNumberString1() {
