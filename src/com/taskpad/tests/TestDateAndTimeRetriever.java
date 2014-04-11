@@ -160,6 +160,66 @@ public class TestDateAndTimeRetriever {
 	}
 	
 	@Test
+	public void testValidConvertDateAndTimeString25() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014 13:00",
+				"We tried to fool \"tmr\" tmr 1pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString26() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014 13:00",
+				"We tried to fool \"tmr\" tmr 1.00pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString27() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014 13:00",
+				"We tried to fool \"tmr\" tmr 13:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString28() {
+		testConvertDateAndTimeString("We tried to fool 1pm 12/04/2014 13:00",
+				"We tried to fool \"1pm\" tmr 1:00 pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString29() {
+		testConvertDateAndTimeString("We tried to fool hour",
+				"We tried to fool hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString30() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool 1 hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString31() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool next next prev hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString32() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 04:00",
+				"We tried to fool next next 2 hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString33() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool 1h", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString34() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool 1hour", "11/04/2014 00:00");
+	}
+	
+	@Test
 	public void testInvalidConvertDateAndTimeString1() {
 		testExceptionConvertDateAndTimeString("Error: Cannot have odd numbers of quotes", 
 				"One ppl named \"two\" want \" to have 1.", "11/04/2014 00:00");
@@ -218,12 +278,12 @@ public class TestDateAndTimeRetriever {
 	
 	@Test
 	public void testValidCheckDateAndTimeWithStart7() {
-		testCheckDateAndTimeWithStart(null, "18/10/1993 15:00", " ", "11/04/2014 00:00");
+		testCheckDateAndTimeWithStart("", "18/10/1993 15:00", " ", "11/04/2014 00:00");
 	}
 	
 	@Test
 	public void testValidCheckDateAndTimeWithStart8() {
-		testCheckDateAndTimeWithStart(null, "", " ", "11/04/2014 00:00");
+		testCheckDateAndTimeWithStart("", "", " ", "11/04/2014 00:00");
 	}
 	
 	@Test

@@ -198,6 +198,11 @@ public class TestSpecialWordParser {
 	}
 	
 	@Test
+	public void validTestTimeWord15(){
+		testTimeWordCommand("23/03/2014 01:01", "1hour", "23/03/2014 00:01");
+	}
+	
+	@Test
 	public void invalidTestTimeWord1(){
 		testInvalidTimeWordCommand(MESSAGE_INVALID_TIME, null, "23/03/2014 00:01");
 	}
