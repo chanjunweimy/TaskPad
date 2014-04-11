@@ -271,7 +271,7 @@ public abstract class Command {
 		
 		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
 		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
-			String errorMessage = String.format(token, MESSAGE_INVALID_DATE);
+			String errorMessage = String.format(MESSAGE_INVALID_DATE, token);
 			InputManager.outputToGui(errorMessage);
 			_logger.severe(errorMessage);
 			return null;
@@ -310,20 +310,20 @@ public abstract class Command {
 		String errorMessage = STRING_EMPTY;
 		
 		if (startNo > 1){
-			errorMessage = String.format(STRING_EMPTY+startNo, MESSAGE_WARNING_STARTDATETIME);
+			errorMessage = String.format(MESSAGE_WARNING_STARTDATETIME, STRING_EMPTY+startNo);
 			InputManager.outputToGui(errorMessage);
 			//InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
 			_logger.warning(errorMessage);
 		}
 		
 		if (endNo > 1){
-			errorMessage = String.format(STRING_EMPTY+endNo, MESSAGE_WARNING_ENDDATETIME);
+			errorMessage = String.format(MESSAGE_WARNING_ENDDATETIME, STRING_EMPTY+endNo);
 			InputManager.outputToGui(errorMessage);
 			_logger.warning(errorMessage);
 		}
 		
 		if (deadNo > 1){
-			errorMessage = String.format(STRING_EMPTY+deadNo + MESSAGE_WARNING_DEADLINE);
+			errorMessage = String.format(MESSAGE_WARNING_DEADLINE, STRING_EMPTY+deadNo);
 			InputManager.outputToGui(errorMessage);
 			_logger.warning(errorMessage);
 		}
@@ -356,8 +356,7 @@ public abstract class Command {
 			deadline = InputManager.checkDateAndTimeWithStart(startEarliest, deadline);
 			
 			if (deadline == null){
-				InputManager.outputToGui(String.format(tempDeadline, MESSAGE_DEADLINE_STARTTIME));
-				//InputManager.outputToGui(tempDeadline + " should be later than start time"); 
+				InputManager.outputToGui(String.format(MESSAGE_DEADLINE_STARTTIME,tempDeadline));
 			}
 		}
 		
@@ -374,7 +373,7 @@ public abstract class Command {
 				endDate = endTokens[datePos];
 				endTime = endTokens[timePos];
 			} else {
-				InputManager.outputToGui(String.format(endDate, endTime, MESSAGE_ENDDATE_STARTTIME));
+				InputManager.outputToGui(String.format(MESSAGE_ENDDATE_STARTTIME, endDate, endTime));
 				//InputManager.outputToGui(endDate + STRING_SPACE + endTime + " should be later than start time"); 
 				endDate = null;
 				endTime = null;
