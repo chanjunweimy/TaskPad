@@ -96,7 +96,7 @@ public class TimeParser {
 		
 		if (isDouble(input)){
 			LOGGER.info(input + " is double!");
-			throw new InvalidTimeException();
+			throw new InvalidTimeException(input);
 		}		
 		
 		//to solve 8 AM case
@@ -234,12 +234,12 @@ public class TimeParser {
                 hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
                 LOGGER.info("hours: " + hours);
                 
-                input.replaceFirst(hours, EMPTY);
-                LOGGER.info("input: " + input);
+                String tempInput = input.replaceFirst(hours, EMPTY);
+                LOGGER.info("tempInput: " + tempInput);
                 
-                if (input.length() > 1){
-                	if (!FULL_AM.equalsIgnoreCase(input)){
-                		throw new InvalidTimeException();
+                if (tempInput.length() > 1){
+                	if (!FULL_AM.equalsIgnoreCase(tempInput)){
+                		throw new InvalidTimeException(input);
                 	}
                 }
                 
@@ -250,7 +250,7 @@ public class TimeParser {
                 	minutes = hours.substring(1, 3);
                 	hours = hours.substring(0, 1);
                 } else {
-                	throw new InvalidTimeException();
+                	throw new InvalidTimeException(input);
                 }
                 
                 LOGGER.info("hours: " + hours);
@@ -264,12 +264,12 @@ public class TimeParser {
                 hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
                 LOGGER.info("hours: " + hours);
                 
-                input.replaceFirst(hours, EMPTY);
-                LOGGER.info("input: " + input);
+                String tempInput = input.replaceFirst(hours, EMPTY);
+                LOGGER.info("tempInput: " + tempInput);
                 
-                if (input.length() > 1){
-                	if (!FULL_PM.equalsIgnoreCase(input)){
-                		throw new InvalidTimeException();
+                if (tempInput.length() > 1){
+                	if (!FULL_PM.equalsIgnoreCase(tempInput)){
+                		throw new InvalidTimeException(input);
                 	}
                 }
                 
@@ -280,7 +280,7 @@ public class TimeParser {
                 	minutes = hours.substring(1, 3);		
                 	hours = hours.substring(0, 1);
                 } else {
-                	throw new InvalidTimeException();
+                	throw new InvalidTimeException(input);
                 }
 
                 LOGGER.info("hours: " + hours);

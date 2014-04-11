@@ -784,8 +784,8 @@ public class DateAndTimeRetriever {
 		boolean[] isModified = new boolean[timeTokens.length];
 
 		int maxJoinWord = 4;
-		initializeArray(isModified);
 		for (int i = maxJoinWord; i >= 1; i--) {
+			initializeArray(isModified);
 			changeNTimeWords(timeTokens, isModified, i);
 		}
 		timeString = buildString(timeTokens, timeString);
@@ -864,10 +864,9 @@ public class DateAndTimeRetriever {
 		StringBuffer dateString = new StringBuffer();
 		boolean[] isModified = new boolean[dateTokens.length];
 
-		initializeArray(isModified);
-
 		int maxJoinWord = 5;
 		for (int i = maxJoinWord; i >= 1; i--) {
+			initializeArray(isModified);
 			changeNDateWords(dateTokens, isModified, i);
 		}
 		dateString = buildString(dateTokens, dateString);
@@ -1231,9 +1230,8 @@ public class DateAndTimeRetriever {
 		boolean[] isModified = new boolean[numberInputTokens.length];
 		StringBuffer holidayString = new StringBuffer();
 
-		initializeArray(isModified);
-
 		for(int noOfWords = 3; noOfWords >= 1; noOfWords--){
+			initializeArray(isModified);
 			parseNHoliday(numberInputTokens, isModified, noOfWords);
 		}
 		holidayString = buildString(numberInputTokens, holidayString);

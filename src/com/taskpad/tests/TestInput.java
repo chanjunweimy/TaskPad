@@ -77,11 +77,13 @@ public class TestInput {
 		testInputString("DESC new description\r\nTASKID 1"
 				, "Edit 1 new description");
 		
-		testInputString("DESC new description\r\n"
+		testInputString("Output to GUI: Warning: TaskID is not in standard position\r\n"
+				+ "DESC new description\r\n"
 				+ "TASKID 1"
 				, "Edit one new description");
 		
-		testInputString("Output to GUI: Not a valid TaskID!",
+		testInputString("Output to GUI: Warning: TaskID is not in standard position\r\n"
+				+ "Output to GUI: Not a valid TaskID!",
 				"Edit one one new description, a, dead 10/04/2014");
 		
 		testInputString("TASKID 1"
@@ -96,7 +98,8 @@ public class TestInput {
 				+ "END DATE 14/04/2014"
 				, "Edit 1 desc a, end Monday, start today, dead Sunday");
 
-		testInputString("Output to GUI: BY a Sunday is not a valid date\r\n"
+		testInputString("Output to GUI: Warning: TaskID is not in standard position\r\n"
+				+ "Output to GUI: BY a Sunday is not a valid date\r\n"
 				+ "END TIME 23:59\r\n"
 				+ "START TIME 00:00\r\n"
 				+ "START DATE 10/04/2014\r\n"
@@ -111,7 +114,8 @@ public class TestInput {
 		testInputString("Output to GUI: Error: Invalid Number of Parameters. Type Help if you need! :) "
 				, "Edit aa");
 		
-		testInputString("Output to GUI: Error: Invalid TaskID"
+		testInputString("Output to GUI: Warning: TaskID is not in standard position\r\n"
+				+ "Output to GUI: Error: Invalid TaskID"
 				, "Edit aa nn");
 		
 		testInputString("DESC nn\r\n" 

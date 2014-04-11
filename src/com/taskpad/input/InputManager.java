@@ -68,6 +68,10 @@ public class InputManager {
 		return ExecutorManager.getStartTimeForTask(taskId);
 	}
 	
+	protected static String getEndDateAndTimeForTask(int taskId){
+		return null;
+	}
+	
 	/**
 	 * compare the input date with startTime and now
 	 * @param now

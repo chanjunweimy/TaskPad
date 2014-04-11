@@ -103,10 +103,10 @@ public class Edit extends Command{
 		try{
 			int taskID = Integer.parseInt(splitInput[1]);
 			_taskID = "" + taskID;
-			return true;
+			return false;
 		} catch (NumberFormatException e){
 			InputManager.outputToGui(MESSAGE_WARNING_TASKID);
-			return false;
+			return true;
 		}
 	}
 
@@ -376,7 +376,7 @@ public class Edit extends Command{
 	}
 	
 	private String removeTaskID(String input, String taskID){
-		input = input.replaceFirst("(?i)" + COMMAND_EDIT, "").trim();
+		input = input.replaceFirst("(?i)" + COMMAND_EDIT, "");
 		return input.replaceFirst(taskID, "").trim();
 	}
 	

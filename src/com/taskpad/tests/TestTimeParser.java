@@ -233,17 +233,17 @@ public class TestTimeParser {
 	
 	@Test
 	public void invalid2(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "0800");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 0800", "0800");
 	}
 	
 	@Test
 	public void invalid3(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "2000");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 2000", "2000");
 	}
 	
 	@Test
 	public void invalid4(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "20.15");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 20.15", "20.15");
 	}
 	
 	public void invalid5(){
@@ -252,7 +252,7 @@ public class TestTimeParser {
 
 	@Test
 	public void invalid6(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "0 Am");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 0am", "0 Am");
 	}
 	
 	/*below test case are to test checkIfInvalidTimeString*/
@@ -294,22 +294,33 @@ public class TestTimeParser {
 	
 	@Test
 	public void invalid14(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "00.15");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 00.15", "00.15");
 	}
 	
 	@Test
 	public void invalid15(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "00 Am");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 00am", "00 Am");
 	}
 	
 	@Test
 	public void invalid16(){
-		testInvalidTimeCommand(MESSAGE_INVALID, "00 p");
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 00p", "00 p");
 	}
 	
 	@Test
 	public void invalid17(){
 		testInvalidTimeCommand(MESSAGE_TIME + "24:00", "24:00");
+	}
+	
+
+	@Test
+	public void invalid18(){
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 111aaa111", "111aaa111");
+	}
+	
+	@Test
+	public void invalid19(){
+		testInvalidTimeCommand(MESSAGE_INVALID + ": 11:00ak", "11:00ak");
 	}
 	
 	private void testTimeCommand (String expected, String input){
