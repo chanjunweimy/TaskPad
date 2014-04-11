@@ -14,6 +14,26 @@ public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
+	/*below is to test parseNumberString*/
+	/*above is to test parseNumberString*/
+	
+	/*below is to test DateAndTime*/
+	@Test
+	public void testDateAndTime1() {
+		testDateAndTimeObject("11/04/2014", "08:13", "friday", "11/04/2014 08:13");
+	}
+	
+	private void testDateAndTimeObject(String date, String time, String day, String dateString){
+		//String dateString = "11/04/2014 08:13";
+		setupDebugEnvironment(dateString);
+
+		assertEquals(date, _datm.getTodayDate());
+		assertEquals(time, _datm.getTodayTime());
+		assertEquals(day.toUpperCase(), _datm.getTodayDay().toUpperCase());
+		assertEquals(dateString, _datm.getTodayDateAndTime());
+	}
+	/*above is to test DateAndTime*/
+	
 	/*below is testCompareDateAndTimeExecutor*/
 	@Test
 	public void testCompareDateAndTimeExecutorValidBigger1() {

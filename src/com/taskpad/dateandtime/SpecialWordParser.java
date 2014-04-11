@@ -60,8 +60,10 @@ public class SpecialWordParser {
 	}
 	
 	protected String parseSpecialDay(String specialDay, String lastWord) throws InvalidDayException{
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		String todayDay = datm.getTodayDay();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		//String todayDay = datm.getTodayDay();
+		String todayDay = datr.getTodayDay();
 		int userDay = -1;
 		lastWord = lastWord.toUpperCase();
 		
@@ -140,10 +142,12 @@ public class SpecialWordParser {
 	}
 	
 	protected String parseSpecialDay(String specialDay, int userDay){
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		TimeWordParser twp = TimeWordParser.getInstance();
 		
-		String todayDay = datm.getTodayDay();
+		//String todayDay = datm.getTodayDay();
+		String todayDay = datr.getTodayDay();
 		int todayDayStat = getTodayDay(todayDay);
 		int nxt = 1;
 		

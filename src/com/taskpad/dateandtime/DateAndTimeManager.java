@@ -174,6 +174,11 @@ public class DateAndTimeManager{
 		return _datr.findTime(input);
 	}
 
+	/**
+	 * methods that parses only holiday
+	 * @param holidayString
+	 * @return
+	 */
 	public String parseHolidayString(String holidayString){
 		return _datr.parseOnlyHoliday(holidayString);
 	}	

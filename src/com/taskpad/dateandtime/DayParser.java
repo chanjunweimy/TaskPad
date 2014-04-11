@@ -130,7 +130,8 @@ public class DayParser {
 	 * @throws DatePassedException 
 	 */
 	protected String parseDayToDate(String input) throws InvalidDayException{
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		
 		if (input == null || input.trim().isEmpty()){
 			throw new InvalidDayException();
@@ -139,13 +140,13 @@ public class DayParser {
 		input = input.toLowerCase();
 		for (String todayVariation : DAY_TODAY){
 			if (todayVariation.equals(input)){
-				return datm.getTodayDate();
+				return datr.getTodayDate();
 			}
 		}
 		
 		for (String nowVariation : DAY_NOW){
 			if (nowVariation.equals(input)){
-				return datm.getTodayDateAndTime();
+				return datr.getTodayDateAndTime();
 			}
 		}
 		
