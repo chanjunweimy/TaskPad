@@ -220,6 +220,33 @@ public class TestDateAndTimeRetriever {
 	}
 	
 	@Test
+	public void testValidConvertDateAndTimeString35() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool nxt 1hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString36() {
+		testConvertDateAndTimeString("We tried to fool nxt 1 11/04/2014 01:00",
+				"We tried to fool nxt 1 1hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString37() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 04:00",
+				"We tried to fool nxt nxt 2hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString38() {
+		testConvertDateAndTimeString("For 25/12/2014 , Friday goes to camp from 11/04/2014 01:00 ~ "
+				+ "14/04/2014 13:00 then come back by 01/04/2014 .",
+				"For christmas, \"Friday\" goes to camp from nxt 1h ~ "
+				+ "Monday one pm then come back by 1/4.", "11/04/2014 00:00");
+	}
+	
+	
+	@Test
 	public void testInvalidConvertDateAndTimeString1() {
 		testExceptionConvertDateAndTimeString("Error: Cannot have odd numbers of quotes", 
 				"One ppl named \"two\" want \" to have 1.", "11/04/2014 00:00");
