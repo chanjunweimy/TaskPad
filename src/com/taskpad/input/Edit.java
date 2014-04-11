@@ -5,6 +5,7 @@ package com.taskpad.input;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.execute.InvalidTaskIdException;
 
 public class Edit extends Command{
@@ -79,7 +80,7 @@ public class Edit extends Command{
 		
 		try {
 			_taskID = findTaskID(fullInput);
-		} catch (TaskIDException e) {
+		} catch (TaskIDException | InvalidQuotesException e) {
 			InputManager.outputToGui(e.getMessage());
 			LOGGER.severe(e.getMessage());
 			return false;
@@ -242,8 +243,9 @@ public class Edit extends Command{
 	 * @param input
 	 * @return taskID
 	 * @throws TaskIDException 
+	 * @throws InvalidQuotesException 
 	 */
-	private String findTaskID(String input) throws TaskIDException{
+	private String findTaskID(String input) throws TaskIDException, InvalidQuotesException{
 		boolean isDateAndTimePreserved = true;
 		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
 
