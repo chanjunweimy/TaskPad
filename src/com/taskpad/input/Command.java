@@ -28,10 +28,18 @@ public abstract class Command {
 	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
 	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
 		
+	protected static final String MESSAGE_DEADLINE_STARTTIME = "%s should be later than start time";
+	protected static final String MESSAGE_ENDDATE_STARTTIME = "%s %s should be later than start time";
+	protected static final String MESSAGE_WARNING_STARTDATETIME ="WARNING: has %s start date and time";
+	protected static final String MESSAGE_WARNING_ENDDATETIME = "WARNING: has %s end date and time";
+	protected static final String MESSAGE_WARNING_DEADLINE = "WARNING: has %s deadline";
+	protected static final String MESSAGE_INVALID_DATE = "%s is not a valid date";
+	
 	protected static Logger _logger = Logger.getLogger("TaskPad");
 	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_NULL = "null";
+	private static final String STRING_EMPTY = "";
 	
 	public Command(String input, String fullInput){
 		Command.fullInput = fullInput;
@@ -300,8 +308,9 @@ public abstract class Command {
 		
 		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
 		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
-			InputManager.outputToGui(token + " is not a valid date!");
-			_logger.severe(token + " is not a valid date!");
+			String errorMessage = String.format(token, MESSAGE_INVALID_DATE);
+			InputManager.outputToGui(errorMessage);
+			_logger.severe(errorMessage);
 			return null;
 		}
 		
@@ -335,19 +344,25 @@ public abstract class Command {
 	 * @param endNo
 	 */
 	protected void showErrorWhenActionRepeated(int startNo, int deadNo, int endNo) {
+		String errorMessage = STRING_EMPTY;
+		
 		if (startNo > 1){
-			InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
-			_logger.warning("WARNING: has " + startNo + " start date and time");
+			errorMessage = String.format(STRING_EMPTY+startNo, MESSAGE_WARNING_STARTDATETIME);
+			InputManager.outputToGui(errorMessage);
+			//InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
+			_logger.warning(errorMessage);
 		}
 		
 		if (endNo > 1){
-			InputManager.outputToGui("WARNING: has " + endNo + " end date and time");
-			_logger.warning("WARNING: has " + endNo + " end date and time");
+			errorMessage = String.format(STRING_EMPTY+endNo, MESSAGE_WARNING_ENDDATETIME);
+			InputManager.outputToGui(errorMessage);
+			_logger.warning(errorMessage);
 		}
 		
 		if (deadNo > 1){
-			InputManager.outputToGui("WARNING: has " + deadNo + " deadline date and time");
-			_logger.warning("WARNING: has " + deadNo + " deadline date and time");
+			errorMessage = String.format(STRING_EMPTY+deadNo + MESSAGE_WARNING_DEADLINE);
+			InputManager.outputToGui(errorMessage);
+			_logger.warning(errorMessage);
 		}
 	}
 	
@@ -370,7 +385,8 @@ public abstract class Command {
 			deadline = InputManager.checkDateAndTimeWithStart(startEarliest, deadline);
 			
 			if (deadline == null){
-				InputManager.outputToGui(tempDeadline + " should be later than start time"); 
+				InputManager.outputToGui(String.format(tempDeadline, MESSAGE_DEADLINE_STARTTIME));
+				//InputManager.outputToGui(tempDeadline + " should be later than start time"); 
 			}
 		}
 		
@@ -387,7 +403,8 @@ public abstract class Command {
 				endDate = endTokens[datePos];
 				endTime = endTokens[timePos];
 			} else {
-				InputManager.outputToGui(endDate + STRING_SPACE + endTime + " should be later than start time"); 
+				InputManager.outputToGui(String.format(endDate, endTime, MESSAGE_ENDDATE_STARTTIME));
+				//InputManager.outputToGui(endDate + STRING_SPACE + endTime + " should be later than start time"); 
 				endDate = null;
 				endTime = null;
 			}
