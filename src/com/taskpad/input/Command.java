@@ -345,7 +345,7 @@ public abstract class Command {
 	 * @throws InvalidTaskIdException
 	 */
 	protected ArrayList<String> checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
-			String deadline, String endTime, String endDate, boolean isExistingTask) 
+			String deadline, String endTime, String endDate, boolean isEdit) 
 			throws InvalidTaskIdException {
 		
 		LOGGER.info("deadline is " + deadline);
@@ -354,18 +354,53 @@ public abstract class Command {
 		LOGGER.info("endDate is " + endDate);
 		LOGGER.info("endTime is " + endTime);
 		LOGGER.info("taskID is " + taskID);
-		LOGGER.info("isExistingTask? " + isExistingTask);
+		LOGGER.info("isEdit? " + isEdit);
 		
 		String startEarliest = null;
 		if (startTime != null && startDate != null){
 			startEarliest = startDate + STRING_SPACE + startTime;
 			startEarliest = startEarliest.trim();
-		} else {
-			if (isExistingTask){
-				//For editing task, it has a task ID stored
-				startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(taskID));
+			
+			LOGGER.info("startEarliest is " + startEarliest); 
+			
+			if (!startEarliest.isEmpty()){
+				boolean isDeadline = true;
+				startEarliest = checkStartEarliest(taskID, deadline, isEdit,
+						startEarliest, isDeadline);
+				LOGGER.info("Checked with deadline: startEarliest is " + startEarliest); 
+				
+				if (startEarliest != null){
+					if (endDate == null || endTime == null){
+						isDeadline = false;
+						String endDateAndTime = null;
+						LOGGER.info("Checked with endDate and endTime: startEarliest is " + startEarliest); 
+						startEarliest = checkStartEarliest(taskID, endDateAndTime, isEdit,
+								startEarliest, isDeadline);
+					}
+					
+					if (startEarliest == null){
+						LOGGER.info("startDate ( " + startDate + " ) and startTime ( " + startTime + " ) is invalid");
+						
+						startDate = null;
+						startTime = null;
+					}
+				} else {
+					LOGGER.info("startDate ( " + startDate + " ) and startTime ( " + startTime + " ) is invalid");
+					
+					startDate = null;
+					startTime = null;
+				}
+				
 			}
+			
+			
+		} 
+		
+		if (isEdit && startEarliest == null){
+			//For editing task, it has a task ID stored
+			startEarliest = InputManager.getStartDateAndTimeForTask(Integer.parseInt(taskID));
 		}
+
 		LOGGER.info("startEarliest is " + startEarliest);
 		LOGGER.info("deadline is " + deadline);
 		
@@ -422,6 +457,64 @@ public abstract class Command {
 		times.add(deadline);
 		
 		return times;
+	}
+
+	/**
+	 * 
+	 * @param taskID
+	 * @param dateAndTime
+	 * @param isEdit
+	 * @param startEarliest
+	 * @param isDeadline
+	 * 						: true if it is deadline, false if it is endtime
+	 * @return
+	 * @throws InvalidTaskIdException
+	 */
+	private String checkStartEarliest(String taskID, String dateAndTime,
+			boolean isEdit, String startEarliest, boolean isDeadline) throws InvalidTaskIdException {
+		if (isEdit){
+			LOGGER.info("isEdit, checking whether startEarliest( " + startEarliest + " ) is valid");
+			//use existing deadline, then start time cannot be first
+			if (dateAndTime == null){
+				String existDateAndTime;
+				if (isDeadline){
+					existDateAndTime = InputManager.getDeadlineForTask(Integer.parseInt(taskID));
+				} else {
+					existDateAndTime = InputManager.getEndDateAndTimeForTask(Integer.parseInt(taskID));
+				}
+				LOGGER.info("isDeadline is " + isDeadline);
+				LOGGER.info("existDateAndTime is " + existDateAndTime);
+				
+				if (existDateAndTime == null){
+					return startEarliest;
+				}
+				
+				switch (InputManager.compareDateAndTime(startEarliest, existDateAndTime)){
+				case -2:
+					assert (false);
+					break;
+					
+				case -1:
+					//it is valid if it is -1
+					LOGGER.info("valid startEarliest");
+					break;
+					
+				case 0:
+				case 1:
+					if (isDeadline){
+						InputManager.outputToGui("startDateAndTime ( " + startEarliest + " ) is "
+							+ "earlier than existing deadline : " + existDateAndTime);
+					} else {
+						InputManager.outputToGui("startDateAndTime ( " + startEarliest + " ) is "
+								+ "earlier than existing end date and end time : " + existDateAndTime);
+					}
+					startEarliest = null;
+					LOGGER.info("invalid startEarliest");
+					break;
+				}
+			}
+		}
+		return startEarliest;
 	}
 	
 }

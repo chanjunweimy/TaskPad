@@ -64,12 +64,16 @@ public class InputManager {
 		return STATUS_CLEAR;
 	}
 	
-	protected static String getStartTimeForTask(int taskId) throws InvalidTaskIdException{
-		return ExecutorManager.getStartTimeForTask(taskId);
+	protected static String getStartDateAndTimeForTask(int taskId) throws InvalidTaskIdException{
+		return ExecutorManager.getStartDateAndTimeForTask(taskId);
 	}
 	
-	protected static String getEndDateAndTimeForTask(int taskId){
-		return null;
+	protected static String getEndDateAndTimeForTask(int taskId) throws InvalidTaskIdException{
+		return ExecutorManager.getEndDateAndTimeForTask(taskId);
+	}
+	
+	protected static String getDeadlineForTask(int taskId) throws InvalidTaskIdException{
+		return ExecutorManager.getDeadlineForTask(taskId);
 	}
 	
 	/**

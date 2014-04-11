@@ -2,22 +2,25 @@
 
 package com.taskpad.input;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidQuotesException;
-import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.execute.InvalidTaskIdException;
 
+/*
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import com.taskpad.dateandtime.DateObject;
+import com.taskpad.dateandtime.TimeObject;
+*/
 
 /**
  * Add syntax
@@ -32,9 +35,10 @@ public class Add extends Command {
 	private static final String STRING_NULL = "null";
 	private static final String STRING_QUOTE = "\"";
 	private static final String STRING_EMPTY = "";
-	private static final String STRING_DASH = "-";
 	private static final String STRING_SPACE = " ";
+	
 	//private static final String STRING_COMMA = ",";
+	//private static final String STRING_DASH = "-";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -246,63 +250,8 @@ public class Add extends Command {
 		
 	}
 
+
 	
-	/**
-	 * @param timeArray
-	 */
-	private void orderTimeArray(ArrayList<String> timeArray) {
-		//this method is add temporary to avoid bug
-		if (timeArray.size() != 2){
-			return;
-		}
-		
-		Collections.sort(timeArray);
-		inputStartTime(timeArray.get(0));
-		inputEndTime(timeArray.get(1));
-	}
-
-	/**
-	 * @param dateArray
-	 */
-	private void orderDateArray(ArrayList<String> dateArray) {
-		//this method is add temporary to avoid bug
-		if (dateArray.size() != 3){
-			return;
-		}
-		
-		dateArray = sortDateArray(dateArray);
-		inputDeadlineDate(dateArray.get(0));
-		inputStartDate(dateArray.get(1));
-		inputEndDate(dateArray.get(2));
-	}
-
-	private ArrayList<String> sortDateArray(ArrayList<String> dateArray) {
-		ArrayList<Date> dates = convertStringToDates(dateArray);
-
-		Collections.sort(dates, new Comparator<Date>(){
-			@Override
-			public int compare(Date d1, Date d2) {
-				return d1.compareTo(d2);
-			}
-		});
-		
-		return null;
-	}
-
-	private ArrayList<Date> convertStringToDates(ArrayList<String> dateArray) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
-		ArrayList<Date> dates = new ArrayList<Date>();
-		
-		for (int i=0; i<dateArray.size(); i++){
-			try {
-				dates.add(sdf.parse(dateArray.get(i)));
-			} catch (ParseException e) {
-				//do nothing
-			}
-		}
-		
-		return dates;
-	}
 
 	/**
 	 * 
@@ -339,8 +288,9 @@ public class Add extends Command {
 		_sc.close();
 		
 		try {
+			boolean isEdit = false;
 			ArrayList<String> times = 
-					checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
+					checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, isEdit);
 			String endLatest = times.get(POSITION_TIME_ENDTIME / 2);
 			String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
 			_deadline = times.get(POSITION_TIME_DEADLINE / 2);
@@ -496,24 +446,6 @@ public class Add extends Command {
 		input = newInput;
 	}
 	
-	
-
-	private static String constructNewInputString(String[] splitInput,
-			String newInput, int index) {
-		if (index != -1){
-			for (int i=0; i<splitInput.length; i++){
-				if (splitInput[i].equals(STRING_DASH)){
-					continue;
-				} else {
-					newInput += splitInput[i].trim() + STRING_SPACE;
-				}
-			}
-		}
-		return newInput;
-	}
-	
-	
-	
 
 	private void getDeadline(String param) {
 		param = stripWhiteSpaces(param);
@@ -527,23 +459,13 @@ public class Add extends Command {
 	}
 	
 
-	private String[] splitBySpace(String param) {
-		return param.split(STRING_SPACE);
-	}
 	
-	@SuppressWarnings("unused")
-	private boolean descAlreadyEntered(){
-		return inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY;
-	}
 
 	private void inputDeadlineDate(String deadline) {
 		putOneParameter(PARAMETER_DEADLINE_DATE, deadline);		
 	}
 	
 	
-	private void inputDesc(String desc) {
-		putOneParameter(PARAMETER_DESCRIPTION, desc);		
-	}
 	
 	private void inputStartDate(String date){
 		putOneParameter(PARAMETER_START_DATE, date);
@@ -634,11 +556,125 @@ public class Add extends Command {
 	 */
 	
 	/**
+	 * @deprecated
+	 * @param dateArray
+	 * @return
+	 */
+	/*
+	private ArrayList<String> sortDateArray(ArrayList<String> dateArray) {
+		ArrayList<Date> dates = convertStringToDates(dateArray);
+
+		Collections.sort(dates, new Comparator<Date>(){
+			@Override
+			public int compare(Date d1, Date d2) {
+				return d1.compareTo(d2);
+			}
+		});
+		
+		return null;
+	}
+	*/
+
+	/**
+	 * @deprecated
+	 * @param dateArray
+	 * @return
+	 */
+	/*
+	private ArrayList<Date> convertStringToDates(ArrayList<String> dateArray) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		ArrayList<Date> dates = new ArrayList<Date>();
+		
+		for (int i=0; i<dateArray.size(); i++){
+			try {
+				dates.add(sdf.parse(dateArray.get(i)));
+			} catch (ParseException e) {
+				//do nothing
+			}
+		}
+		
+		return dates;
+	}
+	*/
+	
+	/*
+	private static String constructNewInputString(String[] splitInput,
+			String newInput, int index) {
+		if (index != -1){
+			for (int i=0; i<splitInput.length; i++){
+				if (splitInput[i].equals(STRING_DASH)){
+					continue;
+				} else {
+					newInput += splitInput[i].trim() + STRING_SPACE;
+				}
+			}
+		}
+		return newInput;
+	}*/
+	
+	
+	/**
+	 * @param timeArray
+	 */
+	/*
+	private void orderTimeArray(ArrayList<String> timeArray) {
+		//this method is add temporary to avoid bug
+		if (timeArray.size() != 2){
+			return;
+		}
+		
+		Collections.sort(timeArray);
+		inputStartTime(timeArray.get(0));
+		inputEndTime(timeArray.get(1));
+	}
+	*/
+
+	/**
+	 * @param dateArray
+	 */
+	/*
+	private void orderDateArray(ArrayList<String> dateArray) {
+		//this method is add temporary to avoid bug
+		if (dateArray.size() != 3){
+			return;
+		}
+		
+		dateArray = sortDateArray(dateArray);
+		inputDeadlineDate(dateArray.get(0));
+		inputStartDate(dateArray.get(1));
+		inputEndDate(dateArray.get(2));
+	}
+	*/
+	
+	/*
+	private String[] splitBySpace(String param) {
+		return param.split(STRING_SPACE);
+	}
+	*/
+	
+	/*
+	private boolean descAlreadyEntered(){
+		return inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY;
+	}
+	*/
+	
+	/**
+	 * @deprecated
+	 * @param desc
+	 */
+	/*
+	private void inputDesc(String desc) {
+		putOneParameter(PARAMETER_DESCRIPTION, desc);		
+	}
+	*/
+	
+	/**
 	 * For each input index, if it is date, put in date; if it is time, put in time
 	 * Otherwise, string them together as description
 	 * @deprecated
 	 * @param splitInput
 	 */
+	/*
 	@SuppressWarnings({ "unused"})
 	private String extractTimeAndDate(String[] splitInput) {
 		ArrayList<String> dateArray = new ArrayList<String>();
@@ -668,13 +704,14 @@ public class Add extends Command {
 		return newInput;
 		
 	}
-
+	*/
 
 	/**
 	 * @deprecated
 	 * @param param
 	 * @return
 	 */
+	/*
 	private boolean findTimeOrDate(String param){
 		param = param.trim();		
 		
@@ -689,12 +726,13 @@ public class Add extends Command {
 		}
 		return false;
 	}
-	
+	*/
 
 	/**
 	 * @deprecated
 	 * @param param
 	 */
+	/*
 	private void getStartDetails(String param){
 		String[] inputParams = splitBySpace(param);
 		inputParams = findDateTime(inputParams);
@@ -702,11 +740,13 @@ public class Add extends Command {
 		inputStartDate(inputParams[0]);
 		inputStartTime(inputParams[1]);
 	}
+	*/
 	
 	/**
 	 * @deprecated
 	 * @param param
 	 */
+	/*
 	private void getEndDetails(String param){
 		String[] inputParams = splitBySpace(param);
 		inputParams = findDateTime(inputParams);
@@ -714,12 +754,14 @@ public class Add extends Command {
 		inputEndDate(inputParams[0]);
 		inputEndTime(inputParams[1]);
 	}
-
+	*/
+	
 	/**
 	 * @deprecated
 	 * @param inputParams
 	 * @return
 	 */
+	/*
 	private String[] findDateTime(String[] inputParams) {
 		String[] dateTime = {STRING_EMPTY, STRING_EMPTY};
 		boolean gotDate = false;
@@ -741,10 +783,12 @@ public class Add extends Command {
 		
 		return dateTime;
 	}
+	*/
 	
 	/**
 	 * @deprecated
 	 */
+	/*
 	@SuppressWarnings("unused")
 	private void checkAndRemoveEnd() {
 		String[] splitInput = input.split(STRING_SPACE);
@@ -773,20 +817,24 @@ public class Add extends Command {
 		getEndDetails(param);
 		input = newInput;
 	}
+	*/
 	
 	/**
 	 * @deprecated
 	 */
+	/*
 	@SuppressWarnings("unused")
 	private void checkAndInputDesc(){
 		if (inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY){
 			inputDesc(input);
 		}
 	}
+	*/
 	
 	/**
 	 * @deprecated
 	 */
+	/*
 	@SuppressWarnings("unused")
 	private void checkAndRemoveStart() {
 		String[] splitInput = input.split(STRING_SPACE);
@@ -816,7 +864,7 @@ public class Add extends Command {
 		input = newInput;
 	}
 	
-	
+	*/
 	/* Testing
 	public static void main(String[] args){
 		checkAndRemoveStart();
