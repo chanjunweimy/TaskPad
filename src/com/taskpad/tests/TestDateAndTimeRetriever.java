@@ -15,6 +15,21 @@ public class TestDateAndTimeRetriever {
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
 	/*below is to test parseNumberString*/
+	@Test
+	public void testValidNumberString1() {
+		testParseNumberString("I want to have 1 apple", "I want to have one apple", true);
+		testParseNumberString("I want to have 1 apple", "I want to have one apple", false);
+	}
+	
+	@Test
+	public void testValidNumberString2() {
+		testParseNumberString("I want to have 1 , thanks", "I want to have one,thanks", true);
+		testParseNumberString("I want to have 1 , thanks", "I want to have one, thanks", false);
+	}
+	
+	private void testParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
+		assertEquals(expected, _datm.parseNumberString(input, isDateAndTimePreserved));
+	}
 	/*above is to test parseNumberString*/
 	
 	/*below is to test DateAndTime*/
