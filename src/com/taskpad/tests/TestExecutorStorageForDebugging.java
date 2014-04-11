@@ -20,13 +20,12 @@ import com.taskpad.storage.Task;
  * TestExecutorData
  * 
  * This class is for debugging purpose only
+ * (It was mainly used at the initial stage of
+ * the software development)
  *
  */
 
-
-
-
-public class TestExecutorData {
+public class TestExecutorStorageForDebugging {
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, DataFileStack.FILE);

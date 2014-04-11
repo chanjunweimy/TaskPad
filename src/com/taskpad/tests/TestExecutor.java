@@ -48,6 +48,18 @@ public class TestExecutor {
 	}
 	
 	@Test
+	public void testAddLargeNumberOfTasks() {
+		TaskList list = new TaskList();
+		for (int i = 0; i < 100; i++) {
+			HashMap<String, String> parameters = new HashMap<String, String>();
+			parameters.put("DESC", "do homework 1");
+			ExecutorTestDriver.addTask(parameters, list);			
+		}
+		LinkedList<Integer> result = ExecutorTestDriver.getAllTasksFromBackend(list);
+		assertEquals(result.size(), 100);
+	}
+	
+	@Test
 	public void testListAll() {
 		TaskList list = new TaskList();
 		
