@@ -41,6 +41,17 @@ public abstract class Command {
 	private static final String STRING_NULL = "null";
 	private static final String STRING_EMPTY = "";
 	
+	protected static final String KEYWORD_ENDTiME = "TO";
+	protected static final String KEYWORD_STARTTIME = "FROM";
+	protected static final String KEYWORD_DEADLINE = "BY";
+	
+	protected static final int POSITION_TIME_ENDTIME = 1;
+	protected static final int POSITION_DATE_ENDTIME = 2;
+	protected static final int POSITION_TIME_STARTTIME = 3;
+	protected static final int POSITION_DATE_STARTTIME = 4;
+	protected static final int POSITION_TIME_DEADLINE = 5;
+	protected static final int POSITION_DATE_DEADLINE = 6;
+	
 	public Command(String input, String fullInput){
 		Command.fullInput = fullInput;
 		Command.input = input;
