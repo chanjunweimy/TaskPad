@@ -778,7 +778,7 @@ public class DateAndTimeRetriever {
 		return true;
 	}
 
-	private String parseTime(String dateString) {
+	protected String parseTime(String dateString) {
 		String[] timeTokens = dateString.split(STRING_SPACE);
 		StringBuffer timeString = new StringBuffer();
 		boolean[] isModified = new boolean[timeTokens.length];
@@ -859,7 +859,7 @@ public class DateAndTimeRetriever {
 	 * @param dayString
 	 * @return
 	 */
-	private String parseDate(String dayString) {
+	protected String parseDate(String dayString) {
 		String[] dateTokens = dayString.split(DateAndTimeRetriever.STRING_SPACE);
 		StringBuffer dateString = new StringBuffer();
 		boolean[] isModified = new boolean[dateTokens.length];
@@ -955,20 +955,16 @@ public class DateAndTimeRetriever {
 		return true;
 	}
 
-	private String getAlphaNumericSpaceDesc(String input){
-		boolean isDateAndTimePreserved = false;
-		return getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
-	}
 	
 	/**
 	 * @param input
 	 */
-	protected String getAlphaNumericSpaceDesc(String input, boolean isDateAndTimePreserved) {
+	protected String getAlphaNumericSpaceDesc(String input) {
 		Scanner sc = new Scanner(input);
 		StringBuffer alphaNumericSpaceString = new StringBuffer();
 		while (sc.hasNext()) {
 			String token = sc.next();
-			token = splitNonAlphaNumericCharacter(token, isDateAndTimePreserved);
+			token = splitNonAlphaNumericCharacter(token);
 			alphaNumericSpaceString.append(token + STRING_SPACE);
 		}
 		sc.close();
@@ -982,12 +978,7 @@ public class DateAndTimeRetriever {
 	 * @param isDateAndTimePreserved
 	 * @return
 	 */
-	private String splitNonAlphaNumericCharacter(String token, boolean isDateAndTimePreserved) {
-		if (isDateAndTimePreserved){
-			if (isDate(token) || isTime(token)){
-				return token;
-			}
-		}
+	private String splitNonAlphaNumericCharacter(String token) {
 		// token = token.replaceAll("!", "");
 		// token = token.replaceAll(".", "");
 		// token = token.replaceAll(",", " ");

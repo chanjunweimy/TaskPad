@@ -328,59 +328,51 @@ public class TestDateAndTimeRetriever {
 	/*below is to test parseNumberString*/
 	@Test
 	public void testValidNumberString1() {
-		testParseNumberString("I want to have 1 apple", "I want to have one apple", true);
-		testParseNumberString("I want to have 1 apple", "I want to have one apple", false);
+		testParseNumberString("I want to have 1 apple", "I want to have one apple");
 	}
 	
 	@Test
 	public void testValidNumberString2() {
-		testParseNumberString("I want to have 1 , thanks", "I want to have one,thanks", true);
-		testParseNumberString("I want to have 1 , thanks", "I want to have one, thanks", false);
+		testParseNumberString("I want to have 1 , thanks", "I want to have one,thanks");
 	}
 	
 	@Test
 	public void testValidNumberString3() {
-		testParseNumberString("1 ppl named two want to have 1 .", "One ppl named \"two\" want to have 1.", true);
-		testParseNumberString("1 ppl named two want to have 1 .", "One ppl named \"two\" want to have 1.", false);
+		testParseNumberString("1 ppl named two want to have 1 .", "One ppl named \"two\" want to have 1.");
 	}
 	
 	@Test
 	public void testValidNumberString4() {
-		testParseNumberString("111 aaa 111", "one one one aaa one one one", true);
-		testParseNumberString("111 aaa 111", "one one one aaa one one one", false);
+		testParseNumberString("111 aaa 111", "one one one aaa one one one");
 	}
 	
 	@Test
 	public void testValidNumberString5() {
-		testParseNumberString("11/11/15 11 / 11 / 15 , 11:11 12 : 00 ,", "11/11/15 11/11/15, 11:11 12:00,", true);
-		testParseNumberString("11 / 11 / 15 11 : 11", "11/11/15 11:11", false);
+		testParseNumberString("11/11/2015 11/11/2015 , 11:11 12:00 ,", "11/11/15 11/11/15, 11:11 12:00,");
 	}
 	
 	@Test
 	public void testValidNumberString6() {
-		testParseNumberString("111 1 111", "one one one 1 one one one", true);
-		testParseNumberString("111 1 111", "one one one 1 one one one", false);
+		testParseNumberString("111 1 111", "one one one 1 one one one");
 	}
 	
 	@Test
 	public void testInvalidNumberString1() {
 		testInvalidParseNumberString("Error: Cannot have odd numbers of quotes", 
-				"One ppl named \"two\" want\" to have 1.", true);
-		testInvalidParseNumberString("Error: Cannot have odd numbers of quotes", 
-				"One ppl named \"two\" want \" to have 1.", false);
+				"One ppl named \"two\" want\" to have 1.");
 	}
 	
-	private void testParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
+	private void testParseNumberString(String expected, String input){
 		try {
-			assertEquals(expected, _datm.parseNumberString(input, isDateAndTimePreserved));
+			assertEquals(expected, _datm.parseNumberString(input));
 		} catch (InvalidQuotesException e) {
 			fail();
 		}
 	}
 	
-	private void testInvalidParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
+	private void testInvalidParseNumberString(String expected, String input){
 		try {
-			_datm.parseNumberString(input, isDateAndTimePreserved);
+			_datm.parseNumberString(input);
 			fail();
 		} catch (InvalidQuotesException e) {
 			assertEquals(expected, e.getMessage());

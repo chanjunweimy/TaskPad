@@ -72,10 +72,9 @@ public abstract class Command {
 			return;
 		}
 		
-		boolean isDateAndTimePreserved = true;
 		String numberInput = STRING_EMPTY;
 		try {
-			numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+			numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
 		} catch (InvalidQuotesException e1) {
 			InputManager.outputToGui(e1.getMessage());
 			return;

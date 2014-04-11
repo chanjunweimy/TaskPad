@@ -250,8 +250,7 @@ public class Edit extends Command{
 	 * @throws InvalidQuotesException 
 	 */
 	private String findTaskID(String input) throws TaskIDException, InvalidQuotesException{
-		boolean isDateAndTimePreserved = true;
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
 
 		LOGGER.info("finding TaskID. Converted to numberInput");
 		LOGGER.info("numberInput is " + numberInput);
