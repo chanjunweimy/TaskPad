@@ -16,7 +16,7 @@ import com.taskpad.ui.GuiManager;
  */
 public class DateAndTimeManager{
 
-	private static DateAndTime _dateAndTimeObject = new DateAndTime();
+	//private static DateAndTime _dateAndTimeObject = new DateAndTime();
 
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
 	private static DateAndTimeRetriever _datr = DateAndTimeRetriever.getInstance();
@@ -38,8 +38,9 @@ public class DateAndTimeManager{
 	 * @return String
 	 */
 	public String getTodayTime() {
+		return _datr.getTodayTime();
 		//_dateAndTimeObject = new DateAndTime();
-		return _dateAndTimeObject.getCurrentTime();
+		//return _dateAndTimeObject.getCurrentTime();
 	}
 
 	/**
@@ -48,8 +49,9 @@ public class DateAndTimeManager{
 	 * @return String
 	 */
 	public String getTodayDate() {
+		return _datr.getTodayDate();
 		//DateAndTime _dateAndTimeObject = new DateAndTime();
-		return _dateAndTimeObject.getCurrentDate();
+		//return _dateAndTimeObject.getCurrentDate();
 	}
 
 	/**
@@ -58,8 +60,9 @@ public class DateAndTimeManager{
 	 * @return String
 	 */
 	public String getTodayDay() {
+		return _datr.getTodayDay();
 		//DateAndTime _dateAndTimeObject = new DateAndTime();
-		return _dateAndTimeObject.getCurrentDay();
+		//return _dateAndTimeObject.getCurrentDay();
 	}
 
 	/**
@@ -68,8 +71,9 @@ public class DateAndTimeManager{
 	 * @return String
 	 */
 	public String getTodayDateAndTime() {
+		return _datr.getTodayDateAndTime();
 		//DateAndTime _dateAndTimeObject = new DateAndTime();
-		return _dateAndTimeObject.getCurrentTimeAndDate();
+		//return _dateAndTimeObject.getCurrentTimeAndDate();
 	}
 	
 	/**
@@ -150,14 +154,12 @@ public class DateAndTimeManager{
 		return compareDateAndTime(dateString, getTodayDate() + " 23:59");
 	}
 
-	
 
 	/**
 	 * Check if there  is a valid date in the string
 	 * @param String
 	 * @returns DateObject
 	 */
-	
 	public DateObject findDate(String input){
 		return _datr.findDate(input);
 	}
@@ -172,10 +174,14 @@ public class DateAndTimeManager{
 		return _datr.findTime(input);
 	}
 
+	/**
+	 * methods that parses only holiday
+	 * @param holidayString
+	 * @return
+	 */
 	public String parseHolidayString(String holidayString){
 		return _datr.parseOnlyHoliday(holidayString);
 	}	
-	
 	
 	/**
 	 * only can parse normal time, such as 1am, 11:00 ......
@@ -186,12 +192,18 @@ public class DateAndTimeManager{
 	 * @throws InvalidTimeException
 	 */
 	public String parseTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
-		TimeParser tp = TimeParser.getInstance();
-		return tp.parseTimeInput(timeString);
+		return _datr.parseOnlyTimeInput(timeString);
 	}
 	
+	/**
+	 * parses only time word + special words
+	 * @param input
+	 * @return
+	 * @throws NullTimeUnitException
+	 * @throws NullTimeValueException
+	 */
 	public String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{
-		return TimeWordParser.getInstance().parseTimeWordWithSpecialWord(input);
+		return _datr.parseOnlyTimeWord(input);
 	}
 	
 	/**
@@ -207,8 +219,11 @@ public class DateAndTimeManager{
 	 */
 	public String convertToSecond(String timeString)
 			throws NullTimeUnitException, NullTimeValueException {
+		return _datr.convertToSecond(timeString);
+		/*
 		TimeWordParser twp = TimeWordParser.getInstance();
 		return twp.parseTimeWord(timeString);
+		*/
 	}
 	
 	/**
@@ -217,8 +232,11 @@ public class DateAndTimeManager{
 	 * @throws InvalidDayException 
 	 */
 	public String parseDayToDate(String input) throws InvalidDayException{
+		return _datr.parseOnlyDayToDate(input);
+		/*
 		DayParser dayParser = DayParser.getInstance();
 		return dayParser.parseDayToDate(input);
+		*/
 	}
 	
 	/**
@@ -228,8 +246,11 @@ public class DateAndTimeManager{
 	 * @throws InvalidDateException 
 	 */
 	public String parseDate(String dateString) throws InvalidDateException{
+		return _datr.parseOnlyDate(dateString);
+		/*
 		DateParser dateParser = DateParser.getInstance();
 		return dateParser.parseDate(dateString);
+		*/
 	}
 	
 	/**
@@ -238,7 +259,8 @@ public class DateAndTimeManager{
 	 * @throws ParseException
 	 */
 	public void setDebug(String dateString) throws ParseException{
-		_dateAndTimeObject.setDebugDate(dateString);
+		_datr.setDebug(dateString);
+		//_dateAndTimeObject.setDebugDate(dateString);
 	}
 	
 	

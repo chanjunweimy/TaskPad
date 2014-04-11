@@ -96,7 +96,8 @@ public class HolidayDatesParser {
 	 * @return
 	 */
 	private int getThisYear() {
-		String today = DateAndTimeManager.getInstance().getTodayDate();
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		String today = datr.getTodayDate();
 		String yearString = today.split("/")[2];
 		return Integer.parseInt(yearString);
 		//return Calendar.getInstance().get(Calendar.YEAR);
