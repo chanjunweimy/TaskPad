@@ -18,6 +18,6 @@
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.taskpad.tests.TestGui"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="cs2103jan2014-w13-3j"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="TaskPad"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-ea"/>
 </launchConfiguration>
