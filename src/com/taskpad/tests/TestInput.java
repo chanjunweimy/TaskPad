@@ -67,24 +67,22 @@ public class TestInput {
 	@Test
 	public void testDelete(){
 		setUpStream();
-		testInputString("TASKID 1", "Del 1");
+		testInputString("KEYWORD \r\nTASKID 1", "Del 1");
+		testInputString("KEYWORD hello\r\nTASKID ", "Del hello");
 	}
 	
 	@Test
 	public void testEdit(){
 		setUpStream();
-		testInputString("DESC new\r\n"
-				+ "TASKID 1"
+		testInputString("DESC new description\r\nTASKID 1"
 				, "Edit 1 new description");
 		
-		testInputString("DESC new\r\n"
+		testInputString("DESC new description\r\n"
 				+ "TASKID 1"
 				, "Edit one new description");
 		
-		testInputString("DEADLINE 10/04/2014 23:59\r\n"
-				+ "DESC new , a\r\n"
-				+ "TASKID 11"
-				, "Edit one one new description, a, dead 10/04/2014");
+		testInputString("Output to GUI: Not a valid TaskID!",
+				"Edit one one new description, a, dead 10/04/2014");
 		
 		testInputString("TASKID 1"
 				, "Edit 1 desc");
@@ -97,24 +95,8 @@ public class TestInput {
 				+ "TASKID 1\r\n"
 				+ "END DATE 14/04/2014"
 				, "Edit 1 desc a, end Monday, start today, dead Sunday");
-		
-		testInputString("Output to GUI: TO a Monday is not a valid date!\r\n"
-				+ "Output to GUI: BY a that day is not a valid date!\r\n"
-				+ "Output to GUI: FROM a today is not a valid date!\r\n"
-				+ "Output to GUI: WARNING: has 3 start date and time\r\n"
-				+ "Output to GUI: WARNING: has 3 end date and time\r\n"
-				+ "Output to GUI: WARNING: has 3 deadline date and time\r\n"
-				+ "END TIME \r\n"
-				+ "START TIME \r\n"
-				+ "DEADLINE 14/04/2014 23:59\r\n"
-				+ "START DATE \r\n"
-				+ "DESC a\r\n"
-				+ "TASKID 1\r\n"
-				+ "END DATE "
-				, "Edit 1 desc a, end Monday, start today, start ,end ,dead Sunday, dead Monday"
-						+ ", end a Monday, dead a that day, start a today");
-		
-		testInputString("Output to GUI: BY a Sunday is not a valid date!\r\n"
+
+		testInputString("Output to GUI: BY a Sunday is not a valid date\r\n"
 				+ "END TIME 23:59\r\n"
 				+ "START TIME 00:00\r\n"
 				+ "START DATE 10/04/2014\r\n"
@@ -150,21 +132,39 @@ public class TestInput {
 				+ "START DATE 11/04/2014\r\n"
 				+ "TASKID 1"
 				, "Edit 1 start 4pm tmr");
+		
+  		testInputString("Output to GUI: TO a Monday is not a valid date\r\n"
+			+ "Output to GUI: BY a that day is not a valid date\r\n"
+			+ "Output to GUI: FROM a today is not a valid date\r\n"
+			+ "Output to GUI: WARNING: has 3 start date and time\r\n"
+			+ "Output to GUI: WARNING: has 3 end date and time\r\n"
+			+ "Output to GUI: WARNING: has 3 deadline\r\n"
+			+ "Output to GUI:   should be later than start time\r\n"
+			+ "END TIME \r\n"
+			+ "START TIME \r\n"
+			+ "DEADLINE 14/04/2014 23:59\r\n"
+			+ "START DATE \r\n"
+			+ "DESC a\r\n"
+			+ "TASKID 1\r\n"
+			+ "END DATE "
+			, "Edit 1 desc a, end Monday, start today, start ,end ,dead Sunday, dead Monday"
+			+ ", end a Monday, dead a that day, start a today");
 	}
 	
 	@Test
 	public void testSearch(){
 		setUpStream();
-		testInputString("KEYWORD dragon potions", "search dragon potions");
+		testInputString("TIME \r\nKEYWORD dragon potions", "search dragon potions");
+		testInputString("TIME 15/04/2014\r\nKEYWORD 15/04/2014", "search 15/04/2014");
 	}
 	
 	@Test
 	public void testList(){
 		setUpStream();
-		testInputString("KEY ALL", "list all");
-		testInputString("KEY DONE", "list done");
-		testInputString("KEY UNDONE", "list undone");
-		testInputString("KEY 31/03/2016", "list 31/03/2016");
+		testInputString("DEADLINE \r\nKEY ALL", "list all");
+		testInputString("DEADLINE \r\nKEY DONE", "list done");
+		testInputString("DEADLINE \r\nKEY UNDONE", "list undone");
+		testInputString("DEADLINE 31/03/2016\r\nKEY ", "list 31/03/2016");
 	}
 	
 	@Test
@@ -176,12 +176,9 @@ public class TestInput {
 	@Test
 	public void testAdd1(){
 		setUpStream();
-		testInputString("START TIME 11:00\r\n"
-				+ "END TIME 11:00\r\n"
-				+ "DEADLINE 11/11/2015\r\n"
-				+ "START DATE 11/11/2015\r\n"
-				+ "DESC \" aaa\" 1\r\n"
-				+ "END DATE 11/11/2015", 
+		testInputString("11:00\r\nDEADLINE TIME \r\nSTART TIME 11:00\r\nEND TIME 11:00\r\n"
+				+ "START DATE 11/11/2015\r\nDESC  aaa 1\r\nEND DATE 11/11/2015\r\n"
+				+ "DEADLINE DATE 11/11/2015", 
 				"add 1 -s 11am, 11/11/15 -d 11/11/15 -e 11am, 11/11/15 \" aaa\"");
 	}
 	
