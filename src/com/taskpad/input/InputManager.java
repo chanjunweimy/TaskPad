@@ -65,7 +65,7 @@ public class InputManager {
 	}
 	
 	protected static String getStartTimeForTask(int taskId) throws InvalidTaskIdException{
-		return ExecutorManager.getStartTimeForTask(taskId);
+		return ExecutorManager.getStartDateAndTimeForTask(taskId);
 	}
 	
 	/**
