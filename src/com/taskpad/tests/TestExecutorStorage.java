@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.taskpad.execute.ExecutorTestDriver;
 import com.taskpad.input.InputManager;
+import com.taskpad.storage.CommandRecord;
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
 import com.taskpad.storage.NoPreviousFileException;
@@ -69,6 +70,64 @@ public class TestExecutorStorage {
 		 */
 		assertTrue(task.getStartTime() == null || task.getStartTime().equals(""));
 		assertTrue(task.getVenue() == null || task.getVenue().equals(""));		
+	}
+	
+	@Test
+	public void testAddTimedTasks() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "CCA meeting");
+		parameters.put("START TIME", "16:00");
+		parameters.put("START DATE", "02/07/2018");
+		parameters.put("END TIME", "18:00");
+		parameters.put("END DATE", "02/07/2018");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
+		
+		Task task = list.get(0);
+		assertEquals(task.getStartTime(), "16:00");
+		assertEquals(task.getStartDate(), "02/07/2018");
+		assertEquals(task.getEndTime(), "18:00");
+		assertEquals(task.getEndDate(), "02/07/2018");
+	}
+	
+	@Test
+	public void testAddLargeNumberOfTasks() {
+		TaskList list = new TaskList();
+		
+		// floating tasks
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		
+		for(int i = 0; i < 100; i++) {
+			ExecutorTestDriver.addTask(parameters, list);
+		}
+		
+		// tasks with deadline
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		parameters.put("DEADLINE", "02/03/2014");
+		
+		for(int i = 0; i < 100; i++) {
+			ExecutorTestDriver.addTask(parameters, list);
+		}
+		
+		// tasks with start and end time (timed tasks)
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "CCA meeting");
+		parameters.put("START TIME", "16:00");
+		parameters.put("START DATE", "02/07/2018");
+		parameters.put("END TIME", "18:00");
+		parameters.put("END DATE", "02/07/2018");
+		
+		for(int i = 0; i < 100; i++) {
+			ExecutorTestDriver.addTask(parameters, list);
+		}
+		
+		assertEquals(DataManager.retrieveNumberOfTasks(), 300);
 	}
 	
 	@Test
@@ -129,23 +188,5 @@ public class TestExecutorStorage {
 		assertEquals(list.size(), 0);
 	}
 	
-	/*
-	@Test
-	public void testUndo() throws NoPreviousFileException {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.archiveForUndo();
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.archiveForUndo();
-		
-		ExecutorTestDriver.updateDataForUndo();
-		
-		list = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(list.size(), 1);
-	}
-	*/
 
 }

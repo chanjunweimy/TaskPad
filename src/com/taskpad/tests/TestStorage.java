@@ -17,6 +17,14 @@ import com.taskpad.storage.TaskList;
 
 public class TestStorage {
 
+	/**
+	 * This is to test whether the record of previously
+	 * entered commands is successfully stored
+	 * for the sake of undo and redo
+	 * 
+	 * @throws NoPreviousCommandException
+	 * 
+	 */
 	@Test(expected = NoPreviousCommandException.class)
 	public void testCommandRecord() throws NoPreviousCommandException {
 		CommandRecord.pushForUndo("add do homework 1");
@@ -38,6 +46,11 @@ public class TestStorage {
 		CommandRecord.popForRedo();
 	}
 	
+	/**
+	 * This is to test whether the data file stack
+	 * is successfully stored for the sake of undo and redo
+	 * 
+	 */
 	@Test
 	public void TestDataFileStack() {
 		DataFileStack.pushForUndo(".data0.xml");
@@ -52,8 +65,12 @@ public class TestStorage {
 		assertTrue(DataFileStack.requestDataFile().equals(".data2.xml"));
 	}
 
+	/**
+	 * This is to test whether DataManager can successfully
+	 * store tasks into or retrieve tasks from database 
+	 */
 	@Test
-	public void TestDataManager() {
+	public void TestDataManagerStoreAndRetrieve() {
 		/* 
 		 * Only testing 0, 1, 2 tasks here,
 		 * since 2 or more are unlikely to be dealt with differently
