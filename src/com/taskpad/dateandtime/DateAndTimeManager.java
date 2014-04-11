@@ -130,10 +130,12 @@ public class DateAndTimeManager{
 	 * @return string changed to numerics
 	 * @throws InvalidQuotesException 
 	 */
-	public String parseNumberString(String input, boolean isDateAndTimePreserved) throws InvalidQuotesException{
-		input = _datr.getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
+	public String parseNumberString(String input) throws InvalidQuotesException{
+		input = _datr.getAlphaNumericSpaceDesc(input);
 		input = _datr.removeParseFreeZone(input);
 		input = _datr.parseNumber(input);
+		input = _datr.parseDate(input);
+		input = _datr.parseTime(input);
 		return input.replaceAll("\"", "").trim();
 	}	
 	
