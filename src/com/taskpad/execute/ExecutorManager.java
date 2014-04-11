@@ -117,7 +117,7 @@ public class ExecutorManager {
 		}	
 	}
 	
-	public static String getStartTimeForTask(int taskId) throws InvalidTaskIdException {
+	public static String getStartDateAndTimeForTask(int taskId) throws InvalidTaskIdException {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
 		if (taskId > listOfTasks.size()) {
@@ -129,4 +129,28 @@ public class ExecutorManager {
 		return task.getStartDate() + " " + task.getStartTime();
 	}
 
+	public static String getEndDateAndTimeForTask(int taskId) throws InvalidTaskIdException {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		if (taskId > listOfTasks.size()) {
+			throw new InvalidTaskIdException();
+		}
+		
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task.getEndDate() + " " + task.getEndTime();
+	}
+
+	public static String getDeadlineForTask(int taskId) throws InvalidTaskIdException {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		if (taskId > listOfTasks.size()) {
+			throw new InvalidTaskIdException();
+		}
+		
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task.getDeadline();
+	}
+	
 }
