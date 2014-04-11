@@ -12,6 +12,10 @@ import java.util.regex.Pattern;
 
 public class TimeParser {
 	
+	private static final String FULL_PM = "PM";
+
+	private static final String FULL_AM = "AM";
+
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 
 	private static final String TIME_TWELVE = "12";
@@ -230,7 +234,16 @@ public class TimeParser {
                 hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
                 LOGGER.info("hours: " + hours);
                 
-                if (hours.length() >= 4){ 
+                input.replaceFirst(hours, EMPTY);
+                LOGGER.info("input: " + input);
+                
+                if (input.length() > 1){
+                	if (!FULL_AM.equalsIgnoreCase(input)){
+                		throw new InvalidTimeException();
+                	}
+                }
+                
+                if (hours.length() == 4){ 
                 	minutes = hours.substring(2, 4);
                 	hours = hours.substring(0, 2);
                 } else if (hours.length() == 3) {
@@ -251,7 +264,16 @@ public class TimeParser {
                 hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
                 LOGGER.info("hours: " + hours);
                 
-                if (hours.length() >= 4){ 
+                input.replaceFirst(hours, EMPTY);
+                LOGGER.info("input: " + input);
+                
+                if (input.length() > 1){
+                	if (!FULL_PM.equalsIgnoreCase(input)){
+                		throw new InvalidTimeException();
+                	}
+                }
+                
+                if (hours.length() == 4){ 
                 	minutes = hours.substring(2, 4);
                 	hours = hours.substring(0, 2);
                 } else if (hours.length() == 3) {

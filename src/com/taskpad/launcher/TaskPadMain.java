@@ -24,7 +24,7 @@ public class TaskPadMain{
 		runProgram();
 	}
 	  
-	private static void runProgram() {
+	public static void runProgram() {
 		GuiManager.initialGuiManager();
 		
 		Runnable runTaskPad = new TaskPadLauncher();

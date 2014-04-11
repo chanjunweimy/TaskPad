@@ -90,76 +90,6 @@ public class DateAndTimeRetriever {
 		return _retriever;
 	}
 
-	/**
-	 * In an input string, check if there is valid time
-	 * 
-	 * @param inputString
-	 * @return time
-	 */
-	protected TimeObject findTime(String inputString) {
-		TimeObject timeObject = null;
-
-		String parsedTime = isValidTime(inputString);
-		if (isNotEmptyParsedString(parsedTime)) {
-			timeObject = createNewTimeObject(parsedTime, inputString);
-		}
-		return timeObject;
-	}
-
-	/* Helper methods for checking valid time in a String */
-	private String isValidTime(String input) {
-		input = trimInput(input);
-		TimeParser tp = TimeParser.getInstance();
-		try {
-			return tp.parseTimeInput(input);
-		} catch (TimeErrorException | InvalidTimeException e) {
-			return STRING_EMPTY;
-		}
-	}
-
-	private TimeObject createNewTimeObject(String parsedTime, String inputTime) {
-		return new TimeObject(parsedTime.trim(), inputTime.trim());
-	}
-
-	/**
-	 * In an input string, check if there is valid date
-	 * 
-	 * @param inputString
-	 * @return date
-	 */
-	protected DateObject findDate(String inputString) {
-		DateObject dateObject = null;
-
-		String parsedDate = isValidDate(inputString);
-		if (isNotEmptyParsedString(parsedDate)) {
-			dateObject = createDateObject(parsedDate, inputString);
-		}
-		return dateObject;
-	}
-
-	/* Helper method for checking valid date in a String */
-	private String isValidDate(String input) {
-		input = trimInput(input);
-		DateParser dateParser = DateParser.getInstance();
-		try {
-			return dateParser.parseDate(input);
-		} catch (InvalidDateException e) {
-			return STRING_EMPTY;
-		}
-	}
-
-	private String trimInput(String input) {
-		input = input.trim();
-		return input;
-	}
-
-	private DateObject createDateObject(String parsedDate, String input) {
-		return new DateObject(parsedDate, input.trim());
-	}
-
-	private boolean isNotEmptyParsedString(String parsedString) {
-		return !parsedString.equals(STRING_EMPTY);
-	}
 
 	protected ArrayList<String> searchTimeAndDate(String desc)
 			throws InvalidQuotesException {
@@ -337,8 +267,8 @@ public class DateAndTimeRetriever {
 		for (int i = 0; i < timeWordTokens.length; i++) {
 			String firstToken = timeWordTokens[i];
 			StringBuffer changedTokens = new StringBuffer();
-
-			if (twp.isTimeUnits(firstToken)) {
+			boolean isTimeWord = twp.isValidTimeWord(firstToken);
+			if (twp.isTimeUnits(firstToken) || isTimeWord) {
 				isModified[i] = true;
 				String secondToken = null;
 
@@ -351,9 +281,9 @@ public class DateAndTimeRetriever {
 					String token = timeWordTokens[j];
 
 					if (swp.isSpecialWord(token)) {
-						changedTokens.append(token + DateAndTimeRetriever.STRING_SPACE);
+						changedTokens.append(token + STRING_SPACE);
 						timeWordTokens[j] = null;
-					} else if (j == i - 1 && np.isDigitString(token)) {
+					} else if (j == i - 1 && np.isDigitString(token) && !isTimeWord) {
 						timeWordTokens[j] = null;
 						secondToken = token;
 					} else {
@@ -362,7 +292,7 @@ public class DateAndTimeRetriever {
 
 				}
 				if (secondToken != null) {
-					changedTokens.append(secondToken + DateAndTimeRetriever.STRING_SPACE);
+					changedTokens.append(secondToken + STRING_SPACE);
 				}
 				changedTokens.append(firstToken);
 
@@ -372,7 +302,7 @@ public class DateAndTimeRetriever {
 									.toString().trim());
 				} catch (NullTimeUnitException | NullTimeValueException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
 			}
@@ -608,6 +538,14 @@ public class DateAndTimeRetriever {
 
 		String now = getTodayDateAndTime();
 		
+		if (startEarliest != null && startEarliest.trim().isEmpty()){
+			startEarliest = null;
+		}
+		
+		if (dateLatest != null && dateLatest.trim().isEmpty()){
+			return STRING_EMPTY;
+		}
+		
 		if (dateLatest != null && startEarliest != null
 				&& compareDateAndTime(dateLatest, startEarliest) <= 0) {
 			dateLatest = null;
@@ -617,8 +555,6 @@ public class DateAndTimeRetriever {
 		}
 		return dateLatest;
 	}
-	
-
 
 	/**
 	 * @param todayDate
@@ -842,14 +778,14 @@ public class DateAndTimeRetriever {
 		return true;
 	}
 
-	private String parseTime(String dateString) {
-		String[] timeTokens = dateString.split(DateAndTimeRetriever.STRING_SPACE);
+	protected String parseTime(String dateString) {
+		String[] timeTokens = dateString.split(STRING_SPACE);
 		StringBuffer timeString = new StringBuffer();
 		boolean[] isModified = new boolean[timeTokens.length];
 
 		int maxJoinWord = 4;
+		initializeArray(isModified);
 		for (int i = maxJoinWord; i >= 1; i--) {
-			initializeArray(isModified);
 			changeNTimeWords(timeTokens, isModified, i);
 		}
 		timeString = buildString(timeTokens, timeString);
@@ -897,7 +833,7 @@ public class DateAndTimeRetriever {
 
 				// System.err.println(dateInput);
 				if (isTime(timeInput)) {
-					LOGGER.info("TIMEWORDS " + n + DateAndTimeRetriever.STRING_SPACE + token);
+					LOGGER.info("TIMEWORDS " + n + STRING_SPACE + token);
 
 					try {
 						timeInput = parseOnlyTimeInput(timeInput);
@@ -923,7 +859,7 @@ public class DateAndTimeRetriever {
 	 * @param dayString
 	 * @return
 	 */
-	private String parseDate(String dayString) {
+	protected String parseDate(String dayString) {
 		String[] dateTokens = dayString.split(DateAndTimeRetriever.STRING_SPACE);
 		StringBuffer dateString = new StringBuffer();
 		boolean[] isModified = new boolean[dateTokens.length];
@@ -1019,20 +955,16 @@ public class DateAndTimeRetriever {
 		return true;
 	}
 
-	private String getAlphaNumericSpaceDesc(String input){
-		boolean isDateAndTimePreserved = false;
-		return getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
-	}
 	
 	/**
 	 * @param input
 	 */
-	protected String getAlphaNumericSpaceDesc(String input, boolean isDateAndTimePreserved) {
+	protected String getAlphaNumericSpaceDesc(String input) {
 		Scanner sc = new Scanner(input);
 		StringBuffer alphaNumericSpaceString = new StringBuffer();
 		while (sc.hasNext()) {
 			String token = sc.next();
-			token = splitNonAlphaNumericCharacter(token, isDateAndTimePreserved);
+			token = splitNonAlphaNumericCharacter(token);
 			alphaNumericSpaceString.append(token + STRING_SPACE);
 		}
 		sc.close();
@@ -1046,12 +978,7 @@ public class DateAndTimeRetriever {
 	 * @param isDateAndTimePreserved
 	 * @return
 	 */
-	private String splitNonAlphaNumericCharacter(String token, boolean isDateAndTimePreserved) {
-		if (isDateAndTimePreserved){
-			if (isDate(token) || isTime(token)){
-				return token;
-			}
-		}
+	private String splitNonAlphaNumericCharacter(String token) {
 		// token = token.replaceAll("!", "");
 		// token = token.replaceAll(".", "");
 		// token = token.replaceAll(",", " ");
@@ -1082,7 +1009,7 @@ public class DateAndTimeRetriever {
 	}
 
 	private boolean isTime(String input) {
-		input = trimInput(input);
+		input = input.trim();
 		TimeParser tp = TimeParser.getInstance();
 		try {
 			tp.parseTimeInput(input);
@@ -1098,7 +1025,7 @@ public class DateAndTimeRetriever {
 	}
 
 	private boolean isDate(String input) {
-		input = trimInput(input);
+		input = input.trim();
 		DateParser dateParser = DateParser.getInstance();
 		try {
 			dateParser.parseDate(input);
@@ -1130,8 +1057,8 @@ public class DateAndTimeRetriever {
 	 * @return
 	 */
 	private String getTmrYtd(String dayString) {
-		String[] dayTokens = dayString.split(DateAndTimeRetriever.STRING_SPACE);
-		StringBuffer dayBuilder = new StringBuffer(DateAndTimeRetriever.STRING_SPACE);
+		String[] dayTokens = dayString.split(STRING_SPACE);
+		StringBuffer dayBuilder = new StringBuffer(STRING_SPACE);
 
 		SpecialWordParser swp = SpecialWordParser.getInstance();
 		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
@@ -1269,7 +1196,7 @@ public class DateAndTimeRetriever {
 						isModified[j] = true;
 						String token = dayTokens[j];
 						if (swp.isSpecialWord(token)) {
-							changedTokens.append(token + DateAndTimeRetriever.STRING_SPACE);
+							changedTokens.append(token + STRING_SPACE);
 							dayTokens[j] = null;
 							isModified[j] = true;
 						} else {
@@ -1306,86 +1233,60 @@ public class DateAndTimeRetriever {
 
 		initializeArray(isModified);
 
+		for(int noOfWords = 3; noOfWords >= 1; noOfWords--){
+			parseNHoliday(numberInputTokens, isModified, noOfWords);
+		}
+		holidayString = buildString(numberInputTokens, holidayString);
+		
+		return holidayString.toString().trim();
+	}
+
+	/**
+	 * @param numberInputTokens
+	 * @param isModified
+	 */
+	private void parseNHoliday(String[] numberInputTokens, boolean[] isModified, int noOfWords) {
+		LOGGER.info("In parseNHoliday, noOfWords are " + noOfWords);
+		
 		HolidayDatesParser holidayParser = HolidayDatesParser.getInstance();
-		for (int i = 2; i < numberInputTokens.length; i++) {
+		for (int i = noOfWords - 1; i < numberInputTokens.length; i++) {
 			String token = numberInputTokens[i];
+			LOGGER.info("currect token is " + token);
 
-			String holidayInput;
-			String pastOneToken, pastTwoToken;
-
+			String holidayInput = null;
+			
 			if (isParseFree(token)) {
 				isModified[i] = true;
 				continue;
 			}
 
 			// search 3 words:
-			if (allNotModified(isModified, i, 3)) {
-				pastOneToken = numberInputTokens[i - 1];
-				pastTwoToken = numberInputTokens[i - 2];
-				holidayInput = holidayParser.replaceHolidayDate(pastTwoToken
-						+ DateAndTimeRetriever.STRING_SPACE + pastOneToken + DateAndTimeRetriever.STRING_SPACE + token);
+			if (allNotModified(isModified, i, noOfWords)) {
+				StringBuffer holidayBuilder = new StringBuffer();
+				for (int j = i - noOfWords + 1 ;j <= i - 1; j++) {
+					String pastToken = numberInputTokens[j];
+					LOGGER.info("pastToken is " + pastToken);
+					holidayBuilder.append(pastToken + STRING_SPACE);
+				}
+				holidayBuilder.append(token);
+				
+				LOGGER.info("constructed string is " + holidayBuilder.toString());
+				
+				holidayInput = holidayParser.replaceHolidayDate(holidayBuilder.toString());
+				
+				LOGGER.info("after parsing, holidayInput is " + holidayInput);
 				if (holidayInput != null) {
 					numberInputTokens[i] = holidayInput;
-					numberInputTokens[i - 1] = null;
-					numberInputTokens[i - 2] = null;
 					isModified[i] = true;
-					isModified[i - 1] = true;
-					isModified[i - 2] = true;
+					for (int j = i - 1; j >= i - noOfWords + 1; j--) {
+						numberInputTokens[j] = null;						
+						isModified[j] = true;
+					}
+					
 					// holidayString.append(holidayInput + " ");
 				}
 			}
 		}
-
-		for (int i = 1; i < numberInputTokens.length; i++) {
-			String token = numberInputTokens[i];
-			String holidayInput;
-			String pastOneToken;
-
-			if (isParseFree(token)) {
-				isModified[i] = true;
-				continue;
-			}
-
-			// search 2 words:
-			if (allNotModified(isModified, i, 2)) {
-				pastOneToken = numberInputTokens[i - 1];
-				holidayInput = holidayParser.replaceHolidayDate(pastOneToken
-						+ DateAndTimeRetriever.STRING_SPACE + token);
-				if (holidayInput != null) {
-					numberInputTokens[i] = holidayInput;
-					numberInputTokens[i - 1] = null;
-					isModified[i] = true;
-					isModified[i - 1] = true;
-					// holidayString.append(holidayInput + " ");
-				}
-			}
-		}
-
-		for (int i = 0; i < numberInputTokens.length; i++) {
-			String token = numberInputTokens[i];
-
-			if (isModified[i]) {
-				continue;
-			}
-
-			if (isParseFree(token)) {
-				isModified[i] = true;
-				continue;
-			}
-
-			String holidayInput;
-			// search 1 word
-			holidayInput = holidayParser.replaceHolidayDate(token);
-			if (holidayInput != null) {
-				numberInputTokens[i] = holidayInput;
-				isModified[i] = true;
-				// holidayString.append(holidayInput + " ");
-			}
-		}
-
-		buildString(numberInputTokens, holidayString);
-
-		return holidayString.toString().trim();
 	}
 
 	/**
@@ -1607,9 +1508,113 @@ public class DateAndTimeRetriever {
 	}
 	
 	/**
-	 * ==================BELOW is deprecated================================================================ 
+	 * ==================BELOW is DEPRECATED method================================================================ 
 	 */
 	
+	/**
+	 * In an input string, check if there is valid time
+	 * @deprecated
+	 * @param inputString
+	 * @return time
+	 */
+	protected TimeObject findTime(String inputString) {
+		TimeObject timeObject = null;
+
+		String parsedTime = isValidTime(inputString);
+		if (isNotEmptyParsedString(parsedTime)) {
+			timeObject = createNewTimeObject(parsedTime, inputString);
+		}
+		return timeObject;
+	}
+
+	/**
+	 * Helper methods for checking valid time in a String
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private String isValidTime(String input) {
+		input = trimInput(input);
+		TimeParser tp = TimeParser.getInstance();
+		try {
+			return tp.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			return STRING_EMPTY;
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 * @param parsedTime
+	 * @param inputTime
+	 * @return
+	 */
+	private TimeObject createNewTimeObject(String parsedTime, String inputTime) {
+		return new TimeObject(parsedTime.trim(), inputTime.trim());
+	}
+
+	/**
+	 * In an input string, check if there is valid date
+	 * @deprecated
+	 * 
+	 * @param inputString
+	 * @return date
+	 */
+	protected DateObject findDate(String inputString) {
+		DateObject dateObject = null;
+
+		String parsedDate = isValidDate(inputString);
+		if (isNotEmptyParsedString(parsedDate)) {
+			dateObject = createDateObject(parsedDate, inputString);
+		}
+		return dateObject;
+	}
+
+
+	/**
+	 * Helper method for checking valid date in a String 
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private String isValidDate(String input) {
+		input = trimInput(input);
+		DateParser dateParser = DateParser.getInstance();
+		try {
+			return dateParser.parseDate(input);
+		} catch (InvalidDateException e) {
+			return STRING_EMPTY;
+		}
+	}
+
+	/**
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private String trimInput(String input) {
+		input = input.trim();
+		return input;
+	}
+
+	/**
+	 * @deprecated
+	 * @param parsedDate
+	 * @param input
+	 * @return
+	 */
+	private DateObject createDateObject(String parsedDate, String input) {
+		return new DateObject(parsedDate, input.trim());
+	}
+
+	/**
+	 * @deprecated
+	 * @param parsedString
+	 * @return
+	 */
+	private boolean isNotEmptyParsedString(String parsedString) {
+		return !parsedString.equals(STRING_EMPTY);
+	}
 	
 	/**
 	 * @deprecated
@@ -1690,6 +1695,7 @@ public class DateAndTimeRetriever {
 		return false;
 	}
 	
+	/*
 	public static void main(String[] args) {
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		/*
@@ -1812,7 +1818,7 @@ public class DateAndTimeRetriever {
 			e.printStackTrace();
 		}
 		*
-		*/
+		*//*
 		
 		//System.out.println(datr.parseNumber("one one one 1 aaa one one one"));
 		//System.out.println(datr.parseNumber("one one one aaa"));
@@ -1828,5 +1834,5 @@ public class DateAndTimeRetriever {
 
 		// System.out.println("AAA".split(" ").length);
 	}
-
+	*/
 }

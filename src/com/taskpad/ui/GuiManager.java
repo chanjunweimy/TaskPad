@@ -19,6 +19,7 @@ public class GuiManager {
 	private static OutputFrame _outputFrame;
 	private static OutputTableFrame _tableFrame;
 	private static boolean _isDebug = false;
+	private static boolean _isGuiTest = false;
 	private static boolean _isTableCalled = false;
 
 	// not designed to be instantiated
@@ -149,7 +150,7 @@ public class GuiManager {
 	}
 
 	public static void callOutputNoLine(final String out) {
-		if (!_isDebug) {
+		if (!_isDebug || _isGuiTest) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -158,11 +159,12 @@ public class GuiManager {
 
 					_inputFrame.requestFocusOnInputBox();
 				}
-
 			});
 
-		} else {
-			System.out.println(out);
+		}
+		
+		if (_isDebug){
+			System.out.print(out);
 		}
 
 	}
@@ -183,7 +185,7 @@ public class GuiManager {
 
 	public static void showSelfDefinedMessageNoNewline(final String out,
 			final Color c, final boolean isBold) {
-		if (!_isDebug) {
+		if (!_isDebug || _isGuiTest) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -195,27 +197,26 @@ public class GuiManager {
 
 			});
 
-		} else {
-			System.out.println(out);
+		} 
+		
+		if (_isDebug){
+			System.out.print(out);
 		}
 
 	}
 
+	
 	public static void startRemindingUser() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				swapFrame(_tableFrame, _outputFrame);
-				remindUser(MESSAGE_START_REMINDER);
-			}
-
-		});
-
+		remindUser(MESSAGE_START_REMINDER);
 	}
 
 	private static void remindUser(final String out) {
 		// swapFrame(_tableFrame, _outputFrame);
 		_outputFrame.addReminder(out + NEWLINE);
+		
+		if (_isDebug){
+			System.out.print(out + NEWLINE);
+		}
 	}
 
 	protected static void passInput(final String in) {
@@ -292,6 +293,10 @@ public class GuiManager {
 	public static void setDebug(boolean isDebugFlag) {
 		_isDebug = isDebugFlag;
 		_isTableCalled = false;
+	}
+	
+	public static void setGui(boolean isGuiTest) {
+		_isGuiTest = isGuiTest;
 	}
 
 	/*

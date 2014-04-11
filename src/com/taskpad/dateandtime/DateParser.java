@@ -194,24 +194,6 @@ public class DateParser {
 		}
 		return dateString;
 	}
-
-	/**
-	 * should not be true because even if 
-	 * the date has passed it can be
-	 * startDate also
-	 * @deprecated
-	 * @param date
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private static boolean isPassed(Date date) {
-		/*
-		Date now = new Date();
-		return now.compareTo(date) > 0;
-		*/
-		
-		return false;
-	}
 	
 	private static Date setYear(Date date) {
 		Calendar calendar = Calendar.getInstance();
@@ -256,6 +238,24 @@ public class DateParser {
 			}
 		}
 		return dateString;
+	}
+	
+	/**
+	 * should not be true because even if 
+	 * the date has passed it can be
+	 * startDate also
+	 * @deprecated
+	 * @param date
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private static boolean isPassed(Date date) {
+		/*
+		Date now = new Date();
+		return now.compareTo(date) > 0;
+		*/
+		
+		return false;
 	}
 	
 	///* Testing

@@ -2,6 +2,7 @@
 
 package com.taskpad.input;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -12,13 +13,6 @@ public class Edit extends Command{
 	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 		
 	private static final int NUMBER_ARGUMENTS = 2;
-	
-	private static final int POSITION_TIME_ENDTIME = 1;
-	private static final int POSITION_DATE_ENDTIME = 2;
-	private static final int POSITION_TIME_STARTTIME = 3;
-	private static final int POSITION_DATE_STARTTIME = 4;
-	private static final int POSITION_TIME_DEADLINE = 5;
-	private static final int POSITION_DATE_DEADLINE = 6;
 
 	private static final String COMMAND_EDIT = "EDIT";
 	
@@ -42,10 +36,6 @@ public class Edit extends Command{
 	private static final String STRING_COMMA = ",";
 	private static final String STRING_EMPTY = "";
 	private static final String MESSAGE_WARNING_TASKID = "Warning: TaskID is not in standard position";
-
-	private static final String KEYWORD_ENDTiME = "TO";
-	private static final String KEYWORD_STARTTIME = "FROM";
-	private static final String KEYWORD_DEADLINE = "BY";
 
 	public Edit(String input, String fullInput) {
 		super(input, fullInput);
@@ -240,7 +230,21 @@ public class Edit extends Command{
 		
 		showErrorWhenActionRepeated(startNo, deadNo, endNo);
 		
-		checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, true);
+		ArrayList<String> times =
+				checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, true);
+		String endLatest = times.get(POSITION_TIME_ENDTIME / 2);
+		String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
+		_deadline = times.get(POSITION_TIME_DEADLINE / 2);
+		
+		if (endLatest == null){
+			_endDate = null;
+			_endTime = null;
+		}
+		
+		if (startEarliest == null){
+			_startDate = null;
+			_startTime = null;
+		}
 	}
 	
 	/**
@@ -251,8 +255,7 @@ public class Edit extends Command{
 	 * @throws InvalidQuotesException 
 	 */
 	private String findTaskID(String input) throws TaskIDException, InvalidQuotesException{
-		boolean isDateAndTimePreserved = true;
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
 
 		LOGGER.info("finding TaskID. Converted to numberInput");
 		LOGGER.info("numberInput is " + numberInput);
@@ -342,9 +345,15 @@ public class Edit extends Command{
 
 	@Override
 	protected void putInputParameters() {
+		if (_deadline != null){
+			String[] tempDeadSplit = _deadline.split(STRING_SPACE);
+			
+			_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
+			putOneParameter(PARAMETER_DEADLINE, _deadline);
+		}
+		
 		putOneParameter(PARAMETER_TASK_ID, _taskID);
 		putOneParameter(PARAMETER_DESC, _desc);		
-		putOneParameter(PARAMETER_DEADLINE, _deadline);
 		putOneParameter(PARAMETER_START_TIME, _startTime);
 		putOneParameter(PARAMETER_START_DATE, _startDate);
 		putOneParameter(PARAMETER_END_TIME, _endTime);
@@ -485,7 +494,7 @@ public class Edit extends Command{
 		_startTime = splitResult[1];
 	}
 	
-	protected void inputEndTimeDate(String result){
+	private void inputEndTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
 		_endDate = splitResult[0];
 		_endTime = splitResult[1];

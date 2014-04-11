@@ -14,27 +14,36 @@ import javax.swing.SwingUtilities;
 
 import org.junit.Test;
 
+import com.taskpad.launcher.TaskPadMain;
 import com.taskpad.ui.GuiManager;
 
 /**
- * ATTEMPT to test GUI!!! 
- *
+ * ATTEMPT to test GUI!!!
+ * 
  */
 public class TestGui {
 	private final ByteArrayOutputStream _outContent = new ByteArrayOutputStream();
 
+	private String _expected;
+
 	@Test
 	public void test() {
 		setUpStream();
-		
-		GuiManager.setDebug(true);
-		GuiManager.initialGuiManager();
 
-		SwingUtilities.invokeLater(new Runnable(){
+		GuiManager.setDebug(true);
+		GuiManager.setGui(true);
+		TaskPadMain.runProgram();
+
+		_expected = "Welcome to Taskpad! Type a command or type \"help\"\n\n"
+				+ "Today\'s Tasks \n\n"
+				+ "Showing your tasks and reminders...\n\n"
+				+ "Nothing to show.\n\n\n";
+
+		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
 			public void run() {
-				///*
+				// /*
 				boolean hasReminder = GuiManager.isTableActive();
 
 				assertTrue(GuiManager.getInputFrameVisibility());
@@ -45,54 +54,61 @@ public class TestGui {
 					assertFalse(GuiManager.getTableVisibility());
 					assertTrue(GuiManager.getOutputFrameVisibility());
 				}
-				//*/
-				
+				// */
+
 			}
-			
+
 		});
-		
+
+		// cleanUpStreams();
 
 		try {
 			Robot bot = new Robot();
 
 			bot.setAutoDelay(40);
 			bot.setAutoWaitForIdle(true);
- 
-			//bot.delay(3000);
-			
-			//leftClick(bot);
-			
+
+			bot.delay(3000);
+
+			type(bot, "clear\n");
+
+			bot.delay(1000);
+			_expected += "All tasks have been deleted. You can use undo to get them back.";
+
+			assertEquals(_expected, _outContent.toString().trim());
+			cleanUpStreams();
+
+			// leftClick(bot);
+
 			bot.delay(3000);
 
 			type(bot, "add abc\n");
-			
-			bot.delay(3000); 
-			
-			String expected =
-					"Task Successfully Added!\r\n\r\n\r\n\r\nTask ID:		3"
-					+ "\r\n\r\n\r\nDescription:	"
-					+ "abc \r\n\r\n\r\nStatus:		Not done.\r\n\r\n\r\n";
-			assertEquals(expected + "\r\n", _outContent.toString());
-			
+
+			bot.delay(3000);
+
+			_expected = "Task Successfully Added!\n\n\nTask ID:		1"
+					+ "\n\nDescription:	" + "abc \n\nStatus:		Not done.";
+			assertEquals(_expected, _outContent.toString().trim());
+
 			cleanUpStreams();
+			bot.delay(3000);
+
 		} catch (AWTException e) {
-			
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//assertFalse(GuiManager.getInputFrameVisibility());
-		//assertFalse(GuiManager.getOutputFrameVisibility());
-		//assertFalse(GuiManager.getTableVisibility());
+		// assertFalse(GuiManager.getInputFrameVisibility());
+		// assertFalse(GuiManager.getOutputFrameVisibility());
+		// assertFalse(GuiManager.getTableVisibility());
 
-		
-		
 	}
-	
-	private void setUpStream(){
+
+	private void setUpStream() {
 		System.setOut(new PrintStream(_outContent));
 	}
-	
-	private void cleanUpStreams(){
+
+	private void cleanUpStreams() {
 		_outContent.reset();
 	}
 

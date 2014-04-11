@@ -6,6 +6,7 @@
 
 package com.taskpad.input;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -35,11 +36,22 @@ public abstract class Command {
 	protected static final String MESSAGE_WARNING_DEADLINE = "WARNING: has %s deadline";
 	protected static final String MESSAGE_INVALID_DATE = "%s is not a valid date";
 	
-	protected static Logger _logger = Logger.getLogger("TaskPad");
+	protected static final Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_NULL = "null";
 	private static final String STRING_EMPTY = "";
+	
+	protected static final String KEYWORD_ENDTiME = "TO";
+	protected static final String KEYWORD_STARTTIME = "FROM";
+	protected static final String KEYWORD_DEADLINE = "BY";
+	
+	protected static final int POSITION_TIME_ENDTIME = 1;
+	protected static final int POSITION_DATE_ENDTIME = 2;
+	protected static final int POSITION_TIME_STARTTIME = 3;
+	protected static final int POSITION_DATE_STARTTIME = 4;
+	protected static final int POSITION_TIME_DEADLINE = 5;
+	protected static final int POSITION_DATE_DEADLINE = 6;
 	
 	public Command(String input, String fullInput){
 		Command.fullInput = fullInput;
@@ -60,10 +72,9 @@ public abstract class Command {
 			return;
 		}
 		
-		boolean isDateAndTimePreserved = true;
 		String numberInput = STRING_EMPTY;
 		try {
-			numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+			numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
 		} catch (InvalidQuotesException e1) {
 			InputManager.outputToGui(e1.getMessage());
 			return;
@@ -150,7 +161,7 @@ public abstract class Command {
 		
 		//inputObject.showAll();
 		
-		_logger.info("Input object created, command: " + inputObject.getCommand());
+		LOGGER.info("Input object created, command: " + inputObject.getCommand());
 		return inputObject;
 	}
 
@@ -177,7 +188,7 @@ public abstract class Command {
 		
 		clearInputParameters();
 		
-		_logger.info("Input object passed to executor");
+		LOGGER.info("Input object passed to executor");
 	}
 	
 	protected boolean isNotInteger(String input){
@@ -239,16 +250,16 @@ public abstract class Command {
 	 * @return
 	 */
 	protected String findDateOrTime(String fullInput) {
-		_logger.info("findDateOrTime...");
+		LOGGER.info("findDateOrTime...");
 		String formatInput = null;
 		try {
 			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
 		} catch (InvalidQuotesException e) {
-			_logger.severe("ERROR!! " + e.getMessage());
+			LOGGER.severe("ERROR!! " + e.getMessage());
 			InputManager.outputToGui(e.getMessage());
 		}
 
-		_logger.info("format input is: " + formatInput);
+		LOGGER.info("format input is: " + formatInput);
 		return formatInput;
 	}
 	
@@ -264,16 +275,16 @@ public abstract class Command {
 		String dateString = splitResult[datePos];
 		String timeString = splitResult[timePos];
 		
-		_logger.info("getting date and time...");
-		_logger.info("dateString is: " + dateString);
-		_logger.info("timeString is: " + timeString);
-		_logger.info("description is: " + splitResult[0]);
+		LOGGER.info("getting date and time...");
+		LOGGER.info("dateString is: " + dateString);
+		LOGGER.info("timeString is: " + timeString);
+		LOGGER.info("description is: " + splitResult[0]);
 		
 		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
 		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
 			String errorMessage = String.format(MESSAGE_INVALID_DATE, token);
 			InputManager.outputToGui(errorMessage);
-			_logger.severe(errorMessage);
+			LOGGER.severe(errorMessage);
 			return null;
 		}
 		
@@ -313,19 +324,19 @@ public abstract class Command {
 			errorMessage = String.format(MESSAGE_WARNING_STARTDATETIME, STRING_EMPTY+startNo);
 			InputManager.outputToGui(errorMessage);
 			//InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
-			_logger.warning(errorMessage);
+			LOGGER.warning(errorMessage);
 		}
 		
 		if (endNo > 1){
 			errorMessage = String.format(MESSAGE_WARNING_ENDDATETIME, STRING_EMPTY+endNo);
 			InputManager.outputToGui(errorMessage);
-			_logger.warning(errorMessage);
+			LOGGER.warning(errorMessage);
 		}
 		
 		if (deadNo > 1){
 			errorMessage = String.format(MESSAGE_WARNING_DEADLINE, STRING_EMPTY+deadNo);
 			InputManager.outputToGui(errorMessage);
-			_logger.warning(errorMessage);
+			LOGGER.warning(errorMessage);
 		}
 	}
 	
@@ -333,38 +344,56 @@ public abstract class Command {
 	 * Check the deadline and end times are after start times
 	 * @throws InvalidTaskIdException
 	 */
-	protected void checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
+	protected ArrayList<String> checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
 			String deadline, String endTime, String endDate, boolean isExistingTask) 
 			throws InvalidTaskIdException {
 		
-		String startEarliest;
+		LOGGER.info("deadline is " + deadline);
+		LOGGER.info("startDate is " + startDate);
+		LOGGER.info("startTime is " + startTime);
+		LOGGER.info("endDate is " + endDate);
+		LOGGER.info("endTime is " + endTime);
+		LOGGER.info("taskID is " + taskID);
+		LOGGER.info("isExistingTask? " + isExistingTask);
+		
+		String startEarliest = null;
 		if (startTime != null && startDate != null){
 			startEarliest = startDate + STRING_SPACE + startTime;
+			startEarliest = startEarliest.trim();
 		} else {
 			if (isExistingTask){
 				//For editing task, it has a task ID stored
 				startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(taskID));
-			} else {
-				//for add task, can only start at NOW 
-				startEarliest = DateAndTimeManager.getInstance().getTodayDate() + STRING_SPACE +
-						DateAndTimeManager.getInstance().getTodayTime();
 			}
 		}
+		LOGGER.info("startEarliest is " + startEarliest);
+		LOGGER.info("deadline is " + deadline);
 		
 		if (deadline != null){
 			String tempDeadline = deadline;
-			deadline = InputManager.checkDateAndTimeWithStart(startEarliest, deadline);
+			deadline = InputManager.checkDateAndTimeWithStart(startEarliest, tempDeadline);
 			
 			if (deadline == null){
 				InputManager.outputToGui(String.format(MESSAGE_DEADLINE_STARTTIME,tempDeadline));
+			} else {
+				deadline = deadline.trim();
 			}
 		}
+		LOGGER.info("deadline is " + deadline);
+		LOGGER.info("endLatest is " + endDate + STRING_SPACE + endTime);
 		
 		String endLatest = null;
 		if (endTime != null && endDate != null){
 			endLatest = endDate + STRING_SPACE + endTime;
 			endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
 			
+			if (endLatest == null){
+				InputManager.outputToGui(String.format(MESSAGE_ENDDATE_STARTTIME, endDate, endTime));
+			} else {
+				endLatest = endLatest.trim();
+			}
+			
+			/*
 			if (endLatest != null){
 				String[] endTokens = endLatest.split(STRING_SPACE);
 				int datePos = 0;
@@ -378,8 +407,21 @@ public abstract class Command {
 				endDate = null;
 				endTime = null;
 			}
+			*/
+			
+		}
+		LOGGER.info("endLatest is " + endLatest);
+		
+		if (startDate == null || startTime == null){
+			startEarliest = null;
 		}
 		
+		ArrayList<String> times = new ArrayList<String>();
+		times.add(endLatest);
+		times.add(startEarliest);
+		times.add(deadline);
+		
+		return times;
 	}
 	
 }

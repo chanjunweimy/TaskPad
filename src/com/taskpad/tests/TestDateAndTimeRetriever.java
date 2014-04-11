@@ -15,30 +15,367 @@ public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
+	/*below is testConvertDateAndTimeString*/
+	@Test
+	public void testValidConvertDateAndTimeString1() {
+		testConvertDateAndTimeString("find Lynnette on 14/04/2014","find Lynnette on Monday", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString2() {
+		testConvertDateAndTimeString("next ASH 14/04/2014 I want to catch Pokemon 18/04/2014 !",
+				"next ASH nxt Monday I want to catch Pokemon nxt Fri !", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString3() {
+		testConvertDateAndTimeString("21/04/2014 I want to catch Pokemon !",
+				"next nxt NXT prev Monday I want to catch Pokemon!", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString4() {
+		testConvertDateAndTimeString("01/11/2014 , I watch movie in 01/12/2014",
+				"1 / 11 / 2014 , I watch movie in 1 December", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString5() {
+		testConvertDateAndTimeString("aaa at 11/03/2014 by 03/04/2014 23:00",
+				"aaa at 11/3 by 3/4 11pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString6() {
+		testConvertDateAndTimeString("do cs2010 assignment by 25/04/2014",
+				"do cs2010 assignment by nxt nxt Wk", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString7() {
+		testConvertDateAndTimeString("use calculator 570 11:11",
+				"use calculator 570 11:11", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString8() {
+		testConvertDateAndTimeString("use calculator 570 11/11/2015",
+				"use calculator 570 11Nov 15", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString9() {
+		testConvertDateAndTimeString("aaa 12/04/2014 23:59",
+				"aaa tmr 11.59pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString10() {
+		testConvertDateAndTimeString("Having CS2010 test with One May on : 17/04/2014 .",
+				"Having CS2010 test with \"One May\" on :17April.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString11() {
+		testConvertDateAndTimeString("We tried to fool Ms Lee on 01/04/2015 .",
+				"We tried to fool Ms Lee on April    FOOL.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString12() {
+		testConvertDateAndTimeString("We tried to fool Ms Lee on 01/04/2015 .",
+				"We tried to fool Ms Lee on April FOOL day.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString13() {
+		testConvertDateAndTimeString("This 25/12/2014 , I want to stay with my family !",
+				"This christmas, I want to stay with my family!", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString14() {
+		testConvertDateAndTimeString("We tried to fool Christmas on 01/04/2015 .",
+				"We tried to fool \"Christmas\" on April FOOL day.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString15() {
+		testConvertDateAndTimeString("We tried to fool Christmas 11/04/2014 11/04/2014 00:00 .",
+				"We tried to fool \"Christmas\" tdy nw.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString16() {
+		testConvertDateAndTimeString("We tried to fool Christmas nxt 11/04/2014 11/04/2014 00:00 , 22/04/2014 .",
+				"We tried to fool \"Christmas\" nxt tdy nw, nxt  nxt prev nxt Tues.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString17() {
+		testConvertDateAndTimeString("We tried to fool Christmas 11/04/2014 .",
+				"We tried to fool \"Christmas\" tdy tdy tdy.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString18() {
+		testConvertDateAndTimeString("We tried to fool Christmas 11/04/2014 00:00 .",
+				"We tried to fool \"Christmas\" nw nw nw.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString19() {
+		testConvertDateAndTimeString("We tried to fool Christmas nxt nxt 11/04/2014 00:00 15/04/2014 .",
+				"We tried to fool \"Christmas\" nxt nxt nw Tues.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString20() {
+		testConvertDateAndTimeString("We tried to fool Christmas 22/04/2014 11/04/2014 00:00 .",
+				"We tried to fool \"Christmas\" nxt nxt Tues nw.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString21() {
+		testConvertDateAndTimeString("We tried to fool Christmas 22/04/2014 nw .",
+				"We tried to fool \"Christmas\" nxt nxt Tues \"nw\".", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString22() {
+		testConvertDateAndTimeString("We tried to fool tdy 13/04/2014 13:00 .",
+				"We tried to fool \"tdy\" tmr tmr 1pm.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString23() {
+		testConvertDateAndTimeString("We tried to fool tdy 12/04/2014 13:00 .",
+				"We tried to fool \"tdy\" tmr tmr ytd 1pm.", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString24() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014",
+				"We tried to fool \"tmr\" tmr tmr ytd", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString25() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014 13:00",
+				"We tried to fool \"tmr\" tmr 1pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString26() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014 13:00",
+				"We tried to fool \"tmr\" tmr 1.00pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString27() {
+		testConvertDateAndTimeString("We tried to fool tmr 12/04/2014 13:00",
+				"We tried to fool \"tmr\" tmr 13:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString28() {
+		testConvertDateAndTimeString("We tried to fool 1pm 12/04/2014 13:00",
+				"We tried to fool \"1pm\" tmr 1:00 pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString29() {
+		testConvertDateAndTimeString("We tried to fool hour",
+				"We tried to fool hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString30() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool 1 hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString31() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool next next prev hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString32() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 04:00",
+				"We tried to fool next next 2 hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString33() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool 1h", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString34() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool 1hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString35() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 01:00",
+				"We tried to fool nxt 1hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString36() {
+		testConvertDateAndTimeString("We tried to fool nxt 1 11/04/2014 01:00",
+				"We tried to fool nxt 1 1hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString37() {
+		testConvertDateAndTimeString("We tried to fool 11/04/2014 04:00",
+				"We tried to fool nxt nxt 2hour", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString38() {
+		testConvertDateAndTimeString("For 25/12/2014 , Friday goes to camp from 11/04/2014 01:00 ~ "
+				+ "14/04/2014 13:00 then come back by 01/04/2014 .",
+				"For christmas, \"Friday\" goes to camp from nxt 1h ~ "
+				+ "Monday one pm then come back by 1/4.", "11/04/2014 00:00");
+	}
+	
+	
+	@Test
+	public void testInvalidConvertDateAndTimeString1() {
+		testExceptionConvertDateAndTimeString("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want \" to have 1.", "11/04/2014 00:00");
+	}
+	
+	private void testConvertDateAndTimeString(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			assertEquals(expected, _datm.convertDateAndTimeString(input));
+		} catch (InvalidQuotesException e) {
+			fail();
+		}
+	}
+	
+	private void testExceptionConvertDateAndTimeString(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			 _datm.convertDateAndTimeString(input);
+			fail();
+		} catch (InvalidQuotesException e) {
+			assertEquals(expected, e.getMessage());
+		}
+	}
+	/*above is testConvertDateAndTimeString*/
+	
+	/*below is to test checkDateAndTimeWithStart*/
+	@Test
+	public void testValidCheckDateAndTimeWithStart1() {
+		testCheckDateAndTimeWithStart(null, "18/10/1993 00:00", "18/08/1994 00:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart2() {
+		testCheckDateAndTimeWithStart(null, "18/10/1993 15:00", null, "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart3() {
+		testCheckDateAndTimeWithStart(null, null, null, "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart4() {
+		testCheckDateAndTimeWithStart("18/10/2014 00:00", null, "18/10/2014 00:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart5() {
+		testCheckDateAndTimeWithStart(null, null, "18/10/2011 00:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart6() {
+		testCheckDateAndTimeWithStart("18/08/2015 00:00", "18/7/2015 00:00", "18/08/2015 00:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart7() {
+		testCheckDateAndTimeWithStart("", "18/10/1993 15:00", " ", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart8() {
+		testCheckDateAndTimeWithStart("", "", " ", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart9() {
+		testCheckDateAndTimeWithStart("18/10/2014 00:00", "", "18/10/2014 00:00", "11/04/2014 00:00");
+	}
+	
+	
+	private void testCheckDateAndTimeWithStart(String expected, String startEarliest, String dateLatest, String dateString){
+		setupDebugEnvironment(dateString);
+		assertEquals(expected, _datm.checkDateAndTimeWithStart(startEarliest, dateLatest));
+	}
+	/*above is to test checkDateAndTimeWithStart*/
+	
 	/*below is to test parseNumberString*/
 	@Test
 	public void testValidNumberString1() {
-		testParseNumberString("I want to have 1 apple", "I want to have one apple", true);
-		testParseNumberString("I want to have 1 apple", "I want to have one apple", false);
+		testParseNumberString("I want to have 1 apple", "I want to have one apple");
 	}
 	
 	@Test
 	public void testValidNumberString2() {
-		testParseNumberString("I want to have 1 , thanks", "I want to have one,thanks", true);
-		testParseNumberString("I want to have 1 , thanks", "I want to have one, thanks", false);
+		testParseNumberString("I want to have 1 , thanks", "I want to have one,thanks");
 	}
 	
 	@Test
 	public void testValidNumberString3() {
-		testParseNumberString("1 ppl named \" two \" want to have 1 .", "One ppl named \"two\" want to have 1.", true);
-		testParseNumberString("1 ppl named \" two \" want to have 1 .", "One ppl named \"two\" want to have 1.", false);
+		testParseNumberString("1 ppl named two want to have 1 .", "One ppl named \"two\" want to have 1.");
 	}
 	
-	private void testParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
+	@Test
+	public void testValidNumberString4() {
+		testParseNumberString("111 aaa 111", "one one one aaa one one one");
+	}
+	
+	@Test
+	public void testValidNumberString5() {
+		testParseNumberString("11/11/2015 11/11/2015 , 11:11 12:00 ,", "11/11/15 11/11/15, 11:11 12:00,");
+	}
+	
+	@Test
+	public void testValidNumberString6() {
+		testParseNumberString("111 1 111", "one one one 1 one one one");
+	}
+	
+	@Test
+	public void testInvalidNumberString1() {
+		testInvalidParseNumberString("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want\" to have 1.");
+	}
+	
+	private void testParseNumberString(String expected, String input){
 		try {
-			assertEquals(expected, _datm.parseNumberString(input, isDateAndTimePreserved));
+			assertEquals(expected, _datm.parseNumberString(input));
 		} catch (InvalidQuotesException e) {
 			fail();
+		}
+	}
+	
+	private void testInvalidParseNumberString(String expected, String input){
+		try {
+			_datm.parseNumberString(input);
+			fail();
+		} catch (InvalidQuotesException e) {
+			assertEquals(expected, e.getMessage());
 		}
 	}
 	/*above is to test parseNumberString*/

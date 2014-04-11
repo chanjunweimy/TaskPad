@@ -130,11 +130,13 @@ public class DateAndTimeManager{
 	 * @return string changed to numerics
 	 * @throws InvalidQuotesException 
 	 */
-	public String parseNumberString(String input, boolean isDateAndTimePreserved) throws InvalidQuotesException{
-		input = _datr.getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
+	public String parseNumberString(String input) throws InvalidQuotesException{
+		input = _datr.getAlphaNumericSpaceDesc(input);
 		input = _datr.removeParseFreeZone(input);
 		input = _datr.parseNumber(input);
-		return _datr.parseNumber(input);
+		input = _datr.parseDate(input);
+		input = _datr.parseTime(input);
+		return input.replaceAll("\"", "").trim();
 	}	
 	
 	/**
@@ -155,26 +157,6 @@ public class DateAndTimeManager{
 	 */
 	public int compareDateAndTime(String dateString){
 		return compareDateAndTime(dateString, getTodayDate() + " 23:59");
-	}
-
-
-	/**
-	 * Check if there  is a valid date in the string
-	 * @param String
-	 * @returns DateObject
-	 */
-	public DateObject findDate(String input){
-		return _datr.findDate(input);
-	}
-	
-	/**
-	 * Check if there is a valid time in the string
-	 * @param String
-	 * @returns TimeObject
-	 */
-	public TimeObject findTime(String input){
-		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return _datr.findTime(input);
 	}
 
 	/**
@@ -272,7 +254,26 @@ public class DateAndTimeManager{
 	 */
 	
 
+	/**
+	 * Check if there  is a valid date in the string
+	 * @deprecated
+	 * @param String
+	 * @returns DateObject
+	 */
+	public DateObject findDate(String input){
+		return _datr.findDate(input);
+	}
 	
+	/**
+	 * Check if there is a valid time in the string
+	 * @deprecated
+	 * @param String
+	 * @returns TimeObject
+	 */
+	public TimeObject findTime(String input){
+		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return _datr.findTime(input);
+	}
 	
 	/**
 	 * parseNumber: parse a language number to a real number String, ex: one to

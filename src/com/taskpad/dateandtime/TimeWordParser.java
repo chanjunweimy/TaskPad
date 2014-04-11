@@ -191,6 +191,8 @@ public class TimeWordParser{
 			tempTime.append(oneSubstring);
 			
 			int secondConvertion = calculateTimeWord(oneSubstring);
+			
+			LOGGER.info(oneSubstring + "\'s secondConvertion is " + secondConvertion);
 			boolean hasTimeUnit = secondConvertion > 0;
 			if (hasTimeUnit){
 				StringBuffer oneSubStringAns = parseOneTimeWord(tempTime.toString());
@@ -253,6 +255,8 @@ public class TimeWordParser{
 				if (isValueFound(variations[i], input)){
 					_timeword = entry.getKey();
 					
+					LOGGER.info("timeword is " + _timeword);
+					
 					Integer value = _timeunitMap.get(_timeword);
 					
 					if (value != null){
@@ -292,6 +296,17 @@ public class TimeWordParser{
 		initialiseWeekString();
 		initialiseMonthString();
 		initialiseYearString();
+	}
+	
+	protected boolean isValidTimeWord(String input){
+		try {
+			parseTimeWord(input);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			LOGGER.info(input + " is not a valid TimeWord");
+			return false;
+		}
+		LOGGER.info(input + " is a valid TimeWord");
+		return true;
 	}
 	
 	protected boolean isTimeUnits(String input){
@@ -349,12 +364,15 @@ public class TimeWordParser{
 		if (input == null || input.trim() == BLANK){
 			return false;
 		}
-		
+				
 		String timeValue;
-		int idx = 0;
+		//int idx = 0;
 		input = input.trim();
 		input = input.toUpperCase();
 		String[] numArr = input.split(SPACE);
+		
+		LOGGER.info("value is " + value + " while the input is " + input);
+
 		
 		/**
 		 * Let's search for unit that is separated by SPACE first.
@@ -370,24 +388,27 @@ public class TimeWordParser{
 					_userTimeword = value;
 					return true;
 				} else {
-					idx = i;
+					//idx = i;
 					break;
 				}
 			}
 		}
-		
+				
 		/**
 		 * If it is not separated by SPACE, then it probably be something like this:
 		 * num + unit, ex: 1s, 10m
 		 */
-		timeValue = numArr[idx].substring(0, numArr[idx].length() - 1);
-		if (isInteger(timeValue)){
-			boolean hasUnit = numArr[idx].endsWith(value);
-			if (hasUnit){
+		//timeValue = numArr[idx].substring(0, numArr[idx].length() - 1);
+		//if (isInteger(timeValue)){
+		boolean hasUnit = input.endsWith(value);
+		if (hasUnit){
+			timeValue = input.replace(value, BLANK);
+			if (isInteger(timeValue)){
 				_userTimeword = value;
 				return true;
-			} 
-		}
+			}
+		} 
+		//}
 		
 		return false;
 	}

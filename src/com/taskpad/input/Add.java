@@ -9,12 +9,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidDateException;
-import com.taskpad.dateandtime.InvalidTimeException;
-import com.taskpad.dateandtime.TimeErrorException;
+import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.execute.InvalidTaskIdException;
 
@@ -34,7 +34,7 @@ public class Add extends Command {
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_DASH = "-";
 	private static final String STRING_SPACE = " ";
-	private static final String STRING_COMMA = ",";
+	//private static final String STRING_COMMA = ",";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -58,6 +58,8 @@ public class Add extends Command {
 	
 	private static Scanner _sc; 
 	private static boolean _invalidParameters;
+	
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	public Add(String input, String fullInput) {
 		super(input, fullInput);
@@ -205,23 +207,22 @@ public class Add extends Command {
 
 	private void parseNonDelimitedString() {
 		//"..." deadlinedate deadlintime startdate starttime enddate endtime
-		
-		String inputNew = findDateOrTime(input);
-		if (inputNew.equals(STRING_NULL)){
-			return;
-		}
-		
-		/* Using method from Command
+		String inputNew = STRING_EMPTY;
 		try {
 			inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		} catch (InvalidQuotesException e) {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
-		*/
 		
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length - 1;
+		
+		for (int i = size; i >= size - 5; i--){
+			if (STRING_NULL.equals(splitInput[i])){
+				splitInput[i] = null;
+			}
+		}
 		
 		_endTime = splitInput[size];
 		_endDate = splitInput[size - 1];
@@ -230,13 +231,8 @@ public class Add extends Command {
 		String deadlineDate = splitInput[size - 5];
 		String deadlineTime = splitInput[size - 4];
 		
-		try {
-			checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
-		} catch (InvalidTaskIdException e) {
-			//do nothing
-		}
 
-		if (!STRING_NULL.equals(deadlineDate) && !STRING_NULL.equals(deadlineTime)){
+		if (deadlineDate != null && deadlineTime != null){
 			_deadline = deadlineTime + STRING_SPACE + deadlineDate;
 		}
 		checkEmptyParametersAndInput();		
@@ -250,41 +246,7 @@ public class Add extends Command {
 		
 	}
 
-	/**
-	 * For each input index, if it is date, put in date; if it is time, put in time
-	 * Otherwise, string them together as description
-	 * @param splitInput
-	 */
-	@SuppressWarnings("unused")
-	private String extractTimeAndDate(String[] splitInput) {
-		ArrayList<String> dateArray = new ArrayList<String>();
-		ArrayList<String> timeArray = new ArrayList<String>();
-		
-		String newInput = STRING_EMPTY;
-		
-		for (int i=0; i<splitInput.length; i++){
-			String inputString = stripWhiteSpaces(splitInput[i]);
-			
-			DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputString);
-			if (dateObject != null){
-				dateArray.add(dateObject.getParsedDate());
-			} else{
-				TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputString);
-				if (timeObject != null){
-					timeArray.add(timeObject.getParsedTime());
-				} else {
-					newInput += inputString + STRING_SPACE;
-				}
-			}
-		}		
-		
-		orderDateArray(dateArray);
-		orderTimeArray(timeArray);
-		
-		return newInput;
-		
-	}
-
+	
 	/**
 	 * @param timeArray
 	 */
@@ -377,9 +339,24 @@ public class Add extends Command {
 		_sc.close();
 		
 		try {
-			checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
+			ArrayList<String> times = 
+					checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
+			String endLatest = times.get(POSITION_TIME_ENDTIME / 2);
+			String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
+			_deadline = times.get(POSITION_TIME_DEADLINE / 2);
+			
+			if (endLatest == null){
+				_endDate = null;
+				_endTime = null;
+			}
+			
+			if (startEarliest == null){
+				_startDate = null;
+				_startTime = null;
+			}
 		} catch (InvalidTaskIdException e) {
 			//do nothing
+			assert (false);
 		}
 		
 		checkEmptyParametersAndInput();
@@ -390,28 +367,31 @@ public class Add extends Command {
 	 * Extracted method to input parameters
 	 */
 	private void checkEmptyParametersAndInput() {
-		if (!STRING_NULL.equals(_endTime)){
+		if (_endTime != null){
 			inputEndTime(_endTime);
 			//putOneParameter(PARAMETER_END_TIME, endTime);
 		}
 		
-		if (!STRING_NULL.equals(_endDate)){
+		if (_endDate != null){
 			inputEndDate(_endDate);
 			//putOneParameter(PARAMETER_END_DATE, endDate);
 		}
 		
-		if (!STRING_NULL.equals(_startTime)) {
+		if (_startTime != null) {
 			inputStartTime(_startTime);
 			//putOneParameter(PARAMETER_START_TIME, startTime);
 		}
 		
 		
-		if (!STRING_NULL.equals(_startDate)){
+		if (_startDate != null){
 			inputStartDate(_startDate);
 			//putOneParameter(PARAMETER_START_DATE, startDate);
 		}
 		
-		if (!STRING_NULL.equals(_deadline)){
+		if (_deadline != null){
+			String[] tempDeadSplit = _deadline.split(STRING_SPACE);
+			
+			_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
 			inputDeadlineDate(_deadline);
 		}
 	}
@@ -482,6 +462,10 @@ public class Add extends Command {
 			break;
 		}
 		
+		LOGGER.info("deadline is " + _deadline );
+		LOGGER.info("start time and date is " + _startTime + " " + _startDate);
+		LOGGER.info("end time and date is " + _endTime + " " + _endDate);
+		
 		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo);
 	}
 
@@ -512,34 +496,7 @@ public class Add extends Command {
 		input = newInput;
 	}
 	
-	@SuppressWarnings("unused")
-	private void checkAndRemoveStart() {
-		String[] splitInput = input.split(STRING_SPACE);
-		String newInput = STRING_EMPTY;
-		String param = STRING_EMPTY;
-		int index = -1;
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].toLowerCase().equals("-s")){
-				index = i;
-				splitInput[i] = STRING_DASH;
-				if (findTimeOrDate(splitInput[i+1])){
-					param += splitInput[i+1] + STRING_SPACE;
-					splitInput[i+1] = STRING_DASH;
-				} 
-				
-				if (findTimeOrDate(splitInput[i+2])){
-					param += splitInput[i+2] + STRING_SPACE;
-					splitInput[i+2] = STRING_DASH;
-				} 
-			} 
-		}
-		
-		newInput = constructNewInputString(splitInput, newInput, index);
-
-		getStartDetails(param);
-		input = newInput;
-	}
+	
 
 	private static String constructNewInputString(String[] splitInput,
 			String newInput, int index) {
@@ -555,56 +512,7 @@ public class Add extends Command {
 		return newInput;
 	}
 	
-	@SuppressWarnings("unused")
-	private void checkAndRemoveEnd() {
-		String[] splitInput = input.split(STRING_SPACE);
-		String newInput = STRING_EMPTY;
-		String param = STRING_EMPTY;
-		int index = -1;
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].toLowerCase().equals("-e")){
-				index = i;
-				splitInput[i] = STRING_DASH;
-				if (findTimeOrDate(splitInput[i+1])){
-					param += splitInput[i+1] + STRING_SPACE;
-					splitInput[i+1] = STRING_DASH;
-				} 
-				
-				if (findTimeOrDate(splitInput[i+2])){
-					param += splitInput[i+2] + STRING_SPACE;
-					splitInput[i+2] = STRING_DASH;
-				} 
-			} 
-		}
-		
-		newInput = constructNewInputString(splitInput, newInput, index);
-
-		getEndDetails(param);
-		input = newInput;
-	}
 	
-	@SuppressWarnings("unused")
-	private void checkAndInputDesc(){
-		if (inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY){
-			inputDesc(input);
-		}
-	}
-	
-	private boolean findTimeOrDate(String param){
-		param = param.trim();		
-		
-		DateObject dateObject = DateAndTimeManager.getInstance().findDate(param);
-		if (dateObject != null){
-			return true;
-		} else {
-			TimeObject timeObject = DateAndTimeManager.getInstance().findTime(param);
-			if (timeObject != null){
-				return true;
-			}
-		}
-		return false;
-	}
 	
 
 	private void getDeadline(String param) {
@@ -618,43 +526,6 @@ public class Add extends Command {
 		inputDeadlineDate(param);
 	}
 	
-	private void getStartDetails(String param){
-		String[] inputParams = splitBySpace(param);
-		inputParams = findDateTime(inputParams);
-		
-		inputStartDate(inputParams[0]);
-		inputStartTime(inputParams[1]);
-	}
-	
-	private void getEndDetails(String param){
-		String[] inputParams = splitBySpace(param);
-		inputParams = findDateTime(inputParams);
-		
-		inputEndDate(inputParams[0]);
-		inputEndTime(inputParams[1]);
-	}
-
-	private String[] findDateTime(String[] inputParams) {
-		String[] dateTime = {STRING_EMPTY, STRING_EMPTY};
-		boolean gotDate = false;
-		boolean gotTime = false;
-		
-		for (int i=0; i<inputParams.length; i++){
-			if (!gotDate){
-				DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputParams[i].trim());
-				if (dateObject != null){
-					dateTime[0] = dateObject.getParsedDate();
-					gotDate = true;
-				} else if (!gotTime){
-					TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputParams[i].trim());
-					dateTime[1] = timeObject.getParsedTime();
-					gotTime = true;
-				}
-			} 
-		}
-		
-		return dateTime;
-	}
 
 	private String[] splitBySpace(String param) {
 		return param.split(STRING_SPACE);
@@ -704,125 +575,247 @@ public class Add extends Command {
 	}
 	
 	private void putDeadline(String param) {
-		param = stripWhiteSpaces(param);
-		String[] splitParam = param.split(STRING_COMMA);
-		
-		String deadlineDate = STRING_EMPTY;
-		String deadlineTime = STRING_EMPTY;
-		
-		if (isValidTimeArgs(splitParam)){
-			for (int i=0; i<splitParam.length; i++){
-				deadlineDate = checkIfIsDate(splitParam[i]);
-				deadlineDate = checkIfIsDate(splitParam[i]);
-				if (notEmptyDateString(deadlineDate)){
-					_deadline += deadlineDate;
-				} else {
-					deadlineTime = checkIfIsTime(splitParam[i]);
-					if (notEmptyTimeString(deadlineTime)){
-						_deadline += deadlineTime;
-					}
-				}
-			}	
+		if (param.trim().isEmpty()){
+			return;
 		}
 		
-		checkEmptyDateTimeString(deadlineDate, deadlineTime, param);
-		_deadline = deadlineDate + STRING_EMPTY + deadlineTime;
+		String token = KEYWORD_DEADLINE + STRING_SPACE + param.trim();
+		String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+		if (tempDead == null){
+			return;
+		}
+		_deadline = tempDead;
 	}
 	
 	private void putStartTime(String param) {
-		String[] splitParam = param.split(STRING_COMMA);
-		
-		String startTime = STRING_EMPTY;
-		String startDate = STRING_EMPTY;
-				
-		if (isValidTimeArgs(splitParam)){
-			for (int i=0; i<splitParam.length; i++){
-				startDate = checkIfIsDate(splitParam[i].trim());
-				if (notEmptyDateString(startDate)){
-					_startDate = startDate;
-				} else {
-					//System.out.println(splitParam[i]);
-					startTime = checkIfIsTime(splitParam[i].trim());
-					if (notEmptyTimeString(startTime)){
-						_startTime = startTime;
-					}
-				}
-			}
+		if (param.trim().isEmpty()){
+			return;
 		}
 		
-		checkEmptyDateTimeString(startDate, startTime, param);
+		String token = KEYWORD_STARTTIME + STRING_SPACE + param.trim();
+		String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
+
+		if (startResult == null){
+			return;
+		}
+		
+		inputStartTimeDate(startResult);
+		
+	}
+	
+	private void inputStartTimeDate(String result){
+		String[] splitResult = result.split(STRING_SPACE);
+		_startDate = splitResult[0];
+		_startTime = splitResult[1];
 	}
 	
 	private void putEndTime(String param) {
-		String[] splitParam = param.split(",");
-		String endTime = STRING_EMPTY;
-		String endDate = STRING_EMPTY;
-
-		if (isValidTimeArgs(splitParam)){
-			for (int i=0; i<splitParam.length; i++){
-				if (notEmptyDateString(endDate)){
-					_endDate = endDate;
-				} else {
-					endTime = checkIfIsTime(splitParam[i].trim());
-					if (notEmptyTimeString(endTime)){
-						_endTime = endTime;
-					}
-				}
-			}
-		}
-		checkEmptyDateTimeString(endDate, endTime, param);
-	}
-	
-	private boolean isValidTimeArgs(String[] args){
-		if (args.length > 2){
-			InputManager.outputToGui("Error in number of time arguments: args.length");
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	private String checkIfIsTime(String string){
-		string.trim();
-		String timeString = STRING_EMPTY;
-		
-		try {
-			timeString = DateAndTimeManager.getInstance().parseTimeInput(string);
-			//timeString = DateAndTimeManager.getInstance().parseTime(string);
-		} catch (TimeErrorException | InvalidTimeException e) {
-			//do nothing
-		}
-		
-		return timeString;
-	}
-	
-	private boolean notEmptyTimeString(String timeString){
-		return timeString == null || !timeString.trim().equals(STRING_EMPTY);
-	}
-
-	private String checkIfIsDate(String string){
-		string.trim();
-		String dateString = STRING_EMPTY;
-		
-		try {
-			dateString = DateAndTimeManager.getInstance().parseDate(string);
-		} catch (InvalidDateException e) {
-			//do nothing
-		}
-		return dateString;
-	}
-	
-	private boolean notEmptyDateString(String dateString){
-		return dateString == null || !dateString.trim().equals(STRING_EMPTY);
-	}
-	
-	private void checkEmptyDateTimeString(String date, String time, String param){
-		if (date.equals(STRING_EMPTY) && time.equals(STRING_EMPTY)){
-			_invalidParameters = true;
-			InputManager.outputToGui(String.format(MESSAGE_INVALID_INPUT, param));
+		if (param.trim().isEmpty()){
 			return;
 		}
+		String token = KEYWORD_ENDTiME + STRING_SPACE + param.trim();
+		String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
+
+		if (endResult == null){
+			return;
+		}
+		
+		inputEndTimeDate(endResult);
 	}
+	
+	private void inputEndTimeDate(String result){
+		String[] splitResult = result.split(STRING_SPACE);
+		_endDate = splitResult[0];
+		_endTime = splitResult[1];
+	}
+	
+	/**
+	 *  =========================DEPRECATED===============================================================================
+	 */
+	
+	/**
+	 * For each input index, if it is date, put in date; if it is time, put in time
+	 * Otherwise, string them together as description
+	 * @deprecated
+	 * @param splitInput
+	 */
+	@SuppressWarnings({ "unused"})
+	private String extractTimeAndDate(String[] splitInput) {
+		ArrayList<String> dateArray = new ArrayList<String>();
+		ArrayList<String> timeArray = new ArrayList<String>();
+		
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			String inputString = stripWhiteSpaces(splitInput[i]);
+			
+			DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputString);
+			if (dateObject != null){
+				dateArray.add(dateObject.getParsedDate());
+			} else{
+				TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputString);
+				if (timeObject != null){
+					timeArray.add(timeObject.getParsedTime());
+				} else {
+					newInput += inputString + STRING_SPACE;
+				}
+			}
+		}		
+		
+		orderDateArray(dateArray);
+		orderTimeArray(timeArray);
+		
+		return newInput;
+		
+	}
+
+
+	/**
+	 * @deprecated
+	 * @param param
+	 * @return
+	 */
+	private boolean findTimeOrDate(String param){
+		param = param.trim();		
+		
+		DateObject dateObject = DateAndTimeManager.getInstance().findDate(param);
+		if (dateObject != null){
+			return true;
+		} else {
+			TimeObject timeObject = DateAndTimeManager.getInstance().findTime(param);
+			if (timeObject != null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	/**
+	 * @deprecated
+	 * @param param
+	 */
+	private void getStartDetails(String param){
+		String[] inputParams = splitBySpace(param);
+		inputParams = findDateTime(inputParams);
+		
+		inputStartDate(inputParams[0]);
+		inputStartTime(inputParams[1]);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param param
+	 */
+	private void getEndDetails(String param){
+		String[] inputParams = splitBySpace(param);
+		inputParams = findDateTime(inputParams);
+		
+		inputEndDate(inputParams[0]);
+		inputEndTime(inputParams[1]);
+	}
+
+	/**
+	 * @deprecated
+	 * @param inputParams
+	 * @return
+	 */
+	private String[] findDateTime(String[] inputParams) {
+		String[] dateTime = {STRING_EMPTY, STRING_EMPTY};
+		boolean gotDate = false;
+		boolean gotTime = false;
+		
+		for (int i=0; i<inputParams.length; i++){
+			if (!gotDate){
+				DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputParams[i].trim());
+				if (dateObject != null){
+					dateTime[0] = dateObject.getParsedDate();
+					gotDate = true;
+				} else if (!gotTime){
+					TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputParams[i].trim());
+					dateTime[1] = timeObject.getParsedTime();
+					gotTime = true;
+				}
+			} 
+		}
+		
+		return dateTime;
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	@SuppressWarnings("unused")
+	private void checkAndRemoveEnd() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		String param = STRING_EMPTY;
+		int index = -1;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-e")){
+				index = i;
+				splitInput[i] = STRING_DASH;
+				if (findTimeOrDate(splitInput[i+1])){
+					param += splitInput[i+1] + STRING_SPACE;
+					splitInput[i+1] = STRING_DASH;
+				} 
+				
+				if (findTimeOrDate(splitInput[i+2])){
+					param += splitInput[i+2] + STRING_SPACE;
+					splitInput[i+2] = STRING_DASH;
+				} 
+			} 
+		}
+		
+		newInput = constructNewInputString(splitInput, newInput, index);
+
+		getEndDetails(param);
+		input = newInput;
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	@SuppressWarnings("unused")
+	private void checkAndInputDesc(){
+		if (inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY){
+			inputDesc(input);
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	@SuppressWarnings("unused")
+	private void checkAndRemoveStart() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		String param = STRING_EMPTY;
+		int index = -1;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-s")){
+				index = i;
+				splitInput[i] = STRING_DASH;
+				if (findTimeOrDate(splitInput[i+1])){
+					param += splitInput[i+1] + STRING_SPACE;
+					splitInput[i+1] = STRING_DASH;
+				} 
+				
+				if (findTimeOrDate(splitInput[i+2])){
+					param += splitInput[i+2] + STRING_SPACE;
+					splitInput[i+2] = STRING_DASH;
+				} 
+			} 
+		}
+		
+		newInput = constructNewInputString(splitInput, newInput, index);
+
+		getStartDetails(param);
+		input = newInput;
+	}
+	
 	
 	/* Testing
 	public static void main(String[] args){
