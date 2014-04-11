@@ -137,6 +137,10 @@ public class NumberParser {
 	}
 
 	protected boolean isDigitString(String input) {
+		if (input != null){
+			input = input.trim();
+		}
+		
 		try{
 			Integer.parseInt(input);
 			//Double.parseDouble(input);

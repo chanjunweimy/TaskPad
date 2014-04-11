@@ -245,6 +245,17 @@ public class TestDateAndTimeRetriever {
 				+ "Monday one pm then come back by 1/4.", "11/04/2014 00:00");
 	}
 	
+	@Test
+	public void testValidConvertDateAndTimeString39() {
+		testConvertDateAndTimeString("aaa 12/04/2014 23:59",
+				"aaa 12/04/2014 11.59pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString40() {
+		testConvertDateAndTimeString(null,
+				null, "11/04/2014 00:00");
+	}
 	
 	@Test
 	public void testInvalidConvertDateAndTimeString1() {

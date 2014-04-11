@@ -229,9 +229,10 @@ public class Edit extends Command{
 		checkDesc();
 		
 		showErrorWhenActionRepeated(startNo, deadNo, endNo);
-		
+	
+		boolean isEdit = true;
 		ArrayList<String> times =
-				checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, true);
+				checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, isEdit);
 		String endLatest = times.get(POSITION_TIME_ENDTIME / 2);
 		String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
 		_deadline = times.get(POSITION_TIME_DEADLINE / 2);

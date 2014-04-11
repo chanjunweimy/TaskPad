@@ -4,11 +4,8 @@ package com.taskpad.dateandtime;
 
 /**
  * Date object to contain parsed date and the input date format
- *
+ * @deprecated
  */
-
-
-
 public class DateObject {
 	
 	private String parsedDate;

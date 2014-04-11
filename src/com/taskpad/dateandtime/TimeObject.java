@@ -2,6 +2,10 @@
 
 package com.taskpad.dateandtime;
 
+/**
+ * @deprecated
+ *
+ */
 public class TimeObject {
 
 	private String parsedTime;
