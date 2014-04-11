@@ -6,6 +6,7 @@
 
 package com.taskpad.input;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -344,22 +345,18 @@ public abstract class Command {
 	 * Check the deadline and end times are after start times
 	 * @throws InvalidTaskIdException
 	 */
-	protected void checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
+	protected ArrayList<String> checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
 			String deadline, String endTime, String endDate, boolean isExistingTask) 
 			throws InvalidTaskIdException {
 		
-		String startEarliest;
+		String startEarliest = null;
 		if (startTime != null && startDate != null){
 			startEarliest = startDate + STRING_SPACE + startTime;
 		} else {
 			if (isExistingTask){
 				//For editing task, it has a task ID stored
 				startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(taskID));
-			} else {
-				//for add task, can only start at NOW 
-				startEarliest = DateAndTimeManager.getInstance().getTodayDate() + STRING_SPACE +
-						DateAndTimeManager.getInstance().getTodayTime();
-			}
+			} 
 		}
 		
 		if (deadline != null){
@@ -376,6 +373,11 @@ public abstract class Command {
 			endLatest = endDate + STRING_SPACE + endTime;
 			endLatest = InputManager.checkDateAndTimeWithStart(startEarliest, endLatest);
 			
+			if (endLatest == null){
+				InputManager.outputToGui(String.format(MESSAGE_ENDDATE_STARTTIME, endDate, endTime));
+			}
+			
+			/*
 			if (endLatest != null){
 				String[] endTokens = endLatest.split(STRING_SPACE);
 				int datePos = 0;
@@ -389,8 +391,20 @@ public abstract class Command {
 				endDate = null;
 				endTime = null;
 			}
+			*/
+			
 		}
 		
+		if (startDate == null || startTime == null){
+			startEarliest = null;
+		}
+		
+		ArrayList<String> times = new ArrayList<String>();
+		times.add(endLatest);
+		times.add(startEarliest);
+		times.add(deadline);
+		
+		return times;
 	}
 	
 }

@@ -140,13 +140,11 @@ public class TestInput {
 			+ "Output to GUI: WARNING: has 3 end date and time\r\n"
 			+ "Output to GUI: WARNING: has 3 deadline\r\n"
 			+ "Output to GUI:   should be later than start time\r\n"
-			+ "END TIME \r\n"
 			+ "START TIME \r\n"
 			+ "DEADLINE 14/04/2014 23:59\r\n"
 			+ "START DATE \r\n"
 			+ "DESC a\r\n"
-			+ "TASKID 1\r\n"
-			+ "END DATE "
+			+ "TASKID 1"
 			, "Edit 1 desc a, end Monday, start today, start ,end ,dead Sunday, dead Monday"
 			+ ", end a Monday, dead a that day, start a today");
 	}

@@ -2,6 +2,7 @@
 
 package com.taskpad.input;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -224,7 +225,21 @@ public class Edit extends Command{
 		
 		showErrorWhenActionRepeated(startNo, deadNo, endNo);
 		
-		checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, true);
+		ArrayList<String> times =
+				checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, true);
+		String endLatest = times.get(POSITION_TIME_ENDTIME / 2);
+		String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
+		_deadline = times.get(POSITION_TIME_DEADLINE / 2);
+		
+		if (endLatest == null){
+			_endDate = null;
+			_endTime = null;
+		}
+		
+		if (startEarliest == null){
+			_startDate = null;
+			_startTime = null;
+		}
 	}
 	
 	/**
