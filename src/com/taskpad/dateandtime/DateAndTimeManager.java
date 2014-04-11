@@ -157,28 +157,6 @@ public class DateAndTimeManager{
 		return compareDateAndTime(dateString, getTodayDate() + " 23:59");
 	}
 
-
-	/**
-	 * Check if there  is a valid date in the string
-	 * @deprecated
-	 * @param String
-	 * @returns DateObject
-	 */
-	public DateObject findDate(String input){
-		return _datr.findDate(input);
-	}
-	
-	/**
-	 * Check if there is a valid time in the string
-	 * @deprecated
-	 * @param String
-	 * @returns TimeObject
-	 */
-	public TimeObject findTime(String input){
-		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
-		return _datr.findTime(input);
-	}
-
 	/**
 	 * methods that parses only holiday
 	 * @param holidayString
@@ -274,7 +252,26 @@ public class DateAndTimeManager{
 	 */
 	
 
+	/**
+	 * Check if there  is a valid date in the string
+	 * @deprecated
+	 * @param String
+	 * @returns DateObject
+	 */
+	public DateObject findDate(String input){
+		return _datr.findDate(input);
+	}
 	
+	/**
+	 * Check if there is a valid time in the string
+	 * @deprecated
+	 * @param String
+	 * @returns TimeObject
+	 */
+	public TimeObject findTime(String input){
+		//DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return _datr.findTime(input);
+	}
 	
 	/**
 	 * parseNumber: parse a language number to a real number String, ex: one to

@@ -19,6 +19,7 @@ public class GuiManager {
 	private static OutputFrame _outputFrame;
 	private static OutputTableFrame _tableFrame;
 	private static boolean _isDebug = false;
+	private static boolean _isGuiTest = false;
 	private static boolean _isTableCalled = false;
 
 	// not designed to be instantiated
@@ -149,7 +150,7 @@ public class GuiManager {
 	}
 
 	public static void callOutputNoLine(final String out) {
-		if (!_isDebug) {
+		if (!_isDebug || _isGuiTest) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -158,10 +159,11 @@ public class GuiManager {
 
 					_inputFrame.requestFocusOnInputBox();
 				}
-
 			});
 
-		} else {
+		}
+		
+		if (_isDebug){
 			System.out.println(out);
 		}
 
@@ -183,7 +185,7 @@ public class GuiManager {
 
 	public static void showSelfDefinedMessageNoNewline(final String out,
 			final Color c, final boolean isBold) {
-		if (!_isDebug) {
+		if (!_isDebug || _isGuiTest) {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
@@ -195,7 +197,9 @@ public class GuiManager {
 
 			});
 
-		} else {
+		} 
+		
+		if (_isDebug){
 			System.out.println(out);
 		}
 
@@ -292,6 +296,10 @@ public class GuiManager {
 	public static void setDebug(boolean isDebugFlag) {
 		_isDebug = isDebugFlag;
 		_isTableCalled = false;
+	}
+	
+	public static void setGui(boolean isGuiTest) {
+		_isGuiTest = isGuiTest;
 	}
 
 	/*
