@@ -16,6 +16,15 @@ public class TestDateAndTimeRetriever {
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
 	/*below is to test checkDateAndTimeWithStart*/
+	@Test
+	public void testValidCheckDateAndTimeWithStart1() {
+		testCheckDateAndTimeWithStart(null, "18/10/1993 00:00","18/08/1994 00:00");
+	}
+	
+	private void testCheckDateAndTimeWithStart(String expected, String startEarliest, String dateLatest){
+		_datm.checkDateAndTimeWithStart(startEarliest, dateLatest);
+	}
+	/*above is to test checkDateAndTimeWithStart*/
 	
 	/*below is to test parseNumberString*/
 	@Test

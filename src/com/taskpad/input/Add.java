@@ -13,8 +13,6 @@ import java.util.Scanner;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidDateException;
-import com.taskpad.dateandtime.InvalidTimeException;
-import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.execute.InvalidTaskIdException;
 
@@ -380,6 +378,7 @@ public class Add extends Command {
 			checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
 		} catch (InvalidTaskIdException e) {
 			//do nothing
+			assert (false);
 		}
 		
 		checkEmptyParametersAndInput();
@@ -390,28 +389,31 @@ public class Add extends Command {
 	 * Extracted method to input parameters
 	 */
 	private void checkEmptyParametersAndInput() {
-		if (!STRING_NULL.equals(_endTime)){
+		if (_endTime != null){
 			inputEndTime(_endTime);
 			//putOneParameter(PARAMETER_END_TIME, endTime);
 		}
 		
-		if (!STRING_NULL.equals(_endDate)){
+		if (_endDate != null){
 			inputEndDate(_endDate);
 			//putOneParameter(PARAMETER_END_DATE, endDate);
 		}
 		
-		if (!STRING_NULL.equals(_startTime)) {
+		if (_startTime != null) {
 			inputStartTime(_startTime);
 			//putOneParameter(PARAMETER_START_TIME, startTime);
 		}
 		
 		
-		if (!STRING_NULL.equals(_startDate)){
+		if (_startDate != null){
 			inputStartDate(_startDate);
 			//putOneParameter(PARAMETER_START_DATE, startDate);
 		}
 		
-		if (!STRING_NULL.equals(_deadline)){
+		if (_deadline != null){
+			String[] tempDeadSplit = _deadline.split(STRING_SPACE);
+			
+			_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
 			inputDeadlineDate(_deadline);
 		}
 	}
@@ -704,124 +706,58 @@ public class Add extends Command {
 	}
 	
 	private void putDeadline(String param) {
-		param = stripWhiteSpaces(param);
-		String[] splitParam = param.split(STRING_COMMA);
-		
-		String deadlineDate = STRING_EMPTY;
-		String deadlineTime = STRING_EMPTY;
-		
-		if (isValidTimeArgs(splitParam)){
-			for (int i=0; i<splitParam.length; i++){
-				deadlineDate = checkIfIsDate(splitParam[i]);
-				deadlineDate = checkIfIsDate(splitParam[i]);
-				if (notEmptyDateString(deadlineDate)){
-					_deadline += deadlineDate;
-				} else {
-					deadlineTime = checkIfIsTime(splitParam[i]);
-					if (notEmptyTimeString(deadlineTime)){
-						_deadline += deadlineTime;
-					}
-				}
-			}	
+		if (param.trim().isEmpty()){
+			return;
 		}
 		
-		checkEmptyDateTimeString(deadlineDate, deadlineTime, param);
-		_deadline = deadlineDate + STRING_EMPTY + deadlineTime;
+		String token = KEYWORD_DEADLINE + STRING_SPACE + param.trim();
+		String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+		if (tempDead == null){
+			return;
+		}
+		_deadline = tempDead;
 	}
 	
 	private void putStartTime(String param) {
-		String[] splitParam = param.split(STRING_COMMA);
-		
-		String startTime = STRING_EMPTY;
-		String startDate = STRING_EMPTY;
-				
-		if (isValidTimeArgs(splitParam)){
-			for (int i=0; i<splitParam.length; i++){
-				startDate = checkIfIsDate(splitParam[i].trim());
-				if (notEmptyDateString(startDate)){
-					_startDate = startDate;
-				} else {
-					//System.out.println(splitParam[i]);
-					startTime = checkIfIsTime(splitParam[i].trim());
-					if (notEmptyTimeString(startTime)){
-						_startTime = startTime;
-					}
-				}
-			}
+		if (param.trim().isEmpty()){
+			return;
 		}
 		
-		checkEmptyDateTimeString(startDate, startTime, param);
+		String token = KEYWORD_STARTTIME + STRING_SPACE + param.trim();
+		String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
+
+		if (startResult == null){
+			return;
+		}
+		
+		inputStartTimeDate(startResult);
+		
+	}
+	
+	private void inputStartTimeDate(String result){
+		String[] splitResult = result.split(STRING_SPACE);
+		_startDate = splitResult[0];
+		_startTime = splitResult[1];
 	}
 	
 	private void putEndTime(String param) {
-		String[] splitParam = param.split(",");
-		String endTime = STRING_EMPTY;
-		String endDate = STRING_EMPTY;
-
-		if (isValidTimeArgs(splitParam)){
-			for (int i=0; i<splitParam.length; i++){
-				if (notEmptyDateString(endDate)){
-					_endDate = endDate;
-				} else {
-					endTime = checkIfIsTime(splitParam[i].trim());
-					if (notEmptyTimeString(endTime)){
-						_endTime = endTime;
-					}
-				}
-			}
-		}
-		checkEmptyDateTimeString(endDate, endTime, param);
-	}
-	
-	private boolean isValidTimeArgs(String[] args){
-		if (args.length > 2){
-			InputManager.outputToGui("Error in number of time arguments: args.length");
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	private String checkIfIsTime(String string){
-		string.trim();
-		String timeString = STRING_EMPTY;
-		
-		try {
-			timeString = DateAndTimeManager.getInstance().parseTimeInput(string);
-			//timeString = DateAndTimeManager.getInstance().parseTime(string);
-		} catch (TimeErrorException | InvalidTimeException e) {
-			//do nothing
-		}
-		
-		return timeString;
-	}
-	
-	private boolean notEmptyTimeString(String timeString){
-		return timeString == null || !timeString.trim().equals(STRING_EMPTY);
-	}
-
-	private String checkIfIsDate(String string){
-		string.trim();
-		String dateString = STRING_EMPTY;
-		
-		try {
-			dateString = DateAndTimeManager.getInstance().parseDate(string);
-		} catch (InvalidDateException e) {
-			//do nothing
-		}
-		return dateString;
-	}
-	
-	private boolean notEmptyDateString(String dateString){
-		return dateString == null || !dateString.trim().equals(STRING_EMPTY);
-	}
-	
-	private void checkEmptyDateTimeString(String date, String time, String param){
-		if (date.equals(STRING_EMPTY) && time.equals(STRING_EMPTY)){
-			_invalidParameters = true;
-			InputManager.outputToGui(String.format(MESSAGE_INVALID_INPUT, param));
+		if (param.trim().isEmpty()){
 			return;
 		}
+		String token = KEYWORD_ENDTiME + STRING_SPACE + param.trim();
+		String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
+
+		if (endResult == null){
+			return;
+		}
+		
+		inputEndTimeDate(endResult);
+	}
+	
+	private void inputEndTimeDate(String result){
+		String[] splitResult = result.split(STRING_SPACE);
+		_endDate = splitResult[0];
+		_endTime = splitResult[1];
 	}
 	
 	/* Testing
