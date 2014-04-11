@@ -35,6 +35,7 @@ public class Edit extends Command{
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
 	private static final String STRING_EMPTY = "";
+	private static final String MESSAGE_WARNING_TASKID = "Warning: TaskID is not in standard position";
 
 	public Edit(String input, String fullInput) {
 		super(input, fullInput);
@@ -68,12 +69,14 @@ public class Edit extends Command{
 		
 		LOGGER.info("Got in commandSpecificRun ... ");
 		
-		try {
-			_taskID = findTaskID(fullInput);
-		} catch (TaskIDException | InvalidQuotesException e) {
-			InputManager.outputToGui(e.getMessage());
-			LOGGER.severe(e.getMessage());
-			return false;
+		if(noTaskIDInPosition(fullInput)){
+			try {
+				_taskID = findTaskID(fullInput);
+			} catch (TaskIDException | InvalidQuotesException e) {
+				InputManager.outputToGui(e.getMessage());
+				LOGGER.severe(e.getMessage());
+				return false;
+			}
 		}
 		
 		LOGGER.info("taskID is " + _taskID);
@@ -86,23 +89,25 @@ public class Edit extends Command{
 			return false;
 		}
 		
-		/*
-		if (isDesc()){
-			fullInput = removeWordDesc(fullInput);
-			_desc = removeTaskID(fullInput, _taskID);
-		} else if (isDeadline()){
-			fullInput = removeWordDeadline(fullInput);
-			_deadline = findDeadline(fullInput);
-		} else {
-			//no tag, just assume description
-			_desc = removeTaskID(fullInput, _taskID);
-		}
-		*/
-		
-		//System.out.println("Desc: " + _desc + "deadline: " + _deadline);
-		
 		putInputParameters();
 		return true;
+	}
+
+	/**
+	 * Check if second word entered is an integer (likely to be taskID)
+	 * @param fullInput
+	 * @return true if is integer and sets it as taskID
+	 */
+	private boolean noTaskIDInPosition(String fullInput) {
+		String splitInput[] = fullInput.split(STRING_SPACE);
+		try{
+			int taskID = Integer.parseInt(splitInput[1]);
+			_taskID = "" + taskID;
+			return true;
+		} catch (NumberFormatException e){
+			InputManager.outputToGui(MESSAGE_WARNING_TASKID);
+			return false;
+		}
 	}
 
 	/**
