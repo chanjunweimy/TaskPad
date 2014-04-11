@@ -22,6 +22,36 @@ public class TestDateAndTimeRetriever {
 	}
 	
 	@Test
+	public void testValidConvertDateAndTimeString2() {
+		testConvertDateAndTimeString("next ASH 14/04/2014 I want to catch Pokemon 18/04/2014 !",
+				"next ASH nxt Monday I want to catch Pokemon nxt Fri !", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString3() {
+		testConvertDateAndTimeString("21/04/2014 I want to catch Pokemon !",
+				"next nxt NXT prev Monday I want to catch Pokemon!", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString4() {
+		testConvertDateAndTimeString("01/11/2014 , I watch movie in 01/12/2014",
+				"1 / 11 / 2014 , I watch movie in 1 December", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString5() {
+		testConvertDateAndTimeString("aaa at 11/03/2014 by 03/04/2014 23:00",
+				"aaa at 11/3 by 3/4 11pm", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidConvertDateAndTimeString6() {
+		testConvertDateAndTimeString("do cs2010 assignment by 25/04/2014",
+				"do cs2010 assignment by nxt nxt Wk", "11/04/2014 00:00");
+	}
+	
+	@Test
 	public void testInvalidConvertDateAndTimeString1() {
 		testExceptionConvertDateAndTimeString("Error: Cannot have odd numbers of quotes", 
 				"One ppl named \"two\" want \" to have 1.", "11/04/2014 00:00");
@@ -105,8 +135,20 @@ public class TestDateAndTimeRetriever {
 	
 	@Test
 	public void testValidNumberString4() {
+		testParseNumberString("111 aaa 111", "one one one aaa one one one", true);
+		testParseNumberString("111 aaa 111", "one one one aaa one one one", false);
+	}
+	
+	@Test
+	public void testValidNumberString5() {
 		testParseNumberString("11/11/15 11 / 11 / 15 , 11:11 12 : 00 ,", "11/11/15 11/11/15, 11:11 12:00,", true);
 		testParseNumberString("11 / 11 / 15 11 : 11", "11/11/15 11:11", false);
+	}
+	
+	@Test
+	public void testValidNumberString6() {
+		testParseNumberString("111 1 111", "one one one 1 one one one", true);
+		testParseNumberString("111 1 111", "one one one 1 one one one", false);
 	}
 	
 	@Test
