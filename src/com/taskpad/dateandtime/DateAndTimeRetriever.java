@@ -302,7 +302,7 @@ public class DateAndTimeRetriever {
 									.toString().trim());
 				} catch (NullTimeUnitException | NullTimeValueException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 
 			}
@@ -538,6 +538,14 @@ public class DateAndTimeRetriever {
 
 		String now = getTodayDateAndTime();
 		
+		if (startEarliest != null && startEarliest.trim().isEmpty()){
+			startEarliest = null;
+		}
+		
+		if (dateLatest != null && dateLatest.trim().isEmpty()){
+			return STRING_EMPTY;
+		}
+		
 		if (dateLatest != null && startEarliest != null
 				&& compareDateAndTime(dateLatest, startEarliest) <= 0) {
 			dateLatest = null;
@@ -771,7 +779,7 @@ public class DateAndTimeRetriever {
 	}
 
 	private String parseTime(String dateString) {
-		String[] timeTokens = dateString.split(DateAndTimeRetriever.STRING_SPACE);
+		String[] timeTokens = dateString.split(STRING_SPACE);
 		StringBuffer timeString = new StringBuffer();
 		boolean[] isModified = new boolean[timeTokens.length];
 
@@ -825,7 +833,7 @@ public class DateAndTimeRetriever {
 
 				// System.err.println(dateInput);
 				if (isTime(timeInput)) {
-					LOGGER.info("TIMEWORDS " + n + DateAndTimeRetriever.STRING_SPACE + token);
+					LOGGER.info("TIMEWORDS " + n + STRING_SPACE + token);
 
 					try {
 						timeInput = parseOnlyTimeInput(timeInput);
@@ -1058,8 +1066,8 @@ public class DateAndTimeRetriever {
 	 * @return
 	 */
 	private String getTmrYtd(String dayString) {
-		String[] dayTokens = dayString.split(DateAndTimeRetriever.STRING_SPACE);
-		StringBuffer dayBuilder = new StringBuffer(DateAndTimeRetriever.STRING_SPACE);
+		String[] dayTokens = dayString.split(STRING_SPACE);
+		StringBuffer dayBuilder = new StringBuffer(STRING_SPACE);
 
 		SpecialWordParser swp = SpecialWordParser.getInstance();
 		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
@@ -1197,7 +1205,7 @@ public class DateAndTimeRetriever {
 						isModified[j] = true;
 						String token = dayTokens[j];
 						if (swp.isSpecialWord(token)) {
-							changedTokens.append(token + DateAndTimeRetriever.STRING_SPACE);
+							changedTokens.append(token + STRING_SPACE);
 							dayTokens[j] = null;
 							isModified[j] = true;
 						} else {
@@ -1234,86 +1242,60 @@ public class DateAndTimeRetriever {
 
 		initializeArray(isModified);
 
+		for(int noOfWords = 3; noOfWords >= 1; noOfWords--){
+			parseNHoliday(numberInputTokens, isModified, noOfWords);
+		}
+		holidayString = buildString(numberInputTokens, holidayString);
+		
+		return holidayString.toString().trim();
+	}
+
+	/**
+	 * @param numberInputTokens
+	 * @param isModified
+	 */
+	private void parseNHoliday(String[] numberInputTokens, boolean[] isModified, int noOfWords) {
+		LOGGER.info("In parseNHoliday, noOfWords are " + noOfWords);
+		
 		HolidayDatesParser holidayParser = HolidayDatesParser.getInstance();
-		for (int i = 2; i < numberInputTokens.length; i++) {
+		for (int i = noOfWords - 1; i < numberInputTokens.length; i++) {
 			String token = numberInputTokens[i];
+			LOGGER.info("currect token is " + token);
 
-			String holidayInput;
-			String pastOneToken, pastTwoToken;
-
+			String holidayInput = null;
+			
 			if (isParseFree(token)) {
 				isModified[i] = true;
 				continue;
 			}
 
 			// search 3 words:
-			if (allNotModified(isModified, i, 3)) {
-				pastOneToken = numberInputTokens[i - 1];
-				pastTwoToken = numberInputTokens[i - 2];
-				holidayInput = holidayParser.replaceHolidayDate(pastTwoToken
-						+ DateAndTimeRetriever.STRING_SPACE + pastOneToken + DateAndTimeRetriever.STRING_SPACE + token);
+			if (allNotModified(isModified, i, noOfWords)) {
+				StringBuffer holidayBuilder = new StringBuffer();
+				for (int j = i - noOfWords + 1 ;j <= i - 1; j++) {
+					String pastToken = numberInputTokens[j];
+					LOGGER.info("pastToken is " + pastToken);
+					holidayBuilder.append(pastToken + STRING_SPACE);
+				}
+				holidayBuilder.append(token);
+				
+				LOGGER.info("constructed string is " + holidayBuilder.toString());
+				
+				holidayInput = holidayParser.replaceHolidayDate(holidayBuilder.toString());
+				
+				LOGGER.info("after parsing, holidayInput is " + holidayInput);
 				if (holidayInput != null) {
 					numberInputTokens[i] = holidayInput;
-					numberInputTokens[i - 1] = null;
-					numberInputTokens[i - 2] = null;
 					isModified[i] = true;
-					isModified[i - 1] = true;
-					isModified[i - 2] = true;
+					for (int j = i - 1; j >= i - noOfWords + 1; j--) {
+						numberInputTokens[j] = null;						
+						isModified[j] = true;
+					}
+					
 					// holidayString.append(holidayInput + " ");
 				}
 			}
 		}
-
-		for (int i = 1; i < numberInputTokens.length; i++) {
-			String token = numberInputTokens[i];
-			String holidayInput;
-			String pastOneToken;
-
-			if (isParseFree(token)) {
-				isModified[i] = true;
-				continue;
-			}
-
-			// search 2 words:
-			if (allNotModified(isModified, i, 2)) {
-				pastOneToken = numberInputTokens[i - 1];
-				holidayInput = holidayParser.replaceHolidayDate(pastOneToken
-						+ DateAndTimeRetriever.STRING_SPACE + token);
-				if (holidayInput != null) {
-					numberInputTokens[i] = holidayInput;
-					numberInputTokens[i - 1] = null;
-					isModified[i] = true;
-					isModified[i - 1] = true;
-					// holidayString.append(holidayInput + " ");
-				}
-			}
-		}
-
-		for (int i = 0; i < numberInputTokens.length; i++) {
-			String token = numberInputTokens[i];
-
-			if (isModified[i]) {
-				continue;
-			}
-
-			if (isParseFree(token)) {
-				isModified[i] = true;
-				continue;
-			}
-
-			String holidayInput;
-			// search 1 word
-			holidayInput = holidayParser.replaceHolidayDate(token);
-			if (holidayInput != null) {
-				numberInputTokens[i] = holidayInput;
-				isModified[i] = true;
-				// holidayString.append(holidayInput + " ");
-			}
-		}
-
-		buildString(numberInputTokens, holidayString);
-
-		return holidayString.toString().trim();
 	}
 
 	/**
@@ -1722,6 +1704,7 @@ public class DateAndTimeRetriever {
 		return false;
 	}
 	
+	/*
 	public static void main(String[] args) {
 		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
 		/*
@@ -1844,7 +1827,7 @@ public class DateAndTimeRetriever {
 			e.printStackTrace();
 		}
 		*
-		*/
+		*//*
 		
 		//System.out.println(datr.parseNumber("one one one 1 aaa one one one"));
 		//System.out.println(datr.parseNumber("one one one aaa"));
@@ -1860,5 +1843,5 @@ public class DateAndTimeRetriever {
 
 		// System.out.println("AAA".split(" ").length);
 	}
-
+	*/
 }
