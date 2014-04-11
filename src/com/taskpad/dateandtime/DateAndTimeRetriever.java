@@ -267,8 +267,8 @@ public class DateAndTimeRetriever {
 		for (int i = 0; i < timeWordTokens.length; i++) {
 			String firstToken = timeWordTokens[i];
 			StringBuffer changedTokens = new StringBuffer();
-
-			if (twp.isTimeUnits(firstToken)) {
+			boolean isTimeWord = twp.isValidTimeWord(firstToken);
+			if (twp.isTimeUnits(firstToken) || isTimeWord) {
 				isModified[i] = true;
 				String secondToken = null;
 
@@ -281,9 +281,9 @@ public class DateAndTimeRetriever {
 					String token = timeWordTokens[j];
 
 					if (swp.isSpecialWord(token)) {
-						changedTokens.append(token + DateAndTimeRetriever.STRING_SPACE);
+						changedTokens.append(token + STRING_SPACE);
 						timeWordTokens[j] = null;
-					} else if (j == i - 1 && np.isDigitString(token)) {
+					} else if (j == i - 1 && np.isDigitString(token) && !isTimeWord) {
 						timeWordTokens[j] = null;
 						secondToken = token;
 					} else {
@@ -292,7 +292,7 @@ public class DateAndTimeRetriever {
 
 				}
 				if (secondToken != null) {
-					changedTokens.append(secondToken + DateAndTimeRetriever.STRING_SPACE);
+					changedTokens.append(secondToken + STRING_SPACE);
 				}
 				changedTokens.append(firstToken);
 
@@ -784,8 +784,8 @@ public class DateAndTimeRetriever {
 		boolean[] isModified = new boolean[timeTokens.length];
 
 		int maxJoinWord = 4;
+		initializeArray(isModified);
 		for (int i = maxJoinWord; i >= 1; i--) {
-			initializeArray(isModified);
 			changeNTimeWords(timeTokens, isModified, i);
 		}
 		timeString = buildString(timeTokens, timeString);
