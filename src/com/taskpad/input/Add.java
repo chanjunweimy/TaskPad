@@ -13,10 +13,10 @@ import java.util.Scanner;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidDateException;
-import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.dateandtime.TimeObject;
+import com.taskpad.execute.InvalidTaskIdException;
 
 
 /**
@@ -193,44 +193,56 @@ public class Add extends Command {
 	private void parseNonDelimitedString() {
 		//"..." deadlinedate deadlintime startdate starttime enddate endtime
 		
-		String inputNew = STRING_EMPTY;
+		String inputNew = findDateOrTime(input);
+		if (inputNew.equals(STRING_NULL)){
+			return;
+		}
+		
+		/* Using method from Command
 		try {
 			inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		} catch (InvalidQuotesException e) {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
+		*/
 		
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length - 1;
 		
 		
 		String endTime = splitInput[size];
+		String endDate = splitInput[size - 1];
+		String startTime = splitInput[size - 2];
+		String startDate = splitInput[size - 3];
+		String deadlineDate = splitInput[size - 5];
+		String deadlineTime = splitInput[size - 4];
+		String deadline = deadlineTime + STRING_SPACE + deadlineDate;
+		
+		try {
+			checkDeadLineAndEndTime(startTime, startDate, "-1", deadline, endTime, endDate, false);
+		} catch (InvalidTaskIdException e) {
+			//do nothing
+		}
+
 		if (!STRING_NULL.equals(endTime)){
 			putOneParameter(PARAMETER_END_TIME, endTime);
 		}
 		
-		String endDate = splitInput[size - 1];
 		if (!STRING_NULL.equals(endDate)){
 			putOneParameter(PARAMETER_END_DATE, endDate);
 		}
 		
-		String startTime = splitInput[size - 2];
 		if (!STRING_NULL.equals(startTime)) {
 			putOneParameter(PARAMETER_START_TIME, startTime);
 		}
 		
 		
-		String startDate = splitInput[size - 3];
 		if (!STRING_NULL.equals(startDate)){
 			putOneParameter(PARAMETER_START_DATE, startDate);
 		}
 		
-		String deadlineDate = splitInput[size - 5];
-		String deadlineTime = splitInput[size - 4];
-		String deadline = deadlineTime + STRING_SPACE + deadlineDate;
 		if (!STRING_NULL.equals(deadlineDate) && !STRING_NULL.equals(deadlineTime)){
-			//putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
 			putOneParameter(PARAMETER_DEADLINE_DATE, deadline);
 		}
 		
@@ -291,9 +303,6 @@ public class Add extends Command {
 	}
 
 	/**
-	 * Lynnette, why you so sure that timeArray got 2 elements?
-	 * I think this is 1 of the bug.
-	 * From: Jun Wei
 	 * @param timeArray
 	 */
 	private void orderTimeArray(ArrayList<String> timeArray) {
@@ -308,8 +317,6 @@ public class Add extends Command {
 	}
 
 	/**
-	 * Lynnette, same here, why you so sure that 
-	 * dateArray got 3 elements?
 	 * @param dateArray
 	 */
 	private void orderDateArray(ArrayList<String> dateArray) {
