@@ -90,76 +90,6 @@ public class DateAndTimeRetriever {
 		return _retriever;
 	}
 
-	/**
-	 * In an input string, check if there is valid time
-	 * 
-	 * @param inputString
-	 * @return time
-	 */
-	protected TimeObject findTime(String inputString) {
-		TimeObject timeObject = null;
-
-		String parsedTime = isValidTime(inputString);
-		if (isNotEmptyParsedString(parsedTime)) {
-			timeObject = createNewTimeObject(parsedTime, inputString);
-		}
-		return timeObject;
-	}
-
-	/* Helper methods for checking valid time in a String */
-	private String isValidTime(String input) {
-		input = trimInput(input);
-		TimeParser tp = TimeParser.getInstance();
-		try {
-			return tp.parseTimeInput(input);
-		} catch (TimeErrorException | InvalidTimeException e) {
-			return STRING_EMPTY;
-		}
-	}
-
-	private TimeObject createNewTimeObject(String parsedTime, String inputTime) {
-		return new TimeObject(parsedTime.trim(), inputTime.trim());
-	}
-
-	/**
-	 * In an input string, check if there is valid date
-	 * 
-	 * @param inputString
-	 * @return date
-	 */
-	protected DateObject findDate(String inputString) {
-		DateObject dateObject = null;
-
-		String parsedDate = isValidDate(inputString);
-		if (isNotEmptyParsedString(parsedDate)) {
-			dateObject = createDateObject(parsedDate, inputString);
-		}
-		return dateObject;
-	}
-
-	/* Helper method for checking valid date in a String */
-	private String isValidDate(String input) {
-		input = trimInput(input);
-		DateParser dateParser = DateParser.getInstance();
-		try {
-			return dateParser.parseDate(input);
-		} catch (InvalidDateException e) {
-			return STRING_EMPTY;
-		}
-	}
-
-	private String trimInput(String input) {
-		input = input.trim();
-		return input;
-	}
-
-	private DateObject createDateObject(String parsedDate, String input) {
-		return new DateObject(parsedDate, input.trim());
-	}
-
-	private boolean isNotEmptyParsedString(String parsedString) {
-		return !parsedString.equals(STRING_EMPTY);
-	}
 
 	protected ArrayList<String> searchTimeAndDate(String desc)
 			throws InvalidQuotesException {
@@ -617,8 +547,6 @@ public class DateAndTimeRetriever {
 		}
 		return dateLatest;
 	}
-	
-
 
 	/**
 	 * @param todayDate
@@ -1082,7 +1010,7 @@ public class DateAndTimeRetriever {
 	}
 
 	private boolean isTime(String input) {
-		input = trimInput(input);
+		input = input.trim();
 		TimeParser tp = TimeParser.getInstance();
 		try {
 			tp.parseTimeInput(input);
@@ -1098,7 +1026,7 @@ public class DateAndTimeRetriever {
 	}
 
 	private boolean isDate(String input) {
-		input = trimInput(input);
+		input = input.trim();
 		DateParser dateParser = DateParser.getInstance();
 		try {
 			dateParser.parseDate(input);
@@ -1607,9 +1535,113 @@ public class DateAndTimeRetriever {
 	}
 	
 	/**
-	 * ==================BELOW is deprecated================================================================ 
+	 * ==================BELOW is DEPRECATED method================================================================ 
 	 */
 	
+	/**
+	 * In an input string, check if there is valid time
+	 * @deprecated
+	 * @param inputString
+	 * @return time
+	 */
+	protected TimeObject findTime(String inputString) {
+		TimeObject timeObject = null;
+
+		String parsedTime = isValidTime(inputString);
+		if (isNotEmptyParsedString(parsedTime)) {
+			timeObject = createNewTimeObject(parsedTime, inputString);
+		}
+		return timeObject;
+	}
+
+	/**
+	 * Helper methods for checking valid time in a String
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private String isValidTime(String input) {
+		input = trimInput(input);
+		TimeParser tp = TimeParser.getInstance();
+		try {
+			return tp.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			return STRING_EMPTY;
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 * @param parsedTime
+	 * @param inputTime
+	 * @return
+	 */
+	private TimeObject createNewTimeObject(String parsedTime, String inputTime) {
+		return new TimeObject(parsedTime.trim(), inputTime.trim());
+	}
+
+	/**
+	 * In an input string, check if there is valid date
+	 * @deprecated
+	 * 
+	 * @param inputString
+	 * @return date
+	 */
+	protected DateObject findDate(String inputString) {
+		DateObject dateObject = null;
+
+		String parsedDate = isValidDate(inputString);
+		if (isNotEmptyParsedString(parsedDate)) {
+			dateObject = createDateObject(parsedDate, inputString);
+		}
+		return dateObject;
+	}
+
+
+	/**
+	 * Helper method for checking valid date in a String 
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private String isValidDate(String input) {
+		input = trimInput(input);
+		DateParser dateParser = DateParser.getInstance();
+		try {
+			return dateParser.parseDate(input);
+		} catch (InvalidDateException e) {
+			return STRING_EMPTY;
+		}
+	}
+
+	/**
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private String trimInput(String input) {
+		input = input.trim();
+		return input;
+	}
+
+	/**
+	 * @deprecated
+	 * @param parsedDate
+	 * @param input
+	 * @return
+	 */
+	private DateObject createDateObject(String parsedDate, String input) {
+		return new DateObject(parsedDate, input.trim());
+	}
+
+	/**
+	 * @deprecated
+	 * @param parsedString
+	 * @return
+	 */
+	private boolean isNotEmptyParsedString(String parsedString) {
+		return !parsedString.equals(STRING_EMPTY);
+	}
 	
 	/**
 	 * @deprecated
