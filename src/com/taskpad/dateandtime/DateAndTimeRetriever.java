@@ -384,7 +384,7 @@ public class DateAndTimeRetriever {
 		return timeWordString.toString().trim();
 	}
 
-	private String removeParseFreeZone(String alphaNumericSpaceDesc)
+	protected String removeParseFreeZone(String alphaNumericSpaceDesc)
 			throws InvalidQuotesException {
 		boolean removeStat = false;
 		String[] descTokens = alphaNumericSpaceDesc.split(DateAndTimeRetriever.STRING_SPACE);

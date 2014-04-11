@@ -61,7 +61,13 @@ public abstract class Command {
 		}
 		
 		boolean isDateAndTimePreserved = true;
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+		String numberInput = STRING_EMPTY;
+		try {
+			numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+		} catch (InvalidQuotesException e1) {
+			InputManager.outputToGui(e1.getMessage());
+			return;
+		}
 		//System.out.println(numberInput);
 		checkIfNumberInputEmpty(numberInput);
 				

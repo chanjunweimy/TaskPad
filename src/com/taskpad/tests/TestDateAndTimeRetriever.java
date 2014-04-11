@@ -9,6 +9,7 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidQuotesException;
 
 public class TestDateAndTimeRetriever {
 
@@ -27,8 +28,18 @@ public class TestDateAndTimeRetriever {
 		testParseNumberString("I want to have 1 , thanks", "I want to have one, thanks", false);
 	}
 	
+	@Test
+	public void testValidNumberString3() {
+		testParseNumberString("1 ppl named \" two \" want to have 1 .", "One ppl named \"two\" want to have 1.", true);
+		testParseNumberString("1 ppl named \" two \" want to have 1 .", "One ppl named \"two\" want to have 1.", false);
+	}
+	
 	private void testParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
-		assertEquals(expected, _datm.parseNumberString(input, isDateAndTimePreserved));
+		try {
+			assertEquals(expected, _datm.parseNumberString(input, isDateAndTimePreserved));
+		} catch (InvalidQuotesException e) {
+			fail();
+		}
 	}
 	/*above is to test parseNumberString*/
 	

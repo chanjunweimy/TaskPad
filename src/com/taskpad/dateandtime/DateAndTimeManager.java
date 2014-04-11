@@ -128,9 +128,12 @@ public class DateAndTimeManager{
 	 * i.e. "one day in forever" changes to "1 day in forever"
 	 * @param input
 	 * @return string changed to numerics
+	 * @throws InvalidQuotesException 
 	 */
-	public String parseNumberString(String input, boolean isDateAndTimePreserved){
+	public String parseNumberString(String input, boolean isDateAndTimePreserved) throws InvalidQuotesException{
 		input = _datr.getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
+		input = _datr.removeParseFreeZone(input);
+		input = _datr.parseNumber(input);
 		return _datr.parseNumber(input);
 	}	
 	
