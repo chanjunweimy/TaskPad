@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.execute.InvalidTaskIdException;
 
@@ -206,23 +207,22 @@ public class Add extends Command {
 
 	private void parseNonDelimitedString() {
 		//"..." deadlinedate deadlintime startdate starttime enddate endtime
-		
-		String inputNew = findDateOrTime(input);
-		if (inputNew.equals(STRING_NULL)){
-			return;
-		}
-		
-		/* Using method from Command
+		String inputNew = STRING_EMPTY;
 		try {
 			inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		} catch (InvalidQuotesException e) {
 			InputManager.outputToGui(e.getMessage());
 			return;
 		}
-		*/
 		
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length - 1;
+		
+		for (int i = size; i >= size - 5; i--){
+			if (STRING_NULL.equals(splitInput[i])){
+				splitInput[i] = null;
+			}
+		}
 		
 		_endTime = splitInput[size];
 		_endDate = splitInput[size - 1];
@@ -231,13 +231,8 @@ public class Add extends Command {
 		String deadlineDate = splitInput[size - 5];
 		String deadlineTime = splitInput[size - 4];
 		
-		try {
-			checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
-		} catch (InvalidTaskIdException e) {
-			//do nothing
-		}
 
-		if (!STRING_NULL.equals(deadlineDate) && !STRING_NULL.equals(deadlineTime)){
+		if (deadlineDate != null && deadlineTime != null){
 			_deadline = deadlineTime + STRING_SPACE + deadlineDate;
 		}
 		checkEmptyParametersAndInput();		

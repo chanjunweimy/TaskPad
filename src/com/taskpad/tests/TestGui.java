@@ -28,6 +28,7 @@ public class TestGui {
 		setUpStream();
 		
 		GuiManager.setDebug(true);
+		GuiManager.setGui(true);
 		GuiManager.initialGuiManager();
 
 		SwingUtilities.invokeLater(new Runnable(){
@@ -58,7 +59,15 @@ public class TestGui {
 			bot.setAutoDelay(40);
 			bot.setAutoWaitForIdle(true);
  
-			//bot.delay(3000);
+			bot.delay(3000);
+			
+			type(bot, "clear\n");
+			
+			bot.delay(1000);
+			String expected = "\n\n\r\nAll tasks have been deleted. You can use undo to get them back.\n\r\n";
+			
+			assertEquals(expected, _outContent.toString());			
+			cleanUpStreams();
 			
 			//leftClick(bot);
 			
@@ -68,13 +77,15 @@ public class TestGui {
 			
 			bot.delay(3000); 
 			
-			String expected =
-					"Task Successfully Added!\r\n\r\n\r\n\r\nTask ID:		3"
-					+ "\r\n\r\n\r\nDescription:	"
-					+ "abc \r\n\r\n\r\nStatus:		Not done.\r\n\r\n\r\n";
-			assertEquals(expected + "\r\n", _outContent.toString());
+			expected =
+					"Task Successfully Added!\n\n\n\r\nTask ID:		1"
+					+ "\n\n\r\nDescription:	"
+					+ "abc \n\n\r\nStatus:		Not done.";
+			assertEquals(expected, _outContent.toString().trim());
 			
 			cleanUpStreams();
+			bot.delay(3000);
+
 		} catch (AWTException e) {
 			
 			// TODO Auto-generated catch block
@@ -87,6 +98,7 @@ public class TestGui {
 		
 		
 	}
+
 	
 	private void setUpStream(){
 		System.setOut(new PrintStream(_outContent));

@@ -15,6 +15,38 @@ public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
+	/*below is testConvertDateAndTimeString*/
+	@Test
+	public void testValidConvertDateAndTimeString1() {
+		testConvertDateAndTimeString("find Lynnette on 14/04/2014","find Lynnette on Monday", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testInvalidConvertDateAndTimeString1() {
+		testExceptionConvertDateAndTimeString("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want \" to have 1.", "11/04/2014 00:00");
+	}
+	
+	private void testConvertDateAndTimeString(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			assertEquals(expected, _datm.convertDateAndTimeString(input));
+		} catch (InvalidQuotesException e) {
+			fail();
+		}
+	}
+	
+	private void testExceptionConvertDateAndTimeString(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			 _datm.convertDateAndTimeString(input);
+			fail();
+		} catch (InvalidQuotesException e) {
+			assertEquals(expected, e.getMessage());
+		}
+	}
+	/*above is testConvertDateAndTimeString*/
+	
 	/*below is to test checkDateAndTimeWithStart*/
 	@Test
 	public void testValidCheckDateAndTimeWithStart1() {
