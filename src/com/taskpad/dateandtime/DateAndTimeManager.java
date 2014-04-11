@@ -134,7 +134,7 @@ public class DateAndTimeManager{
 		input = _datr.getAlphaNumericSpaceDesc(input, isDateAndTimePreserved);
 		input = _datr.removeParseFreeZone(input);
 		input = _datr.parseNumber(input);
-		return _datr.parseNumber(input);
+		return input.replaceAll("\"", "").trim();
 	}	
 	
 	/**

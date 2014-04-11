@@ -30,8 +30,22 @@ public class TestDateAndTimeRetriever {
 	
 	@Test
 	public void testValidNumberString3() {
-		testParseNumberString("1 ppl named \" two \" want to have 1 .", "One ppl named \"two\" want to have 1.", true);
-		testParseNumberString("1 ppl named \" two \" want to have 1 .", "One ppl named \"two\" want to have 1.", false);
+		testParseNumberString("1 ppl named two want to have 1 .", "One ppl named \"two\" want to have 1.", true);
+		testParseNumberString("1 ppl named two want to have 1 .", "One ppl named \"two\" want to have 1.", false);
+	}
+	
+	@Test
+	public void testValidNumberString4() {
+		testParseNumberString("11/11/15 11 / 11 / 15 , 11:11 12 : 00 ,", "11/11/15 11/11/15, 11:11 12:00,", true);
+		testParseNumberString("11 / 11 / 15 11 : 11", "11/11/15 11:11", false);
+	}
+	
+	@Test
+	public void testInvalidNumberString1() {
+		testInvalidParseNumberString("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want\" to have 1.", true);
+		testInvalidParseNumberString("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want \" to have 1.", false);
 	}
 	
 	private void testParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
@@ -39,6 +53,15 @@ public class TestDateAndTimeRetriever {
 			assertEquals(expected, _datm.parseNumberString(input, isDateAndTimePreserved));
 		} catch (InvalidQuotesException e) {
 			fail();
+		}
+	}
+	
+	private void testInvalidParseNumberString(String expected, String input, boolean isDateAndTimePreserved){
+		try {
+			_datm.parseNumberString(input, isDateAndTimePreserved);
+			fail();
+		} catch (InvalidQuotesException e) {
+			assertEquals(expected, e.getMessage());
 		}
 	}
 	/*above is to test parseNumberString*/
