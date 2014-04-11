@@ -247,49 +247,6 @@ public abstract class Command {
 	}
 	
 	/**
-	 * Takes in input string and finds the first integer as taskID
-	 * @param input
-	 * @return taskID
-	 * @throws TaskIDException 
-	 */
-	protected String findTaskID(String input) throws TaskIDException{
-		boolean isDateAndTimePreserved = true;
-		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
-
-		_logger.info("finding TaskID. Converted to numberInput");
-		_logger.info("numberInput is " + numberInput);
-		
-		input = numberInput;
-		fullInput = numberInput;
-	
-		_logger.info("input is " + input);
-		_logger.info("fullInput is " + fullInput);
-		
-		int taskID = -1;
-		String[] splitInput = input.split(STRING_SPACE);
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (taskID == -1){
-				try{
-					taskID = Integer.parseInt(splitInput[i]);
-				} catch (NumberFormatException e){
-					//do nothing
-				}
-			}
-		}
-				
-		_logger.info("taskID is " + taskID);
-		
-		if (taskID == -1){
-			_logger.severe("TASK ID is invalid!");
-			throw new TaskIDException();
-		}
-		
-		
-		return "" + taskID;
-	}
-	
-	/**
 	 * Main logic of getting date and time
 	 * @param token
 	 * @param splitResult
@@ -371,13 +328,21 @@ public abstract class Command {
 	 * @throws InvalidTaskIdException
 	 */
 	protected void checkDeadLineAndEndTime(String startTime, String startDate, String taskID,
-			String deadline, String endTime, String endDate) 
+			String deadline, String endTime, String endDate, boolean isExistingTask) 
 			throws InvalidTaskIdException {
+		
 		String startEarliest;
 		if (startTime != null && startDate != null){
 			startEarliest = startDate + STRING_SPACE + startTime;
 		} else {
-			startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(taskID));
+			if (isExistingTask){
+				//For editing task, it has a task ID stored
+				startEarliest = InputManager.getStartTimeForTask(Integer.parseInt(taskID));
+			} else {
+				//for add task, can only start at NOW 
+				startEarliest = DateAndTimeManager.getInstance().getTodayDate() + STRING_SPACE +
+						DateAndTimeManager.getInstance().getTodayTime();
+			}
 		}
 		
 		if (deadline != null){
@@ -411,6 +376,5 @@ public abstract class Command {
 		}
 		
 	}
-
 	
 }
