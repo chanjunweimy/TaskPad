@@ -164,7 +164,7 @@ public class GuiManager {
 		}
 		
 		if (_isDebug){
-			System.out.println(out);
+			System.out.print(out);
 		}
 
 	}
@@ -200,26 +200,23 @@ public class GuiManager {
 		} 
 		
 		if (_isDebug){
-			System.out.println(out);
+			System.out.print(out);
 		}
 
 	}
 
+	
 	public static void startRemindingUser() {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				swapFrame(_tableFrame, _outputFrame);
-				remindUser(MESSAGE_START_REMINDER);
-			}
-
-		});
-
+		remindUser(MESSAGE_START_REMINDER);
 	}
 
 	private static void remindUser(final String out) {
 		// swapFrame(_tableFrame, _outputFrame);
 		_outputFrame.addReminder(out + NEWLINE);
+		
+		if (_isDebug){
+			System.out.print(out + NEWLINE);
+		}
 	}
 
 	protected static void passInput(final String in) {
