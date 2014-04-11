@@ -4,6 +4,7 @@ package com.taskpad.input;
 
 import java.util.logging.Logger;
 
+import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.execute.InvalidTaskIdException;
 
 public class Edit extends Command{
@@ -233,7 +234,49 @@ public class Edit extends Command{
 		
 		showErrorWhenActionRepeated(startNo, deadNo, endNo);
 		
-		checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate);
+		checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, true);
+	}
+	
+	/**
+	 * Takes in input string and finds the first integer as taskID
+	 * @param input
+	 * @return taskID
+	 * @throws TaskIDException 
+	 */
+	private String findTaskID(String input) throws TaskIDException{
+		boolean isDateAndTimePreserved = true;
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input, isDateAndTimePreserved);
+
+		LOGGER.info("finding TaskID. Converted to numberInput");
+		LOGGER.info("numberInput is " + numberInput);
+		
+		input = numberInput;
+		fullInput = numberInput;
+	
+		LOGGER.info("input is " + input);
+		LOGGER.info("fullInput is " + fullInput);
+		
+		int taskID = -1;
+		String[] splitInput = input.split(STRING_SPACE);
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (taskID == -1){
+				try{
+					taskID = Integer.parseInt(splitInput[i]);
+				} catch (NumberFormatException e){
+					//do nothing
+				}
+			}
+		}
+				
+		LOGGER.info("taskID is " + taskID);
+		
+		if (taskID == -1){
+			LOGGER.severe("TASK ID is invalid!");
+			throw new TaskIDException();
+		}
+		
+		return "" + taskID;
 	}
 
 	/**
