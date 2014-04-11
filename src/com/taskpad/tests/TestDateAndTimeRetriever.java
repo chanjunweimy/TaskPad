@@ -18,11 +18,37 @@ public class TestDateAndTimeRetriever {
 	/*below is to test checkDateAndTimeWithStart*/
 	@Test
 	public void testValidCheckDateAndTimeWithStart1() {
-		testCheckDateAndTimeWithStart(null, "18/10/1993 00:00","18/08/1994 00:00");
+		testCheckDateAndTimeWithStart(null, "18/10/1993 00:00", "18/08/1994 00:00", "11/04/2014 00:00");
 	}
 	
-	private void testCheckDateAndTimeWithStart(String expected, String startEarliest, String dateLatest){
-		_datm.checkDateAndTimeWithStart(startEarliest, dateLatest);
+	@Test
+	public void testValidCheckDateAndTimeWithStart2() {
+		testCheckDateAndTimeWithStart(null, "18/10/1993 15:00", null, "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart3() {
+		testCheckDateAndTimeWithStart(null, null, null, "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart4() {
+		testCheckDateAndTimeWithStart("18/10/2014 00:00", null, "18/10/2014 00:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart5() {
+		testCheckDateAndTimeWithStart(null, null, "18/10/2011 00:00", "11/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidCheckDateAndTimeWithStart6() {
+		testCheckDateAndTimeWithStart("18/08/2015 00:00", "18/7/2015 00:00", "18/08/2015 00:00", "11/04/2014 00:00");
+	}
+	
+	private void testCheckDateAndTimeWithStart(String expected, String startEarliest, String dateLatest, String dateString){
+		setupDebugEnvironment(dateString);
+		assertEquals(expected, _datm.checkDateAndTimeWithStart(startEarliest, dateLatest));
 	}
 	/*above is to test checkDateAndTimeWithStart*/
 	

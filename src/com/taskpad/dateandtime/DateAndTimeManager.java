@@ -160,6 +160,7 @@ public class DateAndTimeManager{
 
 	/**
 	 * Check if there  is a valid date in the string
+	 * @deprecated
 	 * @param String
 	 * @returns DateObject
 	 */
@@ -169,6 +170,7 @@ public class DateAndTimeManager{
 	
 	/**
 	 * Check if there is a valid time in the string
+	 * @deprecated
 	 * @param String
 	 * @returns TimeObject
 	 */
