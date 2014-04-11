@@ -40,13 +40,21 @@ public class Add extends Command {
 	private static final int NUMBER_ARGUMENTS = 1;
 	
 	private static String PARAMETER_DEADLINE_DATE = "DEADLINE DATE";
-	private static String PARAMETER_DEADLINE_TIME = "DEADLINE TIME";
 	private static String PARAMETER_START_DATE = "START DATE";
 	private static String PARAMETER_START_TIME = "START TIME";
 	private static String PARAMETER_END_DATE = "END DATE";
 	private static String PARAMETER_END_TIME = "END TIME";
 	private static String PARAMETER_DESCRIPTION = "DESC";
-	//private static String PARAMETER_INFO = "INFO";
+
+	private int _startNo;
+	private int _deadNo;
+	private int _endNo;
+	private String _taskID;
+	private String _deadline;
+	private String _startDate;
+	private String _startTime;
+	private String _endDate;
+	private String _endTime;
 	
 	private static Scanner _sc; 
 	private static boolean _invalidParameters;
@@ -81,6 +89,17 @@ public class Add extends Command {
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		setCOMMAND(COMMAND_ADD);
 		_sc = new Scanner(System.in);
+		
+		_startNo = 0;
+		_endNo = 0;
+		_deadNo = 0;
+		
+		_taskID = null;
+		_deadline = null;
+		_startDate = null;
+		_startTime = null;
+		_endDate = null;
+		_endTime = null;
 	}
 
 	@Override
@@ -115,12 +134,10 @@ public class Add extends Command {
 	@Override
 	protected void initialiseParametersToNull() {
 		putOneParameter(PARAMETER_DEADLINE_DATE, STRING_EMPTY);
-		putOneParameter(PARAMETER_DEADLINE_TIME, STRING_EMPTY);
 		putOneParameter(PARAMETER_DESCRIPTION, STRING_EMPTY); 
 		putOneParameter(PARAMETER_START_DATE, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_DATE, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_TIME, STRING_EMPTY);
-		//putOneParameter(PARAMETER_INFO, STRING_EMPTY);
 		putOneParameter(PARAMETER_START_TIME, STRING_EMPTY);
 	}
 
@@ -179,10 +196,6 @@ public class Add extends Command {
 	}
 	
 	private void checkIfExistDesc() throws EmptyDescException {
-		/**
-		 * should have null? 
-		 * Jun Wei
-		 */
 		if (inputParameters.get(PARAMETER_DESCRIPTION).trim().isEmpty()
 				|| (inputParameters.get(PARAMETER_DESCRIPTION) == null)){
 			_invalidParameters = true;
@@ -210,61 +223,31 @@ public class Add extends Command {
 		String[] splitInput = inputNew.split(STRING_SPACE);
 		int size = splitInput.length - 1;
 		
-		
-		String endTime = splitInput[size];
-		String endDate = splitInput[size - 1];
-		String startTime = splitInput[size - 2];
-		String startDate = splitInput[size - 3];
+		_endTime = splitInput[size];
+		_endDate = splitInput[size - 1];
+		_startTime = splitInput[size - 2];
+		_startDate = splitInput[size - 3];
 		String deadlineDate = splitInput[size - 5];
 		String deadlineTime = splitInput[size - 4];
-		String deadline = deadlineTime + STRING_SPACE + deadlineDate;
 		
 		try {
-			checkDeadLineAndEndTime(startTime, startDate, "-1", deadline, endTime, endDate, false);
+			checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
 		} catch (InvalidTaskIdException e) {
 			//do nothing
 		}
 
-		if (!STRING_NULL.equals(endTime)){
-			putOneParameter(PARAMETER_END_TIME, endTime);
-		}
-		
-		if (!STRING_NULL.equals(endDate)){
-			putOneParameter(PARAMETER_END_DATE, endDate);
-		}
-		
-		if (!STRING_NULL.equals(startTime)) {
-			putOneParameter(PARAMETER_START_TIME, startTime);
-		}
-		
-		
-		if (!STRING_NULL.equals(startDate)){
-			putOneParameter(PARAMETER_START_DATE, startDate);
-		}
-		
 		if (!STRING_NULL.equals(deadlineDate) && !STRING_NULL.equals(deadlineTime)){
-			putOneParameter(PARAMETER_DEADLINE_DATE, deadline);
+			_deadline = deadlineTime + STRING_SPACE + deadlineDate;
 		}
-		
+		checkEmptyParametersAndInput();		
 		
 		String desc = STRING_EMPTY;
 		for (int i=0; i < size - 5; i++){
 			desc += splitInput[i] + STRING_SPACE;
 		}
-		
-		//String desc = input;
-		
+				
 		putOneParameter(PARAMETER_DESCRIPTION, desc);
 		
-		/* deprecated
-		String descString = extractTimeAndDate(splitInput);
-
-		if (!descAlreadyEntered()){
-			//inputDesc(descString);
-			System.out.println("DEBUG: " + fullInput);
-			inputDesc(input);
-		}
-		*/
 	}
 
 	/**
@@ -381,26 +364,56 @@ public class Add extends Command {
 		
 		_sc.close();
 		
-		
 		_sc = new Scanner(otherPart.toString().trim());
-		//devide the useDelimiter to prevent resource leak;
 		_sc.useDelimiter("\\s-");
 		
 		while(_sc.hasNext()){
 			String nextParam = _sc.next().trim();
 			
 			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
-			//System.out.println("YYY: " + nextParam);
-			
+
 			parseNextParam(nextParam.trim());
 		}
 		_sc.close();
 		
-		/* Reverting to the old bit
-		checkAndRemoveStart();
-		checkAndRemoveEnd();
-		checkAndInputDesc();
-		*/
+		try {
+			checkDeadLineAndEndTime(_startTime, _startDate, _taskID, _deadline, _endTime, _endDate, false);
+		} catch (InvalidTaskIdException e) {
+			//do nothing
+		}
+		
+		checkEmptyParametersAndInput();
+		
+	}
+
+	/**
+	 * Extracted method to input parameters
+	 */
+	private void checkEmptyParametersAndInput() {
+		if (!STRING_NULL.equals(_endTime)){
+			inputEndTime(_endTime);
+			//putOneParameter(PARAMETER_END_TIME, endTime);
+		}
+		
+		if (!STRING_NULL.equals(_endDate)){
+			inputEndDate(_endDate);
+			//putOneParameter(PARAMETER_END_DATE, endDate);
+		}
+		
+		if (!STRING_NULL.equals(_startTime)) {
+			inputStartTime(_startTime);
+			//putOneParameter(PARAMETER_START_TIME, startTime);
+		}
+		
+		
+		if (!STRING_NULL.equals(_startDate)){
+			inputStartDate(_startDate);
+			//putOneParameter(PARAMETER_START_DATE, startDate);
+		}
+		
+		if (!STRING_NULL.equals(_deadline)){
+			inputDeadlineDate(_deadline);
+		}
 	}
 
 	/**
@@ -456,20 +469,24 @@ public class Add extends Command {
 		
 		switch (firstChar){
 		case "d":
+			_deadNo++;
 			putDeadline(param);
 			break;
 		case "s":
+			_startNo++;
 			putStartTime(param);
 			break;
 		case "e": 
+			_endNo++;
 			putEndTime(param);
 			break;
 		}
+		
+		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo);
 	}
 
 	private boolean checkIfDelimitedString() {
 		String inputToCheck = input.toLowerCase();
-		//should add space if we want to use contains. :) because it maybe have "to-do", then it will think it is a
 		//delimited String	
 		if (inputToCheck.contains(" -d ") || inputToCheck.contains(" -s ") || inputToCheck.contains(" -e ")){
 			return true;
@@ -652,9 +669,6 @@ public class Add extends Command {
 		putOneParameter(PARAMETER_DEADLINE_DATE, deadline);		
 	}
 	
-	private void inputDeadlineTime(String deadline){
-		putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
-	}
 	
 	private void inputDesc(String desc) {
 		putOneParameter(PARAMETER_DESCRIPTION, desc);		
@@ -699,18 +713,20 @@ public class Add extends Command {
 		if (isValidTimeArgs(splitParam)){
 			for (int i=0; i<splitParam.length; i++){
 				deadlineDate = checkIfIsDate(splitParam[i]);
+				deadlineDate = checkIfIsDate(splitParam[i]);
 				if (notEmptyDateString(deadlineDate)){
-					inputDeadlineDate(deadlineDate);
+					_deadline += deadlineDate;
 				} else {
 					deadlineTime = checkIfIsTime(splitParam[i]);
 					if (notEmptyTimeString(deadlineTime)){
-						inputDeadlineTime(deadlineTime);
+						_deadline += deadlineTime;
 					}
 				}
 			}	
 		}
 		
 		checkEmptyDateTimeString(deadlineDate, deadlineTime, param);
+		_deadline = deadlineDate + STRING_EMPTY + deadlineTime;
 	}
 	
 	private void putStartTime(String param) {
@@ -721,21 +737,19 @@ public class Add extends Command {
 				
 		if (isValidTimeArgs(splitParam)){
 			for (int i=0; i<splitParam.length; i++){
-				//System.out.println(splitParam[i]);
-				
 				startDate = checkIfIsDate(splitParam[i].trim());
 				if (notEmptyDateString(startDate)){
-					inputStartDate(startDate);
+					_startDate = startDate;
 				} else {
 					//System.out.println(splitParam[i]);
 					startTime = checkIfIsTime(splitParam[i].trim());
 					if (notEmptyTimeString(startTime)){
-						inputStartTime(startTime);
-						System.out.println(startTime);
+						_startTime = startTime;
 					}
 				}
 			}
 		}
+		
 		checkEmptyDateTimeString(startDate, startTime, param);
 	}
 	
@@ -746,19 +760,17 @@ public class Add extends Command {
 
 		if (isValidTimeArgs(splitParam)){
 			for (int i=0; i<splitParam.length; i++){
-				endDate = checkIfIsDate(splitParam[i].trim());
 				if (notEmptyDateString(endDate)){
-					inputEndDate(endDate);
+					_endDate = endDate;
 				} else {
 					endTime = checkIfIsTime(splitParam[i].trim());
 					if (notEmptyTimeString(endTime)){
-						inputEndTime(endTime);
+						_endTime = endTime;
 					}
 				}
 			}
 		}
 		checkEmptyDateTimeString(endDate, endTime, param);
-
 	}
 	
 	private boolean isValidTimeArgs(String[] args){
