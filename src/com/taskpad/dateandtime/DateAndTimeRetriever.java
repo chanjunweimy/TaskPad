@@ -174,9 +174,11 @@ public class DateAndTimeRetriever {
 	 * @param formattedString
 	 */
 	private ArrayList<String> extractAllDateAndTime(String formattedString) {
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		String todayDate = datm.getTodayDate();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//String todayDate = datm.getTodayDate();
 
+		String todayDate = getTodayDate();
+		
 		String recordTime = null;
 		String recordDate = null;
 
@@ -442,10 +444,13 @@ public class DateAndTimeRetriever {
 	 * @param timeString
 	 */
 	private ArrayList<String> extractDateAndTime(String timeString) {
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		String todayDate = datm.getTodayDate();
-		String now = datm.getTodayDateAndTime();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//String todayDate = datm.getTodayDate();
+		//String now = datm.getTodayDateAndTime();
 
+		String todayDate = getTodayDate();
+		String now = getTodayDateAndTime();
+		
 		String[] flexiTokens = timeString.split(" ");
 
 		String startDateEarliest = null;
@@ -596,9 +601,11 @@ public class DateAndTimeRetriever {
 	 */
 	protected String checkDateAndTimeWithStart(String startEarliest,
 			String dateLatest) {
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		String now = datm.getTodayDateAndTime();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//String now = datm.getTodayDateAndTime();
 
+		String now = getTodayDateAndTime();
+		
 		if (dateLatest != null && startEarliest != null
 				&& compareDateAndTime(dateLatest, startEarliest) <= 0) {
 			dateLatest = null;
@@ -854,7 +861,7 @@ public class DateAndTimeRetriever {
 	 */
 	private void changeNTimeWords(String[] timeTokens, boolean[] isModified,
 			int n) {
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		NumberParser np = NumberParser.getInstance();
 		for (int i = n - 1; i < timeTokens.length; i++) {
 			String token = timeTokens[i];
@@ -891,7 +898,8 @@ public class DateAndTimeRetriever {
 					LOGGER.info("TIMEWORDS " + n + " " + token);
 
 					try {
-						timeInput = datm.parseTimeInput(timeInput);
+						timeInput = parseOnlyTimeInput(timeInput);
+						//timeInput = datm.parseTimeInput(timeInput);
 						// timeInput = datm.parseTime(timeInput);
 					} catch (TimeErrorException | InvalidTimeException e) {
 						assert (false);
@@ -935,7 +943,7 @@ public class DateAndTimeRetriever {
 	 */
 	private void changeNDateWords(String[] dateTokens, boolean[] isModified,
 			int numWordJoin) {
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		NumberParser np = NumberParser.getInstance();
 		for (int i = numWordJoin - 1; i < dateTokens.length; i++) {
 			String token = dateTokens[i];
@@ -968,7 +976,8 @@ public class DateAndTimeRetriever {
 				// System.err.println(dateInput);
 				if (isDate(dateInput)) {
 					try {
-						dateInput = datm.parseDate(dateInput);
+						//dateInput = datm.parseDate(dateInput);
+						dateInput = parseOnlyDate(dateInput);
 					} catch (InvalidDateException e) {
 						assert (false);
 					}
@@ -1123,7 +1132,7 @@ public class DateAndTimeRetriever {
 		StringBuffer dayBuilder = new StringBuffer(" ");
 
 		SpecialWordParser swp = SpecialWordParser.getInstance();
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
 
 		String tmrTdyStr = STRING_EMPTY;
 
@@ -1140,7 +1149,8 @@ public class DateAndTimeRetriever {
 					isStart = false;
 					String passString = dayBuilder.toString().trim();
 					try {
-						dayTokens[i - 1] = datm.parseDayToDate(passString);
+						//dayTokens[i - 1] = datm.parseDayToDate(passString);
+						dayTokens[i - 1] = parseOnlyDayToDate(passString);
 					} catch (InvalidDayException e) {
 						// unreachable
 						assert (false);
@@ -1165,7 +1175,8 @@ public class DateAndTimeRetriever {
 					isStart = false;
 					String passString = dayBuilder.toString().trim();
 					try {
-						dayTokens[i - 1] = datm.parseDayToDate(passString);
+						//dayTokens[i - 1] = datm.parseDayToDate(passString);
+						dayTokens[i - 1] = parseOnlyDayToDate(passString);
 					} catch (InvalidDayException e) {
 						// unreachable
 						assert (false);
@@ -1178,7 +1189,8 @@ public class DateAndTimeRetriever {
 		if (isStart) {
 			String passString = dayBuilder.toString().trim();
 			try {
-				tmrTdyStr = datm.parseDayToDate(passString);
+				//tmrTdyStr = datm.parseDayToDate(passString);
+				tmrTdyStr = parseOnlyDayToDate(passString);
 			} catch (InvalidDayException e) {
 				// unreachable
 				assert (false);
@@ -1209,7 +1221,7 @@ public class DateAndTimeRetriever {
 		String[] dayTokens = holidayString.split(" ");
 		StringBuffer dayBuilder = new StringBuffer();
 		SpecialWordParser swp = SpecialWordParser.getInstance();
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		DayParser dp = DayParser.getInstance();
 		boolean[] isModified = new boolean[dayTokens.length];
 		boolean isTdyOnce = false;
@@ -1267,8 +1279,9 @@ public class DateAndTimeRetriever {
 
 				try {
 					// System.err.println(changedTokens.toString());
-					dayTokens[i] = datm.parseDayToDate(changedTokens.toString()
-							.trim());
+					//dayTokens[i] = datm.parseDayToDate(changedTokens.toString()
+					//		.trim());
+					dayTokens[i] = parseOnlyDayToDate(changedTokens.toString());
 				} catch (InvalidDayException e) {
 					assert (false);
 				}
@@ -1624,9 +1637,12 @@ public class DateAndTimeRetriever {
 	private String parseTodayAndNow(String dayString) {
 		String[] todayAndNowTokens = dayString.split(" ");
 		StringBuffer todayAndNowBuilder = new StringBuffer();
-		DateAndTimeManager datm = DateAndTimeManager.getInstance();
-		String todayDate = datm.getTodayDate();
-		String now = datm.getTodayDateAndTime();
+		//DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		//String todayDate = datm.getTodayDate();
+		//String now = datm.getTodayDateAndTime();
+		
+		String todayDate = getTodayDate();
+		String now = getTodayDateAndTime();
 
 		for (int i = 0; i < todayAndNowTokens.length; i++) {
 			String token = todayAndNowTokens[i];

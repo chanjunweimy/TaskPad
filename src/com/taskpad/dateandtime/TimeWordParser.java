@@ -496,9 +496,11 @@ public class TimeWordParser{
 	
 	private Date getCurrentTime(){
 		Date date;
-		DateAndTimeManager dtm = DateAndTimeManager.getInstance();
-		String todayTime = dtm.getTodayDateAndTime();
+		//DateAndTimeManager dtm = DateAndTimeManager.getInstance();
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		//String todayTime = dtm.getTodayDateAndTime();
 //		String todayTime = dtm.getTodayTime();	
+		String todayTime = datr.getTodayDateAndTime();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
