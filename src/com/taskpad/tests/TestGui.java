@@ -146,7 +146,7 @@ public class TestGui {
 		bot.delay(1000);
 		_expected = "Task ID:		6"
 				+ "\n\nDescription:	cs2106 lab \n\n" 
-				+ "Deadline:		13/04/2014 23:59\n\n"
+				+ "Deadline:		23:59 13/04/2014\n\n"
 				+ "Status:		Done.";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
@@ -158,7 +158,7 @@ public class TestGui {
 		bot.delay(1000);
 		_expected = "Task Successfully Added!\n\n\nTask ID:		6"
 				+ "\n\nDescription:	cs2106 lab \n\n" 
-				+ "Deadline:		13/04/2014 23:59\n\n"
+				+ "Deadline:		23:59 13/04/2014\n\n"
 				+ "Status:		Not done.";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
@@ -298,8 +298,8 @@ public class TestGui {
 		_expected = "TASK 5 EDITED: \n\n"
 				+ "Task ID:		5\n\n"
 				+ "Description:	do cheat sheet \n\n"
-				+ "Deadline:		13/04/2014 23:59\n\n"
-				+"Status:		Not done.";
+				+ "Deadline:		23:59 13/04/2014\n\n"
+				+ "Status:		Not done.";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
 		bot.delay(2000);
@@ -335,7 +335,7 @@ public class TestGui {
 		bot.delay(1000);
 		_expected = "Task Successfully Added!\n\n\nTask ID:		5"
 				+ "\n\nDescription:	do cheat sheet \n\n" 
-				+ "Deadline:		24/04/2014 23:59\n\n"
+				+ "Deadline:		23:59 24/04/2014\n\n"
 				+ "Status:		Not done.";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();

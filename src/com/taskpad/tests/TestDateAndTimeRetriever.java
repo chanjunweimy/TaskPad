@@ -5,6 +5,7 @@ package com.taskpad.tests;
 import static org.junit.Assert.*;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -31,6 +32,82 @@ public class TestDateAndTimeRetriever {
 		}
 	}
 	/*above is testDebugDateFlag*/	
+	
+	/*below is testSearchTimeAndDate*/
+	@Test
+	public void testValidSearchTimeAndDate1() {
+		ArrayList<String> expected = new ArrayList<String>();	
+		testSearchTimeAndDate(expected, "", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidSearchTimeAndDate2() {
+		ArrayList<String> expected = new ArrayList<String>();	
+		expected.add("13:00 13/04/2014");
+		testSearchTimeAndDate(expected, "tmr 1pm", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidSearchTimeAndDate3() {
+		ArrayList<String> expected = new ArrayList<String>();	
+		expected.add("13/04/2014");
+		expected.add("13/04/2014");
+		testSearchTimeAndDate(expected, "tmr, tmr", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidSearchTimeAndDate4() {
+		ArrayList<String> expected = new ArrayList<String>();	
+		expected.add("13:00 12/04/2014");
+		expected.add("14:00 12/04/2014");
+		testSearchTimeAndDate(expected, "1pm 2pm", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidSearchTimeAndDate5() {
+		ArrayList<String> expected = new ArrayList<String>();	
+		expected.add("13:00 13/04/2014");
+		expected.add("14:00 13/04/2014");
+		testSearchTimeAndDate(expected, "tmr 1pm tmr 2pm", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidSearchTimeAndDate6() {
+		ArrayList<String> expected = new ArrayList<String>();	
+		expected.add("13:00 13/04/2014");
+		expected.add("14:00 13/04/2014");
+		testSearchTimeAndDate(expected, "1pm tmr 2pm tmr", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testInvalidSearchTimeAndDate1() {
+		testFailSearchTimeAndDate("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want \" to have 1.");
+	}
+	
+	private void testSearchTimeAndDate(ArrayList<String> expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			ArrayList<String> actual = _datm.searchTimeAndDate(input);
+			assertEquals (expected.size(), actual.size());
+			
+			for (int i = 0; i < expected.size(); i++){
+				assertEquals(expected.get(i), actual.get(i));
+			}
+		} catch (InvalidQuotesException e) {
+			fail();
+		}		
+	}
+	
+	private void testFailSearchTimeAndDate(String expected, String input){
+		try {
+			_datm.searchTimeAndDate(input);
+		} catch (InvalidQuotesException e) {
+			assertEquals(expected, e.getMessage());
+		}
+		
+	}
+	/*above is testSearchTimeAndDate*/
 	
 	/*below is testConvertDateAndTimeString*/
 	@Test
