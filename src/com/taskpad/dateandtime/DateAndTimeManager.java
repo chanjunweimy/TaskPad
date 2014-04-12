@@ -133,6 +133,7 @@ public class DateAndTimeManager{
 	 * @throws InvalidQuotesException 
 	 */
 	public String parseNumberString(String input) throws InvalidQuotesException{
+		assert (input != null);
 		input = _datr.getAlphaNumericSpaceDesc(input);
 		input = _datr.removeParseFreeZone(input);
 		input = _datr.parseNumber(input);

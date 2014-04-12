@@ -485,7 +485,7 @@ public abstract class Command {
 				LOGGER.info("isDeadline is " + isDeadline);
 				LOGGER.info("existDateAndTime is " + existDateAndTime);
 				
-				if (existDateAndTime == null){
+				if (existDateAndTime == null || existDateAndTime.trim().isEmpty()){
 					return startEarliest;
 				}
 				

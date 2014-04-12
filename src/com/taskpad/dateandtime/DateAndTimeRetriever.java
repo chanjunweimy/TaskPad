@@ -96,6 +96,10 @@ public class DateAndTimeRetriever {
 
 	protected ArrayList<String> searchTimeAndDate(String desc)
 			throws InvalidQuotesException {
+		if (desc == null){
+			return null;
+		}
+		
 		String formattedString = convertStandardDateAndTime(desc);
 
 		// System.err.println(formattedString);
@@ -233,6 +237,10 @@ public class DateAndTimeRetriever {
 	protected String formatDateAndTimeInString(String desc)
 			throws InvalidQuotesException {
 
+		if (desc == null){
+			return null;
+		}
+		
 		String formattedString = convertStandardDateAndTime(desc);
 
 		// System.err.println(formattedString);
@@ -420,6 +428,7 @@ public class DateAndTimeRetriever {
 		for (int i = flexiTokens.length - 1; i >= 0; i--) {
 			String token = flexiTokens[i];
 
+			/*
 			if (isParseFree(token)) {
 				if (recordDate != null || recordTime != null) {
 					startDates.add(recordDate);
@@ -428,8 +437,9 @@ public class DateAndTimeRetriever {
 					recordDate = null;
 					recordTime = null;
 				}
-			} else if (isDate(token)) {
-				token = parseDate(token);
+			} else */
+			if (isDate(token)) {
+				//token = parseDate(token);
 
 				if (recordDate == null) {
 					recordDate = token;
@@ -444,7 +454,7 @@ public class DateAndTimeRetriever {
 				flexiTokens[i] = null;
 
 			} else if (isTime(token)) {
-				token = parseTime(token);
+				//token = parseTime(token);
 
 				if (recordTime == null) {
 					recordTime = token;
@@ -459,9 +469,9 @@ public class DateAndTimeRetriever {
 				flexiTokens[i] = null;
 
 			} else if (isType(token)) {
-				boolean useWrong = (recordDate == null && recordTime == null);
+				boolean isUsedWrong = (recordDate == null && recordTime == null);
 
-				if (!useWrong) {
+				if (!isUsedWrong) {
 					token = token.toUpperCase();
 					String type = _retrieverMap.get(token);
 					if (DEADLINE.equals(type)) {
