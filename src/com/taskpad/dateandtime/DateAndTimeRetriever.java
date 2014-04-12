@@ -22,11 +22,8 @@ import com.taskpad.ui.GuiManager;
  */
 
 public class DateAndTimeRetriever {
-	private static final String STRING_QUOTES = "\"";
-
-	private static final String STRING_SPACE = " ";
-
-	private final static Logger LOGGER = Logger.getLogger("TaskPad");
+	
+	private static final Logger LOGGER = Logger.getLogger("TaskPad");
 
 	private static final int POSITION_DESCRIPTION = 3;
 	private static final int POSITION_ENDTIME = 2;
@@ -34,12 +31,14 @@ public class DateAndTimeRetriever {
 	private static final int POSITION_DEADLINE = 0;
 
 	private static final String STRING_NULL = "null";
-
 	private static final String STRING_EMPTY = "";
+	private static final String STRING_QUOTES = "\"";
+	private static final String STRING_SPACE = " ";
 
 	private static final String DEADLINE = "DEADLINE";
 	private static final String TIME_START = "STARTTIME";
 	private static final String TIME_END = "ENDTIME";
+	
 	private static final String[] KEYWORD_DEADLINES = { "BY", "BEFORE", "BEF", "DUE" };
 	private static final String[] KEYWORD_STARTTIME = { "AT", "AFTER", "ON",
 			"IN", "FROM", "FRO" };
