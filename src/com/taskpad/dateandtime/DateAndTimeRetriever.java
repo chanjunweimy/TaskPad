@@ -36,7 +36,7 @@ public class DateAndTimeRetriever {
 	private static final String DEADLINE = "DEADLINE";
 	private static final String TIME_START = "STARTTIME";
 	private static final String TIME_END = "ENDTIME";
-	private static final String[] KEYWORD_DEADLINES = { "BY", "BEFORE", "BEF" };
+	private static final String[] KEYWORD_DEADLINES = { "BY", "BEFORE", "BEF", "DUE" };
 	private static final String[] KEYWORD_STARTTIME = { "AT", "AFTER", "ON",
 			"IN", "FROM", "FRO" };
 	private static final String[] KEYWORD_ENDTIME = { "UNTIL", "TILL", "TO",
