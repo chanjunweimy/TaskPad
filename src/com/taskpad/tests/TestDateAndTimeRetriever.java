@@ -15,7 +15,7 @@ import com.taskpad.dateandtime.InvalidQuotesException;
 public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
-
+	
 	/*below is testDebugDateFlag*/
 	@Test
 	public void testValidDebugDate1() {
@@ -32,6 +32,192 @@ public class TestDateAndTimeRetriever {
 		}
 	}
 	/*above is testDebugDateFlag*/	
+	
+	/*below is testFormatDateAndTimeInString*/
+	@Test
+	public void testValidFormatDateAndTimeInString1() {
+		testFormatDateAndTimeInString(" null null null null null null", "", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString2() {
+		testFormatDateAndTimeInString(" null null null null null null", " ", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString3() {
+		testFormatDateAndTimeInString(null, null, "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString4() {
+		testFormatDateAndTimeInString("I want to have lunch . null null 12/04/2014 00:00 null null", 
+				"I want to have lunch now.", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString5() {
+		testFormatDateAndTimeInString("I want to have lunch but not . null null 12/04/2014 00:00 null null", 
+				"I want to have lunch now but not at today 1pm.", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString6() {
+		testFormatDateAndTimeInString("I want to have lunch but not . null null 12/04/2014 00:00 null null", 
+				"I want to have lunch now but not at  1pm today.", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString7() {
+		testFormatDateAndTimeInString("I want to have lunch . 12/04/2014 13:00 12/04/2014 00:00 null null", 
+				"I want to have lunch now by 1pm today.", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString8() {
+		testFormatDateAndTimeInString("I want to have lunch . null null 12/04/2014 00:00 12/04/2014 13:00", 
+				"I want to have lunch now until 1pm today.", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString9() {
+		testFormatDateAndTimeInString("I want to have lunch but not null null 11/04/2014 13:00 null null", 
+				"I want to have lunch now but not yesterday 1pm", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString10() {
+		testFormatDateAndTimeInString("I want to have lunch but not null null 11/04/2014 13:00 null null", 
+				"I want to have lunch now but not yesterday 1pm", "12/04/2014 00:00");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString11() {
+		testFormatDateAndTimeInString(", null null 12/04/2014 00:00 null null", 
+				"today,now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString12() {
+		testFormatDateAndTimeInString(", null null 12/04/2014 00:00 null null", 
+				"12am,now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString13() {
+		testFormatDateAndTimeInString(", null null 13/04/2014 01:00 null null", 
+				"tmr,1am", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString14() {
+		testFormatDateAndTimeInString(", null null 13/04/2014 00:00 null null", 
+				"tmr,", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString15() {
+		testFormatDateAndTimeInString(", null null 13/04/2014 00:00 null null", 
+				"tmr,tmr tmr", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString16() {
+		testFormatDateAndTimeInString(", null null 12/04/2014 13:00 null null", 
+				"1pm,3pm", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString17() {
+		testFormatDateAndTimeInString(", , null null 11/04/2014 00:00 null null", 
+				"yest,tmr tmr, now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString18() {
+		testFormatDateAndTimeInString(", , null null 12/04/2014 00:01 null null", 
+				"1pm,3pm, now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString19() {
+		testFormatDateAndTimeInString(", 12/04/2014 23:59 null null null null", 
+				"by today, by now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString20() {
+		testFormatDateAndTimeInString(", 13/04/2014 00:01 null null null null", 
+				"by tmr 12am,by tmr 00:01", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString21() {
+		testFormatDateAndTimeInString(", 13/04/2014 01:00 null null null null", 
+				"by tmr, by 1am", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString22() {
+		testFormatDateAndTimeInString(", 13/04/2014 23:59 null null null null", 
+				"by tmr,", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString23() {
+		testFormatDateAndTimeInString(", 14/04/2014 23:59 null null null null", 
+				"by tmr,by tmr tmr", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString24() {
+		testFormatDateAndTimeInString(", 12/04/2014 15:00 null null null null", 
+				"by 1pm,by 3pm", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString25() {
+		testFormatDateAndTimeInString(", , 14/04/2014 23:59 null null null null", 
+				"by yest,by tmr tmr,by now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString26() {
+		testFormatDateAndTimeInString(", , 12/04/2014 15:00 null null null null", 
+				"by 1pm,by 3pm,by now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testValidFormatDateAndTimeInString27() {
+		testFormatDateAndTimeInString(", null null null null null null", 
+				"by 12am,by now", "12/04/2014 00:01");
+	}
+	
+	@Test
+	public void testInvalidFormatDateAndTimeInString1() {
+		testFailFormatDateAndTimeInString("Error: Cannot have odd numbers of quotes", 
+				"One ppl named \"two\" want \" to have 1.", "12/04/2014 00:00");
+	}
+	
+	private void testFormatDateAndTimeInString(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			String actual = _datm.formatDateAndTimeInString(input);
+			assertEquals(expected, actual);
+		} catch (InvalidQuotesException e) {
+			fail();
+		}		
+	}
+	
+	private void testFailFormatDateAndTimeInString(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			_datm.formatDateAndTimeInString(input);
+		} catch (InvalidQuotesException e) {
+			assertEquals(expected, e.getMessage());
+		}		
+	}
+	/*above is testFormatDateAndTimeInString*/
 	
 	/*below is testSearchTimeAndDate*/
 	@Test
@@ -80,6 +266,11 @@ public class TestDateAndTimeRetriever {
 	}
 	
 	@Test
+	public void testValidSearchTimeAndDate7() {
+		testSearchTimeAndDate(null, null, "12/04/2014 00:00");
+	}
+	
+	@Test
 	public void testInvalidSearchTimeAndDate1() {
 		testFailSearchTimeAndDate("Error: Cannot have odd numbers of quotes", 
 				"One ppl named \"two\" want \" to have 1.");
@@ -89,10 +280,15 @@ public class TestDateAndTimeRetriever {
 		setupDebugEnvironment(dateString);
 		try {
 			ArrayList<String> actual = _datm.searchTimeAndDate(input);
-			assertEquals (expected.size(), actual.size());
 			
-			for (int i = 0; i < expected.size(); i++){
-				assertEquals(expected.get(i), actual.get(i));
+			if (actual == null){
+				assertEquals(expected, actual);
+			} else {
+				assertEquals (expected.size(), actual.size());
+				
+				for (int i = 0; i < expected.size(); i++){
+					assertEquals(expected.get(i), actual.get(i));
+				}
 			}
 		} catch (InvalidQuotesException e) {
 			fail();
