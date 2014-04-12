@@ -295,6 +295,11 @@ public class Add extends Command {
 			String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
 			_deadline = times.get(POSITION_TIME_DEADLINE / 2);
 			
+			if (_deadline != null){
+				String[] deadTokens = _deadline.split(STRING_SPACE);
+				_deadline = deadTokens[1] + STRING_SPACE + deadTokens[0];
+			}
+			
 			if (endLatest == null){
 				_endDate = null;
 				_endTime = null;
@@ -339,9 +344,9 @@ public class Add extends Command {
 		}
 		
 		if (_deadline != null){
-			String[] tempDeadSplit = _deadline.split(STRING_SPACE);
+			//String[] tempDeadSplit = _deadline.split(STRING_SPACE);
 			
-			_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
+			//_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
 			inputDeadlineDate(_deadline);
 		}
 	}
@@ -428,38 +433,7 @@ public class Add extends Command {
 		
 		return false;
 	}
-	
-	/* Helper methods for parsing delimited strings */
-	@SuppressWarnings("unused")
-	private void checkAndRemoveDate() {
-		String[] splitInput = input.split(STRING_SPACE);
-		String newInput = STRING_EMPTY;
-		
-		for (int i=0; i<splitInput.length; i++){
-			if (splitInput[i].toLowerCase().equals("-d")){
-				getDeadline(splitInput[i+1]);
-				splitInput[i+1] = STRING_EMPTY;
-			} else {
-				newInput += splitInput[i] + STRING_SPACE;
-			}
-		}
-		input = newInput;
-	}
-	
 
-	private void getDeadline(String param) {
-		param = stripWhiteSpaces(param);
-		try {
-			param = DateAndTimeManager.getInstance().parseDate(param);
-		} catch (InvalidDateException e) {
-			InputManager.outputToGui(e.getMessage());
-			_invalidParameters = true;
-		}
-		inputDeadlineDate(param);
-	}
-	
-
-	
 
 	private void inputDeadlineDate(String deadline) {
 		putOneParameter(PARAMETER_DEADLINE_DATE, deadline);		
@@ -554,6 +528,41 @@ public class Add extends Command {
 	/**
 	 *  =========================DEPRECATED===============================================================================
 	 */
+	
+	/**
+	 * @deprecated
+	 * @param param
+	 */
+	private void getDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		try {
+			param = DateAndTimeManager.getInstance().parseDate(param);
+		} catch (InvalidDateException e) {
+			InputManager.outputToGui(e.getMessage());
+			_invalidParameters = true;
+		}
+		inputDeadlineDate(param);
+	}
+	
+	/* Helper methods for parsing delimited strings */
+	/**
+	 * @deprecated
+	 */
+	@SuppressWarnings("unused")
+	private void checkAndRemoveDate() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-d")){
+				getDeadline(splitInput[i+1]);
+				splitInput[i+1] = STRING_EMPTY;
+			} else {
+				newInput += splitInput[i] + STRING_SPACE;
+			}
+		}
+		input = newInput;
+	}
 	
 	/**
 	 * @deprecated

@@ -237,6 +237,11 @@ public class Edit extends Command{
 		String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
 		_deadline = times.get(POSITION_TIME_DEADLINE / 2);
 		
+		if (_deadline != null){
+			String[] deadTokens = _deadline.split(STRING_SPACE);
+			_deadline = deadTokens[1] + STRING_SPACE + deadTokens[0];
+		}
+		
 		if (endLatest == null){
 			_endDate = null;
 			_endTime = null;
