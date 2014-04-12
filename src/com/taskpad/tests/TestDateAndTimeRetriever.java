@@ -15,6 +15,23 @@ public class TestDateAndTimeRetriever {
 
 	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
 
+	/*below is testDebugDateFlag*/
+	@Test
+	public void testValidDebugDate1() {
+		setupDebugEnvironment("11/04/2013 11:00");
+		testDebugDateFlag("11/04/2013 12:00 later","1 hour later");
+		testDebugDateFlag("11/04/2013 13:00 later","2 hour later");
+		testDebugDateFlag("11/04/2013 12:00","nxt hour");
+	}
+	private void testDebugDateFlag(String expected, String input){
+		try {
+			assertEquals(expected, _datm.convertDateAndTimeString(input));
+		} catch (InvalidQuotesException e) {
+			fail();
+		}
+	}
+	/*above is testDebugDateFlag*/	
+	
 	/*below is testConvertDateAndTimeString*/
 	@Test
 	public void testValidConvertDateAndTimeString1() {
