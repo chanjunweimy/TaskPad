@@ -248,7 +248,6 @@ public class DateAndTimeManager{
 		//_dateAndTimeObject.setDebugDate(dateString);
 	}
 	
-	
 	/**
 	 * =================================BELOW ARE ALL DEPRECATED=================================================
 	 */

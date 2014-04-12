@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import com.taskpad.ui.GuiManager;
+
 /**
  * This class is for us to find the existence of Date and Time in an input
  * String
@@ -118,7 +120,7 @@ public class DateAndTimeRetriever {
 
 		ArrayList<String> TimeAndDateRes = new ArrayList<String>();
 
-		String[] formattedTokens = formattedString.split(DateAndTimeRetriever.STRING_SPACE);
+		String[] formattedTokens = formattedString.split(STRING_SPACE);
 		for (int i = 0; i < formattedTokens.length; i++) {
 			String token = formattedTokens[i];
 			if (isDate(token)) {
@@ -154,9 +156,9 @@ public class DateAndTimeRetriever {
 
 		String res = null;
 		if (recordTime != null && recordDate != null) {
-			res = recordTime + DateAndTimeRetriever.STRING_SPACE + recordDate;
+			res = recordTime + STRING_SPACE + recordDate;
 		} else if (recordTime != null && recordDate == null) {
-			res = recordTime + DateAndTimeRetriever.STRING_SPACE + todayDate;
+			res = recordTime + STRING_SPACE + todayDate;
 		} else if (recordTime == null && recordDate != null) {
 			res = recordDate;
 		}
@@ -361,6 +363,10 @@ public class DateAndTimeRetriever {
 		return token.startsWith(DateAndTimeRetriever.STRING_QUOTES);
 	}
 
+	private void outputToGui(String outputString){
+		GuiManager.callOutput(outputString);
+	}
+	
 	/**
 	 * @param allDateAndTime
 	 */
@@ -523,12 +529,22 @@ public class DateAndTimeRetriever {
 			deadlineLatest = deadlineLatest.replaceAll(STRING_QUOTES, STRING_EMPTY);
 		}
 		
-		endLatest = checkDateAndTimeWithStart(startEarliest, endLatest);
-
+		String tempEnd = checkDateAndTimeWithStart(startEarliest, endLatest);
+		if (tempEnd == null && endLatest != null){
+			outputToGui("end time and date: " + endLatest + " is earlier than "
+					+ "startTime: " + startEarliest + " or now: " + now);
+		}
+		endLatest = tempEnd;
+		
 		LOGGER.info("deadlineLatest: " + deadlineLatest);
 		LOGGER.info("startEarliest: " + startEarliest);
-		deadlineLatest = checkDateAndTimeWithStart(startEarliest,
+		String tempDead = checkDateAndTimeWithStart(startEarliest,
 				deadlineLatest);
+		if (tempDead == null && deadlineLatest != null){
+			outputToGui("deadline: " + deadlineLatest + " is earlier than "
+					+ "startTime: " + startEarliest + " or now: " + now);
+		}
+		deadlineLatest = tempDead;
 
 		descBuilder = buildString(flexiTokens, descBuilder);
 		desc = descBuilder.toString().trim();
