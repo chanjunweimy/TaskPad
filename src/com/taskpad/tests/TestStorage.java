@@ -23,7 +23,6 @@ public class TestStorage {
 	 * for the sake of undo and redo
 	 * 
 	 * @throws NoPreviousCommandException
-	 * 
 	 */
 	@Test(expected = NoPreviousCommandException.class)
 	public void testCommandRecord() throws NoPreviousCommandException {
@@ -49,7 +48,6 @@ public class TestStorage {
 	/**
 	 * This is to test whether the data file stack
 	 * is successfully stored for the sake of undo and redo
-	 * 
 	 */
 	@Test
 	public void TestDataFileStack() {
