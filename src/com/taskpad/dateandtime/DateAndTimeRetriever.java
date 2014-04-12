@@ -374,10 +374,10 @@ public class DateAndTimeRetriever {
 		for (int i = 0; i < allDateAndTime.size(); i++) {
 			if (allDateAndTime.get(i) == null
 					|| allDateAndTime.get(i).trim().isEmpty()) {
-				allDateAndTime.set(i, STRING_NULL + DateAndTimeRetriever.STRING_SPACE + STRING_NULL);
-			} else if (allDateAndTime.get(i).split(DateAndTimeRetriever.STRING_SPACE).length == 1) {
+				allDateAndTime.set(i, STRING_NULL + STRING_SPACE + STRING_NULL);
+			} else if (allDateAndTime.get(i).split(STRING_SPACE).length == 1) {
 				String element = allDateAndTime.get(i);
-				allDateAndTime.set(i, element + DateAndTimeRetriever.STRING_SPACE + STRING_NULL);
+				allDateAndTime.set(i, element + STRING_SPACE + STRING_NULL);
 			}
 		}
 		return allDateAndTime;

@@ -18,6 +18,8 @@ public class DateAndTimeManager{
 
 	//private static DateAndTime _dateAndTimeObject = new DateAndTime();
 
+	private static final String STRING_EMPTY = "";
+	private static final String STRING_QUOTE = "\"";
 	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
 	private static DateAndTimeRetriever _datr = DateAndTimeRetriever.getInstance();
 	
@@ -136,7 +138,7 @@ public class DateAndTimeManager{
 		input = _datr.parseNumber(input);
 		input = _datr.parseDate(input);
 		input = _datr.parseTime(input);
-		return input.replaceAll("\"", "").trim();
+		return input.replaceAll(STRING_QUOTE, STRING_EMPTY).trim();
 	}	
 	
 	/**
