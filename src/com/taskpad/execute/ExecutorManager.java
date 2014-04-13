@@ -2,7 +2,7 @@
 
 package com.taskpad.execute;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -30,7 +30,7 @@ public class ExecutorManager {
 	private static final String MESSAGE_SHOWING_REMINDER = "Showing your tasks and reminders...\n";
 
 	private static Logger logger = Logger.getLogger("TaskPad");
-
+	
 	public static void receiveFromInput(Input input, String command) {
 		logger.info("Executor: " + command);
 
@@ -44,7 +44,6 @@ public class ExecutorManager {
 					parameters.get("START DATE"), parameters.get("START TIME"),
 					parameters.get("END DATE"), parameters.get("END TIME"),
 					parameters.get("VENUE"));
-
 			CommandRecord.pushForUndo(command);
 			break;
 		case "DELETE":
@@ -186,6 +185,40 @@ public class ExecutorManager {
 		int index = taskId - 1;
 		Task task = listOfTasks.get(index);
 		return task.getDeadline();
+	}
+	
+	//@author A0119646X
+	/**
+	 * For integration/ system tests
+	 * Creates an artificial database 
+	 * @param ArrayList<Input>
+	 */
+	public void setDebug(){
+		CommandFactory.clear();
+		createDatabase();
+	}
+	
+	/**
+	 * Takes in an arrayList of Input objects and arrayList of full Input 
+	 * Add them to database
+	 */
+	private static void createDatabase(){
+		ArrayList<Input> inputObjects = new ArrayList<Input>();
+		ArrayList<String> fullInputList = new ArrayList<String>();
+		
+		/**
+		 * I just need to figure how to create input objects...
+		 */
+		
+		addObjectsToDatabase(inputObjects, fullInputList);
+	}
+
+
+	private static void addObjectsToDatabase(ArrayList<Input> inputObjects, 
+			ArrayList<String> fullInputList) {
+		for (int i=0; i<inputObjects.size(); i++){
+			receiveFromInput(inputObjects.get(i), fullInputList.get(i));
+		}
 	}
 	
 }
