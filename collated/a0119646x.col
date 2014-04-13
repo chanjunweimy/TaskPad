@@ -1,0 +1,6674 @@
+//@author: a0119646x
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateAndTimeManager.java
+	 */
+
+
+/* Public API to call dates */
+
+package com.taskpad.dateandtime;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+
+import com.taskpad.ui.GuiManager;
+
+/**
+ * 
+ * DateAndTimeManager is a facade class of dateandtime package.
+ * 
+ * 
+ * 
+ */
+public class DateAndTimeManager implements TimeSkeleton, DateSkeleton {
+
+	private static DateAndTime _dateAndTimeObject = new DateAndTime();
+
+	private static DateAndTimeManager _managerInstance = new DateAndTimeManager();
+	
+
+	private DateAndTimeManager() {
+	}
+
+	/**
+	 * getInstance: get the instance of DateAndTimeManager to use dateandtime
+	 * api..
+	 * 
+	 * @return DateAndTimeManager
+	 */
+	public static DateAndTimeManager getInstance() {
+		return _managerInstance;
+	}
+
+	/**
+	 * getTodayTime: return the current time.
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String getTodayTime() {
+		//_dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentTime();
+	}
+
+	/**
+	 * getTodayDate: return today's date
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String getTodayDate() {
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentDate();
+	}
+
+	/**
+	 * getTodayDay: return today's day
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String getTodayDay() {
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentDay();
+	}
+
+	/**
+	 * getTodayDateAndTime: to get today's date and the current time
+	 * 
+	 * @return String
+	 */
+	public String getTodayDateAndTime() {
+		//DateAndTime _dateAndTimeObject = new DateAndTime();
+		return _dateAndTimeObject.getCurrentTimeAndDate();
+	}
+
+	/**
+	 * parse a day (such as Monday to int)
+	 * @param dayString
+	 * @return int
+	 * @throws InvalidDayException
+	 */
+	public int parseDayToInt(String dayString) throws InvalidDayException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToInt(dayString);
+	}
+	
+	/**
+	 * To parse day to date
+	 * @throws DatePassedException 
+	 * @throws InvalidDayException 
+	 */
+	public String parseDayToDate(String input) throws InvalidDayException, DatePassedException{
+		DayParser dayParser = DayParser.getInstance();
+		return dayParser.parseDayToDate(input);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param dayString
+	 * @return
+	 */
+	protected boolean isDay(String dayString){
+		DayParser dayParser = DayParser.getInstance();
+		try {
+			dayParser.parseDayToInt(dayString);
+		} catch (InvalidDayException e) {
+			//GuiManager.callOutput(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * parseDate: parse different formats of Date
+	 * 
+	 * @return timeString, in dd/mm/yyyy 
+	 * @throws InvalidDateException 
+	 */
+	public String parseDate(String dateString) throws InvalidDateException{
+		DateParser dateParser = DateParser.getInstance();
+		return dateParser.parseDate(dateString);
+	}
+
+	/**
+	 * Check if there is a valid date in the string
+	 * @param String
+	 * @returns DateObject
+	 */
+	
+	public DateObject findDate(String input){
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.findDate(input);
+	}
+	
+	/**
+	 * Check if there is a valid time in the string
+	 * @param String
+	 * @returns TimeObject
+	 */
+	public TimeObject findTime(String input){
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.findTime(input);
+	}
+	
+	/**
+	 * parseTime: parse different format of time
+	 * @param timeString
+	 * @return String
+	 * @throws NullTimeUnitException
+	 * @throws NullTimeValueException
+	 * @throws TimeErrorException
+	 * @throws InvalidTimeException 
+	 */
+	public String parseTime(String timeString) throws NullTimeUnitException,
+			NullTimeValueException, TimeErrorException, InvalidTimeException {
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTime(timeString);
+	}
+
+	public String parseTimeInput(String timeString) throws TimeErrorException, InvalidTimeException {
+		TimeParser tp = TimeParser.getInstance();
+		return tp.parseTimeInput(timeString);
+	}
+
+	/**
+	 * convertToSecond: convert time from any unit to second
+	 * 
+	 * @param timeString
+	 *            : time value + time unit, ex: 1 min, one min, 1s
+	 * @return: String
+	 * @throws NullTimeUnitException
+	 *             : User did not key in time unit
+	 * @throws NullTimeValueException
+	 *             : User did not key in time value / not valid time value
+	 */
+	public String convertToSecond(String timeString)
+			throws NullTimeUnitException, NullTimeValueException {
+		TimeWordParser twp = TimeWordParser.getInstance();
+		return twp.parseTimeWord(timeString);
+	}
+
+	protected boolean isSecondInstance(String timeString) {
+		TimeWordParser twp = TimeWordParser.getInstance();
+
+		try {
+			twp.parseTimeWord(timeString);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			GuiManager.callOutput(e.getMessage());
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * parseNumber: parse a language number to a real number String, ex: one to
+	 * 1. It returns null when error occurs.
+	 * 
+	 * @param numberString
+	 *            : language number or normal number
+	 * @return String
+	 */
+	public String parseNumber(String numberString) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, true);
+	}
+	
+	/**
+	 * 
+	 * @param numberString
+	 * @param isStrict
+	 * @return
+	 */
+	public String parseNumber(String numberString, boolean isStrict) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, isStrict);
+	}
+	
+	
+	/**
+	 * Takes in a string and changes number words to numbers
+	 * i.e. "one day in forever" changes to "1 day in forever"
+	 * @param input
+	 * @return string changed to numerics
+	 */
+	public String parseNumberString(String input){
+		return DateAndTimeRetriever.getInstance().parseNumber(input);
+	}
+
+	protected boolean isNumber(String numberString) {
+		NumberParser parser = NumberParser.getInstance();
+		return parser.parseTheNumbers(numberString, true) != null;
+	}
+	
+	public String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{
+		return TimeWordParser.getInstance().parseTimeWordWithSpecialWord(input);
+	}
+	
+	/**
+	 * Takes in a string and formats date and time to TaskPad standards 
+	 * dd/mm/yyyy and hh:mm
+	 * @param input
+	 * @return string with date and time replaced by standard date and time 
+	 * or input string if no date and time exists
+	 * @throws InvalidQuotesException 
+	 */
+	public String formatDateAndTimeInString(String input) throws InvalidQuotesException{
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.formatDateAndTimeInString(input);
+	}
+	
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 * @throws InvalidQuotesException
+	 */
+	public ArrayList<String> searchTimeAndDate(String input) throws InvalidQuotesException{
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.searchTimeAndDate(input);
+	}
+	
+	
+	/**
+	 * 
+	 * @param firstDateString
+	 * @param secondDateString
+	 * @return
+	 */
+	public int compareDateAndTime(String firstDateString, String secondDateString){
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		return datr.compareDateAndTimeExecutor(firstDateString, secondDateString);
+	}
+	
+	/**
+	 * 
+	 * @param dateString
+	 * @return
+	 */
+	public int compareDateAndTime(String dateString){
+		return compareDateAndTime(dateString, getTodayDate() + " 23:59");
+	}
+	
+	/**
+	 * 
+	 * @param dateString
+	 * @throws ParseException
+	 */
+	public void setDebug(String dateString) throws ParseException{
+		_dateAndTimeObject.setDebugDate(dateString);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateAndTimeManager.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateObject.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+/**
+ * Date object to contain parsed date and the input date format
+ *
+ */
+
+
+
+public class DateObject {
+	
+	private String parsedDate;
+	private String inputDate;
+	
+	public DateObject(String parsedDate, String inputDate){
+		this.parsedDate = parsedDate;
+		this.inputDate = inputDate;
+	}
+
+	public String getParsedDate() {
+		return parsedDate;
+	}
+
+	public String getInputDate() {
+		return inputDate;
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateObject.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateParser.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+/** This class takes in a date and checks if it fits any of the SimpleDateFormat
+ * Returns null string if otherwise
+ * 
+ */
+
+public class DateParser {
+
+	//private static final String STRING_EMPTY = "";
+	//private static final String DATE_INVALID = "Not a valid date";
+	private static SimpleDateFormat _formatter = new SimpleDateFormat("dd/MM/yyyy");
+	private static DateParser _dateParser = new DateParser();
+	
+	private static final String[] _dateWithoutYear = {
+		"d MMMM", "MMMM d", "dMMMM", "MMMMd",
+		"d/MMMM", "d-MMMM",
+		"d MMM", "MMM d", "dMMM", "MMMd",
+		"d/MMM", "d-MMM",
+		"d/MM", "d-MM",  //"d.MM", //"d MM",
+		"d/M", "d-M",  //"d.M", //"d M",
+		
+		"dd MMMM", "MMMM dd", "ddMMMM", "MMMMdd",
+		"dd/MMMM", "dd-MMMM",
+		"MMM dd", "dd MMM", "ddMMM", "MMMdd",
+		"dd/MMM", "dd-MMM",
+		"dd/M", "dd-M", //"dd.M", //"dd M", 
+		"dd/MM", "dd-MM", //"dd.MM", //"dd MM", 
+	};
+	
+	private static final String[] _dateFormats = {
+		"d/MM/yy", "d-MM-yy", "d.MM.yy", //"d MM yy", 
+		"d/M/yy", "d-M-yy", "d.M.yy", //"d M yy",
+		"MMMM d yy", "MMMM d , yy", "MMMM d, yy", "MMMM d,yy",  
+		"d MMMM yy", "d MMMM , yy", "d MMMM, yy", "d MMMM,yy", 
+		"d-MMMM-yy", "dMMMMyy",
+		"MMM d yy", "MMM d , yy", "MMM d, yy", "MMM d,yy",  
+		"d MMM yy", "d MMM , yy", "d MMM, yy", "d MMM,yy", 
+		"d-MMM-yy", "d MM , yy", "d MM, yy", "d MM,yy", 
+		"d M , yy", "d M, yy", "d M,yy", "dMMMyy", 
+		
+		"dd/MM/yy", "dd-MM-yy", "dd.MM.yy", //"dd MM yy", 
+		"dd/M/yy", "dd-M-yy", "dd.M.yy", //"dd M yy",
+		"MMMM dd yy", "MMMM dd , yy", "MMMM dd, yy", "MMMM dd,yy",  
+		"dd MMMM yy", "dd MMMM , yy", "dd MMMM, yy", "dd MMMM,yy", 
+		"dd-MMMM-yy", "ddMMMMyy",
+		"MMM dd yy", "MMM dd , yy", "MMM dd, yy", "MMM dd,yy",  
+		"dd MMM yy", "dd MMM , yy", "dd MMM, yy", "dd MMM,yy", 
+		"dd-MMM-yy", "dd MM , yy", "dd MM, yy", "dd MM,yy", 
+		"dd M , yy", "dd M, yy", "dd M,yy", "ddMMMyy", 
+		
+		/*
+		 * deprecated - we will only support d-m-y  
+		"yy/dd/MM", "yy-dd-MM", 
+		"yy.dd.MM", "yy dd MM", "yy-dd-MMM",  "yy/dd/MMM",
+		"yy/d/M", "yy-d-M", "yy.d.M", "yy d M", 
+		, "MMddyy", "yyMMMdd", "ddMMyy", 	
+		*/
+		//"MMMddyy",
+		
+		"d/MM/yyyy", "d-MM-yyyy", "d.MM.yyyy", //"d MM yyyy", 
+		"d/M/yyyy", "d-M-yyyy", "d.M.yyyy", //"d M yyyy",
+		"MMM d yyyy", "MMM d , yyyy", "MMM d, yyyy", "MMM d,yyyy",  
+		"d MMM yyyy", "d MMM , yyyy", "d MMM, yyyy", "d MMM,yyyy", 
+		"d-MMM-yyyy", "d MM , yyyy", "d MM, yyyy", "d MM,yyyy", 
+		"d M , yyyy", "d M, yyyy", "d M,yyyy", "dMMMyyyy", 
+		
+		"dd/MM/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", //"dd MM yyyy", 
+		"dd/M/yyyy", "dd-M-yyyy", "dd.M.yyyy", //"dd M yyyy",
+		"MMM dd yyyy", "MMM dd , yyyy", "MMM dd, yyyy", "MMM dd,yyyy",  
+		"dd MMM yyyy", "dd MMM , yyyy", "dd MMM, yyyy", "dd MMM,yyyy", 
+		"dd-MMM-yyyy", "dd MM , yyyy", "dd MM, yyyy", "dd MM,yyyy", 
+		"dd M , yyyy", "dd M, yyyy", "dd M,yyyy", "ddMMMyyyy"
+		
+		/*
+		 * Deprecated for the reason above
+		//"yyyy/dd/MM", "yyyy-dd-MM", "yyyy.dd.MM", "yyyy dd MM", 
+		//"yyyy dd MMM", "yy dd MMM", "yyyy,dd MMM", "yyyy-dd-MMM", "yyyy/dd/MMM",
+		//"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
+		 //"MMddyyyy", "yyyyMMMdd"锛�"ddMMyyyy", 
+		//"MMMddyyyy",
+		"yyyy/d/M", "yyyy-d-M", "yyyy.d.M", "yyyy d M", 
+		 "MMddyyyy", "yyyyMMMdd"
+		 */
+	};
+	
+	/*
+	private static final String[] MONTHS = {
+		
+	};
+	
+	private static HashMap _monthMap = new HashMap();
+	*/
+	
+	private DateParser(){
+	}
+	
+	protected static DateParser getInstance(){
+		return _dateParser;
+	}
+	
+	protected String parseDate(String input) throws InvalidDateException{
+		if (input == null){
+			throw new InvalidDateException();
+		}
+		
+		input = input.trim();
+		
+		String dateString = getActualDate(input);
+		
+		if (dateString == null){
+			throw new InvalidDateException();
+		} 
+		
+		return dateString;
+	}
+
+	
+	/**
+	 * getActualDate: as formatDateWithoutYear() might parses
+	 * a String with "dd mm yy" also, so, we have to consider cases:
+	 * if we can parse it without year, but not with year, then is without year ; 
+	 * if we can parse it without year and also with year, then is with year;
+	 * if we can parse it with year only, then of course is with year;
+	 * then if both also can't parse, then is null.
+	 * @param input
+	 * 				: String
+	 * @return String
+	 * @throws InvalidDateException 
+	 */
+	private String getActualDate(String input){
+		String dateStringWithoutYear = null;
+		String dateString = null;
+		
+		input = input.toUpperCase();
+		
+		dateStringWithoutYear = formatDateWithoutYear(input);
+		dateString = formatDate(input);
+
+		if (dateString == null || dateString.trim().isEmpty()){
+			dateString = dateStringWithoutYear;
+		}
+		return dateString;
+	}
+	
+	private static String formatDateWithoutYear(String input){
+		assert (input != null);
+		
+		String dateString = null;
+		for (String dwy: _dateWithoutYear){
+			
+			SimpleDateFormat sdf = new SimpleDateFormat(dwy);
+			try {
+				//System.out.println(_dateFormats[i]);
+				
+				//to strictly follow the format
+				sdf.setLenient(false);
+				
+				Date date = sdf.parse(input);
+				
+				
+				boolean isWrongFormat = !input.equals(sdf.format(date).toUpperCase());
+				if (isWrongFormat){
+					continue;
+				}
+				
+				date = setYear(date);
+				
+				/*
+				if (isPassed(date) ){
+					throw new DatePassedException();
+				}
+				*/
+				
+				dateString = _formatter.format(date);
+				break;
+			} catch (ParseException e){
+				//do nothing
+			}
+		}
+		return dateString;
+	}
+
+	/**
+	 * should not be true because even if 
+	 * the date has passed it can be
+	 * startDate also
+	 * @deprecated
+	 * @param date
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private static boolean isPassed(Date date) {
+		/*
+		Date now = new Date();
+		return now.compareTo(date) > 0;
+		*/
+		
+		return false;
+	}
+	
+	private static Date setYear(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		calendar.setTime(date);
+		calendar.set(Calendar.YEAR, year);
+		date = calendar.getTime();
+		
+		return date;
+	}
+
+	private static String formatDate(String input){
+		assert (input != null);
+		
+		String dateString = null;
+		for (String df : _dateFormats){
+			
+			SimpleDateFormat sdf = new SimpleDateFormat(df);
+			try {
+				//System.out.println(_dateFormats[i]);
+				
+				//to strictly follow the format
+				sdf.setLenient(false);
+				
+				Date date = sdf.parse(input);
+				
+				
+				boolean isWrongFormat = !input.equals(sdf.format(date).toUpperCase());
+				if (isWrongFormat){
+					continue;
+				}
+				/*
+				if (isPassed(date) ){
+					throw new DatePassedException();
+				}
+				*/
+				
+				dateString = _formatter.format(date);
+				break;
+			} catch (ParseException e){
+				//do nothing
+			}
+		}
+		return dateString;
+	}
+	
+	///* Testing
+	public static void main (String[] args){
+		//System.out.println(formatDate("13-12-14"));
+		//System.out.println(formatDate("13 12 2014"));
+		//System.out.println(formatDate("1 Feb 14"));
+		//System.out.println(formatDate("2014 1 December"));
+		//System.out.println(formatDate("1December2014"));
+		//System.out.println(formatDate("011214"));
+		//System.out.println(formatDateWithoutYear("03 01"));  //Will use system year at 1970
+		//System.out.println(formatDate("Oct 18,93"));
+		try {
+			System.out.println(DateParser.getInstance().parseDate("18Oct"));
+		} catch (InvalidDateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	//*/
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DatePassedException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+public class DatePassedException extends Exception {
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 7516238062049393549L;
+
+	private static final String MESSAGE = "Date has passed. Please enter a date in the future";
+		
+	public DatePassedException(){
+		super(MESSAGE);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DatePassedException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\HolidayDates.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+/** For special holiday dates
+ * 
+ */
+
+public class HolidayDates {
+	
+	private static Map<String, String> _holidays = new HashMap<String, String>();
+	private static HolidayDates _holidayDate = new HolidayDates();
+	
+	//private static final String STRING_NULL = "";
+	
+	private HolidayDates(){
+		initialiseHolidayMap();
+	}
+	
+	protected static HolidayDates getInstance(){
+		return _holidayDate;
+	}
+	
+	/**
+	 * This method takes an input String, finds if there is holiday dates
+	 * @param input
+	 * @return String with holidayDates replaced, else returns input
+	 */
+	
+	protected String replaceHolidayDate(String input){	
+		String holidayDate = _holidays.get(input.toUpperCase());
+		if (holidayDate != null){
+			holidayDate = parseHolidayDate(holidayDate);
+		} else {
+			holidayDate = null;
+		}
+		return holidayDate;
+	}
+
+	/** This method parses the date in the correct year
+	 * 
+	 * @param holidayDate
+	 * @return String, dd/mm/yyyy
+	 */
+	private String parseHolidayDate(String holidayDate){
+		holidayDate = addYear(holidayDate);
+		
+		/*
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		Date date = null;
+		try {
+			date = sdf.parse(holidayDate);
+			
+		} catch (ParseException e) {
+			//do nothing
+		}
+		return sdf.format(date);
+		*.
+		*/
+		
+		return holidayDate;
+	}
+	
+	private String addYear(String date) {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date holidayDate = null;
+		try {
+			holidayDate = sdf.parse(date + "/" + year);
+			
+		} catch (ParseException e) {
+			//do nothing
+		}
+		
+		Date now = new Date();
+		if (now.compareTo(holidayDate) > 0){
+			year++;
+		}
+		
+		//System.out.println(now.toString() + "\n" + holidayDate.toString());
+		
+		return date + "/" + year;
+	}
+	
+	private static void initialiseHolidayMap(){
+		_holidays.put("CHRISTMAS", "25/12");
+		_holidays.put("APRIL FOOLS", "01/04");
+		_holidays.put("APRIL FOOL", "01/04");
+		_holidays.put("APRIL FOOLS DAY", "01/04");
+		_holidays.put("APRIL FOOL DAY", "01/04");
+		_holidays.put("INDEPDENCE DAY", "04/07");
+		_holidays.put("LABOUR DAY", "01/05");
+		_holidays.put("LABOR DAY", "01/05");
+		_holidays.put("NATIONAL DAY", "09/08");
+		_holidays.put("NEW YEAR", "01/01");
+		_holidays.put("NEW YEAR DAY", "01/01");
+	}
+	
+	///* Testing
+	public static void main(String[] args){
+		String input = "LABOUR DAY";
+		HolidayDates holidayDates = HolidayDates.getInstance();
+		System.out.println(holidayDates.replaceHolidayDate(input));
+		System.out.println(holidayDates.replaceHolidayDate("RANDOM"));
+
+	}
+	//*/
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\HolidayDates.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidDateException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+
+/**
+ * InvalidDateException thrown while it is not a valid date format
+ */
+
+public class InvalidDateException extends Exception{
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 8886449578429827179L;
+	
+	private static final String MESSAGE = "Error: Invalid Date Entered";
+	
+	public InvalidDateException(){
+		super(MESSAGE);
+	}
+	
+	public InvalidDateException(String Message){
+		super (MESSAGE + ": " + Message);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidDateException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidTimeException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+/**
+ * InvalidTimeException when user keys in AM string >12 or PM string > 25 or minutes >60
+ *
+ */
+
+public class InvalidTimeException extends Exception {
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -1003877340664378926L;
+	
+	private static final String MESSAGE = "Error: Invalid time entered";
+	
+	public InvalidTimeException(){
+		super(MESSAGE);
+	}
+	
+	public InvalidTimeException(String message){
+		super(MESSAGE + ": " + message);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidTimeException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\NullTimeValueException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.util.logging.Logger;
+
+/**
+ * 
+ * NullTimeValueException: an exception thrown
+ * when user did not key in a time value
+ */
+
+public class NullTimeValueException extends Exception{
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 1045316937520580318L;
+	
+	private static final String MESSAGE = "Error: Please enter a time value";
+	
+	protected static Logger _logger = Logger.getLogger("TaskPad");
+
+
+	public NullTimeValueException(){
+		super (MESSAGE);
+	}
+	
+	public NullTimeValueException(String Message){
+		super (MESSAGE);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\NullTimeValueException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeErrorException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+public class TimeErrorException extends Exception {
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -8922390543512908633L;
+
+	private static final String MESSAGE = "Error: Invalid Time supplied";
+		
+	public TimeErrorException(){
+		super(MESSAGE);
+		
+	}
+	
+	public TimeErrorException(String input){
+		super(MESSAGE + ": " + input);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeErrorException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeObject.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+public class TimeObject {
+
+	private String parsedTime;
+	private String inputTime;
+	
+	public TimeObject(String parsedTime, String inputTime){
+		this.parsedTime = parsedTime;
+		this.inputTime = inputTime;
+	}
+
+	public String getParsedTime() {
+		return parsedTime;
+	}
+
+	public String getInputTime() {
+		return inputTime;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeObject.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeParser.java
+	 */
+
+
+/**
+ * This class is for FlexiCommands for time
+ */
+
+package com.taskpad.dateandtime;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class TimeParser {
+		
+	private static final String TIME_TWELVE = "12";
+	private static final String TIME_EVE = "17";
+	private static final String TIME_NIGHT = "19";
+	private static final int TIME_NEG = -1;
+	private static final String TIME_DEF = "-1";
+	private static final String TIME_ZERO = "0";
+	private static final String TIME_AM = "a";
+	private static final String TIME_PM = "p";
+	
+	private static final String COLON = ":";
+	private static final String SEMICOLON = ";";
+	private static final String DOT = ".";
+	private static final String EMPTY = "";
+
+	private static TimeParser _timeParser = new TimeParser();
+	
+	private TimeParser(){
+	}
+	
+	protected static TimeParser getInstance(){
+		return _timeParser;
+	}
+	
+	/* This method takes in a time and parses it
+	 * 
+	 */
+	protected String parseTime(String input) throws NullTimeUnitException, NullTimeValueException, TimeErrorException, InvalidTimeException{
+		TimeWordParser twp = TimeWordParser.getInstance();
+		
+		String timeString = EMPTY;
+		long time = 0;
+		
+		timeString = twp.timeWord(input);
+		if(!inputContainsTimeWords(timeString)){
+			time = decodeTime(input);
+			timeString = convertMillisecondsToTime(time);
+		}
+				
+		if (isInvalidTime(timeString)){
+			throw new TimeErrorException(input);
+		}
+		
+		return timeString;
+	}
+	
+	protected String parseTimeInput(String input) throws TimeErrorException, InvalidTimeException{
+		String timeString = EMPTY;
+		long time = 0;
+		
+		if(isNotEmptyString(input)){
+			time = decodeTime(input);
+			timeString = convertMillisecondsToTime(time);
+		} else {
+			throw new TimeErrorException(input);
+		}
+				
+		if (isInvalidTime(timeString)){
+			throw new TimeErrorException(input);
+		}
+		
+		return timeString;
+	}
+	
+	private boolean isNotEmptyString(String timeString) {
+		return !timeString.equals(EMPTY);
+	}
+
+	private boolean inputContainsTimeWords(String input) {
+		if (input.equals(EMPTY)){
+			return true;
+		}
+		return false;
+	}
+
+	private long decodeTime(String input) throws InvalidTimeException{	    
+		input = input.trim();
+        String hours = TIME_DEF, minutes = TIME_DEF;
+        
+        long time = TIME_NEG;
+        
+        time = checkMornAftEvenWords(input);
+        //System.err.println(time);
+        
+        if (time != TIME_NEG){
+        	return time;
+        }
+        	    
+	    if (timePatternMatch(input)) {
+
+	        if (input.contains(COLON) || input.contains(DOT) || input.contains(SEMICOLON)) {
+	            String[] inputs = input.split("[:.;]");
+	            hours =  inputs[0];
+	            minutes = inputs[1].substring(0, 2);
+	        } else {
+	            // Process strings like "8", "8p", "8pm", "2300"
+	            if (input.contains(TIME_AM)) {
+	                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
+	                minutes = TIME_ZERO;
+	                checkIfInvalidTimeString(hours, minutes, input);
+
+	            } else if (input.contains(TIME_PM)) {
+	                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
+	                minutes = TIME_ZERO;
+	                
+	                checkIfInvalidTimeString(hours, minutes, input);
+
+	            } else if (input.length() < 3) {
+	            	/* Deprecated - not supportting single date values
+	                hours = input;
+	                minutes = TIME_ZERO;
+	                */
+	            	throw new InvalidTimeException(input);
+	                
+	            } else {
+	                hours =  input.substring(0, input.length() - 2);
+	                minutes = input.substring(input.length() - 2);
+	                
+	            }
+	        }
+	        
+	        if (input.contains(TIME_AM) && hours.equals(TIME_TWELVE)) {
+	            hours = TIME_ZERO;
+	            minutes = TIME_ZERO;
+	        }
+
+	        //System.out.println(hours + " " + minutes);
+	        time = convertToSeconds(hours, minutes);
+	       // System.out.println(time);
+
+	        if (input.contains(TIME_PM) && !hours.equals(TIME_TWELVE)) {
+	            time = addPM(time);
+	        }
+
+	        return time;
+	    } 
+	    else {
+	    	//To take care of strings like 800 am
+            if (input.contains(TIME_AM)) {
+                hours = input.substring(0, input.indexOf(TIME_AM)).trim();	//am strings
+                if (hours.length() > 4){
+                	minutes = hours.substring(2, 4);
+                	hours = hours.substring(0, 4);
+                } else if (hours.length() == 4) {
+                	minutes = hours.substring(1, 3);
+                	hours = hours.substring(0, 3);
+                } else {
+                	throw new InvalidTimeException();
+                }
+               
+                checkIfInvalidTimeString(hours, minutes, input);
+
+            } else if (input.contains(TIME_PM)) {
+                hours = input.substring(0, input.indexOf(TIME_PM)).trim();	//pm strings
+                
+                if (hours.length() > 4){
+                	minutes = hours.substring(2, 4);
+                	hours = hours.substring(0, 4);
+                } else {
+                	minutes = hours.substring(1, 3);
+                	hours = hours.substring(0, 1);
+                }
+                //System.out.println(hours);
+                //System.out.println(minutes);
+                
+                checkIfInvalidTimeString(hours, minutes, input);
+            }
+            
+	        time = convertToSeconds(hours, minutes);
+	        //System.out.println(time);
+	        
+	        if (input.contains("p") && !hours.equals(TIME_TWELVE)) {
+	            time = addPM(time);
+	        }
+	        
+	        return time;
+	    }
+	 }
+	
+	/**
+	 * check whether timeString is valid:
+	 * hour and minute can only be non-negative and cannot exceed their range
+	 * @param hours
+	 * @param minutes
+	 * @param input
+	 * @throws InvalidTimeException
+	 */
+	private void checkIfInvalidTimeString(String hours, String minutes, String input) throws InvalidTimeException {
+        int h = Integer.parseInt(hours);
+        int m = Integer.parseInt(minutes);
+		if (h >= 12 || m > 60){
+        	throw new InvalidTimeException(input);
+        } else if (h < 0 || m < 0){
+        	throw new InvalidTimeException(input);
+        }
+	}
+
+	private boolean timePatternMatch(String input) {
+		return time12Matches(input) || time24Matches(input);
+	}
+	
+	private boolean time12Matches(String input){
+		Pattern time12 = Pattern.compile("^(1[012]|[1-9])([;:.][0-5][0-9])?(a|p|am|pm)?$");
+	    Matcher time12M = time12.matcher(input);
+	    
+	    return time12M.matches();
+	}
+	
+	private boolean time24Matches(String input){
+	    Pattern time24 = Pattern.compile("^(([01]?[0-9]|2[0-3])[;:.]?([0-5][0-9])?)$");
+	    Matcher time24M = time24.matcher(input);
+	    boolean time24Match = time24M.matches();
+	    
+	    return time24Match;
+	}
+
+	private long addPM(long time) {
+		time += 12 * 60 * 60 * 1000;
+		return time;
+	}
+	
+	private long checkMornAftEvenWords(String input) {
+		long time = TIME_NEG;
+		String hours = TIME_ZERO;
+		String minutes = TIME_ZERO;
+		
+        if (containsMornWords(input)){
+        	hours = TIME_ZERO;
+        	minutes = TIME_ZERO;
+        } else if (containsAftWords(input)){
+        	hours = TIME_TWELVE;
+        	minutes = TIME_ZERO;
+        } else if (containsEveWords(input)){
+        	hours = TIME_EVE;
+        	minutes = TIME_ZERO;
+        } else if (containsNightWords(input)){
+        	hours = TIME_NIGHT;
+        	minutes = TIME_ZERO;
+        } else if (containsMidnightWords(input)){
+        	hours = TIME_ZERO;
+        	minutes = TIME_ZERO;
+        } else {
+        	return time;
+        }
+        
+        //System.err.println(hours + " " + minutes);
+        
+    	time = convertToSeconds(hours, minutes);
+		return time;
+	}
+
+	private boolean containsNightWords(String input) {
+		return input.toLowerCase().equals("night") || input.toLowerCase().equals("ngt");
+	}
+
+	private boolean containsEveWords(String input) {
+		return input.toLowerCase().equals("evening") || input.toLowerCase().equals("eve");
+	}
+
+	private boolean containsAftWords(String input) {
+		return input.toLowerCase().equals("afternoon") || input.toLowerCase().equals("aft") ||
+        		input.toLowerCase().equals("noon");
+	}
+
+	private boolean containsMornWords(String input) {
+		return input.toLowerCase().equals("morning") || input.toLowerCase().equals("morn");
+	}
+
+	
+	private boolean containsMidnightWords(String input) {
+		return input.toLowerCase().equals("midnight") || input.toLowerCase().equals("midngt");
+	}
+	
+	private long convertToSeconds(String hours, String minutes){
+		return (Long.parseLong(hours) * 60 + Long.parseLong(minutes)) * 60 * 1000;
+	}
+	
+	private String convertMillisecondsToTime(long milliseconds){
+		int minutes = (int) ((milliseconds / (1000*60)) % 60);
+		int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
+		
+		//System.err.println(milliseconds);
+		//System.err.println(minutes);
+		//System.err.println(hours);
+		
+		String hourString = "" + hours;
+		if (hourString.length() == 1){
+			hourString = TIME_ZERO + hourString;
+		}
+		
+		String minuteString = EMPTY + minutes;
+		if (minuteString.length() == 1){
+			minuteString = TIME_ZERO + minuteString;
+		}
+		String timeString = hourString + COLON + minuteString;
+		
+		return timeString;
+	}
+	
+	private boolean isInvalidTime(String timeString){
+		if (timeString.trim().equals("-1:-1")){
+			return true;
+		}
+		return false;
+	}
+	
+	public static void main(String[] args){
+		String input = "1am";
+		
+		//System.out.println(checkMornAftEvenWords(input));
+		TimeParser tp = TimeParser.getInstance();
+		String time = null;
+		try {
+			time = tp.parseTime(input);
+		} catch (InvalidTimeException | NullTimeUnitException | NullTimeValueException | TimeErrorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//String timeString = convertMillisecondsToTime(time);
+		System.out.println(input + " " + time);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Add.java
+	 */
+
+
+package com.taskpad.input;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Scanner;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DateObject;
+import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.InvalidQuotesException;
+import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
+import com.taskpad.dateandtime.TimeErrorException;
+import com.taskpad.dateandtime.TimeObject;
+
+
+/**
+ * Add syntax
+ * with delimiters:
+ * add <desc> -d <deadlinedate>,<deadlinetime> -s <start date>,<start time> -e <end date>,<end time>
+ * 
+ *
+ */
+
+public class Add extends Command {
+
+	private static final String STRING_NULL = "null";
+	private static final String STRING_QUOTE = "\"";
+	private static final String STRING_EMPTY = "";
+	private static final String STRING_DASH = "-";
+	private static final String STRING_SPACE = " ";
+	private static final String STRING_COMMA = ",";
+	
+	private static final String COMMAND_ADD = "ADD";
+	private static final int NUMBER_ARGUMENTS = 1;
+	
+	private static String PARAMETER_DEADLINE_DATE = "DEADLINE DATE";
+	private static String PARAMETER_DEADLINE_TIME = "DEADLINE TIME";
+	private static String PARAMETER_START_DATE = "START DATE";
+	private static String PARAMETER_START_TIME = "START TIME";
+	private static String PARAMETER_END_DATE = "END DATE";
+	private static String PARAMETER_END_TIME = "END TIME";
+	private static String PARAMETER_DESCRIPTION = "DESC";
+	//private static String PARAMETER_INFO = "INFO";
+	
+	private static Scanner _sc; 
+	private static boolean _invalidParameters;
+	
+	public Add(String input, String fullInput) {
+		super(input, fullInput);
+		
+		_invalidParameters = false;
+	}
+	
+	@Override
+	public void run(){
+		try {
+			checkIfEmptyString();
+		} catch (EmptyStringException e) {
+			showEmptyString();
+			return;
+		}
+		
+		clearInputParameters();
+		initialiseParametersToNull();
+		
+		if (commandSpecificRun()){
+			createInputObject();
+			passObjectToExecutor();
+		}
+		_sc.close();
+	}
+
+	@Override
+	protected void initialiseOthers() {
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		setCOMMAND(COMMAND_ADD);
+		_sc = new Scanner(System.in);
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {		
+		if(checkIfDelimitedString()){
+			//this line is only useful if it is delimited
+			String temp = putDescInQuotesFirst(input);
+			
+			if (!temp.trim().isEmpty()){
+				input = temp;
+			}
+			//System.out.println("DDE " + input);
+			parseDelimitedString();
+
+		} else {
+			parseNonDelimitedString();
+		}
+		
+		try {
+			checkIfExistDesc();
+		} catch (EmptyDescException e) {
+			InputManager.outputToGui(e.getMessage());
+		}
+		
+		if (_invalidParameters){
+			return false;
+		}
+		
+		return true;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_DEADLINE_DATE, STRING_EMPTY);
+		putOneParameter(PARAMETER_DEADLINE_TIME, STRING_EMPTY);
+		putOneParameter(PARAMETER_DESCRIPTION, STRING_EMPTY); 
+		putOneParameter(PARAMETER_START_DATE, STRING_EMPTY);
+		putOneParameter(PARAMETER_END_DATE, STRING_EMPTY);
+		putOneParameter(PARAMETER_END_TIME, STRING_EMPTY);
+		//putOneParameter(PARAMETER_INFO, STRING_EMPTY);
+		putOneParameter(PARAMETER_START_TIME, STRING_EMPTY);
+	}
+
+	@Override
+	protected void putInputParameters() {
+		//do nothing
+	}
+	
+	/**
+	 * putDescInQuotesFirst: find description within " "
+	 * @return input string without description or empty string if " " not found
+	 */
+	private String putDescInQuotesFirst(String input){
+		_sc = new Scanner(input);
+		
+		StringBuffer tempDesc = null;
+		StringBuffer normalString = new StringBuffer(STRING_EMPTY);
+		boolean isStarted = false;
+		boolean isFinish = false;
+		
+		while (_sc.hasNext()){
+			String buildString = _sc.next();
+			if (!isFinish){
+				if (!isStarted){
+					if (buildString.startsWith(STRING_QUOTE)){
+						isStarted = true;
+						tempDesc = new StringBuffer(buildString);
+					} else {
+						normalString.append(STRING_SPACE + buildString);
+					}
+				} else {
+					//System.out.println(buildString);
+					tempDesc.append(STRING_SPACE + buildString);
+					if (buildString.endsWith(STRING_QUOTE)){
+						isFinish = true;
+					}
+				}
+			} else {
+				normalString.append(STRING_SPACE + buildString);
+			}
+		}
+		
+		if (tempDesc == null){
+			tempDesc = new StringBuffer(STRING_EMPTY);
+			return tempDesc.toString();
+		} else {
+			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
+			tempDesc.append(normalString);
+		}
+	
+		_sc.close();
+		
+		//System.out.println(tempDesc.toString());
+		
+		return tempDesc.toString();
+	}
+	
+	private void checkIfExistDesc() throws EmptyDescException {
+		/**
+		 * should have null? 
+		 * Jun Wei
+		 */
+		if (inputParameters.get(PARAMETER_DESCRIPTION).trim().isEmpty()
+				|| (inputParameters.get(PARAMETER_DESCRIPTION) == null)){
+			_invalidParameters = true;
+			throw new EmptyDescException();
+		}		
+	}
+
+	private void parseNonDelimitedString() {
+		//"..." deadlinedate deadlintime startdate starttime enddate endtime
+		
+		String inputNew = STRING_EMPTY;
+		try {
+			inputNew = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
+		
+		String[] splitInput = inputNew.split(STRING_SPACE);
+		int size = splitInput.length - 1;
+		
+		
+		String endTime = splitInput[size];
+		if (!STRING_NULL.equals(endTime)){
+			putOneParameter(PARAMETER_END_TIME, endTime);
+		}
+		
+		String endDate = splitInput[size - 1];
+		if (!STRING_NULL.equals(endDate)){
+			putOneParameter(PARAMETER_END_DATE, endDate);
+		}
+		
+		String startTime = splitInput[size - 2];
+		if (!STRING_NULL.equals(startTime)) {
+			putOneParameter(PARAMETER_START_TIME, startTime);
+		}
+		
+		
+		String startDate = splitInput[size - 3];
+		if (!STRING_NULL.equals(startDate)){
+			putOneParameter(PARAMETER_START_DATE, startDate);
+		}
+		
+		String deadlineDate = splitInput[size - 5];
+		String deadlineTime = splitInput[size - 4];
+		String deadline = deadlineTime + STRING_SPACE + deadlineDate;
+		if (!STRING_NULL.equals(deadlineDate) && !STRING_NULL.equals(deadlineTime)){
+			//putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
+			putOneParameter(PARAMETER_DEADLINE_DATE, deadline);
+		}
+		
+		
+		String desc = STRING_EMPTY;
+		for (int i=0; i < size - 5; i++){
+			desc += splitInput[i] + STRING_SPACE;
+		}
+		
+		//String desc = input;
+		
+		putOneParameter(PARAMETER_DESCRIPTION, desc);
+		
+		/* deprecated
+		String descString = extractTimeAndDate(splitInput);
+
+		if (!descAlreadyEntered()){
+			//inputDesc(descString);
+			System.out.println("DEBUG: " + fullInput);
+			inputDesc(input);
+		}
+		*/
+	}
+
+	/**
+	 * For each input index, if it is date, put in date; if it is time, put in time
+	 * Otherwise, string them together as description
+	 * @param splitInput
+	 */
+	@SuppressWarnings("unused")
+	private String extractTimeAndDate(String[] splitInput) {
+		ArrayList<String> dateArray = new ArrayList<String>();
+		ArrayList<String> timeArray = new ArrayList<String>();
+		
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			String inputString = stripWhiteSpaces(splitInput[i]);
+			
+			DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputString);
+			if (dateObject != null){
+				dateArray.add(dateObject.getParsedDate());
+			} else{
+				TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputString);
+				if (timeObject != null){
+					timeArray.add(timeObject.getParsedTime());
+				} else {
+					newInput += inputString + STRING_SPACE;
+				}
+			}
+		}		
+		
+		orderDateArray(dateArray);
+		orderTimeArray(timeArray);
+		
+		return newInput;
+		
+	}
+
+	/**
+	 * Lynnette, why you so sure that timeArray got 2 elements?
+	 * I think this is 1 of the bug.
+	 * From: Jun Wei
+	 * @param timeArray
+	 */
+	private void orderTimeArray(ArrayList<String> timeArray) {
+		//this method is add temporary to avoid bug
+		if (timeArray.size() != 2){
+			return;
+		}
+		
+		Collections.sort(timeArray);
+		inputStartTime(timeArray.get(0));
+		inputEndTime(timeArray.get(1));
+	}
+
+	/**
+	 * Lynnette, same here, why you so sure that 
+	 * dateArray got 3 elements?
+	 * @param dateArray
+	 */
+	private void orderDateArray(ArrayList<String> dateArray) {
+		//this method is add temporary to avoid bug
+		if (dateArray.size() != 3){
+			return;
+		}
+		
+		dateArray = sortDateArray(dateArray);
+		inputDeadlineDate(dateArray.get(0));
+		inputStartDate(dateArray.get(1));
+		inputEndDate(dateArray.get(2));
+	}
+
+	private ArrayList<String> sortDateArray(ArrayList<String> dateArray) {
+		ArrayList<Date> dates = convertStringToDates(dateArray);
+
+		Collections.sort(dates, new Comparator<Date>(){
+			@Override
+			public int compare(Date d1, Date d2) {
+				return d1.compareTo(d2);
+			}
+		});
+		
+		return null;
+	}
+
+	private ArrayList<Date> convertStringToDates(ArrayList<String> dateArray) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+		ArrayList<Date> dates = new ArrayList<Date>();
+		
+		for (int i=0; i<dateArray.size(); i++){
+			try {
+				dates.add(sdf.parse(dateArray.get(i)));
+			} catch (ParseException e) {
+				//do nothing
+			}
+		}
+		
+		return dates;
+	}
+
+	/**
+	 * 
+	 * parseDelimitedString: a method that parses
+	 * input that has a description in front.
+	 * @throws EmptyDescException 
+	 */
+	private void parseDelimitedString(){
+		//checkAndRemoveDate();
+		
+		_sc = new Scanner(input);
+		
+		StringBuffer description = new StringBuffer();
+		StringBuffer otherPart = new StringBuffer();
+		String tempInput = null;
+		
+		tempInput = retrieveDescription(_sc, description, tempInput);
+		otherPart = restructureOtherPart(otherPart, tempInput);
+		
+		//System.out.println(tempInput.toString() + " " + otherPart.toString() + " " + input);
+		
+		_sc.close();
+		
+		
+		_sc = new Scanner(otherPart.toString().trim());
+		//devide the useDelimiter to prevent resource leak;
+		_sc.useDelimiter("\\s-");
+		
+		while(_sc.hasNext()){
+			String nextParam = _sc.next().trim();
+			
+			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
+			//System.out.println("YYY: " + nextParam);
+			
+			parseNextParam(nextParam.trim());
+		}
+		_sc.close();
+		
+		/* Reverting to the old bit
+		checkAndRemoveStart();
+		checkAndRemoveEnd();
+		checkAndInputDesc();
+		*/
+	}
+
+	/**
+	 * 
+	 * @param otherPart
+	 * @param tempInput
+	 * @return
+	 */
+	private StringBuffer restructureOtherPart(StringBuffer otherPart, String tempInput) {
+		if (tempInput != null){
+			otherPart.append(tempInput.trim());
+		}
+		while (_sc.hasNext()){
+			otherPart.append(STRING_SPACE + _sc.next());
+		}
+		return otherPart;
+	}
+
+	/**
+	 * @param description
+	 * @param tempInput
+	 * @return
+	 */
+	private String retrieveDescription(Scanner sc, StringBuffer description,
+			String tempInput) {
+		boolean isBreak = false;
+		while (sc.hasNext()){
+			tempInput = sc.next();
+			 
+			if (tempInput.equals("-d") || tempInput.equals("-e") || tempInput.equals("-s")){
+				isBreak = true;
+				break;
+			}
+			
+			description.append(tempInput + STRING_SPACE);
+		}
+		
+		String descString = description.toString().trim();
+		descString = descString.replaceAll("\"", STRING_EMPTY);
+		
+		putOneParameter(PARAMETER_DESCRIPTION, descString);
+		
+		if (!isBreak){
+			tempInput = STRING_EMPTY;
+		}
+		
+		return tempInput;
+	}
+	
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param);
+		
+		switch (firstChar){
+		case "d":
+			putDeadline(param);
+			break;
+		case "s":
+			putStartTime(param);
+			break;
+		case "e": 
+			putEndTime(param);
+			break;
+		}
+	}
+
+	private boolean checkIfDelimitedString() {
+		String inputToCheck = input.toLowerCase();
+		//should add space if we want to use contains. :) because it maybe have "to-do", then it will think it is a
+		//delimited String	
+		if (inputToCheck.contains(" -d ") || inputToCheck.contains(" -s ") || inputToCheck.contains(" -e ")){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/* Helper methods for parsing delimited strings */
+	@SuppressWarnings("unused")
+	private void checkAndRemoveDate() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-d")){
+				getDeadline(splitInput[i+1]);
+				splitInput[i+1] = STRING_EMPTY;
+			} else {
+				newInput += splitInput[i] + STRING_SPACE;
+			}
+		}
+		input = newInput;
+	}
+	
+	@SuppressWarnings("unused")
+	private void checkAndRemoveStart() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		String param = STRING_EMPTY;
+		int index = -1;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-s")){
+				index = i;
+				splitInput[i] = STRING_DASH;
+				if (findTimeOrDate(splitInput[i+1])){
+					param += splitInput[i+1] + STRING_SPACE;
+					splitInput[i+1] = STRING_DASH;
+				} 
+				
+				if (findTimeOrDate(splitInput[i+2])){
+					param += splitInput[i+2] + STRING_SPACE;
+					splitInput[i+2] = STRING_DASH;
+				} 
+			} 
+		}
+		
+		newInput = constructNewInputString(splitInput, newInput, index);
+
+		getStartDetails(param);
+		input = newInput;
+	}
+
+	private static String constructNewInputString(String[] splitInput,
+			String newInput, int index) {
+		if (index != -1){
+			for (int i=0; i<splitInput.length; i++){
+				if (splitInput[i].equals(STRING_DASH)){
+					continue;
+				} else {
+					newInput += splitInput[i].trim() + STRING_SPACE;
+				}
+			}
+		}
+		return newInput;
+	}
+	
+	@SuppressWarnings("unused")
+	private void checkAndRemoveEnd() {
+		String[] splitInput = input.split(STRING_SPACE);
+		String newInput = STRING_EMPTY;
+		String param = STRING_EMPTY;
+		int index = -1;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-e")){
+				index = i;
+				splitInput[i] = STRING_DASH;
+				if (findTimeOrDate(splitInput[i+1])){
+					param += splitInput[i+1] + STRING_SPACE;
+					splitInput[i+1] = STRING_DASH;
+				} 
+				
+				if (findTimeOrDate(splitInput[i+2])){
+					param += splitInput[i+2] + STRING_SPACE;
+					splitInput[i+2] = STRING_DASH;
+				} 
+			} 
+		}
+		
+		newInput = constructNewInputString(splitInput, newInput, index);
+
+		getEndDetails(param);
+		input = newInput;
+	}
+	
+	@SuppressWarnings("unused")
+	private void checkAndInputDesc(){
+		if (inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY){
+			inputDesc(input);
+		}
+	}
+	
+	private boolean findTimeOrDate(String param){
+		param = param.trim();		
+		
+		DateObject dateObject = DateAndTimeManager.getInstance().findDate(param);
+		if (dateObject != null){
+			return true;
+		} else {
+			TimeObject timeObject = DateAndTimeManager.getInstance().findTime(param);
+			if (timeObject != null){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	private void getDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		try {
+			param = DateAndTimeManager.getInstance().parseDate(param);
+		} catch (InvalidDateException e) {
+			InputManager.outputToGui(e.getMessage());
+			_invalidParameters = true;
+		}
+		inputDeadlineDate(param);
+	}
+	
+	private void getStartDetails(String param){
+		String[] inputParams = splitBySpace(param);
+		inputParams = findDateTime(inputParams);
+		
+		inputStartDate(inputParams[0]);
+		inputStartTime(inputParams[1]);
+	}
+	
+	private void getEndDetails(String param){
+		String[] inputParams = splitBySpace(param);
+		inputParams = findDateTime(inputParams);
+		
+		inputEndDate(inputParams[0]);
+		inputEndTime(inputParams[1]);
+	}
+
+	private String[] findDateTime(String[] inputParams) {
+		String[] dateTime = {STRING_EMPTY, STRING_EMPTY};
+		boolean gotDate = false;
+		boolean gotTime = false;
+		
+		for (int i=0; i<inputParams.length; i++){
+			if (!gotDate){
+				DateObject dateObject = DateAndTimeManager.getInstance().findDate(inputParams[i].trim());
+				if (dateObject != null){
+					dateTime[0] = dateObject.getParsedDate();
+					gotDate = true;
+				} else if (!gotTime){
+					TimeObject timeObject = DateAndTimeManager.getInstance().findTime(inputParams[i].trim());
+					dateTime[1] = timeObject.getParsedTime();
+					gotTime = true;
+				}
+			} 
+		}
+		
+		return dateTime;
+	}
+
+	private String[] splitBySpace(String param) {
+		return param.split(STRING_SPACE);
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean descAlreadyEntered(){
+		return inputParameters.get(PARAMETER_DESCRIPTION) != STRING_EMPTY;
+	}
+
+	private void inputDeadlineDate(String deadline) {
+		putOneParameter(PARAMETER_DEADLINE_DATE, deadline);		
+	}
+	
+	private void inputDeadlineTime(String deadline){
+		putOneParameter(PARAMETER_DEADLINE_TIME, deadline);
+	}
+	
+	private void inputDesc(String desc) {
+		putOneParameter(PARAMETER_DESCRIPTION, desc);		
+	}
+	
+	private void inputStartDate(String date){
+		putOneParameter(PARAMETER_START_DATE, date);
+	}
+	
+	private void inputEndDate(String date){
+		putOneParameter(PARAMETER_END_DATE, date);
+	}
+	
+	private void inputStartTime(String time){
+		putOneParameter(PARAMETER_START_TIME, time);
+	}
+	
+	private void inputEndTime(String time){
+		putOneParameter(PARAMETER_END_TIME, time);
+	}
+	
+	private String stripWhiteSpaces(String input){
+		return input.replaceAll(STRING_SPACE, STRING_EMPTY);
+	}
+	
+	private String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
+	}
+	
+	private String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
+	}
+	
+	private void putDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		String[] splitParam = param.split(STRING_COMMA);
+		
+		String deadlineDate = STRING_EMPTY;
+		String deadlineTime = STRING_EMPTY;
+		
+		if (isValidTimeArgs(splitParam)){
+			for (int i=0; i<splitParam.length; i++){
+				deadlineDate = checkIfIsDate(splitParam[i]);
+				if (notEmptyDateString(deadlineDate)){
+					inputDeadlineDate(deadlineDate);
+				} else {
+					deadlineTime = checkIfIsTime(splitParam[i]);
+					if (notEmptyTimeString(deadlineTime)){
+						inputDeadlineTime(deadlineTime);
+					}
+				}
+			}	
+		}
+		
+		checkEmptyDateTimeString(deadlineDate, deadlineTime, param);
+	}
+	
+	private void putStartTime(String param) {
+		String[] splitParam = param.split(STRING_COMMA);
+		
+		String startTime = STRING_EMPTY;
+		String startDate = STRING_EMPTY;
+				
+		if (isValidTimeArgs(splitParam)){
+			for (int i=0; i<splitParam.length; i++){
+				startDate = checkIfIsDate(splitParam[i]);
+				if (notEmptyDateString(startDate)){
+					inputDeadlineDate(startDate);
+				} else {
+					startTime = checkIfIsTime(splitParam[i]);
+					if (notEmptyTimeString(startTime)){
+						inputDeadlineTime(startTime);
+					}
+				}
+			}
+		}
+		checkEmptyDateTimeString(startDate, startTime, param);
+	}
+	
+	private void putEndTime(String param) {
+		String[] splitParam = param.split(",");
+		String endTime = STRING_EMPTY;
+		String endDate = STRING_EMPTY;
+
+		if (isValidTimeArgs(splitParam)){
+			for (int i=0; i<splitParam.length; i++){
+				endDate = checkIfIsDate(splitParam[i]);
+				if (notEmptyDateString(endDate)){
+					inputDeadlineDate(endDate);
+				} else {
+					endTime = checkIfIsTime(splitParam[i]);
+					if (notEmptyTimeString(endTime)){
+						inputDeadlineTime(endTime);
+					}
+				}
+			}
+		}
+		checkEmptyDateTimeString(endDate, endTime, param);
+
+	}
+	
+	private boolean isValidTimeArgs(String[] args){
+		if (args.length > 2){
+			InputManager.outputToGui("Error in number of time arguments: args.length");
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private String checkIfIsTime(String string){
+		string.trim();
+		String timeString = STRING_EMPTY;
+		
+		try {
+			timeString = DateAndTimeManager.getInstance().parseTime(string);
+		} catch (NullTimeUnitException | NullTimeValueException
+				| TimeErrorException | InvalidTimeException e) {
+			//do nothing
+		}
+		
+		return timeString;
+	}
+	
+	private boolean notEmptyTimeString(String timeString){
+		return !timeString.equals(STRING_EMPTY);
+	}
+
+	private String checkIfIsDate(String string){
+		string.trim();
+		String dateString = STRING_EMPTY;
+		
+		try {
+			dateString = DateAndTimeManager.getInstance().parseDate(string);
+		} catch (InvalidDateException e) {
+			//do nothing
+		}
+		return dateString;
+	}
+	
+	private boolean notEmptyDateString(String dateString){
+		return !dateString.equals(STRING_EMPTY);
+	}
+	
+	private void checkEmptyDateTimeString(String date, String time, String param){
+		if (date.equals(STRING_EMPTY) && time.equals(STRING_EMPTY)){
+			_invalidParameters = true;
+			InputManager.outputToGui(String.format(MESSAGE_INVALID_INPUT, param));
+			return;
+		}
+	}
+	
+	/* Testing
+	public static void main(String[] args){
+		checkAndRemoveStart();
+	}
+	//*/
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Add.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Addinfo.java
+	 */
+
+
+package com.taskpad.input;
+
+
+public class Addinfo extends Command{
+	
+	private static final String COMMAND_ADD_INFO = "ADDINFO";
+	private static final int NUMBER_ARGUMENTS = 2;
+	
+	private static String PARAMETER_INFO = "INFO";
+	private static String PARAMETER_TASK_ID = "TASKID";
+	
+	private static String _info = "";
+	private static String _taskID = "";
+
+	public Addinfo(String input, String fullInput) {
+		super(input, fullInput);
+	}
+
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_ADD_INFO);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+	}
+	
+	@Override
+	protected boolean commandSpecificRun() {
+		String splitInput[] = input.split(" ");
+		_taskID = splitInput[0];
+		_info = getInfo(fullInput, _taskID);
+		return true;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_TASK_ID, "");
+		putOneParameter(PARAMETER_INFO, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_TASK_ID, _taskID);
+		putOneParameter(PARAMETER_INFO, _info);
+	}
+	
+	@Override
+	protected boolean isNotNumberArgs(String[] inputString){
+		if (inputString.length < getNUMBER_ARGUMENTS()){
+			return true;
+		}
+		return false;
+	}
+	
+	private String getInfo(String input, String taskID){
+		input = removeFirstWord(input);
+		return input.replaceFirst(taskID, "").trim();
+	}
+	
+	private String removeFirstWord(String input){
+		return input.replace(getFirstWord(input), "").trim();
+	}
+	
+	private static String getFirstWord(String input) {
+		return input.trim().split("\\s+")[0];
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Addinfo.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\AddPri.java
+	 */
+
+
+package com.taskpad.input;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+public class AddPri extends Command{
+	
+	private static final String COMMAND_ADDPRI = "ADDPRI";
+	private static final int NUMBER_ARGUMENTS = 2;
+	
+	private static String PARAMETER_PRIORITY_KEY = "KEY";
+	private static String parameterPri = "NONE";			//Default no priority 
+	
+	private static final String[] PARAMETER_VALID_PRI = {"HIGH", "MEDIUM", "LOW", "NONE"};
+	private static Map<String, String[]> parametersMap;
+	
+	private static final String MESSAGE_INVALID_PARAMETER = "Error: Invalid Priority Parameter. Type help if you need! :) ";
+
+	public AddPri(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_ADDPRI);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		
+		parametersMap = new HashMap<String, String[]>();
+		initialiseParametersMap();
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {
+		if (isInvalidPriParameter()){
+			outputInvalidParameter();
+			return false;
+		}else {
+			return true;	
+		}
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_PRIORITY_KEY, parameterPri);
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_PRIORITY_KEY, parameterPri);
+	}
+
+	private void initialiseParametersMap(){
+		initialiseNoneVariations();
+		initialiseHighVariations();
+		initialiseMediumVariations();
+		initialiseLowVariations();
+	}
+	
+	private void initialiseNoneVariations(){
+		String[] noneVariations = {"NONE", "NO"};
+		parametersMap.put(PARAMETER_VALID_PRI[3], noneVariations);
+	}
+	
+	private void initialiseHighVariations(){
+		String[] highVariations = {"HIGH", "CRITICAL", "IMPORTANT", "H", "IMPT"};
+		parametersMap.put(PARAMETER_VALID_PRI[0], highVariations);
+	}
+	
+	private void initialiseMediumVariations(){
+		String[] medVariations = {"MEDIUM", "MED", "M"};
+		parametersMap.put(PARAMETER_VALID_PRI[1], medVariations);
+	}
+	
+	private void initialiseLowVariations(){
+		String[] lowVariations = {"LOW", "L", "NOTIMPT", "NOTIMPORTANT", "NONCRITICAL"};
+		parametersMap.put(PARAMETER_VALID_PRI[2], lowVariations);
+	}
+	
+	private void outputInvalidParameter() {
+		InputManager.outputToGui(MESSAGE_INVALID_PARAMETER);
+	}
+
+	private boolean isInvalidPriParameter() {
+		String priVariations[];
+		
+		for (Map.Entry<String, String[]> entry : parametersMap.entrySet()){
+			priVariations = entry.getValue();
+			for (int i=0; i<priVariations.length; i++){
+				if (isInputFound(priVariations[i])){
+					parameterPri = entry.getKey();
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean isInputFound(String value) {
+		if (value.equalsIgnoreCase(input)){
+			return true;
+		}
+		return false;
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\AddPri.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Addrem.java
+	 */
+
+
+package com.taskpad.input;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DateObject;
+import com.taskpad.dateandtime.DatePassedException;
+import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.TimeErrorException;
+import com.taskpad.dateandtime.TimeObject;
+import com.taskpad.ui.GuiManager;
+
+
+public class Addrem extends Command{
+	
+	private static final String COMMAND_ADD_REM = "ADDREM";
+	private static final int NUMBER_ARGUMENTS = 2;
+	private static final String SPACE = " ";
+		
+	private static final String PARAMETER_TASK_ID = "TASKID";
+	private static final String PARAMETER_REM_DATE = "DATE";
+	private static final String PARAMETER_REM_TIME = "TIME";
+	
+	private String _taskID;
+	private String _remDate;
+	private String _remTime;
+	
+	private static DateObject _dateObject;
+	private static TimeObject _timeObject;
+	
+	private static Scanner sc;
+	private boolean _invalidParameters = false;
+	private boolean _isFlexiString = false;
+	
+	boolean _gotTaskID = false;
+	boolean _gotDate = false;
+	boolean _gotTime = false;
+
+	public Addrem(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_ADD_REM);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		
+		sc = new Scanner(System.in);
+		_dateObject = null;
+		_timeObject = null;
+		_taskID = "";
+		_remDate = "";
+		_remTime = "";
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {		
+		if (!_isFlexiString){
+			splitInputParameters();
+		} else {
+			splitInputNoDelimiters();
+		}
+		
+		//putInputParameters();
+		
+		try {
+			checkTimeAndDate();
+		} catch (DatePassedException e) {
+			GuiManager.callOutput(e.getMessage());
+		}
+				
+		if (_invalidParameters){
+			return false;
+		} 
+
+		GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+		
+		return true;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_TASK_ID, _taskID);	
+		putOneParameter(PARAMETER_REM_DATE, _remDate);
+		putOneParameter(PARAMETER_REM_TIME, _remTime);
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_TASK_ID, _taskID);	
+		putOneParameter(PARAMETER_REM_DATE, _remDate);
+		putOneParameter(PARAMETER_REM_TIME, _remTime);		
+	}
+	
+	@Override
+	protected boolean isNotNumberArgs(String[] inputString){
+		if (inputString.length == getNUMBER_ARGUMENTS() ||
+				inputString.length == getNUMBER_ARGUMENTS()+1 || 
+				inputString.length == getNUMBER_ARGUMENTS()+2 || 
+				inputString.length == getNUMBER_ARGUMENTS()+3){
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
+		if(checkIfContainsDelimiters()){
+			String inputString[] = input.split(" ");
+			
+			if (isNotNumberArgs(inputString)){
+				System.out.println("Throw");
+				throw new InvalidParameterException();
+			}
+			
+			if(isNotValidTaskID(inputString[0])){
+				throw new TaskIDException(inputString[0]);
+			}
+		} else{
+			_isFlexiString = true;
+		}
+		return false;
+	}
+	
+	private void splitInputParameters(){
+		int count = 0;
+		sc = new Scanner(input);
+		sc.useDelimiter("\\s-");
+		while(sc.hasNext()){
+			String nextParam = sc.next();
+			if (count == 0){
+				_taskID = nextParam;
+			} else {
+				parseNextParam(nextParam);
+			}
+			count++;
+		}
+		sc.close();
+	}
+	
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param).trim();
+
+		switch (firstChar){
+		case "d":
+			getDeadline(param);
+			break;
+		case "t":
+			inputTime(param);
+			break;
+		default:
+			invalidParam();
+		}
+	}
+	
+	private void splitInputNoDelimiters(){
+		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		String[] splitInput = input.split(SPACE);
+		
+		try {
+			checkIfInvalidParameters(splitInput.length);
+		} catch (InvalidParameterException e) {
+			GuiManager.callOutput(e.getMessage());
+			return;
+		};
+		
+		extractTimeAndDate(splitInput);
+		
+		invalidIfNoTaskID();
+		invalidIfNoDateOrTime();
+	}
+	
+	private void invalidIfNoTaskID(){
+		if (_taskID.equals("")){
+			_invalidParameters = true;
+			InputManager.outputToGui("Invalid Task ID");
+		}
+	}
+	
+	private void invalidIfNoDateOrTime(){
+		if(_remDate.equals("") && _remTime.equals("")){
+			_invalidParameters = true;
+			InputManager.outputToGui("No date or time input");
+		}
+	}
+	
+	private void extractTimeAndDate(String[] splitInput){	
+		for (int i=0; i<splitInput.length; i++){
+			if(!_gotDate && isDateObject(splitInput[i])){
+				_remDate = _dateObject.getParsedDate();
+				_gotDate = true;
+			} else if (!_gotTime && isTimeObject(splitInput[i])){
+				_remTime = _timeObject.getParsedTime();
+				_gotTime = true;
+				
+			} else if (!_gotTaskID){
+				try {
+					enterTaskID(splitInput[i]);
+				} catch (TaskIDException e) {
+					continue;
+				}
+			}
+		}
+	}
+	
+	private boolean isTimeObject(String input) {
+		_timeObject = DateAndTimeManager.getInstance().findTime(input);
+		if (_timeObject != null){
+			return true;
+		}
+		return false;
+	}
+
+	private boolean isDateObject(String input) {
+		_dateObject = DateAndTimeManager.getInstance().findDate(input);
+		if (_dateObject != null){
+			return true;
+		}
+		return false;
+	}
+
+	private void enterTaskID(String taskID) throws TaskIDException{
+		taskID = taskID.trim();
+		if (isNotValidTaskID(taskID)){
+			_invalidParameters = true;
+			throw new TaskIDException(taskID);
+		} else{
+			_taskID = taskID;
+			_gotTaskID = true;
+		}
+	}
+	
+	private boolean checkIfInvalidParameters(int length) throws InvalidParameterException{
+		if (length == NUMBER_ARGUMENTS || length == NUMBER_ARGUMENTS + 1){
+			return true;
+		} else{
+			throw new InvalidParameterException();
+		}
+	}
+	
+	/* deprecated for flexiCommands without delimiters
+	private void splitInputNoDelimiters() throws TaskIDException {		
+		String[] splitInput = input.split(SPACE);
+		_taskID = splitInput[0];
+		
+		if (Integer.parseInt(_taskID) > InputManager.retrieveNumberOfTasks()+1){
+			throw new TaskIDException(_taskID);
+		}
+		_remDate = splitInput[1];
+		if (splitInput.length == 3){
+			//_remTime = splitInput[2];		//deprecated for flexi commands
+			try {
+				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
+			} catch (TimeErrorException | InvalidTimeException e) {
+				//ErrorMessages.invalidTimeMessage();
+				InputManager.outputToGui(e.getMessage());
+				_invalidParameters = true;
+				return;
+			}
+		}
+	}
+	*/
+
+	private boolean checkIfContainsDelimiters() {
+		return input.contains("-d")||input.contains("-t");
+	}
+	
+	private void getDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		_remDate = param;
+	}
+	
+	private void inputTime(String param) {
+		param = stripWhiteSpaces(param);
+		//_remTime = param;		//deprecated for flexi commands
+		//_remTime = DateAndTimeManager.getInstance().parseTime(param.trim());
+		try {
+			_remTime = DateAndTimeManager.getInstance().parseTimeInput(param.trim());
+		} catch (TimeErrorException | InvalidTimeException e) {
+			//ErrorMessages.timeErrorMessage(_remTime);
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
+	}
+	
+	/** 
+	 * 
+	 * Checks if the rem time and date added is after current time and date
+	 * If so, throw exception, and populate invalidParameters
+	 * @throws DatePassedException 
+	 */
+	private void checkTimeAndDate() throws DatePassedException {
+		Date now = new Date();
+		Date date = null;
+		date = parseRemDateAndTime(date);
+				
+		if (now.compareTo(date) > 0){
+			_invalidParameters = true;
+			throw new DatePassedException();
+		}
+	}
+
+	private Date parseRemDateAndTime(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		String enteredDateAndTime = formatRemString();
+		try {
+			date = sdf.parse(enteredDateAndTime);
+		} catch (ParseException e) {
+			//Do nothing
+		}
+		return date;
+	}
+	
+	private String formatRemString(){
+		String dateString = formatParaDate() + " " + formatParaTime();
+		return dateString;
+	}
+	
+	private String formatParaDate(){
+		String dateString = "";
+		if (_remDate.equals("")){
+			_remDate = DateAndTimeManager.getInstance().getTodayDate();
+		}
+		
+		dateString += _remDate;
+		
+		return dateString;
+	}
+	
+	private String formatParaTime(){
+		String timeString = "";
+		if(_remTime.equals("")){
+			timeString += DateAndTimeManager.getInstance().getTodayTime();
+		}else {
+			timeString += _remTime;
+		}
+		
+		return timeString;
+	}
+	
+	private String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), "").trim();
+	}
+	
+	private String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
+	}
+	
+	private String stripWhiteSpaces(String input){
+		return input.replaceAll(" ", "");
+	}
+	
+	private void invalidParam() {
+		_invalidParameters = true;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Addrem.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Add_old.java
+	 */
+
+
+package com.taskpad.input;
+
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidDateException;
+import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.TimeErrorException;
+
+public class Add_old extends Command{
+	
+	private static final String QUOTE = "\"";
+	private static final String BLANK = "";
+	private static final String DASH = "-";
+	private static final String SPACE = " ";
+	private static final String EMPTY = "";
+	private static final String COMMA = ",";
+	
+	private static final String COMMAND_ADD = "ADD";
+	private static final int NUMBER_ARGUMENTS = 1;
+		
+	private static String PARAMETER_DEADLINE = "DEADLINE";
+	private static String PARAMETER_START_DATE = "START DATE";
+	private static String PARAMETER_START_TIME = "START TIME";
+	private static String PARAMETER_END_DATE = "END DATE";
+	private static String PARAMETER_END_TIME = "END TIME";
+	private static String PARAMETER_CATEGORY = "CATEGORY";
+	private static String PARAMETER_DESCRIPTION = "DESC";
+	private static String PARAMETER_VENUE = "VENUE";
+	
+	private static String MESSAGE_ERROR_TIME = "Error: Invalid variables for time: %d";
+	
+	private static int LENGTH_TIME = 2;
+	
+	private static boolean _invalidParameters = false;
+	private static int _count;
+	
+	private static String _desc;
+	
+	private static Scanner _sc;
+
+	public Add_old(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		setCOMMAND(COMMAND_ADD);
+		
+		_sc = new Scanner(System.in);
+		_count = 0;
+		_invalidParameters = false;
+	}
+	
+	@Override
+	protected boolean commandSpecificRun() {
+		String inputDesc = putDescToFirst();
+		
+		if (inputDesc.equals(EMPTY)){
+			try {
+				checkIfExistDesc();
+			} catch (EmptyDescException e) {
+				InputManager.outputToGui(e.getMessage());
+				return false;
+			}
+		} else {
+			input = inputDesc;
+		}
+		
+		if(!_invalidParameters){
+			splitInputParameters();
+		}
+		
+		/* Deprecated
+		if (isNotDelimitedString()){
+			getDescInQuotes();
+			removeDesc();
+			parseTheRest();
+		}
+		*/
+		
+		if (_invalidParameters){
+			return false;
+		}
+		
+		return true;		
+	}
+
+	
+	private void checkIfExistDesc() throws EmptyDescException {
+		if (!isFirstBitDesc()){
+			_invalidParameters = true;
+			throw new EmptyDescException();
+		}
+	}
+	
+	private boolean isFirstBitDesc(){
+		int indexFirstDash = fullInput.indexOf(DASH);
+		int indexFirstWhite = fullInput.indexOf(SPACE);
+		if (indexFirstDash == -1){
+			return true;
+		} else if(fullInput.substring(indexFirstWhite+1, indexFirstDash).equals("")){
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * putDescToFirst: move the description that is with
+	 * " " to the first place in order to perform the
+	 * following methods.
+	 * @return
+	 */
+	public String putDescToFirst() {
+		//scanner that omits all white space character
+		_sc = new Scanner(input);
+		
+		StringBuffer tempDesc = null;
+		StringBuffer normalString = new StringBuffer(BLANK);
+		boolean isStarted = false;
+		boolean isFinish = false;
+		
+		while (_sc.hasNext()){
+			String buildString = _sc.next();
+			if (!isFinish){
+				if (!isStarted){
+					if (buildString.startsWith(QUOTE)){
+						isStarted = true;
+						tempDesc = new StringBuffer(buildString);
+					} else {
+						normalString.append(SPACE + buildString);
+					}
+				} else {
+					tempDesc.append(SPACE + buildString);
+					if (buildString.endsWith(QUOTE)){
+						isFinish = true;
+					}
+				}
+			} else {
+				normalString.append(SPACE + buildString);
+			}
+		}
+		
+		if (tempDesc == null){
+			//invalidParam();
+			tempDesc = new StringBuffer(BLANK);
+			return tempDesc.toString();
+		}
+	
+		_sc.close();
+		return tempDesc.append(normalString.toString()).toString();
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_CATEGORY, BLANK);
+		putOneParameter(PARAMETER_DEADLINE, BLANK);
+		putOneParameter(PARAMETER_DESCRIPTION, BLANK); 
+		putOneParameter(PARAMETER_START_DATE, BLANK);
+		putOneParameter(PARAMETER_END_DATE, BLANK);
+		putOneParameter(PARAMETER_END_TIME, BLANK);
+		putOneParameter(PARAMETER_START_TIME, BLANK);
+		putOneParameter(PARAMETER_VENUE, BLANK);
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_DESCRIPTION, _desc);
+	}
+
+	@Override
+	protected boolean checkIfIncorrectArguments(){
+		return false;
+	}
+	
+	
+	private void splitInputParameters(){
+		checkAndRemoveDate();
+		
+		//split into 2 parts:
+		_sc = new Scanner(input);
+		_sc.useDelimiter("\\s-");
+		
+		while(_sc.hasNext()){
+			String nextParam = _sc.next();
+			if (_count == 0){
+				_desc = nextParam.trim();
+			} else {
+				parseNextParam(nextParam.trim());
+			}
+			_count++;
+		}
+		_sc.close();
+	}
+	
+	private void checkAndRemoveDate() {
+		String[] splitInput = input.split(SPACE);
+		String newInput = EMPTY;
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toLowerCase().equals("-d")){
+				getDeadline(splitInput[i+1]);
+				splitInput[i+1] = EMPTY;
+			} else {
+				newInput += splitInput[i] + " ";
+			}
+		}
+		input = newInput;
+	}
+
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param);
+
+		switch (firstChar){
+		case "d":
+			getDeadline(param);
+			break;
+		case "v":
+			inputVenue(param);
+			break;
+		case "s":
+			inputStartTime(param);
+			break;
+		case "e": 
+			inputEndTime(param);
+			break;
+		case "c":
+			inputCategory(param);
+			break;
+		default:
+			invalidParam();
+		}
+	}
+	
+	private void getDeadline(String param) {
+		param = stripWhiteSpaces(param);
+		try {
+			param = DateAndTimeManager.getInstance().parseDate(param);
+		} catch (InvalidDateException e) {
+			InputManager.outputToGui(e.getMessage());
+			_invalidParameters = true;
+		}
+		inputDeadline(param);
+	}
+	
+	private void inputDeadline(String deadline){
+		putOneParameter(PARAMETER_DEADLINE, deadline);
+	}
+	
+	private void inputVenue(String param) {
+		putOneParameter(PARAMETER_VENUE, param);		
+	}
+
+	//TODO: Check if splitParam[0] is valid time and splitParam[1] is valid Date
+	private void inputStartTime(String param) {
+		String[] splitParam = param.split(COMMA);
+		
+		if (isValidTimeArgs(splitParam)){
+			//deprecated for flexi commands 
+			//putOneParameter(PARAMETER_START_TIME, stripWhiteSpaces(splitParam[0]));
+			
+			String startTime = EMPTY;
+			try {
+				startTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException | InvalidTimeException e) {
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(startTime);
+				_invalidParameters = true;
+				return;
+			}
+			putOneParameter(PARAMETER_START_TIME, startTime);
+		
+			String startDate = EMPTY;
+			if (splitParam.length == LENGTH_TIME){
+				try {
+					startDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (InvalidDateException e) {
+					InputManager.outputToGui(e.getMessage()); 
+					_invalidParameters = true;
+					return;
+				}
+				putOneParameter(PARAMETER_START_DATE, startDate);
+			}
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private void getDescInQuotes(){
+		Pattern pattern = Pattern.compile(".*(\\\"|\\\')(.*)(\\\"|\\\').*"); 
+		Matcher m = pattern.matcher(input);
+		while (m.find()){
+			_desc = m.group(2);
+		}
+	}
+
+	private void inputEndTime(String param) {
+		String[] splitParam = param.split(",");
+		
+		if (isValidTimeArgs(splitParam)){
+			//deprecated for flexi commands
+			//putOneParameter(PARAMETER_END_TIME, stripWhiteSpaces(splitParam[0])); 
+			String endTime = EMPTY;
+			
+			try {
+				endTime = DateAndTimeManager.getInstance().parseTimeInput(stripWhiteSpaces(splitParam[0]));
+			} catch (TimeErrorException | InvalidTimeException e) {
+				InputManager.outputToGui(e.getMessage());
+				//outputErrorTimeMessage(endTime);
+				_invalidParameters = true;
+				return;
+			}
+			
+			putOneParameter(PARAMETER_END_TIME, endTime);
+			
+			String endDate = EMPTY;
+			if (splitParam.length == LENGTH_TIME){
+				try {
+					endDate = DateAndTimeManager.getInstance().parseDate(stripWhiteSpaces(splitParam[1]));
+				} catch (InvalidDateException e) {
+					InputManager.outputToGui(e.getMessage());
+					_invalidParameters = true;
+					return;
+				}
+				putOneParameter(PARAMETER_END_DATE, endDate);
+			}
+		}
+	}
+
+	private void inputCategory(String param){
+		putOneParameter(PARAMETER_CATEGORY, param);
+	}
+	
+	private void invalidParam() {
+		_invalidParameters = true;
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean isNotDelimitedString(){
+		if (_count == 1){
+			return true;
+		}
+		return false;
+	}
+	
+	private String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), Add_old.BLANK).trim();
+	}
+	
+	private String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
+	}
+	
+	private boolean isValidTimeArgs(String[] args){
+		if (args.length > LENGTH_TIME){
+			outputTimeArgsError(args.length);
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private String outputTimeArgsError(int length){
+		String errorMessage = String.format(MESSAGE_ERROR_TIME, length);
+		InputManager.outputToGui(errorMessage);
+		return errorMessage;
+	}
+	
+	private String stripWhiteSpaces(String input){
+		return input.replaceAll(Add_old.SPACE, Add_old.BLANK);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Add_old.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\ClearTasks.java
+	 */
+
+
+package com.taskpad.input;
+
+
+public class ClearTasks extends Command{
+	
+	private static final String COMMAND_CLEAR = "CLEAR";
+	private static final int NUMBER_ARGUMENTS = 0;
+
+	private static final String PARAMETER_NULL = "NULL";
+	
+	public ClearTasks(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_CLEAR);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+	}
+	
+	@Override
+	public void run(){
+		initialiseParametersToNull();
+		putInputParameters();
+		createInputObject();
+		passObjectToExecutor();
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {
+		return false;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_NULL, "");
+	}
+
+	@Override
+	protected void putInputParameters() {		
+		putOneParameter(PARAMETER_NULL, "");
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\ClearTasks.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Command.java
+	 */
+
+
+/* 
+ * Abstract class for processing the commands 
+ */
+
+
+
+package com.taskpad.input;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+
+public abstract class Command {
+
+	protected static Input inputObject;
+	protected static Map<String, String> inputParameters;
+	protected static String input;
+	protected static String fullInput;
+	
+	protected static int NUMBER_ARGUMENTS;
+	protected static String COMMAND;
+	
+	protected static final String MESSAGE_EMPTY_INPUT = "Error: Empty Input";
+	protected static final String MESSAGE_INVALID_INPUT = "Error: Invalid input: %s";
+	protected static final String MESSAGE_INVALID_PARAMETER_NUMBER = "Error: Invalid number of parameters.\nType help if you need! :)";
+	    
+	protected static Logger logger = Logger.getLogger("TaskPad");
+	
+	public Command(String input, String fullInput){
+		Command.fullInput = fullInput;
+		Command.input = input;
+		inputParameters = new HashMap<String,String>();
+		initialiseOthers();
+		run();
+	}
+	
+	protected abstract void initialiseOthers();
+
+	public void run() {
+		input = input.trim();
+		try {
+			checkIfEmptyString();
+		} catch (EmptyStringException e) {
+			showEmptyString();
+			return;
+		}
+		
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		if (numberInput != null){
+			input = numberInput;
+		}
+				
+		try {
+			checkIfIncorrectArguments();
+		} catch (TaskIDException | InvalidParameterException e) {
+			//showIncorrectArguments();
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
+		
+		clearInputParameters();
+		initialiseParametersToNull();
+		
+		if (commandSpecificRun()){
+			createInputObject();
+			passObjectToExecutor();
+		} else {
+			return;
+		}
+	}
+	
+	protected void showEmptyString(){
+		String errorMessage = String.format(MESSAGE_EMPTY_INPUT);
+		InputManager.outputToGui(errorMessage);
+	}
+
+	protected void showNoDesc() {
+		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
+		InputManager.outputToGui(errorMessage);
+	}
+	
+	protected abstract boolean commandSpecificRun();
+	
+	protected boolean checkIfEmptyString() throws EmptyStringException {
+		
+		if(isEmptyString()){
+			throw new EmptyStringException();
+//			InputManager.outputToGui(MESSAGE_EMPTY_INPUT);
+//			return true;
+		}
+		return false;
+	}
+	
+	protected abstract void initialiseParametersToNull();
+	
+	protected boolean checkIfIncorrectArguments() throws TaskIDException, InvalidParameterException{
+		String inputString[] = input.split(" ");
+		
+		if (isNotNumberArgs(inputString)){
+			throw new InvalidParameterException();
+		}
+		
+		if(isNotValidTaskID(inputString[0])){
+			throw new TaskIDException(inputString[0]);
+		}
+		
+		return false;
+	}
+	
+	protected boolean isNotValidTaskID(String taskID){
+		if(isNotInteger(taskID) || isInvalidID(taskID)){
+			//outputIdError();
+			return true;
+		}	
+		return false; 
+	}
+	
+	protected Input createInputObject() {
+		//clearInputParameters();	
+		putInputParameters();
+		inputObject = new Input(getCOMMAND(), inputParameters);	
+		
+		inputObject.showAll();
+		
+		logger.info("Input object created, command: " + inputObject.getCommand());
+		return inputObject;
+	}
+
+	protected abstract void putInputParameters();
+	
+	protected static void clearInputParameters(){
+		inputParameters.clear();
+	}
+	
+	protected boolean isEmptyString(){
+		if (input.isEmpty()){
+			return true;
+		}
+		return false;
+	}
+	
+	protected static void putOneParameter(String parameter, String input){
+		inputParameters.put(parameter, input);
+	}
+	
+	protected void passObjectToExecutor(){
+		assert (inputObject.getParameters().size() != 0);
+		InputManager.passToExecutor(inputObject, fullInput);
+		
+		clearInputParameters();
+		
+		logger.info("Input object passed to executor");
+	}
+	
+	protected boolean isNotInteger(String input){
+		try{
+			Integer.parseInt(input);
+		} catch (NumberFormatException e){
+			return true;
+		}
+		return false;
+	}
+	
+	protected boolean isInvalidID(String input){
+		input = input.trim();
+		int inputNum = Integer.parseInt(input.trim());
+		if (inputNum > InputManager.retrieveNumberOfTasks() || inputNum < 0){
+			return true;
+		}
+		return false;
+	}
+	
+	protected boolean isNotNumberArgs(String[] inputString){
+		if (inputString.length != getNUMBER_ARGUMENTS()){
+			return true;
+		}
+		return false;
+	}
+	
+	protected void invalidParameterError(){
+		String errorMessage = String.format(MESSAGE_INVALID_PARAMETER_NUMBER);
+		InputManager.outputToGui(errorMessage);
+	}
+	
+	protected void outputIdError() {
+		String errorMessage = String.format(MESSAGE_INVALID_INPUT, input);
+		InputManager.outputToGui(errorMessage);
+	}
+
+	protected int getNUMBER_ARGUMENTS() {
+		return NUMBER_ARGUMENTS;
+	}
+
+	protected void setNUMBER_ARGUMENTS(int nUMBER_ARGUMENTS) {
+		NUMBER_ARGUMENTS = nUMBER_ARGUMENTS;
+	}
+
+	protected String getCOMMAND() {
+		return COMMAND;
+	}
+
+	protected void setCOMMAND(String cOMMAND) {
+		COMMAND = cOMMAND;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Command.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\CommandQueue.java
+	 */
+
+
+package com.taskpad.input;
+
+/** Trying to make Command a Singleton class
+ * 
+ */
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\CommandQueue.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\CommandQueue.java
+	 */
+
+
+import java.awt.Color;
+import java.util.Map;
+
+import com.taskpad.alarm.AlarmManager;
+import com.taskpad.execute.ExecutorManager;
+import com.taskpad.input.CommandTypes.CommandType;
+
+public class CommandQueue {
+	
+	private static final String STRING_SPACE = " ";
+	private static final String STRING_EMPTY = "";
+	
+	private static final String MESSAGE_TODAYS_REMINDERS = "\nToday's Reminders: ";
+	
+	private static final CommandQueue _commandInstance = new CommandQueue();
+
+	private CommandQueue(){
+	}
+	
+	protected static CommandQueue getInstance(){
+		return _commandInstance;		
+	}
+	
+	/* Methods to perform commands */
+	
+	protected void Add(String input, String fullInput){
+		new Add(input, fullInput);
+	}
+	
+	protected void Alarm(String input, String fullInput){
+		new Alarm(input, fullInput);
+	}
+	
+	protected void stopAlarm(String input, String fullInput){
+		try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			return;
+		}
+	}
+	
+	protected void Help(){
+		new Help();
+	}
+	
+	protected void Exit(){
+		InputManager.callGuiExit();
+	}
+	
+	protected void addPriTask(String input, String fullInput){
+		new AddPri(input, fullInput);
+	}
+
+	protected void addInfoTask(String input, String fullInput) {
+		new Addinfo(input, fullInput);
+	}
+	
+	protected void addRemTask(String input, String fullInput){
+		new Addrem(input, fullInput);
+	}
+	
+	protected void listTask(String input, String fullInput){
+		new List(input, fullInput);
+	}
+	
+	protected void redoTask(){
+		new Redo(STRING_EMPTY, "REDO");
+	}
+	
+	protected void deleteTask(String input, String fullInput) {
+		new Delete(input, fullInput);
+	}
+
+	protected void doneTask(String input, String fullInput) {
+		new Done(input, fullInput);
+	}
+	
+	protected void clearAllTasks() {
+		new ClearTasks(STRING_EMPTY, "CLEAR");
+	}
+
+	
+	protected void undoLast() {
+		new Undo(STRING_EMPTY, "UNDO");
+	}
+	
+	protected void editTask(String input, String fullInput) {
+		new Edit(input, fullInput);
+	}
+
+	protected void searchTask(String input, String fullInput) {
+		new Search(input, fullInput);
+	}
+	
+	protected void showRem(){
+		InputManager.outputFormatString(MESSAGE_TODAYS_REMINDERS, Color.RED, true);
+		ExecutorManager.showReminder();
+	}
+	
+	/* Helper methods to find Command Types */
+	
+	/** 
+	 * This method takes in the first word of input and finds the CommandType
+	 * 
+	 * @param inputCommand
+	 * @return CommandType
+	 */
+	public static CommandType find(String inputCommand){
+		//new CommandTypes();
+		CommandTypes.getInstance();
+		String variations[];
+		
+		for (Map.Entry<CommandType, String[]> entry : CommandTypes.commandVariations.entrySet()){
+			variations = entry.getValue();
+			for (int i=0; i<variations.length; i++){
+				if (isValueInputCommand(variations[i], inputCommand)){
+					return (CommandType) entry.getKey();
+				}
+			}
+		}
+		
+		return CommandType.INVALID;
+	}
+	
+	
+	/** 
+	 * This method takes in the whole input and finds the CommandType
+	 * 
+	 * @param inputCommand
+	 * @return CommandType
+	 */
+	public static CommandType findFlexi(String input){
+		String variations[];
+
+		for (Map.Entry<CommandType, String[]> entry : CommandTypes.commandVariations.entrySet()){
+			variations = entry.getValue();
+			for (int i=0; i<variations.length; i++){
+				if (isInputSubstring(variations[i], input)){
+					return (CommandType) entry.getKey();
+				}
+			}
+		}
+		
+		return CommandType.INVALID;
+	}
+	
+	private static boolean isInputSubstring(String value, String input){
+		String[] splitInput = input.split(STRING_SPACE);
+		for (int i=0; i<splitInput.length; i++){
+			if (splitInput[i].toUpperCase().equals(value)){
+				//System.out.println(splitInput[i] + " " + value);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/* deprecated
+	private static boolean isContainsInput(String value, String input){
+		return input.toUpperCase().contains(value);
+	}
+	*/
+	
+	private static boolean isValueInputCommand(String value, String inputCommand) {
+		inputCommand = inputCommand.trim();
+		if (value.equalsIgnoreCase(inputCommand)){
+			return true;
+		}
+		
+		return false;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\CommandQueue.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\CommandTypes.java
+	 */
+
+
+package com.taskpad.input;
+
+/**
+ * CommandTypes has been changed to a Singleton class
+ */
+
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
+public class CommandTypes {
+	
+	protected static Logger logger = Logger.getLogger("TaskPad");
+	
+	public enum CommandType{
+		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
+		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, REDO, SEARCH, SHOW_REM, STOP, UNDO
+	};
+	
+	protected static Map<CommandType, String[]> commandVariations = new HashMap<CommandType, String[]>();
+	private static final CommandTypes _commandTypes = new CommandTypes();
+	
+	private CommandTypes(){
+		createHashMap();
+	}
+	
+	public static CommandTypes getInstance(){
+		return _commandTypes;
+	}
+
+	private static void createHashMap(){
+		putAddVariations();
+		putAddInfoVariations();
+		putAddRemVariations();
+		putAddPriVariations();
+		putAlarmVariations();
+		putClearVariations();
+		putClearScreenVariations();
+		putDeleteVariations();
+		putDoneVariations();
+		putEditVariations();
+		putExitVariations();
+		putHelpVariations();
+		putListVariations();
+		putRedoVariations();
+		putSearchVariations();
+		putShowRemVariations();
+		putStopVariations();
+		putUndoVariations();
+	}
+	
+	/* Helper methods for creating the hashmap */
+	
+	private static void putAddVariations(){
+		String[] addVariations = {"ADD", "NEW", "CREATE", "INSERT"};
+		commandVariations.put(CommandType.ADD, addVariations);
+	}
+	
+	private static void putAddInfoVariations(){
+		String[] addInfoVariations = {"ADDINFO", "INFO", "INFORMATION", "CREATEDESC", "ADDDESC", "CREATEINFO", "INFORMATIN", "INFORMATN"};
+		commandVariations.put(CommandType.ADD_INFO, addInfoVariations);
+	}
+	
+	private static void putAddRemVariations(){
+		String[] addRemVariations = {"ADDR", "REMINDER", "REMIND", "REMAINDER", "ADDREM"};
+		commandVariations.put(CommandType.ADD_REM, addRemVariations);
+	}
+	
+	private static void putAddPriVariations(){
+		String[] addPriVariations = {"ADDPRI", "ADDPRIORITY", "PRI", "PRIORITY"};
+		commandVariations.put(CommandType.ADD_PRI, addPriVariations);
+	}
+	
+	private static void putAlarmVariations() {
+		String[] exitVariations = {"ALARM", "ADDALARM", "SETALARM", "SETTIMER", "RING", "CREATEALARM"};
+		commandVariations.put(CommandType.ALARM, exitVariations);
+	}
+	
+	private static void putDeleteVariations(){
+		String[] deleteVariations = {"DELETE", "DEL", "REMOVE", "REM"};
+		commandVariations.put(CommandType.DELETE, deleteVariations);
+	}
+	
+	private static void putDoneVariations(){
+		String[] doneVariations = {"DONE", "FINISHED", "COMPLETED", "FINISH", "COMPLETE"};
+		commandVariations.put(CommandType.DONE, doneVariations);
+	}
+	
+	private static void putClearVariations(){
+		String[] clearVariations = {"CLEAR", "CLR", "CLEAN", "CLC", "CLEARALL"};
+		commandVariations.put(CommandType.CLEAR_ALL, clearVariations);
+	}
+	
+	private static void putClearScreenVariations(){
+		String[] clearScreenVariations = {"CLEARSCR", "CLEARSCREEN", "CLEARSC", "CLCSR", "CLCSCR", "SCREEN", "SCR"};
+		commandVariations.put(CommandType.CLEAR_SCREEN, clearScreenVariations);
+	}
+	
+	private static void putEditVariations(){
+		String[] editVariations = {"EDIT", "CHANGE", "ED"};
+		commandVariations.put(CommandType.EDIT, editVariations);
+	}
+	
+	private static void putUndoVariations(){
+		String[] undoVariations = {"UNDO", "UN", "UDO"};
+		commandVariations.put(CommandType.UNDO, undoVariations);
+	}
+	
+	private static void putSearchVariations(){
+		String[] searchVariations = {"SEARCH", "FIND"};
+		commandVariations.put(CommandType.SEARCH, searchVariations);
+	}
+	
+	private static void putShowRemVariations(){
+		String[] showRemVariations = {"SHOWREM", "SHOWREMINDER", "SHOWREMAINDER"};
+		commandVariations.put(CommandType.SHOW_REM, showRemVariations);
+	}
+	
+	private static void putStopVariations(){
+		String[] stopVariations = {"STOP", "STOPP", "STO"};
+		commandVariations.put(CommandType.STOP, stopVariations);
+	}
+	
+	private static void putListVariations(){
+		String[] listVariations = {"LIST", "LS", "SHOW", "DISPLAY", "LST"};
+		commandVariations.put(CommandType.LIST, listVariations);
+	}
+	
+	private static void putRedoVariations(){
+		String[] redoVariations = {"REDO", "RDO", "RE"};
+		commandVariations.put(CommandType.REDO, redoVariations);
+	}
+	
+	public static void putHelpVariations(){
+		String[] helpVariations = {"HELP", "HLP", "MAN"};
+		commandVariations.put(CommandType.HELP, helpVariations);
+	}
+	
+	private static void putExitVariations(){
+		String[] exitVariations = {"EXIT", "QUIT", "END", "CLOSE", "SHUTDOWN"};
+		commandVariations.put(CommandType.EXIT, exitVariations);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\CommandTypes.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Delete.java
+	 */
+
+
+/**
+ * This class creates a Delete object
+ * 
+ * Current syntax for delete: del <taskID>
+ * 
+ * Returns Input object
+ * 
+ */
+
+
+package com.taskpad.input;
+
+public class Delete extends Command{
+	
+	private static String COMMAND_DELETE = "DELETE";
+	private static String PARAMETER_TASK_ID = "TASKID";
+	private static String PARAMETER_KEYWORD = "KEYWORD";
+	private static int NUMBER_ARGUMENTS = 1;		//Number of arguments for delete
+	
+	private String _taskID;
+	private String _keyword;
+
+	public Delete(String input, String fullInput) {
+		super(input, fullInput);	
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		setCOMMAND(COMMAND_DELETE);	
+		
+		_taskID = "";
+		_keyword = "";
+	}
+	
+	@Override
+	protected boolean commandSpecificRun() {
+		if (isTaskID(input)){
+			_taskID = input.trim();
+		} else{
+			_keyword = input.trim();
+		}
+		
+		return true;
+	}
+	
+	private boolean isTaskID(String input){
+		try{
+			Integer.parseInt(input);
+			return true;
+		} catch (NumberFormatException e){
+			return false;
+		}
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		inputParameters.put(PARAMETER_TASK_ID, "");		
+		inputParameters.put(PARAMETER_KEYWORD, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_TASK_ID, _taskID);
+		putOneParameter(PARAMETER_KEYWORD, _keyword);
+	}
+	
+	protected boolean checkIfIncorrectArguments() throws TaskIDException, InvalidParameterException{
+		String inputString[] = input.split(" ");
+		
+		if (isNotNumberArgs(inputString)){
+			throw new InvalidParameterException();
+		}
+		
+		return false;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Delete.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Done.java
+	 */
+
+
+package com.taskpad.input;
+
+
+public class Done extends Command{
+	
+	private static final String COMMAND_DONE = "DONE";
+	private static final int NUMBER_ARGUMENTS = 1;
+	
+	private static String PARAMETER_TASK_ID = "TASKID";
+	 
+	private static String _taskID = "";
+
+	public Done(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_DONE);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {
+		if (isNotValidTaskID(input)){
+			return false;
+		}
+		_taskID = input.trim();
+		return true;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_TASK_ID, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_TASK_ID, _taskID);		
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Done.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Edit.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidQuotesException;
+
+public class Edit extends Command{
+	
+	private static final String COMMAND_EDIT = "EDIT";
+	private static final int NUMBER_ARGUMENTS = 2;
+	
+	private static String PARAMETER_TASK_ID = "TASKID";
+	private static String PARAMETER_DESC = "DESC";
+	private static String PARAMETER_DEADLINE = "DEADLINE";
+	
+	private String _taskID;
+	private String _desc;
+	private String _deadline;
+	
+	private static final String STRING_SPACE = " ";
+
+	public Edit(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		setCOMMAND(COMMAND_EDIT);
+		
+		_taskID = "";
+		_desc = "";
+		_deadline = "";
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {
+		//String[] splitParams = input.split(" ");
+		
+		//_taskID = splitParams[0].trim();
+		
+		try {
+			_taskID = findTaskID(fullInput);
+		} catch (TaskIDException e) {
+			InputManager.outputToGui(e.getMessage());
+		}
+		
+		if (isDesc()){
+			fullInput = removeWordDesc(fullInput);
+			_desc = removeTaskID(fullInput, _taskID);
+		} else if (isDeadline()){
+			fullInput = removeWordDeadline(fullInput);
+			_deadline = findDeadline(fullInput);
+		} else {
+			//no tag, just assume description
+			_desc = removeTaskID(fullInput, _taskID);
+		}
+		
+		System.out.println("Desc: " + _desc + "deadline: " + _deadline);
+		
+		putInputParameters();
+		return true;
+	}
+	
+	private String findDeadline(String fullInput) {
+		String formatInput = null;
+		try {
+			formatInput = DateAndTimeManager.getInstance().formatDateAndTimeInString(fullInput);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+		}
+		System.out.println(formatInput);
+		
+		String[] splitResult = formatInput.split(STRING_SPACE);
+		return splitResult[2];
+	}
+
+	@Override
+	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
+		String inputString[] = input.split(STRING_SPACE);
+		
+		if (isNotNumberArgs(inputString)){
+			System.out.println("Throw");
+			throw new InvalidParameterException();
+		}
+			
+		return false;
+	}
+	
+	/**
+	 * Takes in input string and finds the first integer as taskID
+	 * @param input
+	 * @return
+	 * @throws TaskIDException 
+	 */
+	private String findTaskID(String input) throws TaskIDException{
+		String numberInput = DateAndTimeManager.getInstance().parseNumberString(input);
+		System.out.println("NumInput: " + numberInput);
+
+		if (numberInput != null){
+			input = numberInput;
+			fullInput = numberInput;
+		}
+		
+		int taskID = -1;
+		String[] splitInput = input.split(STRING_SPACE);
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (taskID == -1){
+				try{
+					taskID = Integer.parseInt(splitInput[i]);
+				} catch (NumberFormatException e){
+					//do nothing
+				}
+			}
+		}
+		
+		System.out.println("TaskID " + taskID);
+		
+		if (taskID == -1){
+			throw new TaskIDException();
+		}
+		
+		
+		return ""+taskID;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_TASK_ID, "");
+		putOneParameter(PARAMETER_DESC, "");
+		putOneParameter(PARAMETER_DEADLINE, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_TASK_ID, _taskID);
+		putOneParameter(PARAMETER_DESC, _desc);		
+		putOneParameter(PARAMETER_DEADLINE, _deadline);
+	}
+	
+	/**
+	 * Lynnette, got bug here.
+	 * inputString.length should less that getNUMBER_ARGUMENTS
+	 * Dont understand :(
+	 * JunWei
+	 */
+	@Override
+	protected boolean isNotNumberArgs(String[] inputString){
+		if (inputString.length >= getNUMBER_ARGUMENTS()){
+			return false;
+		}
+		return true;
+	}
+	
+	private String removeTaskID(String input, String taskID){
+		input = input.replaceFirst("(?i)"+COMMAND_EDIT, "").trim();
+		return input.replaceFirst(taskID, "").trim();
+	}
+	
+	@SuppressWarnings("unused")
+	private String removeFirstWord(String input){
+		return input.replace(getFirstWord(input), "").trim();
+	}
+	
+	private static String getFirstWord(String input) {
+		return input.trim().split("\\s+")[0];
+	}
+	
+	private boolean isDesc(){
+		String inputCopy = input.toUpperCase();
+		if (inputCopy.contains("DESC") || inputCopy.contains("DESCRIPTION")){
+			return true;
+		} 
+		return false;
+	}
+
+	private String removeWordDesc(String inputCopy) {
+		String newString = "";
+		int count = 0;	//Just replace only one occurrence of description
+		
+		String[] inputSplit = inputCopy.split(" ");
+		for (int i=0; i<inputSplit.length; i++){
+			if (isNotDescWord(inputSplit[i].trim())){
+				newString += inputSplit[i] + " ";
+			} else if (count > 0) {
+				newString += inputSplit[i] + " ";
+			} else {
+				count ++;
+			}
+		}
+		return newString;
+	}
+
+	private boolean isNotDescWord(String string) {
+		return !(string.toUpperCase().equals("DESC") || 
+				string.toUpperCase().equals("DESCRIPTION"));
+	}
+	
+	private boolean isDeadline(){
+		String inputCopy = input.toUpperCase();
+		if (inputCopy.contains("DEADLINE") || inputCopy.contains("DEAD") || inputCopy.contains("DATE")){
+			return true;
+		} 
+		return false;
+	}
+	
+	private String removeWordDeadline(String inputCopy) {
+		String newString = "";
+		int count = 0;
+		String[] inputSplit = inputCopy.split(" ");
+		for (int i=0; i<inputSplit.length; i++){
+			if (!isDeadlineWord(inputSplit[i].trim())){
+				newString += inputSplit[i] + " ";
+			} else if (count > 0 ){
+				newString += inputSplit[i] + " ";
+			} else {
+				count++;
+			}
+		}
+		return newString;
+	}
+	
+	private boolean isDeadlineWord(String string) {
+		return string.toUpperCase().equals("DEADLINE") || 
+				string.toUpperCase().equals("DATE") || 
+				string.toUpperCase().equals("DEAD");
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Edit.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\EmptyDescException.java
+	 */
+
+
+package com.taskpad.input;
+
+
+import java.util.logging.Logger;
+
+public class EmptyDescException extends Exception {
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 886846093768153430L;
+
+	private static final String MESSAGE = "Error: Please enter a description";
+	private static Logger logger = Logger.getLogger("TaskPad");
+
+	
+	public EmptyDescException(){
+		super(MESSAGE);
+		logger.info(MESSAGE);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\EmptyDescException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\EmptyStringException.java
+	 */
+
+
+package com.taskpad.input;
+
+
+import java.util.logging.Logger;
+
+public class EmptyStringException extends Exception {
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 1091219745520768583L;
+	
+	private static final String MESSAGE = "Error: Empty String after command";
+	
+	private static Logger logger = Logger.getLogger("TaskPad");
+	
+	public EmptyStringException(){
+		super(MESSAGE);
+		logger.info(MESSAGE);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\EmptyStringException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\ErrorMessages.java
+	 */
+
+
+package com.taskpad.input;
+
+/** Class for all Input error messages for Input Handling
+ * 
+ */
+
+public class ErrorMessages {
+	
+	private static final String MESSAGE_EMPTY_INPUT = "Error: Empty input";
+	private static String MESSAGE_TIME_ERROR = "Error: Invalid time format: %s. Time format should be hh:mm or hhmm";
+	private static final String MESSAGE_INVALID_CONFIRM_INPUT = "Error: Invalid confirmation. Please enter Y or N";
+	private static final String MESSAGE_INVALID_TIME = "Invalid time parameter";
+	private static final String MESSAGE_INVALID_TASKID = "Invalid Task ID";
+	
+	private ErrorMessages(){
+	}
+
+	protected static void timeErrorMessage(String input){
+		String errorMessage = String.format(MESSAGE_TIME_ERROR, input);
+		InputManager.outputToGui(errorMessage);
+	}
+	
+	protected static void invalidTimeMessage(){
+		InputManager.outputToGui(MESSAGE_INVALID_TIME);
+	}
+	
+	protected static void emptyInputMessage(){
+		InputManager.outputToGui(String.format(MESSAGE_EMPTY_INPUT));
+	}
+	
+	protected static void invalidConfirmationInput(){
+		InputManager.outputToGui(MESSAGE_INVALID_CONFIRM_INPUT);
+	}
+	
+	protected static void invalidTaskIDMessage(){
+		InputManager.outputToGui(MESSAGE_INVALID_TASKID);
+	}
+
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\ErrorMessages.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Help.java
+	 */
+
+
+/* 
+ * This is the class for the command HELP 
+ * 
+ * Current syntax: help
+ * 
+ * Output: Output frame shows list of commands and their syntax
+ */
+
+
+package com.taskpad.input;
+
+import java.awt.Color;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map.Entry;
+
+
+public class Help {
+
+	private static LinkedHashMap<String, String> helpCommands;
+	
+	private static String KEY_START = "TASKPAD HELP";
+	private static String KEY_ADD_TASK = "ADD TASK";
+	private static String KEY_ADD_INFO_TASK = "ADD INFO TO TASK";
+	private static String KEY_ADD_REM_TASK = "ADD REMINDER";
+	private static String KEY_ALARM = "ALARM";
+	private static String KEY_CLEAR_DATA = "CLEAR MEMORY";
+	private static String KEY_CLEAR_SCREEN = "CLEAR SCREEN";
+	private static String KEY_DELETE_TASK = "DELETE TASK";
+	private static String KEY_EDIT_TASK = "EDIT TASK DESCRIPTION";
+	private static String KEY_EXIT = "EXIT PROGRAM";
+	private static String KEY_LIST = "LIST TASKS"; 
+	private static String KEY_MARK_DONE = "MARK TASK AS DONE";
+	private static String KEY_SEARCH = "SEARCH TASKS";
+	private static String KEY_UNDO_LAST_DONE = "UNDO LAST DONE";
+	private static String KEY_REDO = "REDO";
+	
+	protected Help(){
+		helpCommands  = new LinkedHashMap<String, String>();
+		initialiseCommands();
+		outputHelp();
+	}
+	
+	private static void initialiseCommands(){
+		helpCommands.put(KEY_START, "Here's a list of commands TaskPad can perform!");
+		helpCommands.put(KEY_ADD_TASK, "add <desc> -d <deadline> -s <start time>,<start date> -e <end time>,<end date>");
+		helpCommands.put(KEY_ALARM, "alarm <desc> <number> <time unit>");
+		helpCommands.put(KEY_CLEAR_DATA, "clc");
+		helpCommands.put(KEY_CLEAR_SCREEN, "screen");
+		helpCommands.put(KEY_DELETE_TASK, "del <taskID>");
+		helpCommands.put(KEY_MARK_DONE, "done <taskID>");
+		helpCommands.put(KEY_EDIT_TASK, "edit <taskID> <new desc>");
+		helpCommands.put(KEY_ADD_INFO_TASK, "info <taskID> <info>");
+		helpCommands.put(KEY_SEARCH, "search <keyword>");
+		helpCommands.put(KEY_LIST, "ls <parameter (done, undone, all, dateline)>");
+		helpCommands.put(KEY_ADD_REM_TASK, "rem <taskID> <date> <time>");
+		helpCommands.put(KEY_UNDO_LAST_DONE, "undo");
+		helpCommands.put(KEY_REDO, "redo");
+		helpCommands.put(KEY_EXIT, "exit");
+	}
+	
+	protected void outputHelp(){
+		InputManager.clearScreen();
+		Iterator<Entry<String, String>> it = helpCommands.entrySet().iterator();
+		while (it.hasNext()){
+			Entry<String, String> entry = it.next();
+			formatOutput(entry.getKey(), entry.getValue());
+		}		
+	}
+	
+	private static void formatOutput(String key, String value){
+		InputManager.outputFormatString(key, Color.BLUE, false);
+		InputManager.outputFormatString(value + "\n", Color.BLACK, false);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Help.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Input.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+import java.util.Map;
+
+public class Input {
+	
+	private static Map<String,String> parameters;
+	private static String command;
+	
+	public Input(String command, Map<String,String> parameters){
+		Input.parameters = parameters;
+		Input.command = command;
+	}
+	
+	public String getCommand(){
+		return Input.command;
+	}
+	
+	public Map<String,String> getParameters(){
+		return Input.parameters;
+	}
+	
+	public void addParameter(String parameter, String value){
+		Input.parameters.put(parameter, value);
+	}
+	
+	protected void showAll(){
+		for (Map.Entry<String, String> entry : parameters.entrySet()){
+			System.out.println(entry.getKey() + " " + entry.getValue());
+		}
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Input.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\InputMain.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+import java.util.logging.Logger;
+
+import com.taskpad.input.CommandTypes.CommandType;
+
+public class InputMain {
+
+	private static final String MESSAGE_INVALID_COMMAND = "Invalid Command: %s ";
+	
+	private static final String STRING_EMPTY = "";
+			
+	private static boolean hasCheckedFlexi = false;
+		
+	private static Logger logger = Logger.getLogger("TaskPad");
+	
+	protected static String receiveInput(String input){
+		hasCheckedFlexi = false;
+		input = input.trim();
+		String outputString = STRING_EMPTY;
+
+		if (errorIfNoInput(input)){
+			ErrorMessages.emptyInputMessage();
+		}
+		
+		String inputCopy = input;
+		String commandTypeString = parseInput(inputCopy);
+		CommandTypes.CommandType commandType = determineCommandType(commandTypeString);
+		logger.info("Command: " + commandType.toString());
+		
+		if (isValidCommandType(commandType)){		
+			commandTypeString = removeFirstWord(input);
+			outputString = commandType.toString() + " " + commandTypeString;
+			performCommand (commandType, commandTypeString, input);
+			
+		} else if (hasCheckedFlexi){
+			invalidCommand(input);
+			outputString += commandType.toString();
+			
+		} else if (!hasCheckedFlexi){
+			hasCheckedFlexi = true;
+			outputString = flexiCommand(input);
+		}
+		return outputString;
+	}
+	
+	private static boolean errorIfNoInput(String input) {
+		return input.equals(STRING_EMPTY);
+	}
+
+	@SuppressWarnings("static-access")
+	private static boolean isValidCommandType(CommandType commandType) {
+		return !commandType.equals(commandType.INVALID);
+	}
+
+	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
+		switch(commandType){
+			case ADD:
+				CommandQueue.getInstance().Add(commandTypeString, input);
+				break;
+			case ALARM:
+				CommandQueue.getInstance().Alarm(commandTypeString, input);
+				break;
+			case ADD_INFO:
+				CommandQueue.getInstance().addInfoTask(commandTypeString, input);
+				break;
+			case ADD_REM:
+				CommandQueue.getInstance().addRemTask(commandTypeString, input);
+				break;
+			case ADD_PRI:
+				CommandQueue.getInstance().addPriTask(commandTypeString, input);
+				break;
+			case LIST:
+				CommandQueue.getInstance().listTask(commandTypeString, input);
+				break;
+			case CLEAR_ALL:
+				CommandQueue.getInstance().clearAllTasks();
+				break;
+			case CLEAR_SCREEN:
+				InputManager.clearScreen();
+				break;
+			case DELETE:
+				CommandQueue.getInstance().deleteTask(commandTypeString, input);
+				break;
+			case DONE:
+				CommandQueue.getInstance().doneTask(commandTypeString, input);
+				break;
+			case EDIT:
+				CommandQueue.getInstance().editTask(commandTypeString, input);
+				break;
+			case SEARCH:
+				CommandQueue.getInstance().searchTask(commandTypeString, input);
+				break;
+			case STOP:
+				CommandQueue.getInstance().stopAlarm(commandTypeString, input);
+				break;
+			case SHOW_REM:
+				CommandQueue.getInstance().showRem();
+				break;
+			case HELP:
+				CommandQueue.getInstance().Help();
+				break;
+			case EXIT:
+				CommandQueue.getInstance().Exit();
+				break;
+			case REDO:
+				CommandQueue.getInstance().redoTask();
+				break;
+			case UNDO:
+				CommandQueue.getInstance().undoLast();
+				break;
+			default:
+				invalidCommand(commandTypeString);
+				break;
+		}
+	}
+
+	private static String flexiCommand(String input) {
+		hasCheckedFlexi = true; 
+		CommandType command = CommandQueue.findFlexi(input);
+		logger.info("Flexicommands: " + command.toString());
+		
+		if (isValidCommandType(command)){
+			String inputString = replaceCommandWord(input, command);
+			performCommand(command, inputString, input);
+			
+			return command.toString() + " " + inputString;
+		} else {
+			//throw new EmptyStringException();
+			invalidCommand(input);
+			return command.toString();
+		}
+
+	}
+	
+	private static String replaceCommandWord (String input, CommandType command){
+		//return input.replaceFirst("(?i)"+command.toString()+" ", "");  //deprecated
+		String desc = STRING_EMPTY;
+		String[] splitInput = input.split(" ");
+		
+		for (int i=0; i<splitInput.length; i++){
+			if (isNotCommandString(command, splitInput, i)){
+				desc += splitInput[i] + " ";
+			}
+		}
+		return desc;
+	}
+
+	private static boolean isNotCommandString(CommandType command,
+			String[] splitInput, int i) {
+		return !splitInput[i].toUpperCase().equals(command.toString());
+	}
+	
+	private static void invalidCommand(String input) {
+		InputManager.outputToGui(String.format(MESSAGE_INVALID_COMMAND, input));	
+	}
+
+	private static CommandTypes.CommandType determineCommandType(String commandTypeString) {
+		String commandToFind = getFirstWord(commandTypeString);
+		CommandTypes.CommandType commandType = CommandQueue.find(commandToFind);
+		
+		return commandType;
+	}
+
+	private static String parseInput(String input) {
+		if (isInvalidCommand(input)){
+			return invalidInput(input);
+		}
+		
+		String commandTypeString = getFirstWord(input);
+		return commandTypeString;			
+	}
+	
+	/* Helper methods for parsing commands */ 
+	private static boolean isInvalidCommand(String userCommand) {
+		if (userCommand.trim().equals(STRING_EMPTY)){
+			return true;
+		}
+		return false;
+	}
+	
+	private static String invalidInput(String input) {
+		return String.format(MESSAGE_INVALID_COMMAND, input);
+	}
+	
+	private static String removeFirstWord(String input) {
+		return input.replaceFirst(getFirstWord(input), STRING_EMPTY).trim();
+	}
+	
+	private static String getFirstWord(String input) {
+		String commandTypeString = input.trim().split("\\s+")[0];
+		return commandTypeString;
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\InputMain.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\InputManager.java
+	 */
+
+
+/** This class is used for calling APIs from other packages
+ * 
+ */
+
+package com.taskpad.input;
+
+import java.awt.Color;
+import java.util.logging.Logger;
+
+import com.taskpad.storage.DataManager;
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.execute.ExecutorManager;
+import com.taskpad.ui.GuiManager;
+
+
+public class InputManager {
+	
+	private static final String STATUS_CLEAR = "Clear GUI Screen";
+	private static final String STATUS_EXECUTOR = "Passed to Executor";
+	private static final String STATUS_EXIT = "Exit program";
+	private static final String STATUS_GUI_OUTPUT = "Output to GUI: %s";
+	
+	private static final String STRING_NULL = "";
+	
+	private static boolean debug = false;
+	
+	protected static Logger logger = Logger.getLogger("TaskPad");
+
+	
+	public static String receiveFromGui(String inputString){
+		String outputString = STRING_NULL;
+		outputString = InputMain.receiveInput(inputString);
+		return outputString;
+	}
+
+	public static String outputToGui(String outputString){
+		if (!debug){
+			GuiManager.callOutput(outputString);
+		}else {
+			System.out.println(String.format(STATUS_GUI_OUTPUT, outputString));
+		}
+		return String.format(STATUS_GUI_OUTPUT, outputString);
+	}
+	
+	public static String outputFormatString(String outputString, Color c, boolean isBold){
+		GuiManager.showSelfDefinedMessage(outputString, c, isBold);
+		return String.format(STATUS_GUI_OUTPUT, outputString);
+	}
+	
+	public static String callGuiExit(){
+		GuiManager.callExit();
+		return STATUS_EXIT;
+	}
+	
+	public static String clearScreen(){
+		if (!debug){
+			GuiManager.clearOutput();
+		}else {
+			System.out.println(STATUS_CLEAR);
+		}
+		return STATUS_CLEAR;
+	}
+	
+	public static void passToExecutor(Input input, String fullInput){
+		if (!debug){
+			ExecutorManager.receiveFromInput(input, fullInput);
+			logger.info(STATUS_EXECUTOR);
+		} else {
+			formatInputForTest(input);
+		}
+	}
+	
+	private static void formatInputForTest(Input input){
+		input.showAll();
+	}
+	
+	public static int retrieveNumberOfTasks(){
+		return DataManager.retrieveNumberOfTasks();
+	}
+	
+	public static void setDebug(boolean debug){
+		InputManager.debug = debug;
+	}
+	
+	/**
+	 * CompareDateAndTime(String, String) : compare two date and time, 
+	 * can accept date only. Return -2, if it is not date or date and time
+	 * @param firstDateString the first date you want to compare
+	 * @param secondDateString the second date you want to compare
+	 * @return int: if int > 0, first is bigger; int < 0, first is smaller; int = 0, both are equal
+	 */
+	public static int compareDateAndTime(String firstDateString, String secondDateString){
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		return datm.compareDateAndTime(firstDateString, secondDateString);
+	}
+	
+	/**
+	 * compareDateAndTime(String) : compare the user's date and today 23:59
+	 * can accept date only. Return -2, if it is not date or date and time
+	 * @param dateString the date you want to compare
+	 * @return int: if int > 0, first is bigger; int < 0, first is smaller; int = 0, both are equal
+	 */
+	public static int compareDateAndTime(String dateString){
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		return datm.compareDateAndTime(dateString);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\InputManager.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\InvalidParameterException.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+import java.util.logging.Logger;
+
+public class InvalidParameterException extends Exception {
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -5161609461075304008L;
+	private static final String MESSAGE = "Error: Invalid Number of Parameters. Type Help if you need! :) ";
+	
+	private static Logger logger = Logger.getLogger("TaskPad");
+
+	public InvalidParameterException(String message) {
+		super(MESSAGE);
+		logger.info(MESSAGE);
+	}
+	
+	public InvalidParameterException(){
+		super(MESSAGE);
+		logger.info(MESSAGE);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\InvalidParameterException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\List.java
+	 */
+
+
+/**
+ * This class creates a List Object
+ * 
+ * Current syntax for list: list <argument>
+ * 
+ * Returns input object
+ */
+
+
+
+package com.taskpad.input;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidDateException;
+
+public class List extends Command{
+
+	private static String COMMAND_LIST = "LIST";
+	private static String PARAMETER_LIST_KEY = "KEY";
+	private static String PARAMETER_DEADLINE = "DEADLINE";
+	private String parameterList = "";
+	
+	private static final String[] PARAMETER_VALID_LIST = {"ALL", "DONE", "UNDONE"};
+	private Map<String, String[]> parametersMap;
+	
+	private static final String MESSAGE_INVALID_PARAMETER = "Error: Invalid List Parameter. Type help if you need! :)";
+	
+	private static int NUMBER_ARGUMENTS = 1;
+	
+	private boolean _isDeadline = false;
+	
+	public List(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_LIST);
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		
+		parametersMap = new HashMap<String, String[]>();
+		initialiseParametersMap();
+		_isDeadline = false;
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {
+		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		if(checkIfDateline()){
+			return true; 
+		}
+		
+		if (isInvalidListParameter()){
+			outputInvalidParameter();
+			return false;
+		}else {
+			return true;	
+		}
+	}
+
+	//Initialise default value
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_LIST_KEY, "");
+		putOneParameter(PARAMETER_DEADLINE, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		if (_isDeadline){
+			putOneParameter(PARAMETER_DEADLINE, parameterList);		
+		} else{
+			putOneParameter(PARAMETER_LIST_KEY, parameterList);		
+		}
+	}
+	
+	@Override
+	protected boolean checkIfIncorrectArguments(){
+		return false;
+	}	
+
+	/* This method sets the default parameter ALL to the list parameter
+	 * 	 
+	 * @return false 
+	 */
+	
+	@Override
+	protected boolean checkIfEmptyString(){
+		if(isEmptyString()){
+			input = PARAMETER_VALID_LIST[0];
+		}
+		return false;
+	}
+	
+	private void initialiseParametersMap(){
+		initialiseAllVariations();
+		initialiseDoneVariations();
+		initialiseUndoneVariations();
+	}
+	
+	private boolean isInvalidListParameter(){
+		String listVariations[];
+		
+		for (Map.Entry<String, String[]> entry : parametersMap.entrySet()){
+			listVariations = entry.getValue();
+			for (int i=0; i<listVariations.length; i++){
+				if (isInputFound(listVariations[i])){
+					parameterList = entry.getKey();
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	
+	private boolean isInputFound(String value){
+		if (value.equalsIgnoreCase(input)){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * For listing by deadline 
+	 * Check if Dateline then input into map
+	 * @return isDeadline
+	 */
+	private boolean checkIfDateline() {		
+		try {
+			String deadline = DateAndTimeManager.getInstance().parseDate(input);
+			//putOneParameter(PARAMETER_LIST_KEY, deadline);
+			parameterList = deadline;
+			_isDeadline = true;
+		} catch (InvalidDateException e) {
+			//GuiManager.callOutput(e.getMessage());
+			_isDeadline = false;
+		}
+		
+		return _isDeadline;
+	}
+	
+	private void initialiseAllVariations(){
+		String[] allVariations = {"ALL", "EVERYTHING", "WHOLE", "-A", "-AL"};
+		parametersMap.put(PARAMETER_VALID_LIST[0], allVariations);
+	}
+	
+	private void initialiseDoneVariations(){
+		String[] doneVariations = {"DONE", "COMPLETED", "FINISHED", "FINISH", "-D"};
+		parametersMap.put(PARAMETER_VALID_LIST[1], doneVariations);
+	}
+	
+	private void initialiseUndoneVariations(){
+		String[] undoneVariations = {"UNDONE", "INCOMPLETE", "UNFINISH", "UNFINISHED", "-UD"};
+		parametersMap.put(PARAMETER_VALID_LIST[2], undoneVariations);
+	}
+	
+	private void outputInvalidParameter(){
+		InputManager.outputToGui(MESSAGE_INVALID_PARAMETER);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\List.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Redo.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+public class Redo extends Command{
+	
+	private final static String COMMAND_REDO = "REDO";
+	private static String PARAMETER_REDO = "";
+
+	public Redo(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_REDO);
+	}
+	
+	@Override
+	public void run(){
+		clearInputParameters();
+		initialiseParametersToNull();
+		putInputParameters();
+		createInputObject();
+		passObjectToExecutor();
+	}
+
+	@Override
+	protected boolean commandSpecificRun() {
+		return true;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_REDO, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_REDO, "");		
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Redo.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Search.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+import java.util.ArrayList;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidQuotesException;
+
+public class Search extends Command{
+	
+	private static final String STRING_DELIMITERS = "&";
+	private static final String COMMAND_SEARCH = "SEARCH";
+	private static final int NUMBER_ARGUMENTS = 1;
+	
+	private static String PARAMETER_KEYWORD = "KEYWORD";
+	private static String _keyword;
+	
+	private static String PARAMETER_TIME = "TIME";
+	private static String _time = null;
+
+	public Search(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
+		setCOMMAND(COMMAND_SEARCH);
+	}
+
+	@Override
+	public void run(){
+		try {
+			if (checkIfEmptyString()){
+				return; 
+			}
+		} catch (EmptyStringException e) {
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
+		
+		initialiseParametersToNull();
+		commandSpecificRun();
+		putInputParameters();
+		createInputObject();
+		passObjectToExecutor();
+	}
+	
+	@Override
+	protected boolean commandSpecificRun() {
+		_keyword = input;
+		
+		extractTime();
+		
+		//checkAndInputDeadline();
+		
+		return true;
+	}
+
+	/**
+	 * replaced checkAndInputDeadline();
+	 * get _time varaible
+	 */
+	private void extractTime() {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		try {
+			ArrayList<String> timesArray = datm.searchTimeAndDate(input);
+			_time = getTime(timesArray);
+		} catch (InvalidQuotesException e) {
+			_time = null;
+		}
+		//System.out.println(_time);
+	}
+
+	private String getTime(ArrayList<String> timesArray) {
+		StringBuffer timeBuilder = new StringBuffer();
+		for (int i = 0; i < timesArray.size(); i++){
+			String token = timesArray.get(i);
+			timeBuilder.append(token + STRING_DELIMITERS);
+		}
+		int deleteIdx = timeBuilder.lastIndexOf(STRING_DELIMITERS);
+		
+		if (deleteIdx > -1){
+			timeBuilder.deleteCharAt(deleteIdx);
+		}
+		
+		return timeBuilder.toString().trim();
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_KEYWORD, "");
+		putOneParameter(PARAMETER_TIME, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_KEYWORD, _keyword);
+		
+		if (_time != null){
+			putOneParameter(PARAMETER_TIME, _time);
+		}
+	}
+	
+
+	@Override
+	protected boolean checkIfIncorrectArguments(){
+		return false;
+	}
+	
+	/**
+	 * @deprecated
+	 */
+	@SuppressWarnings("unused")
+	private void checkAndInputDeadline(){	
+		try {
+			_keyword += DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+			return;
+		}
+		
+		/*
+		for (int i=0; i<splitInput.length; i++){
+			dateObject = DateAndTimeManager.getInstance().findDate(splitInput[i].trim());
+			if (dateObject != null){
+				_keyword += " " + dateObject.getParsedDate();
+			}
+		}
+		*/
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Search.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\TaskIDException.java
+	 */
+
+
+package com.taskpad.input;
+
+import java.util.logging.Logger;
+
+/**
+ * Exception for when TaskID larger than number of tasks in storage
+ *
+ */
+
+
+public class TaskIDException extends Exception {
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -1929853963909529411L;
+	private static final String MESSAGE = "Error: Invalid TaskID";
+	
+	private static Logger logger = Logger.getLogger("TaskPad");
+	
+	public TaskIDException(){
+		super(MESSAGE);
+		logger.info(MESSAGE);
+	}
+	
+	public TaskIDException(String message){
+		super(MESSAGE + ": " + message);
+		logger.info(MESSAGE);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\TaskIDException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Undo.java
+	 */
+
+
+package com.taskpad.input;
+
+
+
+public class Undo extends Command{
+
+	private final static String COMMAND_UNDO = "UNDO";
+	
+	private static String PARAMETER_UNDO = "";
+	
+	public Undo(String input, String fullInput) {
+		super(input, fullInput);
+	}
+	
+	@Override
+	protected void initialiseOthers(){
+		setCOMMAND(COMMAND_UNDO);
+	}
+
+	@Override
+	public void run(){
+		clearInputParameters();
+		initialiseParametersToNull();
+		putInputParameters();
+		createInputObject();
+		passObjectToExecutor();
+	}
+	
+	@Override
+	protected boolean commandSpecificRun() {
+		return true;
+	}
+
+	@Override
+	protected void initialiseParametersToNull() {
+		putOneParameter(PARAMETER_UNDO, "");
+	}
+
+	@Override
+	protected void putInputParameters() {
+		putOneParameter(PARAMETER_UNDO, "");
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Undo.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\launcher\LogManager.java
+	 */
+
+
+package com.taskpad.launcher;
+
+
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+
+/** This class is to set up global logging to a file
+ */
+public class LogManager {
+
+	private static String _taskpad = "TaskPad";
+	
+	//Lynnette: try using Logger.GLOBAL_LOGGER_NAME instead of our hard coded name. :) 
+	private static Logger _logger = Logger.getLogger(_taskpad);
+	private static FileHandler _fh;
+	
+	private static LogManager _logManager = new LogManager();
+	
+	private LogManager(){
+		
+	}
+	
+	protected static LogManager getInstance(){
+		return _logManager;
+	}
+	
+	protected void setUpGlobalLogger(){
+		//Set up logging to file 
+
+		createFileName();
+		
+		try{
+			createFileHandler();
+			createAndSetFormatter();
+			initializeLogger();
+		} catch (SecurityException e){
+			e.printStackTrace();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		/*
+		//Redirect System.out
+		File file = new File(pattern);
+	    PrintStream outPS = null;
+		try {
+			outPS = new PrintStream(
+		         new BufferedOutputStream(
+		            new FileOutputStream(file, true)));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}  // append is true
+		System.setErr(outPS);    // redirect System.err
+		System.setOut(outPS);
+		*/
+	}
+	
+	private static void initializeLogger() {
+		_logger.addHandler(_fh);
+	}
+
+	private static void createAndSetFormatter() {
+		SimpleFormatter simpleFormatter = new SimpleFormatter();
+		_fh.setFormatter(simpleFormatter);
+	}
+
+	private static void createFileHandler() throws IOException {
+		_fh = new FileHandler(_taskpad + ".log");
+	}
+	
+	private static void createFileName(){
+		_taskpad = _taskpad + "_" + getCurrentDate();
+		_taskpad.replaceAll("/", "");
+		_taskpad.replaceAll(":", "");
+	}
+	
+	private static String getCurrentDate(){
+		SimpleDateFormat formater = new SimpleDateFormat("dd.MM.yyyy");
+		Date today = new Date();
+		return formater.format(today);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\launcher\LogManager.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestCommands.java
+	 */
+
+
+package com.taskpad.tests;
+
+/**
+ * This class is to test the command words
+ */
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import com.taskpad.input.CommandQueue;
+import com.taskpad.input.CommandTypes;
+import com.taskpad.input.CommandTypes.CommandType;
+
+public class TestCommands {
+	
+	/**
+	 * Testing Invalid commands
+	 */
+	
+	@Test
+	public void testCommandInvalid(){
+		testFindValueCommand(CommandType.INVALID, "");
+		testFindValueCommand(CommandType.INVALID, " ");
+		testFindValueCommand(CommandType.INVALID, "hello");
+		testFindValueCommand(CommandType.INVALID, "HELLO");
+		testFindValueCommand(CommandType.INVALID, "\n");
+	}
+	
+	/**
+	 * Testing add commands
+	 */
+	@Test
+	public void testCommandAdd(){
+		testFindValueCommand(CommandType.ADD, "add");
+		testFindValueCommand(CommandType.ADD, "ADD");
+		testFindValueCommand(CommandType.ADD, "aDd");
+		testFindValueCommand(CommandType.ADD, "aDD");
+		
+		testFindValueCommand(CommandType.ADD, "new");
+		testFindValueCommand(CommandType.ADD, "NEW");
+		testFindValueCommand(CommandType.ADD, "neW");
+		testFindValueCommand(CommandType.ADD, "NeW");
+
+		testFindValueCommand(CommandType.ADD, "create");
+		testFindValueCommand(CommandType.ADD, "CREATE");
+		testFindValueCommand(CommandType.ADD, "cReaTe");
+		testFindValueCommand(CommandType.ADD, "cREATe");
+
+		testFindValueCommand(CommandType.ADD, "insert");
+		testFindValueCommand(CommandType.ADD, "INSERT");
+		testFindValueCommand(CommandType.ADD, "iNseRt");
+		testFindValueCommand(CommandType.ADD, "InSErT");
+	}
+	
+	/**
+	 * Testing add info command
+	 */
+	
+	@Test
+	public void testCommandAddInfo(){
+		testFindValueCommand(CommandType.ADD_INFO, "ADDINFO");
+		testFindValueCommand(CommandType.ADD_INFO, "addinfo");
+		testFindValueCommand(CommandType.ADD_INFO, "addINFO");
+
+		testFindValueCommand(CommandType.ADD_INFO, "INFO");
+		testFindValueCommand(CommandType.ADD_INFO, "info");
+		testFindValueCommand(CommandType.ADD_INFO, "INfo");
+
+		testFindValueCommand(CommandType.ADD_INFO, "INFORMATION");
+		testFindValueCommand(CommandType.ADD_INFO, "INFORMATIN");
+		testFindValueCommand(CommandType.ADD_INFO, "INFORMATN");
+
+		testFindValueCommand(CommandType.ADD_INFO, "ADDDESC");
+		
+		testFindValueCommand(CommandType.ADD_INFO, "CREATEDESC");
+		
+		testFindValueCommand(CommandType.ADD_INFO, "CREATEINFO");
+
+	}
+	
+	/**
+	 * Test add reminder
+	 */
+	@Test
+	public void testCommandAddRem(){
+		testFindValueCommand(CommandType.ADD_REM, "ADDR");
+		
+		testFindValueCommand(CommandType.ADD_REM, "REMIND");
+
+		testFindValueCommand(CommandType.ADD_REM, "REMINDER");
+
+		testFindValueCommand(CommandType.ADD_REM, "REMAINDER");
+		testFindValueCommand(CommandType.ADD_REM, "ADDREM");
+
+	}
+	
+	/**
+	 * Test alarm
+	 */
+	@Test
+	public void testCommandAlarm(){
+		testFindValueCommand(CommandType.ALARM, "ALARM");
+		
+		testFindValueCommand(CommandType.ALARM, "ADDALARM");
+		
+		testFindValueCommand(CommandType.ALARM, "SETALARM");
+
+		testFindValueCommand(CommandType.ALARM, "CREATEALARM");
+		
+		testFindValueCommand(CommandType.ALARM, "RING");
+		
+		testFindValueCommand(CommandType.ALARM, "SETTIMER");
+	}
+	
+	/**
+	 * Test stop alarm
+	 */
+	@Test
+	public void testCommandStop(){
+		testFindValueCommand(CommandType.STOP, "STOP");
+		testFindValueCommand(CommandType.STOP, "STOPP");
+		testFindValueCommand(CommandType.STOP, "STO");
+	}
+	
+	/**
+	 * Test clear data
+	 */
+	@Test
+	public void testCommandClear(){
+		testFindValueCommand(CommandType.CLEAR_ALL, "CLEAR");
+		testFindValueCommand(CommandType.CLEAR_ALL, "CLR");
+		testFindValueCommand(CommandType.CLEAR_ALL, "CLC");
+		testFindValueCommand(CommandType.CLEAR_ALL, "CLEAN");
+		testFindValueCommand(CommandType.CLEAR_ALL, "CLEARALL");
+	}
+	
+	/**
+	 * Test clear screen
+	 */
+	@Test
+	public void testCommandClearScr(){
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "CLCSR");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "CLCSCR");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "SCREEN");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "CLEARSCR");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "CLEARSCREEN");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "CLEARSC");
+	}
+	
+	/**
+	 * Test Delete
+	 */
+	@Test
+	public void testCommandDelete(){
+		testFindValueCommand(CommandType.DELETE, "DELETE");
+		testFindValueCommand(CommandType.DELETE, "DEL");
+		testFindValueCommand(CommandType.DELETE, "REMOVE");
+		testFindValueCommand(CommandType.DELETE, "REM");
+	}
+	
+	/**
+	 * Test edit 
+	 */
+	@Test
+	public void testCommandEdit(){
+		testFindValueCommand(CommandType.EDIT, "EDIT");
+		testFindValueCommand(CommandType.EDIT, "CHANGE");
+		testFindValueCommand(CommandType.EDIT, "ED");
+	}
+	
+	/**
+	 * Test search
+	 */
+	@Test
+	public void testCommandSearch(){
+		testFindValueCommand(CommandType.SEARCH, "SEARCH");
+		testFindValueCommand(CommandType.SEARCH, "FIND");
+	}
+	
+	/**
+	 * Test list 
+	 */
+	@Test
+	public void testCommandList(){
+		testFindValueCommand(CommandType.LIST, "LIST");
+		testFindValueCommand(CommandType.LIST, "LS");
+		testFindValueCommand(CommandType.LIST, "LST");
+		testFindValueCommand(CommandType.LIST, "SHOW");
+		testFindValueCommand(CommandType.LIST, "DISPLAY");
+	}
+	
+	/**
+	 * Test redo
+	 */
+	@Test
+	public void testCommandRedo(){
+		testFindValueCommand(CommandType.REDO, "REDO");
+		testFindValueCommand(CommandType.REDO, "RDO");
+		testFindValueCommand(CommandType.REDO, "RE");
+	}
+	
+	/**
+	 * Test done
+	 */
+	@Test
+	public void testCommandDone(){
+		testFindValueCommand(CommandType.DONE, "DONE");
+		testFindValueCommand(CommandType.DONE, "FINISH");
+		testFindValueCommand(CommandType.DONE, "FINISHED");
+		testFindValueCommand(CommandType.DONE, "COMPLETE");
+		testFindValueCommand(CommandType.DONE, "COMPLETED");
+	}
+	
+	/**
+	 * Test undo
+	 */
+	@Test
+	public void testCommandUndo(){
+		testFindValueCommand(CommandType.UNDO, "UNDO");
+		testFindValueCommand(CommandType.UNDO, "UN");
+		testFindValueCommand(CommandType.UNDO, "UDO");
+	}
+	
+	/**
+	 * Test exit
+	 */
+	@Test
+	public void testCommandExit(){
+		testFindValueCommand(CommandType.EXIT, "EXIT");
+		testFindValueCommand(CommandType.EXIT, "QUIT");
+		testFindValueCommand(CommandType.EXIT, "CLOSE");
+		testFindValueCommand(CommandType.EXIT, "END");
+		testFindValueCommand(CommandType.EXIT, "SHUTDOWN");
+	}
+	
+	/**
+	 * Test help
+	 */
+	@Test
+	public void testCommandHelp(){
+		testFindValueCommand(CommandType.HELP, "HELP");
+		testFindValueCommand(CommandType.HELP, "HLP");
+		testFindValueCommand(CommandType.HELP, "MAN");
+	}
+	
+	/** 
+	 * Testing Any order of Commands
+	 */
+	@Test
+	public void testCommand() {		
+		//invalid
+		testFindValueCommand(CommandType.INVALID, "");
+		testFindValueCommand(CommandType.INVALID, " ");
+		
+		//valid commands
+		testFindValueCommand(CommandType.ADD, "add");
+		testFindValueCommand(CommandType.ADD, "NEw");
+		testFindValueCommand(CommandType.ADD, "Create");
+		testFindValueCommand(CommandType.ADD, "add ");
+		
+		testFindValueCommand(CommandType.DELETE, "delete");
+		testFindValueCommand(CommandType.DELETE, "   del\n");
+		testFindValueCommand(CommandType.DELETE, "   del");
+		
+		testFindValueCommand(CommandType.ADD_INFO, "ADDINFO");
+		
+		testFindValueCommand(CommandType.DONE, "done");
+		
+		testFindValueCommand(CommandType.CLEAR_ALL, "clr");
+		
+		testFindValueCommand(CommandType.EDIT, "edit");
+		
+		testFindValueCommand(CommandType.UNDO, "undo");
+		
+		testFindValueCommand(CommandType.SEARCH, "find");
+		
+		testFindValueCommand(CommandType.LIST, "ls");
+		
+		testFindValueCommand(CommandType.HELP, "HELP");
+		
+		testFindValueCommand(CommandType.EXIT, "quIT");
+	}
+	
+	private void testFindValueCommand (CommandTypes.CommandType expected, String input){
+		//new CommandTypes();
+		CommandTypes.getInstance();
+		assertEquals(expected, CommandQueue.find(input));
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestCommands.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestDateParser.java
+	 */
+
+
+package com.taskpad.tests;
+
+
+import static org.junit.Assert.*;
+
+import java.text.ParseException;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidDateException;
+
+public class TestDateParser {
+	private static final String DATE_TEST = "01/04/2014 00:01";
+	private static final String DATE_INVALID = "Error: Invalid Date Entered";
+	private DateAndTimeManager _dateParser = DateAndTimeManager.getInstance();
+	
+	/*We do equivalence partitioning*/
+	/*We test dates with years*/
+	@Test
+	public void test1() {
+		testDateCommand("11/11/14", "11/11/2014");
+	}
+
+	@Test
+	public void test2() {
+		testDateCommand("11-11-18", "11/11/2018");
+	}
+	
+	@Test
+	public void test3() {
+		testDateCommand("11.11.2015", "11/11/2015");
+	}
+		
+	
+	@Test 
+	public void test4(){
+		testDateCommand("Oct 18 15", "18/10/2015");
+	}
+	
+	@Test
+	public void test5(){
+		testDateCommand("October 18 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test6(){
+		testDateCommand("Oct 18,16", "18/10/2016");
+	}
+	
+	@Test
+	public void test7(){
+		testDateCommand("October 18,14", "18/10/2014");
+	}
+	
+	@Test
+	public void test8(){
+		testDateCommand("Oct 18 , 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test9(){
+		testDateCommand("October 18 , 15", "18/10/2015");
+	}
+	
+	@Test
+	public void test10(){
+		testDateCommand("Oct 18, 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test11(){
+		testDateCommand("October 18, 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test12(){
+		testDateCommand("18 Oct 16", "18/10/2016");
+	}
+	
+	@Test
+	public void test13(){
+		testDateCommand("18 October 15", "18/10/2015");
+	}
+	
+	@Test
+	public void test14(){
+		testDateCommand("18 Oct, 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test15(){
+		testDateCommand("18 October, 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test16(){
+		testDateCommand("18-Oct-15", "18/10/2015");
+	}
+	
+	@Test
+	public void test17(){
+		testDateCommand("18-October-15", "18/10/2015");
+	}
+	
+	@Test
+	public void test18(){
+		testDateCommand("18 Oct,15", "18/10/2015");
+	}
+	
+	@Test
+	public void test19(){
+		testDateCommand("18 October,14", "18/10/2014");
+	}
+	
+	@Test
+	public void test20(){
+		testDateCommand("18 10 , 14", "18/10/2014");
+	}
+	
+	@Test
+	public void test21(){
+		testDateCommand("18 10, 16", "18/10/2016");
+	}
+	
+	@Test
+	public void test22(){
+		testDateCommand("18/10/2015", "18/10/2015");
+	}
+	
+	@Test
+	public void test23(){
+		testDateCommand("18-10-2015", "18/10/2015");
+	}
+	
+	@Test
+	public void test24(){
+		testDateCommand("18.10.2015", "18/10/2015");
+	}
+	
+	@Test
+	public void test25(){
+		testDateCommand("18Oct15", "18/10/2015");
+	}
+	
+	@Test
+	public void test26(){
+		testDateCommand("1 Jun 15", "01/06/2015");
+	}
+	
+	@Test 
+	public void test27(){
+		testDateCommand("1.6.15", "01/06/2015");
+	}
+	
+	@Test
+	public void test28(){
+		testDateCommand("1.6.2015", "01/06/2015");
+	}
+	
+	/*We test dates without year*/
+	@Test
+	public void test29(){
+		testDateCommand("1/6", "01/06/2014");
+	}
+	
+	@Test
+	public void test30(){
+		testDateCommand("1-6", "01/06/2014");
+	}
+	
+	@Test
+	public void test31(){
+		testDateCommand("June 1", "01/06/2014");
+	}
+	
+	@Test
+	public void test32(){
+		testDateCommand("1 Jun", "01/06/2014");
+	}
+	
+	@Test
+	public void test33(){
+		testDateCommand("1Jun", "01/06/2014");
+	}
+	
+	@Test
+	public void test34(){
+		testDateCommand("Jun1", "01/06/2014");
+	}
+	
+	@Test
+	public void test35(){
+		testDateCommand("1/06", "01/06/2014");
+	}
+	
+	@Test
+	public void test36(){
+		testDateCommand("1-06", "01/06/2014");
+	}
+	
+	@Test
+	public void test37(){
+		testDateCommand("01/6", "01/06/2014");
+	}
+	
+	@Test
+	public void test38(){
+		testDateCommand("01-6", "01/06/2014");
+	}
+	
+	@Test
+	public void test39(){
+		testDateCommand("June 01", "01/06/2014");
+	}
+	
+	@Test
+	public void test40(){
+		testDateCommand("01 Jun", "01/06/2014");
+	}
+	
+	@Test
+	public void test41(){
+		testDateCommand("01Jun", "01/06/2014");
+	}
+	
+	@Test
+	public void test42(){
+		testDateCommand("Jun01", "01/06/2014");
+	}
+	
+	@Test
+	public void test43(){
+		testDateCommand("01/06", "01/06/2014");
+	}
+	
+	@Test
+	public void test44(){
+		testDateCommand("01-06", "01/06/2014");
+	}
+	
+	@Test
+	public void test45(){
+		testDateCommand("01-01", "01/01/2014");
+	}
+	
+	@Test
+	public void test46(){
+		testDateCommand("20/03/14", "20/03/2014");
+	}
+	
+	@Test
+	public void test47(){
+		testDateCommand("1 January", "01/01/2014");
+	}
+	
+	
+	
+	
+	/*We test invalid dates*/
+	
+	/*We only support date-month-year*/
+	@Test
+	public void invalid1(){
+		testInvalidDateCommand("1993.1.6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid2(){
+		testInvalidDateCommand("1993 1 6", DATE_INVALID);
+	}
+	
+	/*Boundary case: February have no date "30"*/
+	@Test
+	public void invalid3(){
+		testInvalidDateCommand("30/02/15", DATE_INVALID);
+	}
+	
+	/*We cannot support 6 digits stick together*/
+	@Test
+	public void invalid4() {
+		testInvalidDateCommand("000000", DATE_INVALID);
+	}
+	
+	/*And also we can't parse anything if user doesn't key in anything*/
+	@Test
+	public void invalid5() {
+		testInvalidDateCommand("", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid6() {
+		testInvalidDateCommand(" ", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid7(){
+		testInvalidDateCommand(",", DATE_INVALID);
+	}
+	
+	/*We can't parse "day" in dateparser*/
+	@Test
+	public void invalid8(){
+		testInvalidDateCommand("Wed", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid9(){
+		testInvalidDateCommand("Today", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid10(){
+		testInvalidDateCommand("Oct1815", DATE_INVALID);
+	}
+	
+	/*We cannot support 6 digits stick together*/
+	@Test
+	public void invalid11(){
+		testInvalidDateCommand("18102015", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid12(){
+		testInvalidDateCommand("15/18/10", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid14(){
+		testInvalidDateCommand("40-18-10", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid15(){
+		testInvalidDateCommand("40.18.10", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid16(){
+		testInvalidDateCommand("40 18 10", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid17(){
+		testInvalidDateCommand("40-18-Oct", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid18(){
+		testInvalidDateCommand("16/10/Oct", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid19(){
+		testInvalidDateCommand("15/10/oct", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid20(){
+		testInvalidDateCommand("35.18.10", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid21(){
+		testInvalidDateCommand("49 18 10", DATE_INVALID);
+	}
+
+	/*boundary case: when it is null*/
+	@Test
+	public void invalid22(){
+		testInvalidDateCommand(null, DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid23(){
+		testInvalidDateCommand("100 October,14", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid24(){
+		testInvalidDateCommand("1 1", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid25(){
+		testInvalidDateCommand("18 10 15", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid26(){
+		testInvalidDateCommand("01.06", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid27(){
+		testInvalidDateCommand("01 06", DATE_INVALID);
+	}
+	
+	/*test those exceptions*/
+	@Test
+	public void invalid28(){
+		testInvalidDateCommand("01 02 2015", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid29(){
+		testInvalidDateCommand("01.6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid30(){
+		testInvalidDateCommand("01 6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid31(){
+		testInvalidDateCommand("1.06", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid32(){
+		testInvalidDateCommand("1 06", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid33(){
+		testInvalidDateCommand("01 12", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid34(){
+		testInvalidDateCommand("1.6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid35(){
+		testInvalidDateCommand("1 6", DATE_INVALID);
+	}
+	
+	@Test
+	public void invalid36(){
+		testInvalidDateCommand("1 6 15", DATE_INVALID);
+	}
+	
+	private void testDateCommand(String input, String expected){
+		setupDebug();
+		try {
+			assertEquals(_dateParser.parseDate(input), expected);
+		} catch (InvalidDateException e) {
+			fail();
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void setupDebug() {
+		try {
+			_dateParser.setDebug(DATE_TEST);
+		} catch (ParseException e1) {
+			fail();
+		}
+	}
+	
+	private void testInvalidDateCommand(String input, String expected){
+		setupDebug();
+		try{
+			_dateParser.parseDate(input);
+			fail();
+		} catch (InvalidDateException e){
+			assertEquals(e.getMessage(), expected);
+		}
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestDateParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestFlexiCommands.java
+	 */
+
+
+package com.taskpad.tests;
+
+
+
+/**
+ * This class is to test the commands not as the first word
+ */
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import com.taskpad.input.CommandQueue;
+import com.taskpad.input.CommandTypes;
+import com.taskpad.input.CommandTypes.CommandType;
+
+public class TestFlexiCommands {
+
+	/**
+	 * Test add in between words
+	 */
+	@Test
+	public void testAdd() {
+		testFindValueCommand(CommandType.ADD, "do CS2101 homework add ");
+		testFindValueCommand(CommandType.ADD, "  add  ");
+		testFindValueCommand(CommandType.ADD, "do add CS2101 homework");
+		
+		testFindValueCommand(CommandType.ADD, "do new CS2101 homework");
+		testFindValueCommand(CommandType.ADD, "do CS2101 homework new");
+		testFindValueCommand(CommandType.ADD, "do create CS2101 homework");
+		testFindValueCommand(CommandType.ADD, "do insert CS2101 homework");
+	}
+	
+	/**
+	 * Testing add info in between words
+	 */
+	
+	@Test
+	public void testCommandAddInfo(){
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room addinfo");
+		testFindValueCommand(CommandType.ADD_INFO, "venue addinfo meeting room");
+
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room info");
+		testFindValueCommand(CommandType.ADD_INFO, "venue info meeting room");
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room information");
+		testFindValueCommand(CommandType.ADD_INFO, "venue information meeting room");
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room informatin");
+		testFindValueCommand(CommandType.ADD_INFO, "venue informatin meeting room");
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room informatn");
+		testFindValueCommand(CommandType.ADD_INFO, "venue informatn meeting room");
+		
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room adddesc");
+		testFindValueCommand(CommandType.ADD_INFO, "venue adddesc meeting room");
+		
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room createdesc");
+		testFindValueCommand(CommandType.ADD_INFO, "venue createdesc meeting room");
+		
+		testFindValueCommand(CommandType.ADD_INFO, "venue meeting room createinfo");
+		testFindValueCommand(CommandType.ADD_INFO, "venue createinfo meeting room");
+	}
+	
+	/**
+	 * Test add reminder
+	 */
+	@Test
+	public void testCommandAddRem(){
+		testFindValueCommand(CommandType.ADD_REM, "today wash laundry ADDR");
+		testFindValueCommand(CommandType.ADD_REM, "today addr wash laundry");
+		
+		testFindValueCommand(CommandType.ADD_REM, "today wash laundry remind");
+		testFindValueCommand(CommandType.ADD_REM, "today remind wash laundry");
+
+		testFindValueCommand(CommandType.ADD_REM, "today reminder wash laundry");
+		testFindValueCommand(CommandType.ADD_REM, "today wash laundry reminder");
+
+		testFindValueCommand(CommandType.ADD_REM, "today wash laundry remainder");
+		testFindValueCommand(CommandType.ADD_REM, "today remainder wash laundry");
+		
+		testFindValueCommand(CommandType.ADD_REM, "today addrem wash laundry");
+		testFindValueCommand(CommandType.ADD_REM, "today wash laundry addrem");
+	}
+	
+	/**
+	 * Test alarm
+	 */
+	@Test
+	public void testCommandAlarm(){
+		testFindValueCommand(CommandType.ALARM, "wash dishes ALARM");
+		testFindValueCommand(CommandType.ALARM, "wash ALARM dishes");
+		
+		testFindValueCommand(CommandType.ALARM, "wash dishes ring");
+		testFindValueCommand(CommandType.ALARM, "wash ring dishes");
+		
+		testFindValueCommand(CommandType.ALARM, "wash dishes ADDALARM");
+		testFindValueCommand(CommandType.ALARM, "wash addALARM dishes");
+		
+		testFindValueCommand(CommandType.ALARM, "wash dishes setALARM");
+		testFindValueCommand(CommandType.ALARM, "wash SETALARM dishes");
+		
+		testFindValueCommand(CommandType.ALARM, "wash dishes createALARM");
+		testFindValueCommand(CommandType.ALARM, "wash CREATEALARM dishes");
+		
+		testFindValueCommand(CommandType.ALARM, "wash dishes setTImer");
+		testFindValueCommand(CommandType.ALARM, "wash setTIMER dishes");
+	}
+	
+	/**
+	 * Test stop alarm
+	 */
+	@Test
+	public void testCommandStop(){
+		testFindValueCommand(CommandType.STOP, "STOP it now!!!");
+		testFindValueCommand(CommandType.STOP, "now STOP");
+		testFindValueCommand(CommandType.STOP, "hurry STOP la.");
+		
+		testFindValueCommand(CommandType.STOP, "now STOPP");
+		testFindValueCommand(CommandType.STOP, "hurry STOPP la.");
+		
+		testFindValueCommand(CommandType.STOP, "now STO");
+		testFindValueCommand(CommandType.STOP, "hurry STO la.");
+	}
+	
+	/**
+	 * Test clear data
+	 */
+	@Test
+	public void testCommandClear(){
+		testFindValueCommand(CommandType.CLEAR_ALL, "all data CLEAR");
+		testFindValueCommand(CommandType.CLEAR_ALL, "just CLR");
+		testFindValueCommand(CommandType.CLEAR_ALL, "all CLC data");
+		testFindValueCommand(CommandType.CLEAR_ALL, "i want it CLEAN");
+		testFindValueCommand(CommandType.CLEAR_ALL, "hurry and CLEARALL");
+	}
+	
+	/**
+	 * Test clear screen
+	 */
+	@Test
+	public void testCommandClearScr(){
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "the output frame CLCSR");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "output CLCSCR now");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "i want an empty SCREEN");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "output CLEARSCR now");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "hurry and CLEARSCREEN");
+		testFindValueCommand(CommandType.CLEAR_SCREEN, "please refresh CLEARSC");
+	}
+	
+	/**
+	 * Test Delete
+	 */
+	@Test
+	public void testCommandDelete(){
+		testFindValueCommand(CommandType.DELETE, "task 1 DELETE");
+		testFindValueCommand(CommandType.DELETE, "task DEL now");
+		testFindValueCommand(CommandType.DELETE, "task 1 REMOVE");
+		testFindValueCommand(CommandType.DELETE, "task REM now");
+	}
+	
+	/**
+	 * Test edit 
+	 */
+	@Test
+	public void testCommandEdit(){
+		testFindValueCommand(CommandType.EDIT, "description must EDIT");
+		testFindValueCommand(CommandType.EDIT, "i CHANGE me");
+		testFindValueCommand(CommandType.EDIT, "description to ED");
+	}
+	
+	/**
+	 * Test search
+	 */
+	@Test
+	public void testCommandSearch(){
+		testFindValueCommand(CommandType.SEARCH, "homework SEARCH");
+		testFindValueCommand(CommandType.SEARCH, "homework FIND");
+		testFindValueCommand(CommandType.SEARCH, "i cant FIND my homework");
+	}
+	
+	/**
+	 * Test list 
+	 */
+	@Test
+	public void testCommandList(){
+		testFindValueCommand(CommandType.LIST, "all LIST");
+		testFindValueCommand(CommandType.LIST, "-d LS");
+		testFindValueCommand(CommandType.LIST, "all LST");
+		testFindValueCommand(CommandType.LIST, "undone SHOW");
+		testFindValueCommand(CommandType.LIST, "-al DISPLAY");
+	}
+	
+	/**
+	 * Test done
+	 */
+	@Test
+	public void testCommandDone(){
+		testFindValueCommand(CommandType.DONE, "1 DONE");
+		testFindValueCommand(CommandType.DONE, "2 FINISH");
+		testFindValueCommand(CommandType.DONE, "3 FINISHED");
+		testFindValueCommand(CommandType.DONE, "4 COMPLETE");
+		testFindValueCommand(CommandType.DONE, "5 COMPLETED");
+	}
+	
+	private void testFindValueCommand (CommandTypes.CommandType expected, String input){
+		//new CommandTypes();
+		CommandTypes.getInstance();
+		assertEquals(expected, CommandQueue.findFlexi(input));
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestFlexiCommands.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestInput.java
+	 */
+
+
+package com.taskpad.tests;
+
+
+
+/**
+ * This class is to test the input object passed to executor
+ */
+
+import static org.junit.Assert.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
+import org.junit.Test;
+
+import com.taskpad.input.InputManager;
+
+public class TestInput {
+
+	private final ByteArrayOutputStream _outContent = new ByteArrayOutputStream();
+	
+	
+	/**
+	 * ToDo: alarm not fully being able to test with output streams
+	 */
+	
+	public void testClear(){
+		setUpStream();
+		testInputString("Output to GUI: \r\nConfirm clear data? (Y/N)", "Clear");
+		testInputString("NULL ", "Y");
+	}
+	
+	@Test
+	public void testAddInfo(){
+		setUpStream();
+		testInputString("TASKID 1\r\nINFO venue: meeting room", "addinfo 1 venue: meeting room");
+	}
+	
+	@Test
+	public void testAddRem(){
+		setUpStream();
+		testInputString("TIME 16:00\r\nDATE 23/04/2015\r\nTASKID 1", "addrem 1 23/04/2015 16:00");
+	}
+	
+	@Test
+	public void testAlarm(){
+		setUpStream();
+		testInputString("Output to GUI: Creating alarm... alarm collect laundry 30 min", "alarm collect laundry 30 min");
+	}
+	
+	public void testStopAlarm(){
+		setUpStream();
+		testInputString("", "STOP");
+	}
+	
+	public void testClearScr(){
+		setUpStream();
+		testInputString("Output to GUI:\r\nConfirm clear screen? (Y/N)", "screen");
+		testInputString("Clear GUI Screen", "Y");
+	}
+	
+	@Test
+	public void testDelete(){
+		setUpStream();
+		testInputString("TASKID 1", "Del 1");
+	}
+	
+	@Test
+	public void testEdit(){
+		setUpStream();
+		testInputString("DESC new description\r\nTASKID 1", "Edit 1 new description");
+	}
+	
+	@Test
+	public void testSearch(){
+		setUpStream();
+		testInputString("KEYWORD dragon potions", "search dragon potions");
+	}
+	
+	@Test
+	public void testList(){
+		setUpStream();
+		testInputString("KEY ALL", "list all");
+		testInputString("KEY DONE", "list done");
+		testInputString("KEY UNDONE", "list undone");
+		testInputString("KEY 31/03/2016", "list 31/03/2016");
+	}
+	
+	@Test
+	public void testDone(){
+		setUpStream();
+		testInputString("TASKID 1", "done 1");
+	}
+	
+	@Test
+	public void testAdd1(){
+		setUpStream();
+		testInputString("START TIME 11:00\r\n"
+				+ "END TIME 11:00\r\n"
+				+ "DEADLINE 11/11/2015\r\n"
+				+ "START DATE 11/11/2015\r\n"
+				+ "DESC \" aaa\" 1\r\n"
+				+ "END DATE 11/11/2015", 
+				"add 1 -s 11am, 11/11/15 -d 11/11/15 -e 11am, 11/11/15 \" aaa\"");
+	}
+	
+	
+	private void testInputString(String expected, String input){
+		InputManager.setDebug(true);
+		//assertEquals(description, expected, InputManager.receiveFromGui(input));
+		InputManager.receiveFromGui(input);
+		assertEquals(expected + "\r\n", _outContent.toString());
+		cleanUpStreams();
+	}
+	
+	private void setUpStream(){
+		System.setOut(new PrintStream(_outContent));
+	}
+	
+	private void cleanUpStreams(){
+		_outContent.reset();
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestInput.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestTimeParser.java
+	 */
+
+
+package com.taskpad.tests;
+
+/**
+ * This unit test class tests the Time Parser
+ * 
+ */
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidTimeException;
+import com.taskpad.dateandtime.TimeErrorException;
+
+public class TestTimeParser {
+	
+	private DateAndTimeManager _timeParser = DateAndTimeManager.getInstance();
+	
+	private static final String MESSAGE_INVALID = "Error: Invalid time entered";
+
+	/**
+	 * Test AM strings 
+	 */
+
+	@Test
+	public void AMtest1() {
+		testTimeCommand("08:00", "8am");
+	}
+
+	@Test
+	public void AMtest2(){
+		testTimeCommand("08:00", "8 am");
+	}
+	
+	@Test
+	public void AMtest3(){
+		testTimeCommand("08:00", "0800");
+	}
+	
+	@Test
+	public void AMtest4(){
+		testTimeCommand("08:15", "8.15 am");
+	}
+	
+	@Test
+	public void AMtest5(){
+		testTimeCommand("08:00", "8.00am");
+	}
+	
+	@Test
+	public void AMtest6(){
+		testTimeCommand("08:15", "815am");
+	}
+	
+	@Test
+	public void AMtest7(){
+		testTimeCommand("08:15", "815 am");
+	}
+	
+	
+	/**
+	 * Test PM strings 
+	 */
+	@Test
+	public void PMtest1(){
+		testTimeCommand("20:00", "8pm");
+	}
+	
+	@Test
+	public void PMtest2(){
+		testTimeCommand("20:00", "8 pm");
+	}
+	
+	@Test
+	public void PMtest3(){
+		testTimeCommand("20:00", "2000");
+	}
+	
+	@Test
+	public void PMtest4(){
+		testTimeCommand("20:15", "20.15");
+	}
+	
+	@Test
+	public void PMtest5(){
+		testTimeCommand("20:15", "20;15");
+	}
+	
+	@Test
+	public void PMtest6(){
+		testTimeCommand("20:15", "815 pm");
+	}
+	
+	/**
+	 * Test word strings 
+	 */
+	
+	@Test
+	public void wordTest1(){
+		testTimeCommand("00:00", "morning");
+	}
+	
+	@Test
+	public void wordTest2(){
+		testTimeCommand("00:00", "morn");
+	}
+	
+	@Test
+	public void wordTest3(){
+		testTimeCommand("12:00", "aft");
+	}
+	
+	@Test
+	public void wordTest4(){
+		testTimeCommand("12:00", "afternoon");
+	}
+	
+	@Test
+	public void wordTest5(){
+		testTimeCommand("12:00", "noon");
+	}
+	
+	@Test
+	public void wordTest6(){
+		testTimeCommand("17:00", "evening");
+	}
+	
+	@Test
+	public void wordTest7(){
+		testTimeCommand("17:00", "eve");
+	}
+	
+	@Test
+	public void wordTest8(){
+		testTimeCommand("19:00", "night");
+	}
+	
+	@Test
+	public void wordTest9(){
+		testTimeCommand("19:00", "ngt");
+	}
+	
+	@Test
+	public void wordTest10(){
+		testTimeCommand("00:00", "MORN");
+	}
+	
+	@Test
+	public void wordTest11(){
+		testTimeCommand("00:00", "MORNING");
+	}
+	
+	@Test
+	public void wordTest12(){
+		testTimeCommand("12:00", "AFT");
+	}
+	
+	@Test
+	public void wordTest13(){
+		testTimeCommand("12:00", "NOON");
+	}
+	
+	@Test
+	public void wordTest14(){
+		testTimeCommand("19:00", "NiGHt");
+	}
+	
+	@Test
+	public void wordTest15(){
+		testTimeCommand("19:00", "19:00");
+	}
+	
+	/**
+	 * Test unsupported cases
+	 * @param expected
+	 * @param input
+	 */
+	
+	//How to make this test work?
+	public void invalid1(){
+		testInvalidTimeCommand(MESSAGE_INVALID, "");
+	}
+	
+	private void testTimeCommand (String expected, String input){
+		try {
+			assertEquals(expected, DateAndTimeManager.getInstance().parseTimeInput(input));
+		} catch (TimeErrorException | InvalidTimeException e) {
+			fail();
+		}
+	}
+	
+	private void testInvalidTimeCommand(String input, String expected){
+		try {
+			_timeParser.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			assertEquals(e.getMessage(), MESSAGE_INVALID);
+			e.printStackTrace();
+		}
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestTimeParser.java
+
+
+
+
+
