@@ -275,7 +275,8 @@ public abstract class Command {
 		COMMAND = cOMMAND;
 	}
 	
-	/* Helper methods to process date and times in strings */
+	/* Helper methods to process date and times in strings For Edit and Add */
+	
 	/**
 	 * findDateOrTime: helper method of getDateAndTimeValue,
 	 * it uses formatDateAndTimeInString to get all the date and time
@@ -597,6 +598,58 @@ public abstract class Command {
 		//System.out.println(tempDesc.toString());
 		
 		return tempDesc.toString();
+	}
+	
+	protected String putDeadline(String param) {	
+		if (!param.trim().isEmpty()){
+			return null;
+		}
+		
+		String token = KEYWORD_DEADLINE + STRING_SPACE + param.trim();
+		String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+		if (tempDead == null){
+			return null;
+		}
+		
+		return tempDead;
+	}
+	
+	protected String putStartTime(String param) {
+		if (param.trim().isEmpty()){
+			return null;
+		}
+		
+		String token = KEYWORD_STARTTIME + STRING_SPACE + param.trim();
+		String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
+
+		if (startResult == null){
+			return null;
+		}
+		
+		return startResult;
+	}
+	
+	protected String putEndTime(String param) {
+		if (param.trim().isEmpty()){
+			return null;
+		}
+		String token = KEYWORD_ENDTiME + STRING_SPACE + param.trim();
+		String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
+
+		if (endResult == null){
+			return null;
+		}
+		
+		return endResult;
+	}
+	
+	protected String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
+	}
+	
+	protected String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
 	}
 	
 }

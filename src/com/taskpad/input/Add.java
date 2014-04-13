@@ -250,7 +250,6 @@ public class Add extends Command {
 		}
 		
 		checkEmptyParametersAndInput();
-		
 	}
 
 	/**
@@ -340,15 +339,15 @@ public class Add extends Command {
 		switch (firstChar){
 		case "d":
 			_deadNo++;
-			putDeadline(param);
+			_deadline = putDeadline(param);
 			break;
 		case "s":
 			_startNo++;
-			putStartTime(param);
+			processStart(param);
 			break;
 		case "e": 
 			_endNo++;
-			putEndTime(param);
+			processEnd(param);
 			break;
 		}
 		
@@ -396,68 +395,30 @@ public class Add extends Command {
 		return input.replaceAll(STRING_SPACE, STRING_EMPTY);
 	}
 	
-	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
-	}
-	
-	private String getFirstChar(String input) {
-		String firstChar = input.trim().split("\\s+")[0];
-		return firstChar;
-	}
-	
-	private void putDeadline(String param) {
-		if (param.trim().isEmpty()){
-			return;
-		}
-		
-		String token = KEYWORD_DEADLINE + STRING_SPACE + param.trim();
-		String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
-		if (tempDead == null){
-			return;
-		}
-		_deadline = tempDead;
-	}
-	
-	private void putStartTime(String param) {
-		if (param.trim().isEmpty()){
-			return;
-		}
-		
-		String token = KEYWORD_STARTTIME + STRING_SPACE + param.trim();
-		String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
-
-		if (startResult == null){
-			return;
-		}
-		
-		inputStartTimeDate(startResult);
-		
-	}
-	
 	private void inputStartTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
 		_startDate = splitResult[0];
 		_startTime = splitResult[1];
 	}
 	
-	private void putEndTime(String param) {
-		if (param.trim().isEmpty()){
-			return;
-		}
-		String token = KEYWORD_ENDTiME + STRING_SPACE + param.trim();
-		String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
-
-		if (endResult == null){
-			return;
-		}
-		
-		inputEndTimeDate(endResult);
-	}
-	
 	private void inputEndTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
 		_endDate = splitResult[0];
 		_endTime = splitResult[1];
+	}
+	
+	private void processEnd(String param){
+		String endResult = putEndTime(param);
+		if (endResult != null){
+			inputEndTimeDate(endResult);
+		}
+	}
+	
+	private void processStart(String param){
+		String startResult = putStartTime(param);
+		if (startResult != null){
+			inputStartTimeDate(startResult);
+		}
 	}
 	
 	/**
