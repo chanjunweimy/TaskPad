@@ -187,9 +187,6 @@ public class Add extends Command {
 		
 	}
 
-
-	
-
 	/**
 	 * 
 	 * parseDelimitedString: a method that parses
@@ -217,7 +214,7 @@ public class Add extends Command {
 			String nextParam = _sc.next().trim();
 			
 			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
-
+			System.out.println("Next param " + nextParam);
 			parseNextParam(nextParam.trim());
 		}
 		_sc.close();
@@ -258,29 +255,22 @@ public class Add extends Command {
 	private void checkEmptyParametersAndInput() {
 		if (_endTime != null){
 			inputEndTime(_endTime);
-			//putOneParameter(PARAMETER_END_TIME, endTime);
 		}
 		
 		if (_endDate != null){
 			inputEndDate(_endDate);
-			//putOneParameter(PARAMETER_END_DATE, endDate);
 		}
 		
 		if (_startTime != null) {
 			inputStartTime(_startTime);
-			//putOneParameter(PARAMETER_START_TIME, startTime);
 		}
 		
 		
 		if (_startDate != null){
 			inputStartDate(_startDate);
-			//putOneParameter(PARAMETER_START_DATE, startDate);
 		}
 		
 		if (_deadline != null){
-			//String[] tempDeadSplit = _deadline.split(STRING_SPACE);
-			
-			//_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
 			inputDeadlineDate(_deadline);
 		}
 	}
