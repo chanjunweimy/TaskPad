@@ -68,7 +68,8 @@ public class ExecutorManager {
 			CommandFactory.edit(parameters.get("TASKID"),
 					parameters.get("DESC"), parameters.get("DEADLINE"),
 					parameters.get("START TIME"), parameters.get("START DATE"),
-					parameters.get("END TIME"), parameters.get("END DATE"));
+					parameters.get("END TIME"), parameters.get("END DATE"),
+					parameters.get("INFO"));
 			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":

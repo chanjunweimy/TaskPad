@@ -250,11 +250,10 @@ public class CommandFactoryBackend {
 		
 		return false;
 	}
-	
-	protected static Task editTask(String taskIdString,
-			String description, String deadline,
-			String startTime, String startDate, String endTime,
-			String endDate, TaskList listOfTasks) {
+
+	protected static Task editTask(String taskIdString, String description,
+			String deadline, String startTime, String startDate,
+			String endTime, String endDate, String info, TaskList listOfTasks) {
 		
 		Task task = getTaskById(listOfTasks, taskIdString);
 		
@@ -287,6 +286,11 @@ public class CommandFactoryBackend {
 			logger.info(String.format("Edit task end date: %s ...", 
 					endDate));
 			task.setEndDate(endDate);
+		}
+		if (info != null) {
+			logger.info(String.format("Edit task info: %s ...", 
+					info));
+			task.setDetails(info);			
 		}
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
