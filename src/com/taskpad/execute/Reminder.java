@@ -70,7 +70,9 @@ public class Reminder {
 			Task task = allTasks.get(i);
 			String deadline = task.getDeadline();
 			if(deadline != null && deadline.contains(dateString)) {
-				results.add(i);
+				if(task.getDone() == 0) {
+					results.add(i);
+				}
 			}
 		}
 		
@@ -114,7 +116,9 @@ public class Reminder {
 			Task task = allTasks.get(i);
 			String reminderDate = task.getReminderDate();
 			if(reminderDate != null && reminderDate.contains(dateString)) {
-				results.add(i);
+				if(task.getDone() == 0) {
+					results.add(i);
+				}
 			}
 		}
 		
