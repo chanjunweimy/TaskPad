@@ -71,9 +71,6 @@ public class InputMain {
 			case ADD_REM:
 				CommandQueue.getInstance().addRemTask(commandTypeString, input);
 				break;
-			case ADD_PRI:
-				CommandQueue.getInstance().addPriTask(commandTypeString, input);
-				break;
 			case LIST:
 				CommandQueue.getInstance().listTask(commandTypeString, input);
 				break;

@@ -3,6 +3,7 @@
 package com.taskpad.input;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -33,6 +34,10 @@ public class Edit extends Command{
 	private String _endTime;
 	private String _editInput;
 	
+	private int _deadNo;
+	private int _endNo;
+	private int _startNo;
+	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
 	private static final String STRING_EMPTY = "";
@@ -58,6 +63,10 @@ public class Edit extends Command{
 		_startTime = null;
 		_endDate = null;
 		_endTime = null;
+		
+		_deadNo = 0;
+		_startNo = 0;
+		_endNo = 0;
 	}
 
 	@Override
@@ -104,23 +113,30 @@ public class Edit extends Command{
 	 * delimited string syntax: edit <taskID> <desc> -d <deadline...> -s <start...> -e <end...>
 	 */
 	private void editDelimitedString() {
-		extractTaskID(input);
-	}
-
-	private void extractTaskID(String input) {
-		// TODO Auto-generated method stub
+		extractTaskID();
 		
-	}
+		Scanner sc = new Scanner(input);
+		StringBuffer description = new StringBuffer();
+		StringBuffer otherPart = new StringBuffer();
+		String tempInput = null;
+		
+		tempInput = retrieveDescription(sc, description, tempInput);
+		otherPart = restructureOtherPart(sc, otherPart, tempInput);
+				
+		sc.close();
+		
+		sc = new Scanner(otherPart.toString().trim());
+		
+		while(sc.hasNext()){
+			String nextParam = sc.next().trim();
+			
+			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
 
-	private boolean isDelimitedString(String input) {
-		if (input.contains(" -s ") || input.contains(" -d ") || input.contains(" -e ")){
-			return true;
+			parseNextParam(nextParam.trim());
 		}
-		return false;
+		sc.close();
 	}
 	
-	
-
 	/**
 	 * Check if second word entered is an integer (likely to be taskID)
 	 * @param fullInput
@@ -563,5 +579,124 @@ public class Edit extends Command{
 	private boolean isNotStartWord(String string) {
 		return !string.toUpperCase().equals("START") && !string.toUpperCase().equals("-S");
 	}
+	
+	
+	/* Helper methods for delimited string */
+	
+	private void extractTaskID() {
+		String[] split = input.split(STRING_SPACE);
+		_taskID = split[0];
+		
+		String newInput = STRING_EMPTY;
+		for (int i=1; i<split.length; i++){
+			newInput += split[i] + STRING_SPACE;
+		}
+		input = newInput;
+	}
 
+	private boolean isDelimitedString(String input) {
+		if (input.contains(" -s ") || input.contains(" -d ") || input.contains(" -e ")){
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param description
+	 * @param tempInput
+	 * @return
+	 */
+	private String retrieveDescription(Scanner sc, StringBuffer description,
+			String tempInput) {
+		boolean isBreak = false;
+		while (sc.hasNext()){
+			tempInput = sc.next();
+			 
+			if (tempInput.equals("-d") || tempInput.equals("-e") || tempInput.equals("-s")){
+				isBreak = true;
+				break;
+			}
+			
+			description.append(tempInput + STRING_SPACE);
+		}
+		
+		String descString = description.toString().trim();
+		descString = descString.replaceAll("\"", STRING_EMPTY);
+		
+		_desc = descString;
+		if (!isBreak){
+			tempInput = STRING_EMPTY;
+		}
+				
+		return tempInput;
+	}
+	
+	/**
+	 * 
+	 * @param otherPart
+	 * @param tempInput
+	 * @return
+	 */
+	private StringBuffer restructureOtherPart(Scanner sc, StringBuffer otherPart, String tempInput) {
+		if (tempInput != null){
+			otherPart.append(tempInput.trim());
+		}
+		while (sc.hasNext()){
+			otherPart.append(STRING_SPACE + sc.next());
+		}
+		return otherPart;
+	}
+	
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param);
+		
+		switch (firstChar){
+		case "d":
+			_deadNo++;
+			_deadline = putDeadline(param);
+			break;
+		case "s":
+			_startNo++;
+			processStart(param);
+			break;
+		case "e": 
+			_endNo++;
+			processEnd(param);
+			break;
+		}
+		
+		LOGGER.info("deadline is " + _deadline );
+		LOGGER.info("start time and date is " + _startTime + " " + _startDate);
+		LOGGER.info("end time and date is " + _endTime + " " + _endDate);
+		
+		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo);
+	}
+
+	private void processEnd(String param){
+		String endResult = putEndTime(param);
+		if (endResult != null){
+			inputEndResult(endResult);
+		}
+	}
+	
+	private void processStart(String param){
+		String startResult = putStartTime(param);
+		if (startResult != null){
+			inputStartResult(startResult);
+		}
+	}
+
+	private void inputStartResult(String startResult) {
+		String[] splitResult = startResult.split(STRING_SPACE);
+		_startDate = splitResult[0];
+		_startTime = splitResult[1];
+	}
+	
+	private void inputEndResult(String endResult) {
+		String[] splitResult = endResult.split(STRING_SPACE);
+		_endDate = splitResult[0];
+		_endTime = splitResult[1];
+	}
+	
 }
