@@ -2,6 +2,7 @@
 
 package com.taskpad.execute;
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +28,6 @@ public class ExecutorManager {
 	private static final int WAITING_TIME_IN_MILISECONDS = 1 * 1000;
 
 	private static final String MESSAGE_SHOWING_REMINDER = "Showing your tasks and reminders...\n";
-	private static final String MASSAGE_NOTHING_TO_SHOW = "Nothing to show.";
 
 	private static Logger logger = Logger.getLogger("TaskPad");
 
@@ -88,6 +88,7 @@ public class ExecutorManager {
 		case "ADDREM":
 			CommandFactory.addReminder(parameters.get("TASKID"),
 					parameters.get("DATE"));
+			CommandRecord.pushForUndo(command);
 			break;
 		}
 	}
@@ -120,8 +121,8 @@ public class ExecutorManager {
 	/**
 	 * showReminder
 	 * 
-	 * This is to show tasks due today, overdue tasks, and tasks attached with
-	 * reminder (using addrem command)
+	 * This is to schedule a TimerTask to show tasks due today, overdue tasks,
+	 * and tasks attached with reminder (using addrem command)
 	 * 
 	 */
 	public static void showReminder() {
@@ -133,22 +134,8 @@ public class ExecutorManager {
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				showTasksForReminder();
+				Reminder.showTasksForReminder();
 			}
-
-			private void showTasksForReminder() {
-				boolean haveTasksToShow = false;
-				haveTasksToShow = haveTasksToShow
-						|| Reminder.showReminderForToday();
-				haveTasksToShow = haveTasksToShow
-						|| Reminder.showReminderForOverdue();
-				haveTasksToShow = haveTasksToShow
-						|| Reminder.showReminderTasks();
-				if (!haveTasksToShow) {
-					OutputToGui.output(MASSAGE_NOTHING_TO_SHOW);
-				}
-			}
-
 		}, WAITING_TIME_IN_MILISECONDS);
 
 	}
