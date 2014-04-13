@@ -2,8 +2,6 @@
 
 package com.taskpad.input;
 
-
-
 import java.util.logging.Logger;
 
 import com.taskpad.input.CommandTypes.CommandType;
