@@ -133,7 +133,7 @@ public class CommandQueue {
 	 * @param inputCommand
 	 * @return CommandType
 	 */
-	protected static CommandType findFlexi(String input){
+	public static CommandType findFlexi(String input){
 		String variations[];
 
 		for (Map.Entry<CommandType, String[]> entry : CommandTypes.commandVariations.entrySet()){
