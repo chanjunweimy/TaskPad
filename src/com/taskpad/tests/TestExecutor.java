@@ -2,8 +2,6 @@
 
 package com.taskpad.tests;
 
-
-
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
@@ -16,6 +14,11 @@ import com.taskpad.execute.ExecutorTestDriver;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * This class is for unit testing of Executor component.
+ * It is testing by command types.
+ *
+ */
 public class TestExecutor {	
 	
 	@Test
@@ -38,11 +41,13 @@ public class TestExecutor {
 		result = ExecutorTestDriver.getAllTasksFromBackend(list);
 		assertEquals(result.size(), 2);
 
+		// test list undone
 		Task task = list.get(0);
 		task.setDone();
 		result = ExecutorTestDriver.getUndoneTasksFromBackend(list);
 		assertEquals(result.size(), 1);
 		
+		// test list done
 		result = ExecutorTestDriver.getFinishedTasksFromBackend(list);
 		assertEquals(result.size(), 1);
 	}

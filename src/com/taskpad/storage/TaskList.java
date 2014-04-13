@@ -2,10 +2,14 @@
 
 package com.taskpad.storage;
 
-
-
 import java.util.LinkedList;
 
+/**
+ * TaskList
+ * 
+ * This is the TaskList class to maintain a list of tasks at runtime.
+ * 
+ */
 public class TaskList {
 	private LinkedList<Task> list;
 	

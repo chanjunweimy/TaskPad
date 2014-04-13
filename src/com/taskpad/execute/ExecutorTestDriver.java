@@ -8,12 +8,14 @@ import java.util.LinkedList;
 import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.TaskList;
 
+/**
+ * ExecutorTestDriver
+ * 
+ * Methods in CommandFactoryBackend are not public
+ * This class offers public access for testing purpose
+ * 
+ */
 public class ExecutorTestDriver {
-	/* 
-	 * Methods in CommandFactoryBackend are not public
-	 * Offer public access for testing purpose
-	 */
-	
 	public static void addTask(HashMap<String, String> parameters, TaskList list) {
 		CommandFactoryBackend.addTask(parameters.get("DESC"), parameters.get("DEADLINE"),
 				parameters.get("START DATE"), parameters.get("START TIME"),
