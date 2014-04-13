@@ -540,8 +540,13 @@ public class DateAndTimeRetriever {
 		
 		String tempEnd = checkDateAndTimeWithStart(startEarliest, endLatest);
 		if (tempEnd == null && endLatest != null){
-			outputToGui("end time and date: " + endLatest + " is earlier than "
+			if (startEarliest != null){
+				outputToGui("end time and date: " + endLatest + " is earlier than "
 					+ "startTime: " + startEarliest + " or now: " + now);
+			} else {
+				outputToGui("end time and date: " + endLatest + " is earlier than "
+						+ "now: " + now);
+			}
 		}
 		endLatest = tempEnd;
 		
@@ -550,8 +555,13 @@ public class DateAndTimeRetriever {
 		String tempDead = checkDateAndTimeWithStart(startEarliest,
 				deadlineLatest);
 		if (tempDead == null && deadlineLatest != null){
-			outputToGui("deadline: " + deadlineLatest + " is earlier than "
+			if (startEarliest != null){
+				outputToGui("deadline: " + deadlineLatest + " is earlier than "
 					+ "startTime: " + startEarliest + " or now: " + now);
+			} else {
+				outputToGui("deadline: " + deadlineLatest + " is earlier than "
+						+ "now: " + now);
+			}
 		}
 		deadlineLatest = tempDead;
 
