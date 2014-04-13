@@ -1,4 +1,4 @@
-//@author A0119646X
+	//@author A0119646X
 
 package com.taskpad.input;
 
@@ -415,15 +415,6 @@ public class Addrem extends Command{
 	}
 	
 	
-	
-	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), "").trim();
-	}
-	
-	private String getFirstChar(String input) {
-		String firstChar = input.trim().split("\\s+")[0];
-		return firstChar;
-	}
 	
 	private String stripWhiteSpaces(String input){
 		return input.replaceAll(" ", "");
