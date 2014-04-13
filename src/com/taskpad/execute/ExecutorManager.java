@@ -157,21 +157,21 @@ public class ExecutorManager {
 	 * getStartDateAndTimeForTask
 	 * 
 	 * This is to get the start date and time for a certain task.
-	 * Similar for next two methods.
-	 * InputProcessing needs these information to decide whether an editing request is valid
-	 * (e.g. start time must be earlier than end time etc)
+	 * InputProcessing needs these information to decide whether an editing
+	 * request is valid (e.g. start time must be earlier than end time etc)
 	 * 
 	 * @param taskId
-	 * @return
+	 * @return String of start date plus start time
 	 * @throws InvalidTaskIdException
 	 */
-	public static String getStartDateAndTimeForTask(int taskId) throws InvalidTaskIdException {
+	public static String getStartDateAndTimeForTask(int taskId)
+			throws InvalidTaskIdException {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		
+
 		if (taskId > listOfTasks.size()) {
 			throw new InvalidTaskIdException();
 		}
-		
+
 		int index = taskId - 1;
 		Task task = listOfTasks.get(index);
 		return task.getStartDate() + " " + task.getStartTime();

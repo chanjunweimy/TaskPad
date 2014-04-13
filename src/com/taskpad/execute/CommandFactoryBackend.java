@@ -3,6 +3,7 @@
 package com.taskpad.execute;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import com.taskpad.storage.CommandRecord;
 import com.taskpad.storage.DataFileStack;
@@ -12,47 +13,29 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * CommandFactoryBackend
+ * 
+ * This class is to access the database to support command execution.
+ * 
+ */
 public class CommandFactoryBackend {
-	/**
-	 * ACCENDING_ORDER: a comparator used to sort Task by their dates.
-	 * 
-	 */
-	/*
-	protected static final Comparator<Task> ACCENDING_ORDER = new Comparator<Task>() {
-		/**
-		 * compare: compare two tasks' Date
-		 * 
-		 * @param e1
-		 *            : task1
-		 * @param e2
-		 *            : task2
-		 * @return int
-		 */
-	/*	@Override
-		public int compare(Task e1, Task e2) {
-			SimpleDateFormat dateConverter = new SimpleDateFormat(
-					"dd/MM/yyyy HH:mm");
-			Date d1, d2;
-			try {
-				d1 = dateConverter.parse(e1.getDeadline() + e1.getEndTime());
-				d2 = dateConverter.parse(e2.getDeadline() + e2.getEndTime());
-			} catch (ParseException e) {
-				System.err.println(e.getMessage());
-				return 0;
-			}
-			return d1.compareTo(d2);
-		}
-	};
-	*/
+	private static final String LOGGING_STORE_BACK_TO_DB = "Storing task '%s' back to data file...";
+	
+	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	protected static Task addTask(String description, String deadline,
 			String startDate, String startTime, String endDate, String endTime,
 			String venue, TaskList listOfTasks) {
+		assert(description != null);
+		
 		Task taskToAdd = new Task(description, deadline, startDate,
 				startTime, endDate, endTime, venue);
 		listOfTasks.add(taskToAdd);
 
+		logger.info(String.format(LOGGING_STORE_BACK_TO_DB, description));
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		
 		return taskToAdd;
 	}
 	
@@ -88,15 +71,25 @@ public class CommandFactoryBackend {
 		return tasks;
 	}
 
+	/**
+	 * updateDataForUndo
+	 * 
+	 * This is to update data files for undo operation
+	 * 
+	 * @return the name of previous stored data file
+	 * @throws NoPreviousFileException
+	 */
 	protected static String updateDataForUndo() throws NoPreviousFileException {
 		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
+		// recover previously stored data file in undo stack
 		String previousFile = DataFileStack.popForUndo();
 		TaskList previousListOfTasks = DataManager.retrieve(previousFile);
 		
 		DataManager.storeBack(previousListOfTasks, DataFileStack.FILE);
-		DataManager.storeBack(currentListOfTasks, previousFile);
 		
+		// later can redo back
+		DataManager.storeBack(currentListOfTasks, previousFile);
 		DataFileStack.pushForRedo(previousFile);
 		
 		return previousFile;
@@ -104,6 +97,7 @@ public class CommandFactoryBackend {
 	
 	protected static String updateCommandRecordForUndo(String previousFile)
 			throws NoPreviousCommandException {
+		
 		String command = CommandRecord.popForUndo();
 		CommandRecord.pushForRedo(command);
 		
@@ -113,12 +107,14 @@ public class CommandFactoryBackend {
 	protected static String updateDataForRedo() throws NoPreviousFileException {
 		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
+		// recover previously stored data file in redo stack
 		String previousFile = DataFileStack.popForRedo();
 		TaskList previousListOfTasks = DataManager.retrieve(previousFile);
 		
 		DataManager.storeBack(previousListOfTasks, DataFileStack.FILE);
-		DataManager.storeBack(currentListOfTasks, previousFile);
 		
+		// later can undo again
+		DataManager.storeBack(currentListOfTasks, previousFile);
 		DataFileStack.pushForUndo(previousFile);
 		
 		return previousFile;
@@ -157,6 +153,16 @@ public class CommandFactoryBackend {
 		return results;
 	}
 
+	/**
+	 * containsKeywords
+	 * 
+	 * This is to check whether task contains ALL the keywords.
+	 * 
+	 * @param keywords
+	 * @param description
+	 * @param details
+	 * @return a boolean value
+	 */
 	private static boolean containsKeywords(String[] keywords,
 			String description, String details) {
 		boolean isCandidate = true;
@@ -168,6 +174,15 @@ public class CommandFactoryBackend {
 		return isCandidate;
 	}
 
+	/**
+	 * containsTimes
+	 * 
+	 * This is to check whether task contains ANY ONE OF the searched time
+	 * 
+	 * @param timesOrDates
+	 * @param task
+	 * @return
+	 */
 	private static boolean containsTimes(String[] timesOrDates, Task task) {
 		String deadline = task.getDeadline();
 		String startDate = task.getStartDate();
@@ -176,43 +191,61 @@ public class CommandFactoryBackend {
 		String endTime = task.getEndTime();
 		
 		for(String timeOrDate: timesOrDates) {
-			if(timeOrDate.trim().equals("")) {
+			if(isValidTimeOrDates(timeOrDate)) {
 				continue;
 			}
-			// check deadline
-			if(deadline != null && deadline.contains(timeOrDate)) {
+
+			if(deadlineContainsTimeOrDate(deadline, timeOrDate)) {
 				return true;
 			}
 			
-			// check start/end time
-			String time = "";
-			String date = "";
-			if(timeOrDate.contains(" ")) {
-				// time + date
-				String[] timeAndDate = timeOrDate.split(" ");
-				time = timeAndDate[0];
-				date = timeAndDate[1];
-				
-				if(startDate != null && startDate.equals(date) 
-						&& startTime != null && startTime.equals(time)) {
-					return true;
-				}
-				if(endDate != null && endDate.equals(date) 
-						&& endTime != null && endTime.equals(time)) {
-					return true;
-				}
-				
-			} else {
-				// only date
-				date = timeOrDate;
-				if(startDate != null && startDate.equals(date)) {
-					return true;
-				}
-				if(endDate != null && endDate.equals(date)) {
-					return true;
-				}
+			if(StartOrEndContainsTimeOrDate(startDate, startTime, endDate,
+					endTime, timeOrDate)) {
+				return true;
+			}		
+		}
+		
+		return false;
+	}
+
+	private static boolean isValidTimeOrDates(String timeOrDate) {
+		return timeOrDate.trim().equals("");
+	}
+	
+	private static boolean deadlineContainsTimeOrDate(String deadline,
+			String timeOrDate) {
+		return deadline != null && deadline.contains(timeOrDate);
+	}
+	
+	private static boolean StartOrEndContainsTimeOrDate(String startDate,
+			String startTime, String endDate, String endTime, String timeOrDate) {
+		
+		String time = "";
+		String date = "";
+		if(timeOrDate.contains(" ")) {
+			// time + date
+			String[] timeAndDate = timeOrDate.split(" ");
+			time = timeAndDate[0];
+			date = timeAndDate[1];
+			
+			if(startDate != null && startDate.equals(date) 
+					&& startTime != null && startTime.equals(time)) {
+				return true;
+			}
+			if(endDate != null && endDate.equals(date) 
+					&& endTime != null && endTime.equals(time)) {
+				return true;
 			}
 			
+		} else {
+			// only date
+			date = timeOrDate;
+			if(startDate != null && startDate.equals(date)) {
+				return true;
+			}
+			if(endDate != null && endDate.equals(date)) {
+				return true;
+			}
 		}
 		
 		return false;
@@ -222,25 +255,37 @@ public class CommandFactoryBackend {
 			String description, String deadline,
 			String startTime, String startDate, String endTime,
 			String endDate, TaskList listOfTasks) {
-		Task task = getTaskById(listOfTasks, taskIdString);
-		// String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
 		
-		if(description != null && !description.equals("")) {
+		Task task = getTaskById(listOfTasks, taskIdString);
+		
+		if (description != null && !description.equals("")) {
+			logger.info(String.format("Edit task description: %s ...",
+					description));
 			task.setDescription(description);
 		}
-		if(deadline != null) {
+		if (deadline != null) {
+			logger.info(String.format("Edit task deadline: %s ...", 
+					deadline));
 			task.setDeadline(deadline);
 		}
-		if(startTime != null) {
+		if (startTime != null) {
+			logger.info(String.format("Edit task start time: %s ...", 
+					startTime));
 			task.setStartTime(startTime);
 		}
-		if(startDate != null) {
+		if (startDate != null) {
+			logger.info(String.format("Edit task start date: %s ...", 
+					startDate));
 			task.setStartDate(startDate);
 		}
-		if(endTime != null) {
+		if (endTime != null) {
+			logger.info(String.format("Edit task end time: %s ...", 
+					endTime));
 			task.setEndTime(endTime);
 		}
-		if(endDate != null) {
+		if (endDate != null) {
+			logger.info(String.format("Edit task end date: %s ...", 
+					endDate));
 			task.setEndDate(endDate);
 		}
 		
@@ -269,15 +314,22 @@ public class CommandFactoryBackend {
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 	}
 	
+	/**
+	 * archiveForUndo
+	 * 
+	 * This is to archive the current database before making changes.
+	 * 
+	 * @return
+	 */
 	protected static TaskList archiveForUndo() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		
+
 		// request a file for archive purpose
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		
+
 		DataFileStack.pushForUndo(fileRecord);
-		
+
 		return listOfTasks;
 	}
 	
@@ -288,6 +340,7 @@ public class CommandFactoryBackend {
 		if(task.getDetails() == null) {
 			task.setDetails(info);
 		} else {
+			// append to details
 			String details = task.getDetails();
 			details += ("\n" + info);
 			task.setDetails(details);
@@ -312,7 +365,7 @@ public class CommandFactoryBackend {
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 	}
 
-	/*
+	/* not used by v0.5
 	public static LinkedList<Integer> sortByDeadline(TaskList listOfTasks) {
 		LinkedList<Task> tasks = listOfTasks.getList();
 		

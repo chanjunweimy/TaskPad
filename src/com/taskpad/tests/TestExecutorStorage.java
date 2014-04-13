@@ -2,8 +2,6 @@
 
 package com.taskpad.tests;
 
-
-
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
@@ -20,6 +18,13 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * TestExecutorStorage
+ * 
+ * This class is for integration testing involving Executor and Data Storage
+ * components
+ * 
+ */
 public class TestExecutorStorage {
 
 	@Test
@@ -136,6 +141,8 @@ public class TestExecutorStorage {
 		 * only test 0, 1, 2 here
 		 */
 		TaskList list = new TaskList();
+		
+		// test list all
 		LinkedList<Integer> result = ExecutorTestDriver.getAllTasksFromBackend(list);
 		assertEquals(result.size(), 0);
 		
@@ -150,11 +157,13 @@ public class TestExecutorStorage {
 		result = ExecutorTestDriver.getAllTasksFromBackend(list);
 		assertEquals(result.size(), 2);
 
+		// test list undone
 		Task task = list.get(0);
 		task.setDone();
 		result = ExecutorTestDriver.getUndoneTasksFromBackend(list);
 		assertEquals(result.size(), 1);
 		
+		// test list done
 		result = ExecutorTestDriver.getFinishedTasksFromBackend(list);
 		assertEquals(result.size(), 1);
 	}

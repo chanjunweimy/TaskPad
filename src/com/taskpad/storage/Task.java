@@ -2,12 +2,12 @@
 
 package com.taskpad.storage;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-
-
+/**
+ * Task
+ * 
+ * This is the Task class to store task information at runtime
+ * 
+ */
 public class Task{
 	private String description;
 	private String deadline;
@@ -15,13 +15,13 @@ public class Task{
 	private String startTime;
 	private String endDate;
 	private String endTime;
-	private String venue; 
+	private String venue;
 	private String details;
-	private int done;	// 0 for undone, 1 for done
 	private String reminderDate;
-	
-	public Task(String description, String deadline, String startDate, String startTime,
-			String endDate, String endTime, String venue) {
+	private int done; // 0 for undone, 1 for done
+
+	public Task(String description, String deadline, String startDate,
+			String startTime, String endDate, String endTime, String venue) {
 		this.description = description;
 		this.deadline = deadline;
 		this.startDate = startDate;
@@ -33,8 +33,8 @@ public class Task{
 		this.reminderDate = "";
 	}
 
-	public Task(String description, String deadline, String startDate, String startTime,
-			String endDate, String endTime, String venue,
+	public Task(String description, String deadline, String startDate,
+			String startTime, String endDate, String endTime, String venue,
 			String details, int done, String reminderDate) {
 		this.description = description;
 		this.deadline = deadline;
