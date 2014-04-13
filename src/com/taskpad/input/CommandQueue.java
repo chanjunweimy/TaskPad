@@ -133,7 +133,7 @@ public class CommandQueue {
 	 * @param inputCommand
 	 * @return CommandType
 	 */
-	public static CommandType findFlexi(String input){
+	protected static CommandType findFlexi(String input){
 		String variations[];
 
 		for (Map.Entry<CommandType, String[]> entry : CommandTypes.commandVariations.entrySet()){
@@ -146,6 +146,10 @@ public class CommandQueue {
 		}
 		
 		return CommandType.INVALID;
+	}
+	
+	protected String[] getFlexiMatch(String command){
+		return CommandTypes.commandVariations.get(command.toUpperCase());
 	}
 	
 	private static boolean isInputSubstring(String value, String input){
