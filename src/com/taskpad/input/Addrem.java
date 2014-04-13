@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DatePassedException;
+import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.ui.GuiManager;
@@ -66,7 +67,11 @@ public class Addrem extends Command{
 		LOGGER.info("is input : " + input + " a flexi String? " + _isFlexiString);
 		
 		if (!_isFlexiString){
-			splitInputParameters();
+			try {
+				splitInputParameters();
+			} catch (InvalidQuotesException e) {
+				return false; 
+			 }
 		} else {
 			splitInputNoDelimiters();
 		}
@@ -137,25 +142,84 @@ public class Addrem extends Command{
 		return false;
 	}
 	
-	private void splitInputParameters(){
+	private void splitInputParameters() throws InvalidQuotesException{
 		int count = 0;
 		sc = new Scanner(input);
 		sc.useDelimiter("\\s-");
 		
-		//int dCnt = 0;
-		//int tCnt = 0;
+		int dCnt = 0;
+		int tCnt = 0;
 		while(sc.hasNext()){
 			String nextParam = sc.next();
 			if (count == 0){
 				_taskID = nextParam;
 			} else {
 				switch (parseNextParam(nextParam)){
-				
+				case 0:
+					dCnt++;
+					break;
+				case 1:
+					tCnt++;
+					break;
 				}
 			}
 			count++;
 		}
+		
 		sc.close();
+
+		
+		if (dCnt == 0 && tCnt == 0){
+			_invalidParameters = true;
+			return;
+		} else if (dCnt > 0 || tCnt > 0) {
+			_invalidParameters = false;
+		}
+		
+		if (dCnt > 1){
+			InputManager.outputToGui("-d appears " + dCnt + "times");
+		}
+		
+		if (tCnt > 1){
+			InputManager.outputToGui("-t appears " + tCnt + "times");
+		}
+		
+		assert (_remDate != null);
+		assert (_remTime != null);
+		
+		_remDate = _remDate.trim();
+		_remTime = _remTime.trim();
+		
+		String dateAndTime = null;
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		if (!_remDate.isEmpty() && !_remTime.isEmpty()){
+			dateAndTime = _remDate + " " + _remTime;
+		} else if (_remDate.isEmpty() && !_remTime.isEmpty()){
+			String todayDate = datm.getTodayDate();
+			dateAndTime = todayDate + " " + _remTime;
+		} else if (!_remDate.isEmpty() && _remTime.isEmpty()){
+			_remTime = " 23:59";
+			dateAndTime = _remDate + _remTime;
+		}
+		
+		if (dateAndTime != null){
+			try {
+				String formatString = datm.formatDateAndTimeInString(dateAndTime);
+				String[] formatTokens = formatString.split(" ");
+				int size = formatTokens.length;
+				
+				_remDate = formatTokens[size - POSITION_DATE_STARTTIME];
+				_remTime = formatTokens[size - POSITION_TIME_STARTTIME];
+				
+				LOGGER.info("remDate is " + _remDate);
+				LOGGER.info("remTime is " + _remTime);
+				
+			} catch (InvalidQuotesException e) {
+				_invalidParameters = true;  
+				InputManager.outputToGui(e.getMessage());
+				throw e;
+			}
+		}
 	}
 	
 	private int parseNextParam(String param){
@@ -318,16 +382,35 @@ public class Addrem extends Command{
 	 * @throws DatePassedException 
 	 */
 	private void checkTimeAndDate() throws DatePassedException {
+		String dateAndTime = _remDate + " " + _remTime;
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String now = datm.getTodayDateAndTime();
+		
+		int num = datm.compareDateAndTime(dateAndTime, now);
+		
+		if (num <= 0){
+			_invalidParameters = true;
+			throw new DatePassedException();
+		}
+		
+		/*
 		Date now = new Date();
 		Date date = null;
 		date = parseRemDateAndTime(date);
-				
+			
 		if (now.compareTo(date) > 0){
 			_invalidParameters = true;
 			throw new DatePassedException();
 		}
+		*/
 	}
 
+	/**
+	 * @deprecated
+	 * @param date
+	 * @return
+	 */
+	@SuppressWarnings("unused")
 	private Date parseRemDateAndTime(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String enteredDateAndTime = formatRemString();
