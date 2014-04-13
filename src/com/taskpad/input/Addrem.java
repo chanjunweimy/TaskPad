@@ -6,18 +6,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.ui.GuiManager;
-
 import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.TimeObject;
 
 
 public class Addrem extends Command{
+	protected static final Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final int NUMBER_ARGUMENTS = 2;
@@ -36,6 +37,7 @@ public class Addrem extends Command{
 	
 	private static Scanner sc;
 	private boolean _invalidParameters = false;
+	
 	private boolean _isFlexiString = false;
 	
 	boolean _gotTaskID = false;
@@ -60,7 +62,9 @@ public class Addrem extends Command{
 	}
 
 	@Override
-	protected boolean commandSpecificRun() {		
+	protected boolean commandSpecificRun() {	
+		LOGGER.info("is input : " + input + " a flexi String? " + _isFlexiString);
+		
 		if (!_isFlexiString){
 			splitInputParameters();
 		} else {
@@ -72,14 +76,17 @@ public class Addrem extends Command{
 		try {
 			checkTimeAndDate();
 		} catch (DatePassedException e) {
-			GuiManager.callOutput(e.getMessage());
+			InputManager.outputToGui(e.getMessage());
 		}
 				
 		if (_invalidParameters){
+			LOGGER.info("parameters are incorrect!");
+			InputManager.outputToGui("parameters are incorrect!");
 			return false;
 		} 
-
-		GuiManager.callOutput("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+ 
+		LOGGER.info("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+		InputManager.outputToGui("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
 		
 		return true;
 	}
@@ -111,11 +118,13 @@ public class Addrem extends Command{
 	
 	@Override
 	protected boolean checkIfIncorrectArguments() throws InvalidParameterException, TaskIDException{
+		LOGGER.info("input is " + input);
+		
 		if(checkIfContainsDelimiters()){
 			String inputString[] = input.split(" ");
 			
 			if (isNotNumberArgs(inputString)){
-				System.out.println("Throw");
+				//System.out.println("Throw");
 				throw new InvalidParameterException();
 			}
 			
@@ -132,32 +141,43 @@ public class Addrem extends Command{
 		int count = 0;
 		sc = new Scanner(input);
 		sc.useDelimiter("\\s-");
+		
+		//int dCnt = 0;
+		//int tCnt = 0;
 		while(sc.hasNext()){
 			String nextParam = sc.next();
 			if (count == 0){
 				_taskID = nextParam;
 			} else {
-				parseNextParam(nextParam);
+				switch (parseNextParam(nextParam)){
+				
+				}
 			}
 			count++;
 		}
 		sc.close();
 	}
 	
-	private void parseNextParam(String param){
+	private int parseNextParam(String param){
 		String firstChar = getFirstChar(param);
 		param = removeFirstChar(param).trim();
-
+		
 		switch (firstChar){
 		case "d":
 			getDeadline(param);
-			break;
+			//break;
+			return 0;
 		case "t":
 			inputTime(param);
-			break;
+			//break;
+			return 1;
 		default:
 			invalidParam();
 		}
+		
+		
+		//if reach here then is invalidParam
+		return -1;
 	}
 	
 	private void splitInputNoDelimiters(){
@@ -266,13 +286,13 @@ public class Addrem extends Command{
 			}
 		}
 	}
-	*/
+	*/     
 
 	private boolean checkIfContainsDelimiters() {
-		return input.contains("-d")||input.contains("-t");
+		return fullInput.contains(" -d ")||input.contains(" -t ");
 	}
 	
-	private void getDeadline(String param) {
+	private void getDeadline(String param) {		
 		param = stripWhiteSpaces(param);
 		_remDate = param;
 	}
