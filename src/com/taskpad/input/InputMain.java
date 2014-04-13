@@ -52,9 +52,8 @@ public class InputMain {
 		return input.equals(STRING_EMPTY);
 	}
 
-	@SuppressWarnings("static-access")
 	private static boolean isValidCommandType(CommandType commandType) {
-		return !commandType.equals(commandType.INVALID);
+		return !commandType.equals(CommandType.INVALID);
 	}
 
 	private static void performCommand(CommandType commandType, String commandTypeString, String input) {
