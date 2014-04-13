@@ -135,7 +135,8 @@ public class CommandQueue {
 	 */
 	public static CommandType findFlexi(String input){
 		String variations[];
-
+		CommandTypes.getInstance();
+		
 		for (Map.Entry<CommandType, String[]> entry : CommandTypes.commandVariations.entrySet()){
 			variations = entry.getValue();
 			for (int i=0; i<variations.length; i++){
@@ -148,8 +149,11 @@ public class CommandQueue {
 		return CommandType.INVALID;
 	}
 	
-	protected String[] getFlexiMatch(String command){
-		return CommandTypes.commandVariations.get(command.toUpperCase());
+	protected String[] getFlexiMatch(CommandType command){
+		CommandTypes.getInstance();
+		String[] flexiMatch = CommandTypes.commandVariations.get(command);
+				
+		return flexiMatch;
 	}
 	
 	private static boolean isInputSubstring(String value, String input){

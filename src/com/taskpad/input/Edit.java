@@ -24,6 +24,7 @@ public class Edit extends Command{
 	private static String PARAMETER_START_TIME = "START TIME";
 	private static String PARAMETER_END_DATE = "END DATE";
 	private static String PARAMETER_END_TIME = "END TIME";
+	private static String PARAMETER_INFO = "INFO";
 	
 	private String _taskID;
 	private String _desc;
@@ -33,10 +34,12 @@ public class Edit extends Command{
 	private String _endDate;
 	private String _endTime;
 	private String _editInput;
+	private String _info;
 	
 	private int _deadNo;
 	private int _endNo;
 	private int _startNo;
+	private int _infoNo;
 	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
@@ -63,10 +66,12 @@ public class Edit extends Command{
 		_startTime = null;
 		_endDate = null;
 		_endTime = null;
+		_info = null;
 		
 		_deadNo = 0;
 		_startNo = 0;
 		_endNo = 0;
+		_infoNo = 0;
 	}
 
 	@Override
@@ -159,10 +164,6 @@ public class Edit extends Command{
 		
 		String[] fullInputTokens = inputString.split(STRING_COMMA);
 		
-		int startNo = 0;
-		int deadNo = 0;
-		int endNo = 0;
-		
 		for (String token : fullInputTokens){
 			String tag = findTag(token);
 			
@@ -172,7 +173,6 @@ public class Edit extends Command{
 			switch(tag){
 				case "DESC":
 					token = removeWordDesc(token);
-					//_desc = removeTaskID(token, _taskID);
 					if (_desc == null){
 						_desc = token;
 						LOGGER.info("description is " + _desc);
@@ -182,7 +182,7 @@ public class Edit extends Command{
 					}
 					break;
 				case "DEADLINE":	
-					deadNo++;
+					_deadNo++;
 					
 					token = removeWordDeadline(token);
 					if (token.trim().isEmpty()){
@@ -204,7 +204,7 @@ public class Edit extends Command{
 					LOGGER.info("deadline is " + _deadline);
 					break;
 				case "START":	
-					startNo++;
+					_startNo++;
 					
 					token = removeWordStart(token);
 					if (token.trim().isEmpty()){
@@ -227,7 +227,7 @@ public class Edit extends Command{
 					inputStartTimeDate(startResult);
 					break;
 				case "END":
-					endNo++;
+					_endNo++;
 					
 					token = removeWordEnd(token);
 					if (token.trim().isEmpty()){
@@ -249,8 +249,18 @@ public class Edit extends Command{
 					
 					inputEndTimeDate(endResult);
 					break;
+				case "INFO":
+					_infoNo++;
+					token = removeWordInfo(token);
+					if (_info == null){
+						_info = token;
+						LOGGER.info("information is " + _info);
+					} else {
+						_info = _info + STRING_COMMA + token;
+						LOGGER.info("information is " + _info);
+					}
+					break;
 				default:
-					//_desc = removeTaskID(token, _taskID);
 					if (_desc == null){
 						_desc = token;
 						LOGGER.info("description is " + _desc);
@@ -264,7 +274,7 @@ public class Edit extends Command{
 		
 		checkDesc();
 		
-		showErrorWhenActionRepeated(startNo, deadNo, endNo);
+		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo, _infoNo);
 	
 		boolean isEdit = true;
 		ArrayList<String> times =
@@ -356,6 +366,8 @@ public class Edit extends Command{
 			tag = "START";
 		} else if (containsEnd(fullInput)){
 			tag = "END";
+		} else if (containsInfo(fullInput)){
+			tag = "INFO";
 		}
 		
 		return tag;		
@@ -383,6 +395,7 @@ public class Edit extends Command{
 		putOneParameter(PARAMETER_START_DATE, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_TIME, STRING_EMPTY);
 		putOneParameter(PARAMETER_END_DATE, STRING_EMPTY);
+		putOneParameter(PARAMETER_INFO, STRING_EMPTY);
 	}
 
 	@Override
@@ -402,6 +415,7 @@ public class Edit extends Command{
 		putOneParameter(PARAMETER_START_DATE, _startDate);
 		putOneParameter(PARAMETER_END_TIME, _endTime);
 		putOneParameter(PARAMETER_END_DATE, _endDate);
+		putOneParameter(PARAMETER_INFO, _info);
 	}
 	
 	@Override
@@ -456,6 +470,15 @@ public class Edit extends Command{
 		} 
 		return false;
 	}
+	
+	private boolean containsInfo(String input){
+		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
+		if (inputCopy.contains(" INFO ") || inputCopy.contains(" INFORMATION ") ||
+				inputCopy.contains(" DETAILS ")){
+			return true;
+		} 
+		return false;
+	}
 
 	private String removeWordDesc(String inputCopy) {
 		String newString = "";
@@ -472,6 +495,30 @@ public class Edit extends Command{
 			}
 		}
 		return newString;
+	}
+	
+	private String removeWordInfo(String inputCopy) {
+		String newString = "";
+		int count = 0;	//Just replace only one occurrence of description
+		
+		String[] inputSplit = inputCopy.split(" ");
+		for (int i=0; i<inputSplit.length; i++){
+			if (isNotInfoWord(inputSplit[i].trim())){
+				newString += inputSplit[i] + " ";
+			} else if (count > 0) {
+				newString += inputSplit[i] + " ";
+			} else {
+				count ++;
+			}
+		}
+		return newString;
+	}
+	
+	private boolean isNotInfoWord(String string) {
+		string = string.toUpperCase();
+		return !(string.equals("INFO") &&
+				!string.equals("INFORMATION") &&
+				!string.equals("DETAILS"));
 	}
 
 	private boolean isNotDescWord(String string) {
@@ -587,7 +634,8 @@ public class Edit extends Command{
 	}
 
 	private boolean isDelimitedString(String input) {
-		if (input.contains(" -s ") || input.contains(" -d ") || input.contains(" -e ")){
+		if (input.contains(" -s ") || input.contains(" -d ") || 
+				input.contains(" -e ") || input.contains(" -i ")){
 			return true;
 		}
 		return false;
@@ -610,13 +658,17 @@ public class Edit extends Command{
 				_endNo++;
 				processEnd(param);
 				break;
+			case "i":
+				_infoNo++;
+				processInfo(param);
+				break;
 		}
 		
 		LOGGER.info("deadline is " + _deadline );
 		LOGGER.info("start time and date is " + _startTime + " " + _startDate);
 		LOGGER.info("end time and date is " + _endTime + " " + _endDate);
 		
-		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo);
+		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo, _infoNo);
 	}
 
 	private void processDeadline(String param){
@@ -674,6 +726,14 @@ public class Edit extends Command{
 			int size = input.length();
 			input = input.substring(index, size).trim();
 		}
+	}
+	
+	private void processInfo(String param){
+		param = param.trim();
+		if (param.isEmpty()){
+			return;
+		}
+		_info = param;
 	}
 	
 }

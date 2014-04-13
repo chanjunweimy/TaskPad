@@ -23,7 +23,6 @@ public class CommandFactory {
 	private static final String FEEDBACK_NO_TASK_FOUND = "No task found.";
 	private static final String FEEDBACK_NO_UNDONE_TASK = "No undone task found.";
 	private static final String FEEDBACK_NO_FINISHED_TASK = "No finished task found.";
-	private static final String FEEDBACK_NO_TASK_WITH_DEADLINE = "No task with deadline in the database.";
 	private static final String FEEDBACK_CLEAR = "All tasks have been deleted. You can use undo to get them back.";
 	private static final String FEEDBACK_CANNOT_UNDO = "You don't have things to undo.";
 	
@@ -189,12 +188,13 @@ public class CommandFactory {
 
 	protected static void edit(String taskIdString, String description,
 			String deadline, String startTime, String startDate,
-			String endTime, String endDate) {
+			String endTime, String endDate, String info) {
 
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 
 		Task task = CommandFactoryBackend.editTask(taskIdString, description,
-				deadline, startTime, startDate, endTime, endDate, listOfTasks);
+				deadline, startTime, startDate, endTime, endDate, info,
+				listOfTasks);
 
 		// pass feedback to gui
 		OutputToGui.output(STRING_NEWLINE + "TASK " + taskIdString
