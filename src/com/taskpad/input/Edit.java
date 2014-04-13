@@ -114,18 +114,10 @@ public class Edit extends Command{
 	 */
 	private void editDelimitedString() {
 		extractTaskID();
+		extractDescription();		
 		
 		Scanner sc = new Scanner(input);
-		StringBuffer description = new StringBuffer();
-		StringBuffer otherPart = new StringBuffer();
-		String tempInput = null;
-		
-		tempInput = retrieveDescription(sc, description, tempInput);
-		otherPart = restructureOtherPart(sc, otherPart, tempInput);
-				
-		sc.close();
-		
-		sc = new Scanner(otherPart.toString().trim());
+		sc.useDelimiter("\\s-");
 		
 		while(sc.hasNext()){
 			String nextParam = sc.next().trim();
@@ -601,69 +593,23 @@ public class Edit extends Command{
 		return false;
 	}
 	
-	/**
-	 * @param description
-	 * @param tempInput
-	 * @return
-	 */
-	private String retrieveDescription(Scanner sc, StringBuffer description,
-			String tempInput) {
-		boolean isBreak = false;
-		while (sc.hasNext()){
-			tempInput = sc.next();
-			 
-			if (tempInput.equals("-d") || tempInput.equals("-e") || tempInput.equals("-s")){
-				isBreak = true;
-				break;
-			}
-			
-			description.append(tempInput + STRING_SPACE);
-		}
-		
-		String descString = description.toString().trim();
-		descString = descString.replaceAll("\"", STRING_EMPTY);
-		
-		_desc = descString;
-		if (!isBreak){
-			tempInput = STRING_EMPTY;
-		}
-				
-		return tempInput;
-	}
-	
-	/**
-	 * 
-	 * @param otherPart
-	 * @param tempInput
-	 * @return
-	 */
-	private StringBuffer restructureOtherPart(Scanner sc, StringBuffer otherPart, String tempInput) {
-		if (tempInput != null){
-			otherPart.append(tempInput.trim());
-		}
-		while (sc.hasNext()){
-			otherPart.append(STRING_SPACE + sc.next());
-		}
-		return otherPart;
-	}
-	
 	private void parseNextParam(String param){
 		String firstChar = getFirstChar(param);
-		param = removeFirstChar(param);
-		
+		param = removeFirstChar(param).trim();
+
 		switch (firstChar){
-		case "d":
-			_deadNo++;
-			_deadline = putDeadline(param);
-			break;
-		case "s":
-			_startNo++;
-			processStart(param);
-			break;
-		case "e": 
-			_endNo++;
-			processEnd(param);
-			break;
+			case "d":
+				_deadNo++;
+				processDeadline(param);
+				break;
+			case "s":
+				_startNo++;
+				processStart(param);
+				break;
+			case "e": 
+				_endNo++;
+				processEnd(param);
+				break;
 		}
 		
 		LOGGER.info("deadline is " + _deadline );
@@ -673,7 +619,25 @@ public class Edit extends Command{
 		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo);
 	}
 
+	private void processDeadline(String param){
+		if (param.isEmpty()){
+			return;
+		}
+		
+		String tempDate = putDeadline(param);
+		_deadline = swapDeadlinePlaces(tempDate);
+	}
+	
+	private String swapDeadlinePlaces(String deadline){
+		String[] tempDead = deadline.split(STRING_SPACE);
+		return tempDead[1] + STRING_SPACE + tempDead[0];
+	}
+	
 	private void processEnd(String param){
+		if (param.isEmpty()){
+			return;
+		}
+		
 		String endResult = putEndTime(param);
 		if (endResult != null){
 			inputEndResult(endResult);
@@ -681,12 +645,16 @@ public class Edit extends Command{
 	}
 	
 	private void processStart(String param){
+		if (param.isEmpty()){
+			return;
+		}
+		
 		String startResult = putStartTime(param);
 		if (startResult != null){
 			inputStartResult(startResult);
 		}
 	}
-
+	
 	private void inputStartResult(String startResult) {
 		String[] splitResult = startResult.split(STRING_SPACE);
 		_startDate = splitResult[0];
@@ -697,6 +665,15 @@ public class Edit extends Command{
 		String[] splitResult = endResult.split(STRING_SPACE);
 		_endDate = splitResult[0];
 		_endTime = splitResult[1];
+	}
+	
+	private void extractDescription(){
+		int index = input.indexOf("-");
+		if (index != 0){
+			_desc = input.substring(0, index).trim();
+			int size = input.length();
+			input = input.substring(index, size).trim();
+		}
 	}
 	
 }
