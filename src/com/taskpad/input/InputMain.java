@@ -136,7 +136,6 @@ public class InputMain {
 		String[] commandVariations = CommandQueue.getInstance().getFlexiMatch(command);
 		
 		String commandVar = findCommandVariationInString(commandVariations, splitInput);
-		System.out.println("Command Var " + commandVar);
 		desc = replaceCommandStr(commandVar, splitInput);
 		
 		return desc;
