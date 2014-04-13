@@ -1,4 +1,4 @@
-//@author A0105788U
+//@author A0112084U
 
 package com.taskpad.execute;
 
@@ -9,6 +9,11 @@ import java.util.Date;
 
 import com.taskpad.storage.Task;
 
+/**
+ * TaskDeadlineComparator
+ *
+ * This is a comparator to compare two tasks according to their deadline
+ */
 public class TaskDeadlineComparator implements Comparator<Task>{
 	/**
 	 * compare: compare two tasks' Date

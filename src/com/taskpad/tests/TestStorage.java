@@ -15,6 +15,10 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * This class is for unit testing of Storage component
+ *
+ */
 public class TestStorage {
 
 	/**

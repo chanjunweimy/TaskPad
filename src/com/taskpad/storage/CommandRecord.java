@@ -2,17 +2,21 @@
 
 package com.taskpad.storage;
 
-
-
 import java.util.LinkedList;
 
+/**
+ * CommandRecord
+ * 
+ * This class is to keep a record of executed user commands at runtime, for (multiple)
+ * undo and redo purpose. It is done by maintaining two stacks for undo and redo
+ * respectively.
+ * 
+ */
 public class CommandRecord {
-	// private static String previousCommand;
 	private static LinkedList<String> commandsForUndo = new LinkedList<String>();
 	private static LinkedList<String> commandsForRedo = new LinkedList<String>();
 	
 	public static void pushForUndo(String command) {
-		// previousCommand = command;
 		commandsForUndo.push(command);
 	}
 	
@@ -24,7 +28,6 @@ public class CommandRecord {
 	}
 	
 	public static void pushForRedo(String command) {
-		// previousCommand = command;
 		commandsForRedo.push(command);
 	}
 	
@@ -33,5 +36,5 @@ public class CommandRecord {
 			throw new NoPreviousCommandException();
 		}
 		return commandsForRedo.pop();
-	}	// dummy
+	}
 }

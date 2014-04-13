@@ -2,34 +2,26 @@
 
 package com.taskpad.storage;
 
-
-
 import java.util.LinkedList;
 
+/**
+ * CommandRecord
+ * 
+ * This class is to keep a record of older-version data files, for (multiple)
+ * undo and redo purpose. It is done by maintaining two stacks for undo and redo
+ * respectively.
+ * 
+ */
 public class DataFileStack {
 	public static final String FILE = ".data.xml";
-	// public static final String FILE_PREV = ".data_prev.xml";
 	public static LinkedList<String> undoStack = new LinkedList<String>();
 	public static LinkedList<String> redoStack = new LinkedList<String>();
-	
-	// private static boolean previousIsValid = false;
-	
-	/*
-	public static boolean isValidPrevious() {
-		return previousIsValid;
-	}
-	
-	public static void setPreviousIsValid(boolean isValid) {
-		previousIsValid = isValid;
-	}
-	*/
 	
 	public static String requestDataFile() {
 		return ".data" + (undoStack.size() + redoStack.size()) + ".xml";
 	}
 	
 	public static void pushForUndo(String file) {
-		// previousCommand = command;
 		undoStack.push(file);
 	}
 	
