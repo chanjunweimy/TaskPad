@@ -2,8 +2,6 @@
 
 package com.taskpad.input;
 
-
-
 import java.util.logging.Logger;
 
 import com.taskpad.input.CommandTypes.CommandType;
@@ -130,16 +128,15 @@ public class InputMain {
 			invalidCommand(input);
 			return command.toString();
 		}
-
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
 		String desc = STRING_EMPTY;
 		String[] splitInput = input.split(" ");
-		String[] commandVariations = CommandQueue.getInstance().getFlexiMatch(command.toString());
+		String[] commandVariations = CommandQueue.getInstance().getFlexiMatch(command);
 		
 		String commandVar = findCommandVariationInString(commandVariations, splitInput);
-		
+		System.out.println("Command Var " + commandVar);
 		desc = replaceCommandStr(commandVar, splitInput);
 		
 		return desc;
@@ -161,7 +158,7 @@ public class InputMain {
 		
 		for (int i = 0; i < splitInput.length; i++){
 			for (int j = 0; j < commandVariations.length; j++){
-				if (splitInput[i].equals(commandVariations[j])){
+				if (isEqualStrings(splitInput[i], commandVariations[j])){
 					return commandVariations[j];
 				}
 			}
@@ -169,6 +166,10 @@ public class InputMain {
 		return null;
 	}
 
+	private static boolean isEqualStrings(String inputString, String command){
+		return inputString.toUpperCase().equals(command);
+	}
+	
 	private static boolean isNotCommandString(String commandVar,
 			String[] splitInput, int i) {
 		return !splitInput[i].toUpperCase().equals(commandVar.toString());

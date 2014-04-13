@@ -7,6 +7,11 @@ package com.taskpad.execute;
  * 
  */
 public class InvalidTaskIdException extends Exception {
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 4039361586685055328L;
+
 	public InvalidTaskIdException() {
 		System.out.println("Invalid task id.");
 	}

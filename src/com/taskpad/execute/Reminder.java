@@ -20,10 +20,7 @@ import com.taskpad.storage.TaskList;
  * 
  */
 public class Reminder {
-	private static final String FEEDBACK_NO_REMINDER_FOR_TODAY = "No reminders for today.\n";
-	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No tasks due today.\n";
-	private static final String FEEDBACK_NO_OVERDUE = "No overdue tasks.\n";
-	
+
 	private static final String FEEDBACK_NOTHING_TO_SHOW = "Nothing to show.";
 
 	/**
