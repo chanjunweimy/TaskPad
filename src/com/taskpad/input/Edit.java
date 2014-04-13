@@ -89,11 +89,12 @@ public class Edit extends Command{
 				return false;
 			}
 		}
-		fullInput = _editInput;
 		
 		LOGGER.info("taskID is " + _taskID);
 		input = removeTaskID(fullInput, _taskID);
 		LOGGER.info("input is " + input);
+		
+		fullInput = _editInput;
 		
 		if(isDelimitedString(" " + input + " ")){
 			String temp = putDescInQuotesFirst(input);
@@ -172,8 +173,9 @@ public class Edit extends Command{
 	 * 
 	 */
 	private void getOtherKeysValue() throws InvalidTaskIdException {
-		String inputString = fullInput;
-		inputString = removeTaskID(inputString, _taskID);
+		//String inputString = fullInput;
+		//inputString = removeTaskID(inputString, _taskID);
+		String inputString = input;
 		
 		LOGGER.info("getting other parameters value (exclude ID).");
 		LOGGER.info("inputString is " + inputString);

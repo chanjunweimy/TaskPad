@@ -62,7 +62,7 @@ public class TestGui {
 			Robot bot = new Robot();
 
 			autoWait(bot);
-
+			
 			/* To reset Eclipse's data */
 			clear(bot);
 			
