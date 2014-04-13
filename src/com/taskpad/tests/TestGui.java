@@ -19,6 +19,11 @@ import com.taskpad.dateandtime.DateAndTimeManager;
 import com.taskpad.launcher.TaskPadMain;
 import com.taskpad.ui.GuiManager;
 
+/**
+ *
+ * This JUnit Test case tests the whole system using GUI testing.
+ *
+ */
 public class TestGui {
 	private final ByteArrayOutputStream _outContent = new ByteArrayOutputStream();
 
