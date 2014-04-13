@@ -3,6 +3,7 @@
 package com.taskpad.input;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -33,6 +34,10 @@ public class Edit extends Command{
 	private String _endTime;
 	private String _editInput;
 	
+	private int _deadNo;
+	private int _endNo;
+	private int _startNo;
+	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
 	private static final String STRING_EMPTY = "";
@@ -58,44 +63,72 @@ public class Edit extends Command{
 		_startTime = null;
 		_endDate = null;
 		_endTime = null;
+		
+		_deadNo = 0;
+		_startNo = 0;
+		_endNo = 0;
 	}
 
 	@Override
 	protected boolean commandSpecificRun() {
 		clearInputParameters();
-
-		//String[] splitParams = input.split(" ");
 		
-		//_taskID = splitParams[0].trim();
-		
-		LOGGER.info("Got in commandSpecificRun ... ");
-		
-		_editInput = fullInput;  
-		if(noTaskIDInPosition(fullInput)){
+		if(isDelimitedString(input)){
+			String temp = putDescInQuotesFirst(input);
+			
+			if (!temp.trim().isEmpty()){
+				input = temp;
+			}
+			editDelimitedString();
+		} else {
+			_editInput = fullInput;  
+			if(noTaskIDInPosition(fullInput)){
+				try {
+					_taskID = findTaskID(fullInput);
+				} catch (TaskIDException | InvalidQuotesException e) {
+					InputManager.outputToGui(e.getMessage());
+					LOGGER.severe(e.getMessage());
+					return false;
+				}
+			}
+			
+			LOGGER.info("taskID is " + _taskID);
+			
 			try {
-				_taskID = findTaskID(fullInput);
-			} catch (TaskIDException | InvalidQuotesException e) {
-				InputManager.outputToGui(e.getMessage());
-				LOGGER.severe(e.getMessage());
+				getOtherKeysValue();
+			} catch (InvalidTaskIdException e) {
+				InputManager.outputToGui("Not a valid TaskID!");
+				LOGGER.severe("Not a valid TaskID!");
 				return false;
 			}
+			
+			fullInput = _editInput;
 		}
-		
-		LOGGER.info("taskID is " + _taskID);
-		
-		try {
-			getOtherKeysValue();
-		} catch (InvalidTaskIdException e) {
-			InputManager.outputToGui("Not a valid TaskID!");
-			LOGGER.severe("Not a valid TaskID!");
-			return false;
-		}
-		
-		fullInput = _editInput;
+
 		putInputParameters();
 		return true;
 	}
 
+	/**
+	 * delimited string syntax: edit <taskID> <desc> -d <deadline...> -s <start...> -e <end...>
+	 */
+	private void editDelimitedString() {
+		extractTaskID();
+		extractDescription();		
+		
+		Scanner sc = new Scanner(input);
+		sc.useDelimiter("\\s-");
+		
+		while(sc.hasNext()){
+			String nextParam = sc.next().trim();
+			
+			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
+
+			parseNextParam(nextParam.trim());
+		}
+		sc.close();
+	}
+	
 	/**
 	 * Check if second word entered is an integer (likely to be taskID)
 	 * @param fullInput
@@ -538,5 +571,109 @@ public class Edit extends Command{
 	private boolean isNotStartWord(String string) {
 		return !string.toUpperCase().equals("START") && !string.toUpperCase().equals("-S");
 	}
+	
+	
+	/* Helper methods for delimited string */
+	
+	private void extractTaskID() {
+		String[] split = input.split(STRING_SPACE);
+		_taskID = split[0];
+		
+		String newInput = STRING_EMPTY;
+		for (int i=1; i<split.length; i++){
+			newInput += split[i] + STRING_SPACE;
+		}
+		input = newInput;
+	}
 
+	private boolean isDelimitedString(String input) {
+		if (input.contains(" -s ") || input.contains(" -d ") || input.contains(" -e ")){
+			return true;
+		}
+		return false;
+	}
+	
+	private void parseNextParam(String param){
+		String firstChar = getFirstChar(param);
+		param = removeFirstChar(param).trim();
+
+		switch (firstChar){
+			case "d":
+				_deadNo++;
+				processDeadline(param);
+				break;
+			case "s":
+				_startNo++;
+				processStart(param);
+				break;
+			case "e": 
+				_endNo++;
+				processEnd(param);
+				break;
+		}
+		
+		LOGGER.info("deadline is " + _deadline );
+		LOGGER.info("start time and date is " + _startTime + " " + _startDate);
+		LOGGER.info("end time and date is " + _endTime + " " + _endDate);
+		
+		showErrorWhenActionRepeated(_startNo, _deadNo, _endNo);
+	}
+
+	private void processDeadline(String param){
+		if (param.isEmpty()){
+			return;
+		}
+		
+		String tempDate = putDeadline(param);
+		_deadline = swapDeadlinePlaces(tempDate);
+	}
+	
+	private String swapDeadlinePlaces(String deadline){
+		String[] tempDead = deadline.split(STRING_SPACE);
+		return tempDead[1] + STRING_SPACE + tempDead[0];
+	}
+	
+	private void processEnd(String param){
+		if (param.isEmpty()){
+			return;
+		}
+		
+		String endResult = putEndTime(param);
+		if (endResult != null){
+			inputEndResult(endResult);
+		}
+	}
+	
+	private void processStart(String param){
+		if (param.isEmpty()){
+			return;
+		}
+		
+		String startResult = putStartTime(param);
+		if (startResult != null){
+			inputStartResult(startResult);
+		}
+	}
+	
+	private void inputStartResult(String startResult) {
+		String[] splitResult = startResult.split(STRING_SPACE);
+		_startDate = splitResult[0];
+		_startTime = splitResult[1];
+	}
+	
+	private void inputEndResult(String endResult) {
+		String[] splitResult = endResult.split(STRING_SPACE);
+		_endDate = splitResult[0];
+		_endTime = splitResult[1];
+	}
+	
+	private void extractDescription(){
+		int index = input.indexOf("-");
+		if (index != 0){
+			_desc = input.substring(0, index).trim();
+			int size = input.length();
+			input = input.substring(index, size).trim();
+		}
+	}
+	
 }

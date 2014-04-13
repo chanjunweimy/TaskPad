@@ -2,8 +2,6 @@
 
 package com.taskpad.input;
 
-
-
 import java.util.Map;
 
 public class Input {
