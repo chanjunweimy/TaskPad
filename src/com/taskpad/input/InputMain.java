@@ -135,21 +135,44 @@ public class InputMain {
 	}
 	
 	private static String replaceCommandWord (String input, CommandType command){
-		//return input.replaceFirst("(?i)"+command.toString()+" ", "");  //deprecated
 		String desc = STRING_EMPTY;
 		String[] splitInput = input.split(" ");
+		String[] commandVariations = CommandQueue.getInstance().getFlexiMatch(command.toString());
 		
+		String commandVar = findCommandVariationInString(commandVariations, splitInput);
+		
+		desc = replaceCommandStr(commandVar, splitInput);
+		
+		return desc;
+	}
+	
+	private static String replaceCommandStr(String commandVar,
+			String[] splitInput) {
+		String desc = STRING_EMPTY;
 		for (int i=0; i<splitInput.length; i++){
-			if (isNotCommandString(command, splitInput, i)){
+			if (isNotCommandString(commandVar, splitInput, i)){
 				desc += splitInput[i] + " ";
 			}
 		}
 		return desc;
 	}
 
-	private static boolean isNotCommandString(CommandType command,
+	private static String findCommandVariationInString(String[] commandVariations, 
+			String[] splitInput){
+		
+		for (int i=0; i<splitInput.length; i++){
+			for (int j=0; j<commandVariations.length; j++){
+				if (splitInput[i].equals(commandVariations[j])){
+					return commandVariations[j];
+				}
+			}
+		}
+		return null;
+	}
+
+	private static boolean isNotCommandString(String commandVar,
 			String[] splitInput, int i) {
-		return !splitInput[i].toUpperCase().equals(command.toString());
+		return !splitInput[i].toUpperCase().equals(commandVar.toString());
 	}
 	
 	private static void invalidCommand(String input) {
