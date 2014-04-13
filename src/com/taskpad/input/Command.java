@@ -37,6 +37,7 @@ public abstract class Command {
 	protected static final String MESSAGE_WARNING_INFONO = "WARNING: has %s info tag, discarding second one";
 	protected static final String MESSAGE_WARNING_DEADLINE = "WARNING: has %s deadline";
 	protected static final String MESSAGE_INVALID_DATE = "%s is not a valid date";
+	protected static final String MESSAGE_WARNING_TASKID = "Warning: TaskID is not in standard position";
 	
 	protected static final Logger LOGGER = Logger.getLogger("TaskPad");
 	
