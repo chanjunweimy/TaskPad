@@ -646,8 +646,6 @@ public abstract class Command {
 	}
 	
 	protected String putDeadline(String param) {	
-		System.out.println("HELLOHELLO");
-		System.out.println("Param " + param);
 		if (param.trim().isEmpty()){
 			return null;
 		}
