@@ -106,7 +106,6 @@ public abstract class Command {
 		if (!numberInput.equals("") || numberInput != null){
 			LOGGER.info("numberInput is " + numberInput);
 			String[] inputTokens = numberInput.split(" ");
-			StringBuffer inputBuilder = new StringBuffer();
 			
 			for (int i = 0; i < inputTokens.length - 1; i++){
 				if (inputTokens[i] == null){
@@ -126,17 +125,25 @@ public abstract class Command {
 					}
 				}
 			}
-			
-			for (int i = 0; i < inputTokens.length; i++){
-				if (inputTokens[i] != null){
-					inputBuilder.append(inputTokens[i] + STRING_SPACE);
-				}
-			}
 			  
-			input = inputBuilder.toString().trim();
+			input = buildString(inputTokens);
 			
 			LOGGER.info("input is " + input);
 		}
+	}
+
+	/**
+	 * @param inputTokens
+	 * @return
+	 */
+	protected String buildString(String[] inputTokens) {
+		StringBuffer inputBuilder = new StringBuffer();
+		for (int i = 0; i < inputTokens.length; i++){
+			if (inputTokens[i] != null){
+				inputBuilder.append(inputTokens[i] + STRING_SPACE);
+			}
+		}
+		return inputBuilder.toString().trim();
 	}
 	
 	protected void showEmptyString(){

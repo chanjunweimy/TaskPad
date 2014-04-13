@@ -14,8 +14,8 @@ import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
 import com.taskpad.ui.GuiManager;
-import com.taskpad.dateandtime.DateObject;
-import com.taskpad.dateandtime.TimeObject;
+//import com.taskpad.dateandtime.DateObject;
+//import com.taskpad.dateandtime.TimeObject;
 
 
 public class Addrem extends Command{
@@ -33,8 +33,10 @@ public class Addrem extends Command{
 	private String _remDate;
 	private String _remTime;
 	
+	/*
 	private static DateObject _dateObject;
 	private static TimeObject _timeObject;
+	*/
 	
 	private static Scanner sc;
 	private boolean _invalidParameters = false;
@@ -55,8 +57,8 @@ public class Addrem extends Command{
 		setNUMBER_ARGUMENTS(NUMBER_ARGUMENTS);
 		
 		sc = new Scanner(System.in);
-		_dateObject = null;
-		_timeObject = null;
+		//_dateObject = null;
+		//_timeObject = null;
 		_taskID = "";
 		_remDate = "";
 		_remTime = "";
@@ -201,8 +203,7 @@ public class Addrem extends Command{
 			String todayDate = datm.getTodayDate();
 			dateAndTime = todayDate + " " + _remTime;
 		} else if (!_remDate.isEmpty() && _remTime.isEmpty()){
-			_remTime = " 23:59";
-			dateAndTime = _remDate + _remTime;
+			dateAndTime = _remDate;
 		}
 		
 		findDateAndTime(dateAndTime);
@@ -210,13 +211,13 @@ public class Addrem extends Command{
 
 	/**
 	 * @param dateAndTime
-	 * @param datm
 	 * @throws InvalidQuotesException
 	 */
 	private void findDateAndTime(String dateAndTime)
 			throws InvalidQuotesException {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		if (dateAndTime != null){
+			dateAndTime += " 23:59";
 			try {
 				String formatString = datm.formatDateAndTimeInString(dateAndTime);
 				String[] formatTokens = formatString.split(" ");
@@ -227,6 +228,11 @@ public class Addrem extends Command{
 				
 				LOGGER.info("remDate is " + _remDate);
 				LOGGER.info("remTime is " + _remTime);
+				
+				if ("null".equals(_remDate) && "null".equals(_remTime)){
+					_remDate = "";
+					_remTime = "";
+				}
 				
 			} catch (InvalidQuotesException e) {
 				_invalidParameters = true;  
@@ -274,9 +280,20 @@ public class Addrem extends Command{
 		if (invalidIfNoTaskID()){
 			return false;
 		}
+		
+		String dateAndTime = buildString(splitInput);
 		//extractTimeAndDate(splitInput);
 		
-		invalidIfNoDateOrTime();
+		try {
+			findDateAndTime(dateAndTime);
+		} catch (InvalidQuotesException e) {
+			InputManager.outputToGui(e.getMessage());
+			return false;
+		}
+		
+		if (invalidIfNoDateOrTime()){
+			return false;
+		}
 		
 		return true;
 	}
@@ -287,6 +304,7 @@ public class Addrem extends Command{
 			if (!isNotValidTaskID(token)){
 				_taskID = token;
 				_gotTaskID = true;
+				splitInput[i] = null;
 				return;
 				//_invalidParameters = true;
 				//throw new TaskIDException(taskID);
@@ -307,11 +325,13 @@ public class Addrem extends Command{
 		return false;
 	}
 	
-	private void invalidIfNoDateOrTime(){
+	private boolean invalidIfNoDateOrTime(){
 		if(_remDate.equals("") && _remTime.equals("")){
 			_invalidParameters = true;
 			InputManager.outputToGui("No date or time input");
+			return true;
 		}
+		return false;
 	}
 	
 	private boolean checkIfInvalidParameters(int length) throws InvalidParameterException{
@@ -322,28 +342,7 @@ public class Addrem extends Command{
 		}
 	}
 	
-	/* deprecated for flexiCommands without delimiters
-	private void splitInputNoDelimiters() throws TaskIDException {		
-		String[] splitInput = input.split(SPACE);
-		_taskID = splitInput[0];
-		
-		if (Integer.parseInt(_taskID) > InputManager.retrieveNumberOfTasks()+1){
-			throw new TaskIDException(_taskID);
-		}
-		_remDate = splitInput[1];
-		if (splitInput.length == 3){
-			//_remTime = splitInput[2];		//deprecated for flexi commands
-			try {
-				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
-			} catch (TimeErrorException | InvalidTimeException e) {
-				//ErrorMessages.invalidTimeMessage();
-				InputManager.outputToGui(e.getMessage());
-				_invalidParameters = true;
-				return;
-			}
-		}
-	}
-	*/     
+	
 
 	private boolean checkIfContainsDelimiters() {
 		return fullInput.contains(" -d ")||input.contains(" -t ");
@@ -415,32 +414,7 @@ public class Addrem extends Command{
 		return date;
 	}
 	
-	private String formatRemString(){
-		String dateString = formatParaDate() + " " + formatParaTime();
-		return dateString;
-	}
 	
-	private String formatParaDate(){
-		String dateString = "";
-		if (_remDate.equals("")){
-			_remDate = DateAndTimeManager.getInstance().getTodayDate();
-		}
-		
-		dateString += _remDate;
-		
-		return dateString;
-	}
-	
-	private String formatParaTime(){
-		String timeString = "";
-		if(_remTime.equals("")){
-			timeString += DateAndTimeManager.getInstance().getTodayTime();
-		}else {
-			timeString += _remTime;
-		}
-		
-		return timeString;
-	}
 	
 	private String removeFirstChar(String input) {
 		return input.replaceFirst(getFirstChar(input), "").trim();
@@ -462,6 +436,67 @@ public class Addrem extends Command{
 	/**
 	 * ====================================DEPRECATED==============================================================
 	 */
+	/**
+	 * @deprecated
+	 * @return
+	 */
+	private String formatRemString(){
+		String dateString = formatParaDate() + " " + formatParaTime();
+		return dateString;
+	}
+	
+	/**
+	 * @deprecated
+	 * @return
+	 */
+	private String formatParaDate(){
+		String dateString = "";
+		if (_remDate.equals("")){
+			_remDate = DateAndTimeManager.getInstance().getTodayDate();
+		}
+		
+		dateString += _remDate;
+		
+		return dateString;
+	}
+	
+	/**
+	 * @deprecated
+	 * @return
+	 */
+	private String formatParaTime(){
+		String timeString = "";
+		if(_remTime.equals("")){
+			timeString += DateAndTimeManager.getInstance().getTodayTime();
+		}else {
+			timeString += _remTime;
+		}
+		
+		return timeString;
+	}
+	
+	/* deprecated for flexiCommands without delimiters
+	private void splitInputNoDelimiters() throws TaskIDException {		
+		String[] splitInput = input.split(SPACE);
+		_taskID = splitInput[0];
+		
+		if (Integer.parseInt(_taskID) > InputManager.retrieveNumberOfTasks()+1){
+			throw new TaskIDException(_taskID);
+		}
+		_remDate = splitInput[1];
+		if (splitInput.length == 3){
+			//_remTime = splitInput[2];		//deprecated for flexi commands
+			try {
+				_remTime = DateAndTimeManager.getInstance().parseTimeInput(splitInput[2].trim());
+			} catch (TimeErrorException | InvalidTimeException e) {
+				//ErrorMessages.invalidTimeMessage();
+				InputManager.outputToGui(e.getMessage());
+				_invalidParameters = true;
+				return;
+			}
+		}
+	}
+	*/     
 	
 	/**
 	 * @deprecated
@@ -471,10 +506,10 @@ public class Addrem extends Command{
 	private void extractTimeAndDate(String[] splitInput){	
 		for (int i=0; i<splitInput.length; i++){
 			if(!_gotDate && isDateObject(splitInput[i])){
-				_remDate = _dateObject.getParsedDate();
+				//_remDate = _dateObject.getParsedDate();
 				_gotDate = true;
 			} else if (!_gotTime && isTimeObject(splitInput[i])){
-				_remTime = _timeObject.getParsedTime();
+				//_remTime = _timeObject.getParsedTime();
 				_gotTime = true;
 				
 			} else if (!_gotTaskID){
@@ -493,10 +528,10 @@ public class Addrem extends Command{
 	 * @return
 	 */
 	private boolean isTimeObject(String input) {
-		_timeObject = DateAndTimeManager.getInstance().findTime(input);
-		if (_timeObject != null){
-			return true;
-		}
+		//_timeObject = DateAndTimeManager.getInstance().findTime(input);
+		//if (_timeObject != null){
+		//	return true;
+		//}
 		return false;
 	}
 
@@ -506,10 +541,10 @@ public class Addrem extends Command{
 	 * @return
 	 */
 	private boolean isDateObject(String input) {
-		_dateObject = DateAndTimeManager.getInstance().findDate(input);
-		if (_dateObject != null){
-			return true;
-		}
+		//_dateObject = DateAndTimeManager.getInstance().findDate(input);
+		//if (_dateObject != null){
+		//	return true;
+		//}
 		return false;
 	}
 
