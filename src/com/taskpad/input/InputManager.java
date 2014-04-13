@@ -7,6 +7,7 @@
 package com.taskpad.input;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import com.taskpad.storage.DataManager;
@@ -25,9 +26,10 @@ public class InputManager {
 	
 	private static final String STRING_NULL = "";
 	
-	private static boolean debug = false;
+	private static boolean _isDebug = false;
+	private static ArrayList<Input> _debugStor = null;
 	
-	protected static Logger logger = Logger.getLogger("TaskPad");
+	protected static final Logger LOGGER = Logger.getLogger("TaskPad");
 
 	
 	public static String receiveFromGui(String inputString){
@@ -37,7 +39,7 @@ public class InputManager {
 	}
 
 	protected static String outputToGui(String outputString){
-		if (!debug){
+		if (!_isDebug){
 			GuiManager.callOutput(outputString);
 		}else {
 			System.out.println(String.format(STATUS_GUI_OUTPUT, outputString));
@@ -56,7 +58,7 @@ public class InputManager {
 	}
 	
 	protected static String clearScreen(){
-		if (!debug){
+		if (!_isDebug){
 			GuiManager.clearOutput();
 		}else {
 			System.out.println(STATUS_CLEAR);
@@ -65,14 +67,58 @@ public class InputManager {
 	}
 	
 	protected static String getStartDateAndTimeForTask(int taskId) throws InvalidTaskIdException{
+		if (_isDebug && _debugStor != null){
+			taskId--;
+			if (taskId >= _debugStor.size() || taskId < 0){
+				throw new InvalidTaskIdException();
+			}
+			
+			Input storedID = _debugStor.get(taskId);
+			String startDate = storedID.getParameters().get("START DATE");
+			String startTime = storedID.getParameters().get("START TIME");
+			if (startDate == null || startTime == null){
+				return null;
+			}
+			
+			return startDate + " " + startTime;
+		}
+		
 		return ExecutorManager.getStartDateAndTimeForTask(taskId);
 	}
 	
 	protected static String getEndDateAndTimeForTask(int taskId) throws InvalidTaskIdException{
+		if (_isDebug && _debugStor != null){
+			taskId--;
+			if (taskId >= _debugStor.size() || taskId < 0){
+				throw new InvalidTaskIdException();
+			}
+			
+			Input storedID = _debugStor.get(taskId);
+			String endDate = storedID.getParameters().get("END DATE");
+			String endTime = storedID.getParameters().get("END TIME");
+			if (endDate == null || endTime == null){
+				return null;
+			}
+			
+			return endDate + " " + endTime;
+		}
+		
 		return ExecutorManager.getEndDateAndTimeForTask(taskId);
 	}
 	
 	protected static String getDeadlineForTask(int taskId) throws InvalidTaskIdException{
+		if (_isDebug && _debugStor != null){
+			taskId--;
+			if (taskId >= _debugStor.size() || taskId < 0){
+				throw new InvalidTaskIdException();
+			}
+			
+			Input storedID = _debugStor.get(taskId);
+			String deadline = storedID.getParameters().get("DEADLINE");
+			
+			return deadline;
+		}
+		
 		return ExecutorManager.getDeadlineForTask(taskId);
 	}
 	
@@ -90,9 +136,9 @@ public class InputManager {
 	}
 	
 	protected static void passToExecutor(Input input, String fullInput){
-		if (!debug){
+		if (!_isDebug){
 			ExecutorManager.receiveFromInput(input, fullInput);
-			logger.info(STATUS_EXECUTOR);
+			LOGGER.info(STATUS_EXECUTOR);
 		} else {
 			formatInputForTest(input);
 		}
@@ -107,7 +153,12 @@ public class InputManager {
 	}
 	
 	public static void setDebug(boolean debug){
-		InputManager.debug = debug;
+		_isDebug = debug;
+	}
+	
+	public static void setDebug(boolean debug, ArrayList<Input> debugStor){
+		setDebug(debug);
+		_debugStor = debugStor;
 	}
 	
 	/**
