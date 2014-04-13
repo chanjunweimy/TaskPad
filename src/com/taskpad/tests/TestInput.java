@@ -13,10 +13,14 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.input.Input;
 import com.taskpad.input.InputManager;
 
 public class TestInput {
@@ -38,13 +42,14 @@ public class TestInput {
 	@Test
 	public void testAddInfo(){
 		setUpStream();
-		testInputString("TASKID 1\r\nINFO venue: meeting room", "addinfo 1 venue: meeting room");
+		testInputString("TASKID 1\r\nINFO venue : meeting room", "addinfo 1 venue: meeting room");
 	}
 	
 	@Test
 	public void testAddRem(){
 		setUpStream();
-		testInputString("TIME 16:00\r\nDATE 23/04/2015\r\nTASKID 1", "addrem 1 23/04/2015 16:00");
+		testInputString("Output to GUI: Reminder added!  1: 23/04/2015 16:00\r\n"
+				+ "TIME 16:00\r\nDATE 23/04/2015\r\nTASKID 1", "addrem 1 23/04/2015 16:00");
 	}
 	
 	@Test
@@ -74,16 +79,16 @@ public class TestInput {
 	@Test
 	public void testEdit(){
 		setUpStream();
-		testInputString("DESC new description\r\nTASKID 1"
+		testInputString("DESC new\r\nTASKID 1"
 				, "Edit 1 new description");
 		
 		testInputString("Output to GUI: Warning: TaskID is not in standard position\r\n"
-				+ "DESC new description\r\n"
+				+ "DESC new\r\n"
 				+ "TASKID 1"
 				, "Edit one new description");
 		
 		testInputString("Output to GUI: Warning: TaskID is not in standard position\r\n"
-				+ "Output to GUI: Not a valid TaskID!",
+				+ "Output to GUI: Error: Invalid TaskID",
 				"Edit one one new description, a, dead 10/04/2014");
 		
 		testInputString("TASKID 1"
@@ -91,7 +96,7 @@ public class TestInput {
 		
 		testInputString("END TIME 23:59\r\n"
 				+ "START TIME 00:00\r\n"
-				+ "DEADLINE 13/04/2014 23:59\r\n"
+				+ "DEADLINE 23:59 13/04/2014\r\n"
 				+ "START DATE 10/04/2014\r\n"
 				+ "DESC a\r\n"
 				+ "TASKID 1\r\n"
@@ -138,15 +143,14 @@ public class TestInput {
 				, "Edit 1 start 4pm tmr");
 		
   		testInputString("Output to GUI: TO a Monday is not a valid date\r\n"
-			+ "Output to GUI: BY a that day is not a valid date\r\n"
-			+ "Output to GUI: FROM a today is not a valid date\r\n"
-			+ "Output to GUI: WARNING: has 3 start date and time\r\n"
+  				+ "Output to GUI: BY a that day is not a valid date\r\n"
+  				+ "Output to GUI: WARNING: has 3 start date and time\r\n"
 			+ "Output to GUI: WARNING: has 3 end date and time\r\n"
 			+ "Output to GUI: WARNING: has 3 deadline\r\n"
 			+ "END TIME \r\n"
-			+ "START TIME \r\n"
-			+ "DEADLINE 14/04/2014 23:59\r\n"
-			+ "START DATE \r\n"
+			+ "START TIME 00:00\r\n"
+			+ "DEADLINE 23:59 14/04/2014\r\n"
+			+ "START DATE 10/04/2014\r\n"
 			+ "DESC a\r\n"
 			+ "TASKID 1\r\n"
 			+ "END DATE "
@@ -179,20 +183,33 @@ public class TestInput {
 	@Test
 	public void testAdd1(){
 		setUpStream();
-		testInputString("11:00\r\nDEADLINE TIME \r\nSTART TIME 11:00\r\nEND TIME 11:00\r\n"
+		testInputString("START TIME 08:00\r\nEND TIME 11:00\r\n"
 				+ "START DATE 11/11/2015\r\nDESC  aaa 1\r\nEND DATE 11/11/2015\r\n"
-				+ "DEADLINE DATE 11/11/2015", 
-				"add 1 -s 11am, 11/11/15 -d 11/11/15 -e 11am, 11/11/15 \" aaa\"");
+				+ "DEADLINE DATE 23:59 11/11/2015", 
+				"add 1 -s 8am, 11/11/15 -d 11/11/15 -e 11am, 11/11/15 \" aaa\"");
 	}
 	
 	
 	private void testInputString(String expected, String input){
 		setupDebugDate(DEBUG_DATE);
-		InputManager.setDebug(true);
+		ArrayList<Input> debugStor = setupDebugStorage();
+		InputManager.setDebug(true, debugStor);
 		//assertEquals(description, expected, InputManager.receiveFromGui(input));
 		InputManager.receiveFromGui(input);
 		assertEquals(expected + "\r\n", _outContent.toString());
 		cleanUpStreams();
+	}
+
+	/**
+	 * @return
+	 */
+	private ArrayList<Input> setupDebugStorage() {
+		ArrayList<Input> debugStor = new ArrayList<Input>();
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("DESC", "AAA");
+		Input newInput = new Input("ADD", param);
+		debugStor.add(newInput);
+		return debugStor;
 	}
 
 	/**

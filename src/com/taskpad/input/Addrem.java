@@ -1,4 +1,4 @@
-	//@author A0119646X
+//@author A0119646X
 
 package com.taskpad.input;
 
@@ -19,11 +19,15 @@ import com.taskpad.ui.GuiManager;
 
 
 public class Addrem extends Command{
+	private static final String STRING_SPACE = " ";
+
+	private static final String DAY_TIME_END = "23:59";
+
 	protected static final Logger LOGGER = Logger.getLogger("TaskPad");
 	
 	private static final String COMMAND_ADD_REM = "ADDREM";
 	private static final int NUMBER_ARGUMENTS = 2;
-	private static final String SPACE = " ";
+	private static final String SPACE = Addrem.STRING_SPACE;
 		
 	private static final String PARAMETER_TASK_ID = "TASKID";
 	private static final String PARAMETER_REM_DATE = "DATE";
@@ -95,8 +99,8 @@ public class Addrem extends Command{
 			return false;
 		} 
  
-		LOGGER.info("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
-		InputManager.outputToGui("Reminder added! " + " " + _taskID + ": " +  _remDate + " " + _remTime);
+		LOGGER.info("Reminder added! " + Addrem.STRING_SPACE + _taskID + ": " +  _remDate + Addrem.STRING_SPACE + _remTime);
+		InputManager.outputToGui("Reminder added! " + Addrem.STRING_SPACE + _taskID + ": " +  _remDate + Addrem.STRING_SPACE + _remTime);
 		
 		return true;
 	}
@@ -131,7 +135,7 @@ public class Addrem extends Command{
 		LOGGER.info("input is " + input);
 		
 		if(checkIfContainsDelimiters()){
-			String inputString[] = input.split(" ");
+			String inputString[] = input.split(Addrem.STRING_SPACE);
 			
 			if (isNotNumberArgs(inputString)){
 				//System.out.println("Throw");
@@ -198,12 +202,13 @@ public class Addrem extends Command{
 		String dateAndTime = null;
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		if (!_remDate.isEmpty() && !_remTime.isEmpty()){
-			dateAndTime = _remDate + " " + _remTime;
+			dateAndTime = _remDate + STRING_SPACE + _remTime;
 		} else if (_remDate.isEmpty() && !_remTime.isEmpty()){
 			String todayDate = datm.getTodayDate();
-			dateAndTime = todayDate + " " + _remTime;
+			dateAndTime = todayDate + STRING_SPACE + _remTime;
 		} else if (!_remDate.isEmpty() && _remTime.isEmpty()){
-			dateAndTime = _remDate;
+			_remTime = STRING_SPACE + DAY_TIME_END;
+			dateAndTime = _remDate + _remTime;
 		}
 		
 		findDateAndTime(dateAndTime);
@@ -217,10 +222,10 @@ public class Addrem extends Command{
 			throws InvalidQuotesException {
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		if (dateAndTime != null){
-			dateAndTime += " 23:59";
+			//dateAndTime += " 23:59";
 			try {
 				String formatString = datm.formatDateAndTimeInString(dateAndTime);
-				String[] formatTokens = formatString.split(" ");
+				String[] formatTokens = formatString.split(STRING_SPACE);
 				int size = formatTokens.length;
 				
 				_remDate = formatTokens[size - POSITION_DATE_STARTTIME];
@@ -374,7 +379,7 @@ public class Addrem extends Command{
 	 * @throws DatePassedException 
 	 */
 	private void checkTimeAndDate() throws DatePassedException {
-		String dateAndTime = _remDate + " " + _remTime;
+		String dateAndTime = _remDate + Addrem.STRING_SPACE + _remTime;
 		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		String now = datm.getTodayDateAndTime();
 		
@@ -417,7 +422,7 @@ public class Addrem extends Command{
 	
 	
 	private String stripWhiteSpaces(String input){
-		return input.replaceAll(" ", "");
+		return input.replaceAll(Addrem.STRING_SPACE, "");
 	}
 	
 	private void invalidParam() {
@@ -432,7 +437,7 @@ public class Addrem extends Command{
 	 * @return
 	 */
 	private String formatRemString(){
-		String dateString = formatParaDate() + " " + formatParaTime();
+		String dateString = formatParaDate() + Addrem.STRING_SPACE + formatParaTime();
 		return dateString;
 	}
 	

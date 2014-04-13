@@ -324,7 +324,9 @@ public abstract class Command {
 		LOGGER.info("timeString is: " + timeString);
 		LOGGER.info("description is: " + splitResult[0]);
 		
-		boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
+		//isDescNotNull is deprecated!
+		//boolean isDescNotNull = splitResult.length > 6 && !splitResult[0].trim().isEmpty();
+		boolean isDescNotNull = false;
 		if (STRING_NULL.equals(dateString) || STRING_NULL.equals(timeString) || isDescNotNull){
 			String errorMessage = String.format(MESSAGE_INVALID_DATE, token);
 			InputManager.outputToGui(errorMessage);
