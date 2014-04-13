@@ -55,10 +55,6 @@ public class CommandQueue {
 		InputManager.callGuiExit();
 	}
 	
-	protected void addPriTask(String input, String fullInput){
-		new AddPri(input, fullInput);
-	}
-
 	protected void addInfoTask(String input, String fullInput) {
 		new Addinfo(input, fullInput);
 	}

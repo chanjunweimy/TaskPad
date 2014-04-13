@@ -9,6 +9,7 @@ package com.taskpad.input;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -41,6 +42,7 @@ public abstract class Command {
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_NULL = "null";
 	private static final String STRING_EMPTY = "";
+	private static final String STRING_QUOTE = "\"";
 	
 	protected static final String KEYWORD_ENDTiME = "TO";
 	protected static final String KEYWORD_STARTTIME = "FROM";
@@ -546,6 +548,55 @@ public abstract class Command {
 			}
 		}
 		return startEarliest;
+	}
+	
+	/**
+	 * putDescInQuotesFirst: find description within " "
+	 * @return input string without description or empty string if " " not found
+	 */
+	protected  String putDescInQuotesFirst(String input){
+		Scanner sc = new Scanner(input);
+		
+		StringBuffer tempDesc = null;
+		StringBuffer normalString = new StringBuffer(STRING_EMPTY);
+		boolean isStarted = false;
+		boolean isFinish = false;
+		
+		while (sc.hasNext()){
+			String buildString = sc.next();
+			if (!isFinish){
+				if (!isStarted){
+					if (buildString.startsWith(STRING_QUOTE)){
+						isStarted = true;
+						tempDesc = new StringBuffer(buildString);
+					} else {
+						normalString.append(STRING_SPACE + buildString);
+					}
+				} else {
+					//System.out.println(buildString);
+					tempDesc.append(STRING_SPACE + buildString);
+					if (buildString.endsWith(STRING_QUOTE)){
+						isFinish = true;
+					}
+				}
+			} else {
+				normalString.append(STRING_SPACE + buildString);
+			}
+		}
+		
+		if (tempDesc == null){
+			tempDesc = new StringBuffer(STRING_EMPTY);
+			return tempDesc.toString();
+		} else {
+			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
+			tempDesc.append(normalString);
+		}
+	
+		sc.close();
+		
+		//System.out.println(tempDesc.toString());
+		
+		return tempDesc.toString();
 	}
 	
 }

@@ -63,38 +63,63 @@ public class Edit extends Command{
 	@Override
 	protected boolean commandSpecificRun() {
 		clearInputParameters();
-
-		//String[] splitParams = input.split(" ");
 		
-		//_taskID = splitParams[0].trim();
-		
-		LOGGER.info("Got in commandSpecificRun ... ");
-		
-		_editInput = fullInput;  
-		if(noTaskIDInPosition(fullInput)){
+		if(isDelimitedString(input)){
+			String temp = putDescInQuotesFirst(input);
+			
+			if (!temp.trim().isEmpty()){
+				input = temp;
+			}
+			editDelimitedString();
+		} else {
+			_editInput = fullInput;  
+			if(noTaskIDInPosition(fullInput)){
+				try {
+					_taskID = findTaskID(fullInput);
+				} catch (TaskIDException | InvalidQuotesException e) {
+					InputManager.outputToGui(e.getMessage());
+					LOGGER.severe(e.getMessage());
+					return false;
+				}
+			}
+			
+			LOGGER.info("taskID is " + _taskID);
+			
 			try {
-				_taskID = findTaskID(fullInput);
-			} catch (TaskIDException | InvalidQuotesException e) {
-				InputManager.outputToGui(e.getMessage());
-				LOGGER.severe(e.getMessage());
+				getOtherKeysValue();
+			} catch (InvalidTaskIdException e) {
+				InputManager.outputToGui("Not a valid TaskID!");
+				LOGGER.severe("Not a valid TaskID!");
 				return false;
 			}
+			
+			fullInput = _editInput;
 		}
-		
-		LOGGER.info("taskID is " + _taskID);
-		
-		try {
-			getOtherKeysValue();
-		} catch (InvalidTaskIdException e) {
-			InputManager.outputToGui("Not a valid TaskID!");
-			LOGGER.severe("Not a valid TaskID!");
-			return false;
-		}
-		
-		fullInput = _editInput;
+
 		putInputParameters();
 		return true;
 	}
+
+	/**
+	 * delimited string syntax: edit <taskID> <desc> -d <deadline...> -s <start...> -e <end...>
+	 */
+	private void editDelimitedString() {
+		extractTaskID(input);
+	}
+
+	private void extractTaskID(String input) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private boolean isDelimitedString(String input) {
+		if (input.contains(" -s ") || input.contains(" -d ") || input.contains(" -e ")){
+			return true;
+		}
+		return false;
+	}
+	
+	
 
 	/**
 	 * Check if second word entered is an integer (likely to be taskID)

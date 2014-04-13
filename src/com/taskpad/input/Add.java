@@ -12,15 +12,6 @@ import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.execute.InvalidTaskIdException;
 
-/*
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import com.taskpad.dateandtime.DateObject;
-import com.taskpad.dateandtime.TimeObject;
-*/
 
 /**
  * Add syntax
@@ -33,12 +24,8 @@ import com.taskpad.dateandtime.TimeObject;
 public class Add extends Command {
 
 	private static final String STRING_NULL = "null";
-	private static final String STRING_QUOTE = "\"";
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_SPACE = " ";
-	
-	//private static final String STRING_COMMA = ",";
-	//private static final String STRING_DASH = "-";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -117,7 +104,6 @@ public class Add extends Command {
 			if (!temp.trim().isEmpty()){
 				input = temp;
 			}
-			//System.out.println("DDE " + input);
 			parseDelimitedString();
 
 		} else {
@@ -150,55 +136,6 @@ public class Add extends Command {
 	@Override
 	protected void putInputParameters() {
 		//do nothing
-	}
-	
-	/**
-	 * putDescInQuotesFirst: find description within " "
-	 * @return input string without description or empty string if " " not found
-	 */
-	private String putDescInQuotesFirst(String input){
-		_sc = new Scanner(input);
-		
-		StringBuffer tempDesc = null;
-		StringBuffer normalString = new StringBuffer(STRING_EMPTY);
-		boolean isStarted = false;
-		boolean isFinish = false;
-		
-		while (_sc.hasNext()){
-			String buildString = _sc.next();
-			if (!isFinish){
-				if (!isStarted){
-					if (buildString.startsWith(STRING_QUOTE)){
-						isStarted = true;
-						tempDesc = new StringBuffer(buildString);
-					} else {
-						normalString.append(STRING_SPACE + buildString);
-					}
-				} else {
-					//System.out.println(buildString);
-					tempDesc.append(STRING_SPACE + buildString);
-					if (buildString.endsWith(STRING_QUOTE)){
-						isFinish = true;
-					}
-				}
-			} else {
-				normalString.append(STRING_SPACE + buildString);
-			}
-		}
-		
-		if (tempDesc == null){
-			tempDesc = new StringBuffer(STRING_EMPTY);
-			return tempDesc.toString();
-		} else {
-			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
-			tempDesc.append(normalString);
-		}
-	
-		_sc.close();
-		
-		//System.out.println(tempDesc.toString());
-		
-		return tempDesc.toString();
 	}
 	
 	private void checkIfExistDesc() throws EmptyDescException {
@@ -270,9 +207,7 @@ public class Add extends Command {
 		
 		tempInput = retrieveDescription(_sc, description, tempInput);
 		otherPart = restructureOtherPart(otherPart, tempInput);
-		
-		//System.out.println(tempInput.toString() + " " + otherPart.toString() + " " + input);
-		
+			
 		_sc.close();
 		
 		_sc = new Scanner(otherPart.toString().trim());
