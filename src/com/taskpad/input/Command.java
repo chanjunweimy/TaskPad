@@ -591,6 +591,8 @@ public abstract class Command {
 				normalString.append(STRING_SPACE + buildString);
 			}
 		}
+		sc.close();
+
 		
 		if (tempDesc == null){
 			tempDesc = new StringBuffer(STRING_EMPTY);
@@ -599,9 +601,7 @@ public abstract class Command {
 			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
 			tempDesc.append(normalString);
 		}
-	
-		sc.close();
-		
+			
 		//System.out.println(tempDesc.toString());
 		
 		return tempDesc.toString();

@@ -159,8 +159,8 @@ public class InputMain {
 	private static String findCommandVariationInString(String[] commandVariations, 
 			String[] splitInput){
 		
-		for (int i=0; i<splitInput.length; i++){
-			for (int j=0; j<commandVariations.length; j++){
+		for (int i = 0; i < splitInput.length; i++){
+			for (int j = 0; j < commandVariations.length; j++){
 				if (splitInput[i].equals(commandVariations[j])){
 					return commandVariations[j];
 				}
