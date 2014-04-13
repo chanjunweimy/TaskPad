@@ -16,7 +16,7 @@ public class CommandTypes {
 	protected static Logger logger = Logger.getLogger("TaskPad");
 	
 	public enum CommandType{
-		ADD, ADD_INFO, ADD_REM, ADD_PRI, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
+		ADD, ADD_INFO, ADD_REM, ALARM, CLEAR_ALL, CLEAR_SCREEN, 
 		DELETE, DONE, EDIT, EXIT, HELP, INVALID, LIST, REDO, SEARCH, SHOW_REM, STOP, UNDO
 	};
 	
@@ -35,7 +35,6 @@ public class CommandTypes {
 		putAddVariations();
 		putAddInfoVariations();
 		putAddRemVariations();
-		putAddPriVariations();
 		putAlarmVariations();
 		putClearVariations();
 		putClearScreenVariations();
@@ -67,11 +66,6 @@ public class CommandTypes {
 	private static void putAddRemVariations(){
 		String[] addRemVariations = {"ADDR", "REMINDER", "REMIND", "REMAINDER", "ADDREM"};
 		commandVariations.put(CommandType.ADD_REM, addRemVariations);
-	}
-	
-	private static void putAddPriVariations(){
-		String[] addPriVariations = {"ADDPRI", "ADDPRIORITY", "PRI", "PRIORITY"};
-		commandVariations.put(CommandType.ADD_PRI, addPriVariations);
 	}
 	
 	private static void putAlarmVariations() {

@@ -5,7 +5,6 @@ package com.taskpad.tests;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.xml.sax.SAXParseException;
 
 import com.taskpad.storage.CommandRecord;
 import com.taskpad.storage.DataFileStack;

@@ -9,6 +9,7 @@ package com.taskpad.input;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
@@ -41,6 +42,7 @@ public abstract class Command {
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_NULL = "null";
 	private static final String STRING_EMPTY = "";
+	private static final String STRING_QUOTE = "\"";
 	
 	protected static final String KEYWORD_ENDTiME = "TO";
 	protected static final String KEYWORD_STARTTIME = "FROM";
@@ -280,7 +282,8 @@ public abstract class Command {
 		COMMAND = cOMMAND;
 	}
 	
-	/* Helper methods to process date and times in strings */
+	/* Helper methods to process date and times in strings For Edit and Add */
+	
 	/**
 	 * findDateOrTime: helper method of getDateAndTimeValue,
 	 * it uses formatDateAndTimeInString to get all the date and time
@@ -553,6 +556,109 @@ public abstract class Command {
 			}
 		}
 		return startEarliest;
+	}
+	
+	/**
+	 * putDescInQuotesFirst: find description within " "
+	 * @return input string without description or empty string if " " not found
+	 */
+	protected  String putDescInQuotesFirst(String input){
+		Scanner sc = new Scanner(input);
+		
+		StringBuffer tempDesc = null;
+		StringBuffer normalString = new StringBuffer(STRING_EMPTY);
+		boolean isStarted = false;
+		boolean isFinish = false;
+		
+		while (sc.hasNext()){
+			String buildString = sc.next();
+			if (!isFinish){
+				if (!isStarted){
+					if (buildString.startsWith(STRING_QUOTE)){
+						isStarted = true;
+						tempDesc = new StringBuffer(buildString);
+					} else {
+						normalString.append(STRING_SPACE + buildString);
+					}
+				} else {
+					//System.out.println(buildString);
+					tempDesc.append(STRING_SPACE + buildString);
+					if (buildString.endsWith(STRING_QUOTE)){
+						isFinish = true;
+					}
+				}
+			} else {
+				normalString.append(STRING_SPACE + buildString);
+			}
+		}
+		sc.close();
+
+		
+		if (tempDesc == null){
+			tempDesc = new StringBuffer(STRING_EMPTY);
+			return tempDesc.toString();
+		} else {
+			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
+			tempDesc.append(normalString);
+		}
+			
+		//System.out.println(tempDesc.toString());
+		
+		return tempDesc.toString();
+	}
+	
+	protected String putDeadline(String param) {	
+		System.out.println("HELLOHELLO");
+		System.out.println("Param " + param);
+		if (param.trim().isEmpty()){
+			return null;
+		}
+		
+		String token = KEYWORD_DEADLINE + STRING_SPACE + param.trim();
+		String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
+		if (tempDead == null){
+			return null;
+		}
+		
+		return tempDead;
+	}
+	
+	protected String putStartTime(String param) {
+		if (param.trim().isEmpty()){
+			return null;
+		}
+		
+		String token = KEYWORD_STARTTIME + STRING_SPACE + param.trim();
+		String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
+
+		if (startResult == null){
+			return null;
+		}
+		
+		return startResult;
+	}
+	
+	protected String putEndTime(String param) {
+		if (param.trim().isEmpty()){
+			return null;
+		}
+		String token = KEYWORD_ENDTiME + STRING_SPACE + param.trim();
+		String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
+
+		if (endResult == null){
+			return null;
+		}
+		
+		return endResult;
+	}
+	
+	protected String removeFirstChar(String input) {
+		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
+	}
+	
+	protected String getFirstChar(String input) {
+		String firstChar = input.trim().split("\\s+")[0];
+		return firstChar;
 	}
 	
 }

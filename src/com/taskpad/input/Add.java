@@ -12,15 +12,6 @@ import com.taskpad.dateandtime.InvalidDateException;
 import com.taskpad.dateandtime.InvalidQuotesException;
 import com.taskpad.execute.InvalidTaskIdException;
 
-/*
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import com.taskpad.dateandtime.DateObject;
-import com.taskpad.dateandtime.TimeObject;
-*/
 
 /**
  * Add syntax
@@ -33,12 +24,8 @@ import com.taskpad.dateandtime.TimeObject;
 public class Add extends Command {
 
 	private static final String STRING_NULL = "null";
-	private static final String STRING_QUOTE = "\"";
 	private static final String STRING_EMPTY = "";
 	private static final String STRING_SPACE = " ";
-	
-	//private static final String STRING_COMMA = ",";
-	//private static final String STRING_DASH = "-";
 	
 	private static final String COMMAND_ADD = "ADD";
 	private static final int NUMBER_ARGUMENTS = 1;
@@ -117,7 +104,6 @@ public class Add extends Command {
 			if (!temp.trim().isEmpty()){
 				input = temp;
 			}
-			//System.out.println("DDE " + input);
 			parseDelimitedString();
 
 		} else {
@@ -150,55 +136,6 @@ public class Add extends Command {
 	@Override
 	protected void putInputParameters() {
 		//do nothing
-	}
-	
-	/**
-	 * putDescInQuotesFirst: find description within " "
-	 * @return input string without description or empty string if " " not found
-	 */
-	private String putDescInQuotesFirst(String input){
-		_sc = new Scanner(input);
-		
-		StringBuffer tempDesc = null;
-		StringBuffer normalString = new StringBuffer(STRING_EMPTY);
-		boolean isStarted = false;
-		boolean isFinish = false;
-		
-		while (_sc.hasNext()){
-			String buildString = _sc.next();
-			if (!isFinish){
-				if (!isStarted){
-					if (buildString.startsWith(STRING_QUOTE)){
-						isStarted = true;
-						tempDesc = new StringBuffer(buildString);
-					} else {
-						normalString.append(STRING_SPACE + buildString);
-					}
-				} else {
-					//System.out.println(buildString);
-					tempDesc.append(STRING_SPACE + buildString);
-					if (buildString.endsWith(STRING_QUOTE)){
-						isFinish = true;
-					}
-				}
-			} else {
-				normalString.append(STRING_SPACE + buildString);
-			}
-		}
-		
-		if (tempDesc == null){
-			tempDesc = new StringBuffer(STRING_EMPTY);
-			return tempDesc.toString();
-		} else {
-			//putOneParameter(PARAMETER_DESCRIPTION, tempDesc.toString());
-			tempDesc.append(normalString);
-		}
-	
-		_sc.close();
-		
-		//System.out.println(tempDesc.toString());
-		
-		return tempDesc.toString();
 	}
 	
 	private void checkIfExistDesc() throws EmptyDescException {
@@ -250,9 +187,6 @@ public class Add extends Command {
 		
 	}
 
-
-	
-
 	/**
 	 * 
 	 * parseDelimitedString: a method that parses
@@ -270,9 +204,7 @@ public class Add extends Command {
 		
 		tempInput = retrieveDescription(_sc, description, tempInput);
 		otherPart = restructureOtherPart(otherPart, tempInput);
-		
-		//System.out.println(tempInput.toString() + " " + otherPart.toString() + " " + input);
-		
+			
 		_sc.close();
 		
 		_sc = new Scanner(otherPart.toString().trim());
@@ -282,7 +214,7 @@ public class Add extends Command {
 			String nextParam = _sc.next().trim();
 			
 			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
-
+			System.out.println("Next param " + nextParam);
 			parseNextParam(nextParam.trim());
 		}
 		_sc.close();
@@ -315,7 +247,6 @@ public class Add extends Command {
 		}
 		
 		checkEmptyParametersAndInput();
-		
 	}
 
 	/**
@@ -324,29 +255,22 @@ public class Add extends Command {
 	private void checkEmptyParametersAndInput() {
 		if (_endTime != null){
 			inputEndTime(_endTime);
-			//putOneParameter(PARAMETER_END_TIME, endTime);
 		}
 		
 		if (_endDate != null){
 			inputEndDate(_endDate);
-			//putOneParameter(PARAMETER_END_DATE, endDate);
 		}
 		
 		if (_startTime != null) {
 			inputStartTime(_startTime);
-			//putOneParameter(PARAMETER_START_TIME, startTime);
 		}
 		
 		
 		if (_startDate != null){
 			inputStartDate(_startDate);
-			//putOneParameter(PARAMETER_START_DATE, startDate);
 		}
 		
 		if (_deadline != null){
-			//String[] tempDeadSplit = _deadline.split(STRING_SPACE);
-			
-			//_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
 			inputDeadlineDate(_deadline);
 		}
 	}
@@ -405,15 +329,15 @@ public class Add extends Command {
 		switch (firstChar){
 		case "d":
 			_deadNo++;
-			putDeadline(param);
+			_deadline = putDeadline(param);
 			break;
 		case "s":
 			_startNo++;
-			putStartTime(param);
+			processStart(param);
 			break;
 		case "e": 
 			_endNo++;
-			putEndTime(param);
+			processEnd(param);
 			break;
 		}
 		
@@ -461,68 +385,30 @@ public class Add extends Command {
 		return input.replaceAll(STRING_SPACE, STRING_EMPTY);
 	}
 	
-	private String removeFirstChar(String input) {
-		return input.replaceFirst(getFirstChar(input), STRING_EMPTY).trim();
-	}
-	
-	private String getFirstChar(String input) {
-		String firstChar = input.trim().split("\\s+")[0];
-		return firstChar;
-	}
-	
-	private void putDeadline(String param) {
-		if (param.trim().isEmpty()){
-			return;
-		}
-		
-		String token = KEYWORD_DEADLINE + STRING_SPACE + param.trim();
-		String tempDead = getDateAndTimeValue(token, POSITION_DATE_DEADLINE , POSITION_TIME_DEADLINE);
-		if (tempDead == null){
-			return;
-		}
-		_deadline = tempDead;
-	}
-	
-	private void putStartTime(String param) {
-		if (param.trim().isEmpty()){
-			return;
-		}
-		
-		String token = KEYWORD_STARTTIME + STRING_SPACE + param.trim();
-		String startResult = getDateAndTimeValue(token, POSITION_DATE_STARTTIME , POSITION_TIME_STARTTIME);
-
-		if (startResult == null){
-			return;
-		}
-		
-		inputStartTimeDate(startResult);
-		
-	}
-	
 	private void inputStartTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
 		_startDate = splitResult[0];
 		_startTime = splitResult[1];
 	}
 	
-	private void putEndTime(String param) {
-		if (param.trim().isEmpty()){
-			return;
-		}
-		String token = KEYWORD_ENDTiME + STRING_SPACE + param.trim();
-		String endResult = getDateAndTimeValue(token, POSITION_DATE_ENDTIME , POSITION_TIME_ENDTIME);
-
-		if (endResult == null){
-			return;
-		}
-		
-		inputEndTimeDate(endResult);
-	}
-	
 	private void inputEndTimeDate(String result){
 		String[] splitResult = result.split(STRING_SPACE);
 		_endDate = splitResult[0];
 		_endTime = splitResult[1];
+	}
+	
+	private void processEnd(String param){
+		String endResult = putEndTime(param);
+		if (endResult != null){
+			inputEndTimeDate(endResult);
+		}
+	}
+	
+	private void processStart(String param){
+		String startResult = putStartTime(param);
+		if (startResult != null){
+			inputStartTimeDate(startResult);
+		}
 	}
 	
 	/**
