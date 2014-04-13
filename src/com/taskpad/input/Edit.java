@@ -31,6 +31,7 @@ public class Edit extends Command{
 	private String _startTime;
 	private String _endDate;
 	private String _endTime;
+	private String _editInput;
 	
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
@@ -69,6 +70,7 @@ public class Edit extends Command{
 		
 		LOGGER.info("Got in commandSpecificRun ... ");
 		
+		_editInput = fullInput;  
 		if(noTaskIDInPosition(fullInput)){
 			try {
 				_taskID = findTaskID(fullInput);
@@ -89,6 +91,7 @@ public class Edit extends Command{
 			return false;
 		}
 		
+		fullInput = _editInput;
 		putInputParameters();
 		return true;
 	}
@@ -237,7 +240,7 @@ public class Edit extends Command{
 		String startEarliest = times.get(POSITION_TIME_STARTTIME / 2);
 		_deadline = times.get(POSITION_TIME_DEADLINE / 2);
 		
-		if (_deadline != null){
+		if (_deadline != null && !_deadline.trim().isEmpty  ()){
 			String[] deadTokens = _deadline.split(STRING_SPACE);
 			_deadline = deadTokens[1] + STRING_SPACE + deadTokens[0];
 		}
@@ -268,7 +271,7 @@ public class Edit extends Command{
 		
 		input = numberInput;
 		fullInput = numberInput;
-	
+		
 		LOGGER.info("input is " + input);
 		LOGGER.info("fullInput is " + fullInput);
 		
@@ -352,9 +355,11 @@ public class Edit extends Command{
 	@Override
 	protected void putInputParameters() {
 		if (_deadline != null){
-			String[] tempDeadSplit = _deadline.split(STRING_SPACE);
+			if (! _deadline.trim().isEmpty()){
+				String[] tempDeadSplit = _deadline.split(STRING_SPACE);
 			
-			_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
+				_deadline = tempDeadSplit[1] + STRING_SPACE + tempDeadSplit[0]; 
+			}
 			putOneParameter(PARAMETER_DEADLINE, _deadline);
 		}
 		
