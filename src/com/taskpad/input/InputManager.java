@@ -36,7 +36,7 @@ public class InputManager {
 		return outputString;
 	}
 
-	public static String outputToGui(String outputString){
+	protected static String outputToGui(String outputString){
 		if (!debug){
 			GuiManager.callOutput(outputString);
 		}else {
@@ -45,17 +45,17 @@ public class InputManager {
 		return String.format(STATUS_GUI_OUTPUT, outputString);
 	}
 	
-	public static String outputFormatString(String outputString, Color c, boolean isBold){
+	protected static String outputFormatString(String outputString, Color c, boolean isBold){
 		GuiManager.showSelfDefinedMessage(outputString, c, isBold);
 		return String.format(STATUS_GUI_OUTPUT, outputString);
 	}
 	
-	public static String callGuiExit(){
+	protected static String callGuiExit(){
 		GuiManager.callExit();
 		return STATUS_EXIT;
 	}
 	
-	public static String clearScreen(){
+	protected static String clearScreen(){
 		if (!debug){
 			GuiManager.clearOutput();
 		}else {
@@ -89,7 +89,7 @@ public class InputManager {
 		return datm.checkDateAndTimeWithStart(startEarliest, dateLatest);
 	}
 	
-	public static void passToExecutor(Input input, String fullInput){
+	protected static void passToExecutor(Input input, String fullInput){
 		if (!debug){
 			ExecutorManager.receiveFromInput(input, fullInput);
 			logger.info(STATUS_EXECUTOR);
@@ -102,7 +102,7 @@ public class InputManager {
 		input.showAll();
 	}
 	
-	public static int retrieveNumberOfTasks(){
+	protected static int retrieveNumberOfTasks(){
 		return DataManager.retrieveNumberOfTasks();
 	}
 	

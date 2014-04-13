@@ -8,12 +8,13 @@ import java.util.Date;
 import java.util.Scanner;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
-import com.taskpad.dateandtime.DateObject;
 import com.taskpad.dateandtime.DatePassedException;
 import com.taskpad.dateandtime.InvalidTimeException;
 import com.taskpad.dateandtime.TimeErrorException;
-import com.taskpad.dateandtime.TimeObject;
 import com.taskpad.ui.GuiManager;
+
+import com.taskpad.dateandtime.DateObject;
+import com.taskpad.dateandtime.TimeObject;
 
 
 public class Addrem extends Command{
