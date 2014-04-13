@@ -9,6 +9,10 @@ import java.util.LinkedList;
 
 
 
+
+
+
+
 import com.taskpad.storage.DataFileStack;
 import com.taskpad.storage.DataManager;
 import com.taskpad.storage.TaskList;
@@ -26,6 +30,7 @@ import com.taskpad.storage.Task;
  */
 
 public class TestExecutorStorageForDebugging {
+	@SuppressWarnings("unused")
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, DataFileStack.FILE);
@@ -70,15 +75,18 @@ public class TestExecutorStorageForDebugging {
 		ExecutorManager.receiveFromInput(inputObj1,input1);
 	}
 	
+	@SuppressWarnings("unused")
 	private static void dataRetrievalTest() {
 		DataManager.retrieve("test_data.xml");
 	}
 	
+	@SuppressWarnings("unused")
 	private static void dataStoreBackTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, "test_data.xml");
 	}
 	
+	@SuppressWarnings("unused")
 	private static void parameterizedStringTest() {
 		String LOGGING_ADDING_TASK = "adding task: %s";
 		String description = "sth";
