@@ -34,6 +34,7 @@ public abstract class Command {
 	protected static final String MESSAGE_ENDDATE_STARTTIME = "%s %s should be later than start time";
 	protected static final String MESSAGE_WARNING_STARTDATETIME ="WARNING: has %s start date and time";
 	protected static final String MESSAGE_WARNING_ENDDATETIME = "WARNING: has %s end date and time";
+	protected static final String MESSAGE_WARNING_INFONO = "WARNING: has %s info tag, discarding second one";
 	protected static final String MESSAGE_WARNING_DEADLINE = "WARNING: has %s deadline";
 	protected static final String MESSAGE_INVALID_DATE = "%s is not a valid date";
 	
@@ -354,6 +355,8 @@ public abstract class Command {
 	}
 	
 	/**
+	 * For when the user has keyed in more than one startDate/ deadline/ endDate
+	 * Used in ADD
 	 * @param startNo
 	 * @param deadNo
 	 * @param endNo
@@ -364,7 +367,6 @@ public abstract class Command {
 		if (startNo > 1){
 			errorMessage = String.format(MESSAGE_WARNING_STARTDATETIME, STRING_EMPTY + startNo);
 			InputManager.outputToGui(errorMessage);
-			//InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
 			LOGGER.warning(errorMessage);
 		}
 		
@@ -380,6 +382,40 @@ public abstract class Command {
 			LOGGER.warning(errorMessage);
 		}
 	}
+	
+	/**
+	 * For when the user has keyed in more than one startDate/ deadline/ endDate/ info
+	 * used in Edit
+	 * @param startNo, endNo, infoNo, deadNo
+	 */
+	protected void showErrorWhenActionRepeated(int startNo, int deadNo, int endNo, int infoNo){
+		String errorMessage = STRING_EMPTY;
+		
+		if (startNo > 1){
+			errorMessage = String.format(MESSAGE_WARNING_STARTDATETIME, STRING_EMPTY + startNo);
+			InputManager.outputToGui(errorMessage);
+			LOGGER.warning(errorMessage);
+		}
+		
+		if (endNo > 1){
+			errorMessage = String.format(MESSAGE_WARNING_ENDDATETIME, STRING_EMPTY + endNo);
+			InputManager.outputToGui(errorMessage);
+			LOGGER.warning(errorMessage);
+		}
+		
+		if (deadNo > 1){
+			errorMessage = String.format(MESSAGE_WARNING_DEADLINE, STRING_EMPTY + deadNo);
+			InputManager.outputToGui(errorMessage); 
+			LOGGER.warning(errorMessage);
+		}
+		
+		if (infoNo > 1){
+			errorMessage = String.format(MESSAGE_WARNING_INFONO, STRING_EMPTY + infoNo);
+			InputManager.outputToGui(errorMessage);
+			LOGGER.warning(errorMessage);
+		}
+	}
+
 	
 	/**
 	 * Check the deadline and end times are after start times
