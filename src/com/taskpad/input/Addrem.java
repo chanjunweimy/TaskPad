@@ -73,7 +73,10 @@ public class Addrem extends Command{
 				return false; 
 			 }
 		} else {
-			splitInputNoDelimiters();
+			boolean isContinuing = splitInputNoDelimiters();
+			if (!isContinuing){
+				return false;
+			}
 		}
 		
 		//putInputParameters();
@@ -202,6 +205,17 @@ public class Addrem extends Command{
 			dateAndTime = _remDate + _remTime;
 		}
 		
+		findDateAndTime(dateAndTime);
+	}
+
+	/**
+	 * @param dateAndTime
+	 * @param datm
+	 * @throws InvalidQuotesException
+	 */
+	private void findDateAndTime(String dateAndTime)
+			throws InvalidQuotesException {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
 		if (dateAndTime != null){
 			try {
 				String formatString = datm.formatDateAndTimeInString(dateAndTime);
@@ -244,7 +258,7 @@ public class Addrem extends Command{
 		return -1;
 	}
 	
-	private void splitInputNoDelimiters(){
+	private boolean splitInputNoDelimiters(){
 		//input = DateAndTimeManager.getInstance().formatDateAndTimeInString(input);
 		String[] splitInput = input.split(SPACE);
 		
@@ -252,72 +266,51 @@ public class Addrem extends Command{
 			checkIfInvalidParameters(splitInput.length);
 		} catch (InvalidParameterException e) {
 			GuiManager.callOutput(e.getMessage());
-			return;
+			return false;
 		};
 		
-		extractTimeAndDate(splitInput);
+		extractTaskID(splitInput);
 		
-		invalidIfNoTaskID();
+		if (invalidIfNoTaskID()){
+			return false;
+		}
+		//extractTimeAndDate(splitInput);
+		
 		invalidIfNoDateOrTime();
+		
+		return true;
 	}
 	
-	private void invalidIfNoTaskID(){
+	private void extractTaskID(String[] splitInput) {
+		for (int i = 0; i < splitInput.length; i++){
+			String token = splitInput[i];
+			if (!isNotValidTaskID(token)){
+				_taskID = token;
+				_gotTaskID = true;
+				return;
+				//_invalidParameters = true;
+				//throw new TaskIDException(taskID);
+			} 
+		}
+		
+		//if reach here then doesn't have valid taskID
+		_invalidParameters = true;
+		_gotTaskID = false;
+	}
+
+	private boolean invalidIfNoTaskID(){
 		if (_taskID.equals("")){
 			_invalidParameters = true;
 			InputManager.outputToGui("Invalid Task ID");
+			return true;
 		}
+		return false;
 	}
 	
 	private void invalidIfNoDateOrTime(){
 		if(_remDate.equals("") && _remTime.equals("")){
 			_invalidParameters = true;
 			InputManager.outputToGui("No date or time input");
-		}
-	}
-	
-	private void extractTimeAndDate(String[] splitInput){	
-		for (int i=0; i<splitInput.length; i++){
-			if(!_gotDate && isDateObject(splitInput[i])){
-				_remDate = _dateObject.getParsedDate();
-				_gotDate = true;
-			} else if (!_gotTime && isTimeObject(splitInput[i])){
-				_remTime = _timeObject.getParsedTime();
-				_gotTime = true;
-				
-			} else if (!_gotTaskID){
-				try {
-					enterTaskID(splitInput[i]);
-				} catch (TaskIDException e) {
-					continue;
-				}
-			}
-		}
-	}
-	
-	private boolean isTimeObject(String input) {
-		_timeObject = DateAndTimeManager.getInstance().findTime(input);
-		if (_timeObject != null){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isDateObject(String input) {
-		_dateObject = DateAndTimeManager.getInstance().findDate(input);
-		if (_dateObject != null){
-			return true;
-		}
-		return false;
-	}
-
-	private void enterTaskID(String taskID) throws TaskIDException{
-		taskID = taskID.trim();
-		if (isNotValidTaskID(taskID)){
-			_invalidParameters = true;
-			throw new TaskIDException(taskID);
-		} else{
-			_taskID = taskID;
-			_gotTaskID = true;
 		}
 	}
 	
@@ -464,6 +457,76 @@ public class Addrem extends Command{
 	
 	private void invalidParam() {
 		_invalidParameters = true;
+	}
+	
+	/**
+	 * ====================================DEPRECATED==============================================================
+	 */
+	
+	/**
+	 * @deprecated
+	 * @param splitInput
+	 */
+	@SuppressWarnings("unused")
+	private void extractTimeAndDate(String[] splitInput){	
+		for (int i=0; i<splitInput.length; i++){
+			if(!_gotDate && isDateObject(splitInput[i])){
+				_remDate = _dateObject.getParsedDate();
+				_gotDate = true;
+			} else if (!_gotTime && isTimeObject(splitInput[i])){
+				_remTime = _timeObject.getParsedTime();
+				_gotTime = true;
+				
+			} else if (!_gotTaskID){
+				try {
+					enterTaskID(splitInput[i]);
+				} catch (TaskIDException e) {
+					continue;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private boolean isTimeObject(String input) {
+		_timeObject = DateAndTimeManager.getInstance().findTime(input);
+		if (_timeObject != null){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @deprecated
+	 * @param input
+	 * @return
+	 */
+	private boolean isDateObject(String input) {
+		_dateObject = DateAndTimeManager.getInstance().findDate(input);
+		if (_dateObject != null){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @deprecated
+	 * @param taskID
+	 * @throws TaskIDException
+	 */
+	private void enterTaskID(String taskID) throws TaskIDException{
+		taskID = taskID.trim();
+		if (isNotValidTaskID(taskID)){
+			_invalidParameters = true;
+			throw new TaskIDException(taskID);
+		} else{
+			_taskID = taskID;
+			_gotTaskID = true;
+		}
 	}
 	
 }
