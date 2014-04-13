@@ -44,7 +44,6 @@ public class Edit extends Command{
 	private static final String STRING_SPACE = " ";
 	private static final String STRING_COMMA = ",";
 	private static final String STRING_EMPTY = "";
-	private static final String MESSAGE_WARNING_TASKID = "Warning: TaskID is not in standard position";
 
 	public Edit(String input, String fullInput) {
 		super(input, fullInput);
@@ -78,8 +77,25 @@ public class Edit extends Command{
 	protected boolean commandSpecificRun() {
 		clearInputParameters();
 		
-		LOGGER.info(input);
-		if(isDelimitedString(input)){
+		LOGGER.info("input is " + input);
+		
+		_editInput = fullInput;  
+		if(noTaskIDInPosition(fullInput)){
+			try {
+				_taskID = findTaskID(fullInput);
+			} catch (TaskIDException | InvalidQuotesException e) {
+				InputManager.outputToGui(e.getMessage());
+				LOGGER.severe(e.getMessage());
+				return false;
+			}
+		}
+		fullInput = _editInput;
+		
+		LOGGER.info("taskID is " + _taskID);
+		input = removeTaskID(fullInput, _taskID);
+		LOGGER.info("input is " + input);
+		
+		if(isDelimitedString(" " + input + " ")){
 			String temp = putDescInQuotesFirst(input);
 			
 			if (!temp.trim().isEmpty()){
@@ -87,16 +103,6 @@ public class Edit extends Command{
 			}
 			editDelimitedString();
 		} else {
-			_editInput = fullInput;  
-			if(noTaskIDInPosition(fullInput)){
-				try {
-					_taskID = findTaskID(fullInput);
-				} catch (TaskIDException | InvalidQuotesException e) {
-					InputManager.outputToGui(e.getMessage());
-					LOGGER.severe(e.getMessage());
-					return false;
-				}
-			}
 			
 			LOGGER.info("taskID is " + _taskID);
 			
@@ -107,8 +113,6 @@ public class Edit extends Command{
 				LOGGER.severe("Not a valid TaskID!");
 				return false;
 			}
-			
-			fullInput = _editInput;
 		}
 
 		putInputParameters();
@@ -142,6 +146,16 @@ public class Edit extends Command{
 	 */
 	private boolean noTaskIDInPosition(String fullInput) {
 		String splitInput[] = fullInput.split(STRING_SPACE);
+		
+		if (isNotValidTaskID(splitInput[1])){
+			InputManager.outputToGui(MESSAGE_WARNING_TASKID);
+			return true;
+		} else {
+			int taskID = Integer.parseInt(splitInput[1]);
+			_taskID = "" + taskID;
+			return false;
+		}
+		/*
 		try{
 			int taskID = Integer.parseInt(splitInput[1]);
 			_taskID = "" + taskID;
@@ -150,6 +164,7 @@ public class Edit extends Command{
 			InputManager.outputToGui(MESSAGE_WARNING_TASKID);
 			return true;
 		}
+		*/
 	}
 
 	/**
@@ -322,12 +337,12 @@ public class Edit extends Command{
 		int taskID = -1;
 		String[] splitInput = input.split(STRING_SPACE);
 		
-		for (int i=0; i<splitInput.length; i++){
+		for (int i = 0; i < splitInput.length; i++){
 			if (taskID == -1){
-				try{
-					taskID = Integer.parseInt(splitInput[i]);
-				} catch (NumberFormatException e){
-					//do nothing
+				String token = splitInput[i];
+				if (!isNotValidTaskID(token)){
+					taskID = Integer.parseInt(token);
+					break;
 				}
 			}
 		}
@@ -475,7 +490,7 @@ public class Edit extends Command{
 	private boolean containsInfo(String input){
 		String inputCopy = STRING_SPACE + input.toUpperCase() + STRING_SPACE;
 		if (inputCopy.contains(" INFO ") || inputCopy.contains(" INFORMATION ") ||
-				inputCopy.contains(" DETAILS ")){
+				inputCopy.contains(" DETAILS ") || inputCopy.contains(" DETAIL ")){
 			return true;
 		} 
 		return false;
@@ -504,26 +519,33 @@ public class Edit extends Command{
 		
 		String[] inputSplit = inputCopy.split(" ");
 		for (int i=0; i<inputSplit.length; i++){
+			LOGGER.info("token is " + inputSplit[i]);
+			LOGGER.info("cnt is " + count + " newString is: " + newString);
 			if (isNotInfoWord(inputSplit[i].trim())){
 				newString += inputSplit[i] + " ";
+				LOGGER.info("added notInfoWord: " + newString);
 			} else if (count > 0) {
 				newString += inputSplit[i] + " ";
+				LOGGER.info("added other InfoWord: " + newString);
 			} else {
 				count ++;
 			}
 		}
+		
+		LOGGER.info("after deleting word info : " + newString);
 		return newString;
 	}
 	
 	private boolean isNotInfoWord(String string) {
 		string = string.toUpperCase();
-		return !(string.equals("INFO") &&
+		return (!string.equals("INFO") &&
 				!string.equals("INFORMATION") &&
-				!string.equals("DETAILS"));
+				!string.equals("DETAILS") &&
+				!string.equals("DETAIL"));
 	}
 
 	private boolean isNotDescWord(String string) {
-		return !(string.toUpperCase().equals("DESC") &&
+		return (!string.toUpperCase().equals("DESC") &&
 				!string.toUpperCase().equals("DESCRIPTION"));
 	}
 	
@@ -618,20 +640,6 @@ public class Edit extends Command{
 	
 	private boolean isNotStartWord(String string) {
 		return !string.toUpperCase().equals("START") && !string.toUpperCase().equals("-S");
-	}
-	
-	
-	/* Helper methods for delimited string */
-	
-	private void extractTaskID() {
-		String[] split = input.split(STRING_SPACE);
-		_taskID = split[0];
-		
-		String newInput = STRING_EMPTY;
-		for (int i=1; i<split.length; i++){
-			newInput += split[i] + STRING_SPACE;
-		}
-		input = newInput;
 	}
 
 	private boolean isDelimitedString(String input) {
@@ -737,4 +745,23 @@ public class Edit extends Command{
 		_info = param;
 	}
 	
+	/**
+	 * =======================================DEPRECATED=================================================================
+	 */
+	/* Helper methods for delimited string */
+	/**
+	 * @deprecated
+	 */
+	private void extractTaskID() {
+		/*
+		String[] split = input.split(STRING_SPACE);
+		_taskID = split[0];
+		
+		String newInput = STRING_EMPTY;
+		for (int i=1; i<split.length; i++){
+			newInput += split[i] + STRING_SPACE;
+		}
+		input = newInput;
+		*/
+	}
 }
