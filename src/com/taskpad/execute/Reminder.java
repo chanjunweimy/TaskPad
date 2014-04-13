@@ -23,55 +23,91 @@ public class Reminder {
 	private static final String FEEDBACK_NO_REMINDER_FOR_TODAY = "No reminders for today.\n";
 	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No tasks due today.\n";
 	private static final String FEEDBACK_NO_OVERDUE = "No overdue tasks.\n";
+	
+	private static final String FEEDBACK_NOTHING_TO_SHOW = "Nothing to show.";
 
-	protected static boolean showReminderForToday() {
+	/**
+	 * showReminder
+	 * 
+	 * This is to show tasks due today, overdue tasks, and tasks attached with
+	 * reminder (using addrem command)
+	 * 
+	 */
+	protected static void showTasksForReminder() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		LinkedList<Integer> tasks = getTasksDueToday();
-		if (tasks.size() == 0) {
-			// OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
-			return false;
+		
+		LinkedList<Integer> tasksToShow = new LinkedList<Integer>();
+		
+		boolean haveTasksToShow = false;
+		
+		haveTasksToShow = Reminder.findReminderForToday(tasksToShow)
+				|| haveTasksToShow;
+		haveTasksToShow = Reminder.findReminderForOverdue(tasksToShow)
+				|| haveTasksToShow;
+		haveTasksToShow = Reminder.findReminderTasks(tasksToShow)
+				|| haveTasksToShow;
+		
+		if (!haveTasksToShow) {
+			OutputToGui.output(FEEDBACK_NOTHING_TO_SHOW);
 		} else {
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
-			OutputToGui.outputTable(tasks, listOfTasks);
-			return true;
+			OutputToGui.outputTable(tasksToShow, listOfTasks);
 		}
 	}
 	
-	protected static boolean showReminderForOverdue() {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+	protected static boolean findReminderForToday(LinkedList<Integer> tasksToShow) {
+		LinkedList<Integer> tasks = getTasksDueToday();
+		if (tasks.size() == 0) {
+			return false;
+		} else {
+			addTasks(tasksToShow, tasks);
+			return true;
+		}
+	}
+
+	protected static boolean findReminderForOverdue(LinkedList<Integer> tasksToShow) {
 		LinkedList<Integer> tasks = getOverdueTasks();
 
 		if (tasks.size() == 0) {
-			// OutputToGui.output(FEEDBACK_NO_OVERDUE);
 			return false;
 		} else {
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
-			OutputToGui.outputTable(tasks, listOfTasks);
+			addTasks(tasksToShow, tasks);
 			return true;
 		}
 	}
 	
 	/**
-	 * showReminderTasks
+	 * findReminderTasks
 	 * 
 	 * This is to show tasks attached with reminder
 	 * 
 	 * @return Returns false if no task is found, and true otherwise
 	 */
-	protected static boolean showReminderTasks() {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+	protected static boolean findReminderTasks(LinkedList<Integer> tasksToShow) {
 		LinkedList<Integer> tasks = getReminderTasks();
 
 		if (tasks.size() == 0) {
-			// OutputToGui.output(FEEDBACK_NO_REMINDER_FOR_TODAY);
 			return false;
 		} else {
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
-			OutputToGui.outputTable(tasks, listOfTasks);
+			addTasks(tasksToShow, tasks);
 			return true;
 		}
 	}
 
+	/**
+	 * Add elements in tasks into tasksToShow, without adding duplicates
+	 * 
+	 * @param tasksToShow
+	 * @param tasks
+	 */
+	private static void addTasks(LinkedList<Integer> tasksToShow,
+			LinkedList<Integer> tasks) {
+		for (int task : tasks) {
+			if (!tasksToShow.contains(task)) {
+				tasksToShow.add(task);
+			}
+		}
+	}
+	
 	protected static LinkedList<Integer> getTasksDueToday() {
 		LinkedList<Integer> results = new LinkedList<Integer>();
 
