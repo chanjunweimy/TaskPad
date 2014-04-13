@@ -88,6 +88,7 @@ public class ExecutorManager {
 		case "ADDREM":
 			CommandFactory.addReminder(parameters.get("TASKID"),
 					parameters.get("DATE"));
+			CommandRecord.pushForUndo(command);
 			break;
 		}
 	}
