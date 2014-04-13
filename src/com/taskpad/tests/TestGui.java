@@ -16,6 +16,7 @@ import javax.swing.SwingUtilities;
 import org.junit.Test;
 
 import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.input.InputManager;
 import com.taskpad.launcher.TaskPadMain;
 import com.taskpad.ui.GuiManager;
 
@@ -37,6 +38,7 @@ public class TestGui {
 
 		setUpGuiManager();
 		setUpDateTimeDebug("12/04/2014 09:00");
+		InputManager.setDebug(false, null);
 		runTaskPad();
 
 		SwingUtilities.invokeLater(new Runnable() {
@@ -139,9 +141,9 @@ public class TestGui {
 	}
 
 	private void alarmOneSec(Robot bot) {
-		type(bot, "alarm stopping demo 1s\n");
+		type(bot, "alarm stopping demo 3s\n");
 		bot.delay(1000);
-		_expected = "Creating alarm... alarm stopping demo 1s";
+		_expected = "Creating alarm... alarm stopping demo 3s";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
 		bot.delay(2000);
