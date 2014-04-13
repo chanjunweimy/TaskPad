@@ -90,6 +90,7 @@ public class TestGui {
 			//addrem(bot);
 			
 			/* Alternative words */
+			listTask(bot);
 			delTask(bot);
 			remTask(bot);
 			
@@ -203,7 +204,7 @@ public class TestGui {
 	private void findTask(Robot bot) {
 		type(bot, "find meeting \n");
 		bot.delay(1000);
-		_expected = "No task is found.";
+		_expected = "No task found.";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
 		bot.delay(2000);
@@ -232,7 +233,7 @@ public class TestGui {
 	private void remTask(Robot bot) {
 		type(bot, "rem 2\n");
 		bot.delay(1000);
-		_expected = "'team meeting' deleted.";
+		_expected = "'team meeting' deleted";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
 		bot.delay(2000);
@@ -241,7 +242,7 @@ public class TestGui {
 	private void delTask(Robot bot) {
 		type(bot, "del 1\n");
 		bot.delay(1000);
-		_expected = "'do video presentation ' deleted.";
+		_expected = "'do video presentation ' deleted";
 		assertEquals(_expected, _outContent.toString().trim());
 		cleanUpStreams();
 		bot.delay(2000);

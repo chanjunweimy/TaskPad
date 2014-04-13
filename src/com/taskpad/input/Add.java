@@ -214,7 +214,6 @@ public class Add extends Command {
 			String nextParam = _sc.next().trim();
 			
 			nextParam = nextParam.replaceFirst("-", STRING_EMPTY);
-			System.out.println("Next param " + nextParam);
 			parseNextParam(nextParam.trim());
 		}
 		_sc.close();
