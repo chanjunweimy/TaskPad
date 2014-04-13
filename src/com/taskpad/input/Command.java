@@ -104,7 +104,38 @@ public abstract class Command {
 	private void checkIfNumberInputEmpty(String numberInput) {
 		numberInput = numberInput.trim();
 		if (!numberInput.equals("") || numberInput != null){
-			input = numberInput;
+			LOGGER.info("numberInput is " + numberInput);
+			String[] inputTokens = numberInput.split(" ");
+			StringBuffer inputBuilder = new StringBuffer();
+			
+			for (int i = 0; i < inputTokens.length - 1; i++){
+				if (inputTokens[i] == null){
+					continue;
+				} else if ("".equals(inputTokens[i])){
+					inputTokens[i] = null;
+					continue;
+				} else if ("-".equals(inputTokens[i])){
+					switch (inputTokens[i + 1]){
+					case "d":
+					case "s":
+					case "e":
+					case "t":
+						inputTokens[i] = inputTokens[i] + inputTokens[i + 1];
+						inputTokens[i + 1] = null;
+						break;
+					}
+				}
+			}
+			
+			for (int i = 0; i < inputTokens.length; i++){
+				if (inputTokens[i] != null){
+					inputBuilder.append(inputTokens[i] + STRING_SPACE);
+				}
+			}
+			  
+			input = inputBuilder.toString().trim();
+			
+			LOGGER.info("input is " + input);
 		}
 	}
 	
@@ -321,21 +352,21 @@ public abstract class Command {
 		String errorMessage = STRING_EMPTY;
 		
 		if (startNo > 1){
-			errorMessage = String.format(MESSAGE_WARNING_STARTDATETIME, STRING_EMPTY+startNo);
+			errorMessage = String.format(MESSAGE_WARNING_STARTDATETIME, STRING_EMPTY + startNo);
 			InputManager.outputToGui(errorMessage);
 			//InputManager.outputToGui("WARNING: has " + startNo + " start date and time");
 			LOGGER.warning(errorMessage);
 		}
 		
 		if (endNo > 1){
-			errorMessage = String.format(MESSAGE_WARNING_ENDDATETIME, STRING_EMPTY+endNo);
+			errorMessage = String.format(MESSAGE_WARNING_ENDDATETIME, STRING_EMPTY + endNo);
 			InputManager.outputToGui(errorMessage);
 			LOGGER.warning(errorMessage);
 		}
 		
 		if (deadNo > 1){
-			errorMessage = String.format(MESSAGE_WARNING_DEADLINE, STRING_EMPTY+deadNo);
-			InputManager.outputToGui(errorMessage);
+			errorMessage = String.format(MESSAGE_WARNING_DEADLINE, STRING_EMPTY + deadNo);
+			InputManager.outputToGui(errorMessage); 
 			LOGGER.warning(errorMessage);
 		}
 	}
