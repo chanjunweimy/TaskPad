@@ -78,6 +78,7 @@ public class Edit extends Command{
 	protected boolean commandSpecificRun() {
 		clearInputParameters();
 		
+		LOGGER.info(input);
 		if(isDelimitedString(input)){
 			String temp = putDescInQuotesFirst(input);
 			

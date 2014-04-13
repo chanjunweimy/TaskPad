@@ -122,6 +122,7 @@ public abstract class Command {
 					case "s":
 					case "e":
 					case "t":
+					case "i":
 						inputTokens[i] = inputTokens[i] + inputTokens[i + 1];
 						inputTokens[i + 1] = null;
 						break;
