@@ -1,0 +1,7021 @@
+//@author: a0112084u
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmExecutor.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import com.taskpad.ui.GuiManager;
+
+/**
+ * and note that: Alarm can only support 
+ * 10 s, not 10s
+ * 
+ */
+public class AlarmExecutor {
+	
+	private static final String ERROR_NEGATIVE_DELAY = "Time should be a positive integer";
+	private static final int TIME_FORCE_WAIT = 1;
+	private static TimerObject _forceWaitTimer = new TimerObject();
+	
+	private static String _desc = "";
+	
+	private AlarmExecutor(int time){
+	}
+	
+	protected static void initializeAlarm(String desc, int time){
+		_desc = desc;
+		if (time >= 1){
+			_forceWaitTimer.setForceStopTimer(TIME_FORCE_WAIT, time - TIME_FORCE_WAIT);
+		} else {
+			GuiManager.callOutput(ERROR_NEGATIVE_DELAY);
+		}
+	}
+	
+	protected static void launchAlarm(int time) {		
+		try {
+			AlarmManager.setAlarm(_desc, time);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmExecutor.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmManager.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import java.awt.Color;
+
+import javax.swing.JApplet;
+
+import com.taskpad.ui.GuiManager;
+
+public class AlarmManager extends JApplet{
+
+	
+	private static final long serialVersionUID = 4348001564533802036L;		//Randomly generated
+	private static final Exception EXCEPTION_ERROR = new Exception();
+	private final static String SONG_DEFAULT = "pokemon.mid";
+	private static Sound _alarm = null;
+	private final static int ALARM_DURATION = 60;
+	private static boolean _isPlaying = false;
+	private static TimerObject _startAlarmTimer = new TimerObject();
+	
+	private static String _desc = "";
+	private static final String MESSAGE_ALARM = "ALARM!! %s";
+	private static final String MESSAGE_CANCEL_ALARM = "Cancelling Alarm";
+	private static final String MESSAGE_STOP_ALARM = "Stopping Alarm";
+	private static final String MESSAGE_NO_ALARM = "No alarm has been set";
+	private static final String MESSAGE_UNABLE_SET_ALARM = "Error: Unable to set alarm";
+	
+	private AlarmManager(){
+		/* deprecated, we no longer wants it to be an object
+		try {
+			initializeSong();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		*/
+	}
+	
+	/* deprecated
+	public AlarmManager(String otherSong) throws Exception{
+		initializeSong(otherSong);
+	}
+	*/
+	
+	private static void initializeSong() throws Exception{
+		_alarm = setUpSong();
+	}
+	
+	public static void setAlarm(String desc, int time){
+		_desc = desc;
+		ensureInitialization();
+
+		boolean isOn = true;
+		_startAlarmTimer.setAlarmTimer(isOn, time);
+	}  
+	
+	private static void ensureInitialization() {
+		if (_alarm == null){
+			try {
+				initializeSong();
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
+		}
+	}
+	
+	private static Sound setUpSong() throws Exception {
+		Sound testSong = new Sound(SONG_DEFAULT);
+		return testSong;
+	}
+	
+	protected static void turnOnAlarm() throws Exception{
+		showGuiWindow();
+		outputAlarmDesc();
+		
+		if (_alarm == null){
+			GuiManager.callOutput(MESSAGE_UNABLE_SET_ALARM);
+			throw EXCEPTION_ERROR;
+		}
+		
+		if (!_isPlaying){
+			_alarm.playSound();
+			_isPlaying = true;
+		} else {
+			turnOffAlarm();
+			_alarm.playSound();
+			_isPlaying = true;
+		}
+	}
+	
+	private static void outputAlarmDesc() {
+		String alarmOutput = String.format(MESSAGE_ALARM, _desc);
+		GuiManager.showSelfDefinedMessage(alarmOutput, Color.RED, true);		
+	}
+
+	private static void showGuiWindow() {
+		GuiManager.showWindow(true);		
+	}
+
+	public static void turnOffAlarm() throws Exception{
+		if (_alarm == null){
+			GuiManager.callOutput(MESSAGE_NO_ALARM);
+			throw EXCEPTION_ERROR;
+		}
+		
+		if (_isPlaying){
+			_alarm.stopSound();
+			_isPlaying = false;
+		} else{
+			throw EXCEPTION_ERROR;
+		}
+		GuiManager.callOutput(MESSAGE_STOP_ALARM);
+	}
+	
+	public static void cancelAlarms() throws Exception{
+		if (_alarm == null){
+			throw EXCEPTION_ERROR;
+		}
+				
+		if (_isPlaying){
+			_alarm.stopSound();
+			TimerObject.cancelAlarms();
+			_isPlaying = false;
+		} else {
+			TimerObject.cancelAlarms();
+		}
+		GuiManager.callOutput(MESSAGE_CANCEL_ALARM);
+
+	}
+	
+	protected static void runAlarm() throws Exception{
+		turnOnAlarm();
+		boolean isOn = false;
+		_startAlarmTimer.setAlarmTimer(isOn, ALARM_DURATION);
+	}
+	
+	public static void initializeAlarm(String desc, int time){
+		AlarmExecutor.initializeAlarm(desc, time);
+	} 
+	
+	/* deprecated
+	private void initializeSong(String otherSong) throws Exception{
+		_alarm = setUpSong(otherSong);
+	}*/
+	
+	/* deprecated
+	protected void playSong(){
+		assert (_alarm != null);
+		_alarm.playSound();
+		_isPlaying = true;
+	}
+	*/
+	/* deprecated
+	private Sound setUpSong(String otherSong) throws Exception {
+		Sound testSong = new Sound(otherSong);
+		return testSong;
+	}
+	*/
+	
+	/* test alarm
+	public static void main(String[] args){
+		AlarmManager alarm = null;
+		try {
+			alarm = new AlarmManager();
+			alarm.runAlarm();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.err.println(e.getMessage());
+			System.err.println("cannot start song");
+			
+		}
+	}
+	*/
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmManager.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmOffTask.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import java.util.TimerTask;
+
+/**
+ * 
+ * AlarmTask is the task that should be done
+ * after the timer delay, which is stop playing sound. :D
+ */
+
+
+
+public class AlarmOffTask extends TimerTask {
+	
+	protected AlarmOffTask(){
+	}
+	
+    public void run() {
+    	try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+    }
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmOffTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmOnTask.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import java.util.TimerTask;
+
+/**
+ * 
+ * AlarmTask is the task that should be done
+ * after the timer delay, which is stop playing sound. :D
+ */
+
+public class AlarmOnTask extends TimerTask {
+	
+	protected AlarmOnTask(){
+	}
+	
+    public void run() {
+    	try {
+			AlarmManager.runAlarm();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+    }
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\AlarmOnTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\ForceWaitTask.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import java.util.TimerTask;
+
+/**
+ * 
+ * Force user to wait to load sound
+ *
+ */
+
+public class ForceWaitTask extends TimerTask {
+	private int _time = -1;
+	
+	protected ForceWaitTask(int time){
+		_time = time;
+	}
+	
+    public void run() {
+    	AlarmExecutor.launchAlarm(_time);
+    }
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\ForceWaitTask.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\Sound.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.net.URL;
+
+/**
+ * 
+ * This is a helper class
+ * to play the sound
+ *
+ */
+
+
+public class Sound {
+	private AudioClip _song; // Sound player
+	private URL _songPath; // Sound path
+	
+	protected Sound(String filename) throws Exception{
+		assert (filename != null);
+		setUpSong(filename);
+	}
+
+	private void setUpSong(String filename) throws Exception{
+		_songPath = ClassLoader.getSystemResource(filename); // Get the Sound URL
+		_song = Applet.newAudioClip(_songPath); // Load the Sound
+	}
+	
+	protected void playSound(){
+		_song.loop(); // Play
+	}
+	
+	protected void stopSound(){
+		_song.stop(); // Stop		
+	}
+	
+	protected void playSoundOnce(){
+		_song.play(); // Play only once
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\Sound.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\TimerObject.java
+	 */
+
+
+package com.taskpad.alarm;
+
+import java.util.LinkedList;
+import java.util.Timer;
+
+/**
+ * 
+ * TimerObject is the timer
+ * that counts how long the 
+ * song plays
+ */
+
+public class TimerObject {
+	private static LinkedList<Timer> _timers = new LinkedList<Timer>();
+
+	protected TimerObject(){
+	}
+	
+	/* DEPRECATED
+    protected TimerObject(boolean isOn, int seconds) {
+        initializeTimer(isOn, seconds);
+	}
+	*/
+
+	protected void setAlarmTimer(boolean isOn, int seconds) {
+		Timer alarmTimer = new Timer();
+        seconds *= 1000;
+        if (!isOn){
+        	alarmTimer.schedule(new AlarmOffTask(), seconds);
+        } else {
+        	alarmTimer.schedule(new AlarmOnTask(), seconds);
+        }
+        
+        _timers.add(alarmTimer);
+	}
+
+	protected void setForceStopTimer(int seconds, int time) {
+		Timer forceStopTimer = new Timer();
+    	forceStopTimer.schedule(new ForceWaitTask(time), seconds);
+    	
+    	_timers.add(forceStopTimer);
+	}
+	
+	protected static void cancelAlarms(){
+		for (Timer timer: _timers){
+			timer.cancel();
+		}
+	}
+    
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\alarm\TimerObject.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateAndTime.java
+	 */
+
+
+/* This helper class creates the date and time object */
+
+package com.taskpad.dateandtime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class DateAndTime {	
+	private Date _today;
+	
+	//date used in debugging
+	private Date _debugDate = null;
+	
+	protected DateAndTime(){
+	}
+
+	/**
+	 * 
+	 */
+	private void setupDateAndTime() {
+		boolean isNotDebugging = _debugDate == null;
+		if (isNotDebugging){
+			_today = new Date();
+		} else {
+			_today = _debugDate;
+		}
+	}
+	
+	protected String getCurrentDate(){
+		setupDateAndTime();
+		
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+		return formater.format(_today);
+	}
+	
+	protected String getCurrentTime(){
+		setupDateAndTime();
+		
+		SimpleDateFormat formater = new SimpleDateFormat("HH:mm");
+		return formater.format(_today);
+	}
+	
+	protected String getCurrentDay(){
+		setupDateAndTime();
+		
+		SimpleDateFormat formater = new SimpleDateFormat("EEEE");
+		return formater.format(_today);
+	}
+	
+	protected String getCurrentTimeAndDate(){
+		setupDateAndTime();
+		
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		return formater.format(_today);
+	}
+	
+	/**
+	 * setDebugDate: setup a date for debugging. Used when debugging
+	 * @param dateString
+	 * @throws ParseException
+	 */
+	protected void setDebugDate(String dateString) throws ParseException{
+		SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		_debugDate = formater.parse(dateString);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateAndTime.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateAndTimeRetriever.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+/**
+ * This class is for us to find the existence of Date and Time in an input
+ * String
+ * 
+ * Supposed to put all the protected methods from DateAndTimeManager here
+ *  
+ */
+
+public class DateAndTimeRetriever {
+
+	private static final int POSITION_DESCRIPTION = 3;
+	private static final int POSITION_ENDTIME = 2;
+	private static final int POSITION_STARTTIME = 1;
+	private static final int POSITION_DEADLINE = 0;
+
+	private static final String STRING_NULL = "null";
+
+	private static final String STRING_EMPTY = "";
+	
+	private static final String DEADLINE = "DEADLINE";
+	private static final String TIME_START = "STARTTIME";
+	private static final String TIME_END = "ENDTIME";
+	private static final String[] KEYWORD_DEADLINES = {
+		"BY",
+		"BEFORE",
+		"BEF"
+	};
+	private static final String[] KEYWORD_STARTTIME = {
+		"AT",
+		"AFTER",
+		"ON",
+		"IN",
+		"FROM",
+		"FRO"
+	};
+	private static final String[] KEYWORD_ENDTIME = {
+		"UNTIL",
+		"TILL",
+		"TO",
+		"TIL",
+		"~",
+		"FOR"
+	};
+	private static final String[] KEYWORD_TODAY = {
+		"TODAY",
+		"TDY",
+		"2DAY"
+	};
+	private static final String[] KEYWORD_NOW = {
+		"NOW"
+	};
+	private static HashMap<String, String> _retrieverMap = new HashMap<String, String>();
+	private static DateAndTimeRetriever _retriever = new DateAndTimeRetriever();
+	
+	private DateAndTimeRetriever(){
+		intializeRetrieverMap();
+	}
+	
+	private void intializeRetrieverMap() {
+		initializeStartTime();
+		initializeEndTime();
+		initializeDeadlines();
+	}
+
+	private void initializeStartTime() {
+		for (String anyStartTime: KEYWORD_STARTTIME){
+			_retrieverMap.put(anyStartTime, TIME_START);
+		}
+	}
+
+	private void initializeEndTime() {
+		for (String anyEndTime: KEYWORD_ENDTIME){
+			_retrieverMap.put(anyEndTime, TIME_END);
+		}
+		
+	}
+
+	private void initializeDeadlines() {
+		for (String anyDeadline: KEYWORD_DEADLINES){
+			_retrieverMap.put(anyDeadline, DEADLINE);
+		}
+	}
+
+	protected static DateAndTimeRetriever getInstance(){
+		return _retriever;
+	}
+	
+	/**
+	 * In an input string, check if there is valid time
+	 * 
+	 * @param inputString
+	 * @return time
+	 */
+	protected TimeObject findTime(String inputString) {
+		TimeObject timeObject = null;
+
+		String parsedTime = isValidTime(inputString);
+		if (isNotEmptyParsedString(parsedTime)) {
+			timeObject = createNewTimeObject(parsedTime, inputString);
+		}
+		return timeObject;
+	}
+
+	/* Helper methods for checking valid time in a String */
+	private String isValidTime(String input) {
+		input = trimInput(input);
+		TimeParser tp = TimeParser.getInstance();
+		try {
+			return tp.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			return STRING_EMPTY;
+		}
+	}
+
+	private TimeObject createNewTimeObject(String parsedTime,
+			String inputTime) {
+		return new TimeObject(parsedTime.trim(), inputTime.trim());
+	}
+
+	/**
+	 * In an input string, check if there is valid date
+	 * 
+	 * @param inputString
+	 * @return date
+	 */
+	protected DateObject findDate(String inputString) {
+		DateObject dateObject = null;
+
+		String parsedDate = isValidDate(inputString);
+		if (isNotEmptyParsedString(parsedDate)) {
+			dateObject = createDateObject(parsedDate, inputString);
+		}
+		return dateObject;
+	}
+
+	/* Helper method for checking valid date in a String */
+	private String isValidDate(String input) {
+		input = trimInput(input);
+		DateParser dateParser = DateParser.getInstance();
+		try {
+			return dateParser.parseDate(input);
+		} catch (InvalidDateException e) {
+			return STRING_EMPTY;
+		}
+	}
+
+	private String trimInput(String input) {
+		input = input.trim();
+		return input;
+	}
+
+	private DateObject createDateObject(String parsedDate, String input) {
+		return new DateObject(parsedDate, input.trim());
+	}
+
+	private boolean isNotEmptyParsedString(String parsedString) {
+		return !parsedString.equals(STRING_EMPTY);
+	}
+
+	protected ArrayList<String> searchTimeAndDate(String desc) throws InvalidQuotesException{
+		String formattedString = convertStandardDateAndTime(desc);
+		
+		//System.err.println(formattedString);
+		
+		ArrayList<String> searchResult = extractAllDateAndTime(formattedString);
+		
+		return searchResult;
+	}
+
+	/**
+	 * @param formattedString
+	 */
+	private ArrayList<String> extractAllDateAndTime(String formattedString) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDate = datm.getTodayDate();
+		
+		String recordTime = null;
+		String recordDate = null;
+		
+		ArrayList<String> TimeAndDateRes = new ArrayList<String>();
+		
+		String[] formattedTokens = formattedString.split(" ");
+		for (int i = 0; i < formattedTokens.length; i++){
+			String token = formattedTokens[i];
+			if (isDate(token)){
+				if (recordDate != null){
+					String res;
+					if (recordTime == null){
+						res = recordDate;
+						recordDate = null;
+					} else {
+						res = recordTime + " " + recordDate;
+						recordDate = null;
+						recordTime = null;
+					}
+					TimeAndDateRes.add(res);
+				}
+				recordDate = token;
+			} else if (isTime(token)){
+				if (recordTime != null){
+					String res;
+					if (recordDate == null){
+						res = recordTime + " " + todayDate;
+						recordTime = null;
+					} else {
+						res = recordTime + " " + recordDate;
+						recordDate = null;
+						recordTime = null;
+					}
+					TimeAndDateRes.add(res);
+				}
+				recordTime = token;
+			}
+		}
+		
+		String res = null;
+		if (recordTime != null && recordDate!= null){
+			res = recordTime + " " + recordDate;
+		} else if (recordTime != null && recordDate == null){
+			res = recordTime + " " + todayDate;
+		} else if (recordTime == null && recordDate != null){
+			res = recordDate;
+		}
+		
+		if (res != null){
+			TimeAndDateRes.add(res);
+		}
+		return TimeAndDateRes;
+	}
+
+	/**
+	 * format all the date and time in a string to standard format
+	 * @param desc
+	 * @throws InvalidQuotesException
+	 */
+	private String convertStandardDateAndTime(String desc)
+			throws InvalidQuotesException {
+		String alphaNumericSpaceDesc = getAlphaNumericSpaceDesc(desc);
+		
+		String noQuoteDesc = removeParseFreeZone(alphaNumericSpaceDesc);
+		
+		String numberedInput = parseNumber(noQuoteDesc);
+		
+		String holidayString = parseHolidayDates(numberedInput);
+		
+		String dayString = parseDay(holidayString);
+		
+		String todayAndNowString = parseTodayAndNow(dayString);
+		
+		String dateString = parseDate(todayAndNowString);
+		
+		String timeString = parseTime(dateString);
+		//System.err.println(numberedInput);
+		
+		String timeWordString = parseTimeWord(timeString);
+	
+		return timeWordString;
+	}
+	
+	private String parseTodayAndNow(String dayString) {
+		String[] todayAndNowTokens = dayString.split(" ");
+		StringBuffer todayAndNowBuilder = new StringBuffer();
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDate = datm.getTodayDate();
+		String now = datm.getTodayDateAndTime();
+		
+		for (int i = 0; i < todayAndNowTokens.length; i++){
+			String token = todayAndNowTokens[i];
+			if (isToday(token)){
+				todayAndNowTokens[i] = todayDate;
+			} else if (isNow(token)){
+				todayAndNowTokens[i] = now;
+			}
+		}
+		
+		todayAndNowBuilder = buildString(todayAndNowTokens, todayAndNowBuilder);
+		
+		return todayAndNowBuilder.toString().trim();
+	}
+
+	/**
+	 * format DateAndTime as Deadline, StartTime, EndTime
+	 * @param desc
+	 * @return desc | Deadline: | StartTime: Date then Time | EndTime: Date Then Time
+	 * @throws InvalidQuotesException 
+	 */
+	protected String formatDateAndTimeInString(String desc) throws InvalidQuotesException {			
+		
+		String formattedString = convertStandardDateAndTime(desc);
+		
+		ArrayList<String> allDateAndTime = extractDateAndTime(formattedString);
+		
+		//System.err.println(allDateAndTime.get(POSITION_DEADLINE));
+		//System.err.println(allDateAndTime.get(POSITION_STARTTIME));
+		//System.err.println(allDateAndTime.get(POSITION_ENDTIME));
+		
+		desc = allDateAndTime.remove(POSITION_DESCRIPTION);
+		
+		allDateAndTime = modifyAllDateAndTime(allDateAndTime);
+
+		String deadlineRes = allDateAndTime.get(POSITION_DEADLINE);
+		String startTimeRes = allDateAndTime.get(POSITION_STARTTIME);
+		String endTimeRes = allDateAndTime.get(POSITION_ENDTIME);
+		
+		// return that string to parse in respective Add/Addrem/Alarm classes -
+		// already done with return input
+		
+		return desc + " " + deadlineRes + " " + startTimeRes + " " + endTimeRes;
+	}
+
+	/**
+	 * @param timeString
+	 * @return
+	 */
+	private String parseTimeWord(String timeString) {
+		String[] timeWordTokens = timeString.split(" ");
+		
+		TimeWordParser twp = TimeWordParser.getInstance();
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		NumberParser np = NumberParser.getInstance();
+		
+		boolean[] isModified = new boolean[timeWordTokens.length];
+		
+		initializeArray(isModified);
+		
+		for (int i = 0; i < timeWordTokens.length; i++){
+			String firstToken = timeWordTokens[i];
+			StringBuffer changedTokens = new StringBuffer();
+
+			if (twp.isTimeUnits(firstToken)) {
+				isModified[i] = true;
+				String secondToken = null;
+				
+				for (int j = i - 1; j >= 0; j--) {
+					if (isModified[j]) {
+						break;
+					}
+					
+					isModified[j] = true;
+					String token = timeWordTokens[j];
+					
+					if (swp.isSpecialWord(token)) {
+						changedTokens.append(token + " ");
+						timeWordTokens[j] = null;
+					} else if (j == i - 1 && np.isDigitString(token)){
+						timeWordTokens[j] = null;
+						secondToken = token;
+					} else {
+						break;
+					}
+					
+				}
+				if (secondToken != null){
+					changedTokens.append(secondToken + " ");
+				}
+				changedTokens.append(firstToken);
+
+
+				try {
+					timeWordTokens[i] = twp.parseTimeWordWithSpecialWord(changedTokens.toString()
+								.trim());
+				} catch (NullTimeUnitException | NullTimeValueException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+		
+		StringBuffer timeWordString = new StringBuffer();
+		timeWordString = buildString(timeWordTokens, timeWordString);
+		
+		return timeWordString.toString().trim();
+	}
+
+	private String removeParseFreeZone(String alphaNumericSpaceDesc) throws InvalidQuotesException {
+		boolean removeStat = false;
+		String[] descTokens = alphaNumericSpaceDesc.split(" ");
+		for (int i = 0; i < descTokens.length; i++){
+			if ("\"".equals(descTokens[i]) || "\'".equals(descTokens[i])){
+				if (!removeStat){
+					removeStat = true;
+				} else {
+					removeStat = false;
+				}
+				descTokens[i] = null;
+			} else {
+				if (removeStat){
+					descTokens[i] = null;
+				}
+			}
+		}
+		
+		if (removeStat){
+			throw new InvalidQuotesException();
+		}
+		
+		StringBuffer tokensBuilder = new StringBuffer();
+		
+		for (String token : descTokens){
+			if (token != null){
+				tokensBuilder.append(token + " ");
+			}
+		}
+		
+		return tokensBuilder.toString().trim();
+	}
+
+	/**
+	 * @param allDateAndTime
+	 */
+	private ArrayList<String> modifyAllDateAndTime(ArrayList<String> allDateAndTime) {
+		for (int i = 0; i < allDateAndTime.size(); i++){
+			if (allDateAndTime.get(i) == null || allDateAndTime.get(i).trim().isEmpty()){
+				allDateAndTime.set(i, STRING_NULL + " " + STRING_NULL);
+			} else if (allDateAndTime.get(i).split(" ").length == 1){
+				String element = allDateAndTime.get(i);
+				allDateAndTime.set(i, element + " " + STRING_NULL);
+			}
+		}
+		return allDateAndTime;
+	}
+
+	/**
+	 * @param timeString
+	 */
+	private ArrayList<String> extractDateAndTime(String timeString) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDate = datm.getTodayDate();
+		String now = datm.getTodayDateAndTime();
+		
+		String[] flexiTokens = timeString.split(" ");
+		
+		String startDateEarliest = null;
+		String startTimeEarliest = null;
+		String startEarliest = null;
+		
+		LinkedList<String> startDates = new LinkedList<String>();
+		LinkedList<String> startTimes = new LinkedList<String>();
+		
+		LinkedList<String> deadlineDates = new LinkedList<String>();
+		LinkedList<String> deadlineTimes = new LinkedList<String>();
+		
+		LinkedList<String> endDates = new LinkedList<String>();
+		LinkedList<String> endTimes = new LinkedList<String>();
+		
+		ArrayList<String> allDateAndTime = new ArrayList<String>();
+
+		StringBuffer descBuilder = new StringBuffer();
+		String desc;
+		
+		String recordDate = null;
+		String recordTime = null;
+		
+		for (int i = flexiTokens.length - 1; i >= 0; i--){
+			String token = flexiTokens[i];
+			
+			if (isDate(token)){
+				token = parseDate(token);
+				
+				if (recordDate == null){
+					recordDate = token;
+				} else {
+					startDates.add(recordDate);
+					startTimes.add(recordTime);
+					
+					recordDate = token;
+					recordTime = null;
+				}
+				
+				flexiTokens[i] = null;
+				
+			} else if (isTime(token)){
+				token = parseTime(token);
+				
+				if (recordTime == null){
+					recordTime = token;
+				} else {
+					startDates.add(recordDate);
+					startTimes.add(recordTime);
+					
+					recordDate = null;
+					recordTime = token;
+				}
+				
+				flexiTokens[i] = null;
+
+			} else if (isType(token)){
+				boolean useWrong = (recordDate == null && recordTime == null);
+				
+				if (!useWrong){
+					token = token.toUpperCase();
+					String type = _retrieverMap.get(token);
+					if (DEADLINE.equals(type)){
+						deadlineDates.add(recordDate);
+						deadlineTimes.add(recordTime);
+					} else if (TIME_START.equals(type)){
+						startDates.add(recordDate);
+						startTimes.add(recordTime);
+					} else if (TIME_END.equals(type)){
+						endDates.add(recordDate);
+						endTimes.add(recordTime);
+					}
+					recordDate = null;
+					recordTime = null;
+					
+					flexiTokens[i] = null;
+
+				}
+			} 
+		}
+		
+		if (recordDate != null || recordTime != null){
+			startDates.add(recordDate);
+			startTimes.add(recordTime);
+		}
+
+		startEarliest = retrieveStartEarliest(todayDate, now, startDateEarliest,
+				startTimeEarliest, startEarliest, startDates, startTimes);
+		
+		if (startEarliest == null){
+			startDateEarliest = todayDate;
+		} else {
+			startDateEarliest = startEarliest.split(" ")[0];
+		}
+		
+		//System.out.println("DD: " + startDateEarliest);
+		
+		String deadlineLatest = retrieveNotStartLatest(deadlineDates, deadlineTimes, startDateEarliest);
+		String endLatest = retrieveNotStartLatest(endDates, endTimes, startDateEarliest);
+		
+		//System.err.println(deadlineLatest);
+		//System.err.println(startEarliest);
+		//System.err.println(endLatest);
+		
+		if (endLatest != null && startEarliest != null && compareDateAndTime(endLatest, startEarliest) <= 0){
+			endLatest = null;
+		} else if (endLatest != null && compareDateAndTime(endLatest, now) <= 0){
+			endLatest = null;
+		}
+		
+		//System.err.println(deadlineLatest);
+		//System.err.println(startEarliest);
+		if (deadlineLatest != null && startEarliest != null && compareDateAndTime(deadlineLatest, startEarliest) <= 0){
+			deadlineLatest = null;
+		} else if (deadlineLatest != null && compareDateAndTime(deadlineLatest, now) <= 0){
+			deadlineLatest = null;
+		}
+		
+		descBuilder = buildString(flexiTokens, descBuilder);
+		desc = descBuilder.toString().trim();
+		
+		allDateAndTime.add(deadlineLatest);
+		allDateAndTime.add(startEarliest);
+		allDateAndTime.add(endLatest);
+		allDateAndTime.add(desc);
+		
+		return allDateAndTime;
+	}
+	
+	private boolean isToday(String input){
+		input = input.toUpperCase();
+		for (int i = 0; i < KEYWORD_TODAY.length; i++){
+			if (KEYWORD_TODAY[i].equals(input)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isNow(String input){
+		input = input.toUpperCase();
+		for (int i = 0; i < KEYWORD_NOW.length; i++){
+			if (KEYWORD_NOW[i].equals(input)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @param todayDate
+	 * @param now
+	 * @param startDateEarliest
+	 * @param startTimeEarliest
+	 * @param startEarliest
+	 * @param startDates
+	 * @param startTimes
+	 * @return
+	 */
+	private String retrieveStartEarliest(String todayDate, String now,
+			String startDateEarliest, String startTimeEarliest,
+			String startEarliest, LinkedList<String> startDates,
+			LinkedList<String> startTimes) {
+		assert (startDates.size() == startTimes.size());
+		
+		for (int i = 0; i < startDates.size(); i++){
+			if (startDates.get(i) != null && startTimes.get(i) != null){
+				String start = startDates.get(i) + " " + startTimes.get(i);
+				if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+					startEarliest = start;
+				}
+			} else if (startDates.get(i) != null && startTimes.get(i) == null){
+				String startDate = startDates.get(i);
+				if (startDateEarliest == null || compareDate(startDateEarliest, startDate) > 0){
+					startDateEarliest = startDate;
+				}
+			} else if (startDates.get(i) == null && startTimes.get(i) != null){
+				String startTime = startTimes.get(i);
+				if (startTimeEarliest == null || compareTime(startTimeEarliest, startTime) > 0){
+					startTimeEarliest = startTime;
+				}
+			} else {
+				//unreachable
+				assert (false);
+			}
+		}
+		
+		if (startDateEarliest != null){
+			if (startTimeEarliest == null){
+				startTimeEarliest = "00:00";
+			}
+			
+			String start = startDateEarliest + " " + startTimeEarliest;
+			if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+				startEarliest = start;
+			}
+		} else if (startTimeEarliest != null){
+			String start = todayDate + " " + startTimeEarliest;
+			if (startEarliest == null || compareDateAndTime(startEarliest, start) > 0){
+				startEarliest = start;
+			}
+		} else if (startEarliest == null){
+			//startEarliest = now;
+			return null;
+		}
+		return startEarliest.trim();
+	}
+
+	private String retrieveNotStartLatest(LinkedList<String> Dates,
+			LinkedList<String> Times, String startDateEarliest) {
+		assert (Dates.size() == Times.size());
+		String latest = null;
+		String dateLatest = null;
+		String timeLatest = null;
+		
+		for (int i = 0; i < Dates.size(); i++){
+			if (Dates.get(i) != null && Times.get(i) != null){
+				String notStart = Dates.get(i) + " " + Times.get(i);
+				if (latest == null || compareDateAndTime(latest, notStart) < 0){
+					latest = notStart;
+				}
+			} else if (Dates.get(i) != null && Times.get(i) == null){
+				String dateGet = Dates.get(i);
+				if (dateLatest == null || compareDate(dateLatest, dateGet) < 0){
+					dateLatest = dateGet;
+				}
+			} else if (Dates.get(i) == null && Times.get(i) != null){
+				String timeGet = Times.get(i);
+				if (timeLatest == null || compareTime(timeLatest, timeGet) < 0){
+					timeLatest = timeGet;
+				}
+			} else {
+				//unreachable
+				assert (false);
+			}
+		}
+		
+		if (dateLatest != null){
+			if (timeLatest == null){
+				timeLatest = "23:59";
+			}
+			String cur = dateLatest + " " + timeLatest;
+			if (latest == null || compareDateAndTime(latest, cur) < 0){
+				latest = cur;
+			}
+		} else if (timeLatest != null){
+			String cur = startDateEarliest + " " + timeLatest;
+			if (latest == null || compareDateAndTime(latest, cur) < 0){
+				latest = cur;
+			}
+		} 
+		if (latest != null){
+			latest = latest.trim();
+		}
+		
+		return latest;
+	}
+
+	private boolean isType(String token) {
+		return _retrieverMap.containsKey(token.toUpperCase());
+	}
+
+	protected int compareDate(String firstDateString, String secondDateString){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date firstDate = new Date();
+		Date secondDate = new Date();
+		try {
+			firstDate = sdf.parse(firstDateString);
+			secondDate = sdf.parse(secondDateString);
+		} catch (ParseException e) {
+			//should not use this function if it hasn't been converted
+			assert (false);
+		}
+		return firstDate.compareTo(secondDate);
+	}
+	
+	protected int compareTime(String firstTimeString, String secondTimeString){
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		Date firstTime = new Date();
+		Date secondTime = new Date();
+		try {
+			firstTime = sdf.parse(firstTimeString);
+			secondTime = sdf.parse(secondTimeString);
+		} catch (ParseException e) {
+			//should not use this function if it hasn't been converted
+			assert (false);
+		}
+		return firstTime.compareTo(secondTime);
+	}
+	
+	protected int compareDateAndTime(String firstDateString, String secondDateString){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Date firstDate = new Date();
+		Date secondDate = new Date();
+		try {
+			firstDate = sdf.parse(firstDateString);
+			secondDate = sdf.parse(secondDateString);
+		} catch (ParseException e) {
+			//should not use this function if it hasn't been converted
+			assert (false);
+		}
+		return firstDate.compareTo(secondDate);
+	}
+	
+	protected int compareDateAndTimeExecutor(String firstDateString, String secondDateString){
+		if (firstDateString == null || secondDateString == null){
+			return -2;
+		}
+		
+		firstDateString = firstDateString.trim();
+		secondDateString = secondDateString.trim();
+		
+		firstDateString = addTimeCap(firstDateString);
+		secondDateString = addTimeCap(secondDateString);
+		
+		if (firstDateString == null || secondDateString == null){
+			return -2;
+		}
+		
+		return compareDateAndTime(firstDateString, secondDateString);
+	}
+
+	/**
+	 * @param firstDateString
+	 * @return
+	 */
+	private String addTimeCap(String dateString) {
+		if (!isDateAndTime(dateString)){
+			if (isDate(dateString)){
+				dateString = dateString + " 00:00";
+			} else if (isTimeAndDate(dateString)){
+				String[] tokens = dateString.split(" ");
+				dateString = tokens[1] + " " + tokens[0];
+			} else {
+				dateString = null;
+			}
+		}
+		return dateString;
+	}
+	
+	private boolean isTimeAndDate(String dateString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd/MM/yyyy");		
+		
+		try {
+			sdf.parse(dateString);
+		} catch (ParseException e) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	private boolean isDateAndTime(String dateString) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");		
+		
+		try {
+			sdf.parse(dateString);
+		} catch (ParseException e) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	private String parseTime(String dateString) {
+		String[] timeTokens = dateString.split(" ");
+		StringBuffer timeString = new StringBuffer();
+		boolean[] isModified = new boolean[timeTokens.length];
+
+		initializeArray(isModified);
+
+		int maxJoinWord = 4;
+		for (int i = maxJoinWord; i >= 1; i--) {
+			changeNTimeWords(timeTokens, isModified, i);
+		}
+		timeString = buildString(timeTokens, timeString);
+
+		return timeString.toString().trim();
+	}
+
+	/**
+	 * @param dateTokens
+	 * @param isModified
+	 */
+	private void changeNTimeWords(String[] timeTokens,
+			boolean[] isModified, int n) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		for (int i = n - 1; i < timeTokens.length; i++) {
+			String token = timeTokens[i];
+			StringBuffer wholeString = new StringBuffer();
+			String timeInput;
+
+			// combine n words:
+			if (allNotModified(isModified, i, n)) {
+				for (int j = i - n + 1; j <= i - 1; j++) {
+					wholeString.append(timeTokens[j]);
+				}
+				wholeString.append(token);
+				timeInput = wholeString.toString().trim();
+				// System.err.println(dateInput);
+				if (isTime(timeInput)) {
+				
+					try {
+						timeInput = datm.parseTimeInput(timeInput);
+					} catch (TimeErrorException | InvalidTimeException e) {
+						assert (false);
+					}
+					
+					allNWordsModified(isModified, i, n);
+					timeTokens[i] = timeInput;
+					
+					
+					for (int j = i - n + 1; j <= i - 1; j++) {
+						timeTokens[j] = null;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param dayString
+	 * @return
+	 */
+	private String parseDate(String dayString) {
+		String[] dateTokens = dayString.split(" ");
+		StringBuffer dateString = new StringBuffer();
+		boolean[] isModified = new boolean[dateTokens.length];
+
+		initializeArray(isModified);
+
+		int maxJoinWord = 5;
+		for (int i = maxJoinWord; i >= 1; i--) {
+			changeNDateWords(dateTokens, isModified, i);
+		}
+		dateString = buildString(dateTokens, dateString);
+
+		return dateString.toString().trim();
+	}
+
+	/**
+	 * @param dateTokens
+	 * @param isModified
+	 */
+	private void changeNDateWords(String[] dateTokens,
+			boolean[] isModified, int n) {
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		for (int i = n - 1; i < dateTokens.length; i++) {
+			String token = dateTokens[i];
+			StringBuffer wholeString = new StringBuffer();
+			String dateInput;
+
+			// combine n words:
+			if (allNotModified(isModified, i, n)) {
+				for (int j = i - n + 1; j <= i - 1; j++) {
+					wholeString.append(dateTokens[j]);
+				}
+				wholeString.append(token);
+				dateInput = wholeString.toString().trim();
+				// System.err.println(dateInput);
+				if (isDate(dateInput)) {
+					try {
+						dateInput = datm.parseDate(dateInput);
+					} catch (InvalidDateException e) {
+						assert (false);
+					} 
+					allNWordsModified(isModified, i, n);
+					dateTokens[i] = dateInput;
+					for (int j = i - n + 1; j <= i - 1; j++) {
+						dateTokens[j] = null;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param isModified
+	 * @param idx
+	 * @param num
+	 */
+	private void allNWordsModified(boolean[] isModified, int idx, int num) {
+		for (int i = idx; i >= idx - num + 1; i--) {
+			isModified[i] = true;
+		}
+	}
+
+	/**
+	 * @param isModified
+	 * @param i
+	 * @return
+	 */
+	private boolean allNotModified(boolean[] isModified, int idx, int num) {
+		for (int i = idx; i >= idx - num + 1; i--) {
+			if (isModified[i]) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * @param input
+	 */
+	private String getAlphaNumericSpaceDesc(String input) {
+		Scanner sc = new Scanner(input);
+		StringBuffer alphaNumericSpaceString = new StringBuffer();
+		while (sc.hasNext()) {
+			String token = sc.next();
+			token = splitNonAlphaNumericCharacter(token);
+			alphaNumericSpaceString.append(token + " ");
+		}
+		sc.close();
+		return alphaNumericSpaceString.toString().trim();
+	}
+
+	/**
+	 * @param token
+	 */
+	private String splitNonAlphaNumericCharacter(String token) {
+		// token = token.replaceAll("!", "");
+		// token = token.replaceAll(".", "");
+		// token = token.replaceAll(",", " ");
+		// token = token.replaceAll(";", " ");
+		// token = token.replaceAll("?", "");
+		// token = token.replaceAll("\"", " \" ");
+		// token = token.replaceAll("\'", " \' ");
+		// token = token.replaceAll("(", "");
+		// token = token.replaceAll(")", "");
+		// token = token.replaceAll("~", " until ");
+		// token = token.replaceAll("*", "");
+
+		Scanner sc = new Scanner(token);
+		// sc.useDelimiter("[^A-Za-z0-9]");
+		StringBuffer tokenBuilder = new StringBuffer();
+		String anyCharacter;
+		while ((anyCharacter = sc.findInLine("[^A-Za-z0-9]")) != null) {
+			int splitIndex = token.indexOf(anyCharacter);
+			String tempTokens = token.substring(0, splitIndex);
+			token = token.substring(splitIndex + 1, token.length());
+			tokenBuilder.append(tempTokens + " " + anyCharacter + " ");
+		}
+		if (token != null) {
+			tokenBuilder.append(token);
+		}
+		sc.close();
+		return tokenBuilder.toString().trim();
+	}
+
+	private boolean isTime(String input) {
+		input = trimInput(input);
+		TimeParser tp = TimeParser.getInstance();
+		try {
+			tp.parseTimeInput(input);
+		} catch (TimeErrorException | InvalidTimeException e) {
+			return false;
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean isDate(String input) {
+		input = trimInput(input);
+		DateParser dateParser = DateParser.getInstance();
+		try {
+			dateParser.parseDate(input);
+		} catch (InvalidDateException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * not fully integrated yet
+	 * @param holidayString
+	 */
+	private String parseDay(String holidayString) {
+		
+		String dayString = getDayNtTmrYtd(holidayString);
+
+		dayString = getTmrYtd(dayString);
+		
+		return dayString;
+	}
+
+	/**
+	 * @param dayString
+	 * @return
+	 */
+	private String getTmrYtd(String dayString) {
+		String[] dayTokens = dayString.split(" ");
+		StringBuffer dayBuilder = new StringBuffer(" ");
+		
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		
+		String tmrTdyStr = STRING_EMPTY;
+		
+		boolean isStart = false;
+		
+		for (int i = 0; i < dayTokens.length; i++){
+			String token = dayTokens[i];
+			boolean isTmrYtdVariation = swp.isTmrYtd(token);
+			if (isTmrYtdVariation && !isStart){
+				dayBuilder.append(token + " ");
+				dayTokens[i] = null;
+				isStart = true;
+			} else if (isTmrYtdVariation && isStart){
+				dayTokens[i] = null;
+				dayBuilder.append(token + " ");
+			} else {
+				if (isStart){
+					isStart = false;
+					String passString = dayBuilder.toString().trim();
+					try {
+						dayTokens[i] = datm.parseDayToDate(passString);
+					} catch (InvalidDayException | DatePassedException e) {
+						//unreachable
+						assert (false);
+					}
+					dayBuilder = new StringBuffer();
+				}
+			}
+		}
+		
+		if (isStart){
+			String passString = dayBuilder.toString().trim();
+			try {
+				tmrTdyStr = datm.parseDayToDate(passString);
+			} catch (InvalidDayException | DatePassedException e) {
+				//unreachable
+				assert (false);
+			}
+		}
+		
+		dayBuilder = new StringBuffer();
+
+		dayBuilder = buildString(dayTokens, dayBuilder);
+		dayBuilder.append(tmrTdyStr);
+		
+		dayString = dayBuilder.toString().trim();
+		return dayString;
+	}
+
+	/**
+	 * @param dayTokens
+	 * @param dayString
+	 * @param swp
+	 * @param datm
+	 * @param dp
+	 * @param isModified
+	 * @return
+	 */
+	private String getDayNtTmrYtd(String holidayString) {
+		String[] dayTokens = holidayString.split(" ");
+		StringBuffer dayBuilder = new StringBuffer();
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		DayParser dp = DayParser.getInstance();
+		boolean[] isModified = new boolean[dayTokens.length];
+
+		initializeArray(isModified);
+		
+		for (int i = 0; i < dayTokens.length; i++) {
+			String firstToken = dayTokens[i];
+			StringBuffer changedTokens = new StringBuffer();
+
+			if (dp.isDay(firstToken) || swp.isWk(firstToken)) {
+				isModified[i] = true;
+				for (int j = i - 1; j >= 0; j--) {
+					if (isModified[j]) {
+						break;
+					}
+
+					isModified[j] = true;
+					String token = dayTokens[j];
+					if (swp.isSpecialWord(token)) {
+						changedTokens.append(token + " ");
+						dayTokens[j] = null;
+						isModified[j] = true;
+					} else {
+						break;
+					}
+				}
+				changedTokens.append(firstToken);
+
+				try {
+					// System.err.println(changedTokens.toString());
+					dayTokens[i] = datm.parseDayToDate(changedTokens.toString()
+							.trim());
+				} catch (InvalidDayException | DatePassedException e) {
+					assert (false);
+				}
+			}
+		}
+
+		dayBuilder = buildString(dayTokens, dayBuilder);
+		return dayBuilder.toString().trim();
+	}
+
+	/**
+	 * 
+	 * @param numberedInput
+	 * @return
+	 */
+	private String parseHolidayDates(String numberedInput) {
+		String[] numberInputTokens = numberedInput.split(" ");
+		boolean[] isModified = new boolean[numberInputTokens.length];
+		StringBuffer holidayString = new StringBuffer();
+
+		initializeArray(isModified);
+
+		HolidayDates holidayParser = HolidayDates.getInstance();
+		for (int i = 2; i < numberInputTokens.length; i++) {
+			String token = numberInputTokens[i];
+
+			String holidayInput;
+			String pastOneToken, pastTwoToken;
+
+			// search 3 words:
+			if (allNotModified(isModified, i, 3)) {
+				pastOneToken = numberInputTokens[i - 1];
+				pastTwoToken = numberInputTokens[i - 2];
+				holidayInput = holidayParser.replaceHolidayDate(pastTwoToken
+						+ " " + pastOneToken + " " + token);
+				if (holidayInput != null) {
+					numberInputTokens[i] = holidayInput;
+					numberInputTokens[i - 1] = null;
+					numberInputTokens[i - 2] = null;
+					isModified[i] = true;
+					isModified[i - 1] = true;
+					isModified[i - 2] = true;
+					// holidayString.append(holidayInput + " ");
+				}
+			}
+		}
+
+		for (int i = 1; i < numberInputTokens.length; i++) {
+			String token = numberInputTokens[i];
+			String holidayInput;
+			String pastOneToken;
+
+			// search 2 words:
+			if (allNotModified(isModified, i, 2)) {
+				pastOneToken = numberInputTokens[i - 1];
+				holidayInput = holidayParser.replaceHolidayDate(pastOneToken
+						+ " " + token);
+				if (holidayInput != null) {
+					numberInputTokens[i] = holidayInput;
+					numberInputTokens[i - 1] = null;
+					isModified[i] = true;
+					isModified[i - 1] = true;
+					// holidayString.append(holidayInput + " ");
+				}
+			}
+		}
+
+		for (int i = 0; i < numberInputTokens.length; i++) {
+			String token = numberInputTokens[i];
+
+			if (isModified[i]) {
+				continue;
+			}
+			String holidayInput;
+			// search 1 word
+			holidayInput = holidayParser.replaceHolidayDate(token);
+			if (holidayInput != null) {
+				numberInputTokens[i] = holidayInput;
+				isModified[i] = true;
+				// holidayString.append(holidayInput + " ");
+			}
+		}
+
+		buildString(numberInputTokens, holidayString);
+
+		return holidayString.toString().trim();
+	}
+
+	/**
+	 * @param numberInputTokens
+	 * @param holidayString
+	 */
+	private StringBuffer buildString(String[] anyTokens,
+			StringBuffer anyString) {
+		for (String token : anyTokens) {
+			if (token != null) {
+				anyString.append(token + " ");
+			}
+		}
+		return anyString;
+	}
+
+	/**
+	 * @param isModified
+	 */
+	private void initializeArray(boolean[] isModified) {
+		for (int i = 0; i < isModified.length; i++) {
+			isModified[i] = false;
+		}
+	}
+
+	/**
+	 * @param input
+	 * @param datmParser
+	 */
+	protected String parseNumber(String input) {
+		DateAndTimeManager datmParser = DateAndTimeManager.getInstance();
+		NumberParser np = NumberParser.getInstance();
+		Scanner sc = new Scanner(input);
+		StringBuffer changedString = new StringBuffer();
+		StringBuffer numberString = new StringBuffer();
+		boolean isNumberContinue = false;
+		
+		while (sc.hasNext()) {
+			String token = sc.next();
+			if (!datmParser.isNumber(token)) {
+				if (isNumberContinue ) {
+					String realNumber = datmParser.parseNumber(numberString
+							.toString().trim());
+					changedString.append(realNumber + " ");
+					numberString = new StringBuffer();
+				}
+
+				changedString.append(token + " ");
+				isNumberContinue = false;
+			} else if (np.isDigitString(token)){
+				if (isNumberContinue) {
+					String realNumber = datmParser.parseNumber(numberString
+							.toString().trim());
+					changedString.append(realNumber + " ");
+					numberString = new StringBuffer();
+				}
+				
+				//System.err.println("AAA: " + token);
+				isNumberContinue = false;
+				String realNumber = datmParser.parseNumber(token, false);
+				changedString.append(realNumber + " ");
+				numberString = new StringBuffer();
+			} else {
+				if (!isNumberContinue) {
+					isNumberContinue = true;
+				}
+				numberString.append(token + " ");
+			}
+		}
+
+		String realNumber = datmParser.parseNumber(numberString.toString()
+				.trim(), false);
+		if (realNumber != null) {
+			changedString.append(realNumber + " ");
+		}
+
+		sc.close();
+		return changedString.toString().trim();
+	}
+
+	/**
+	 * @deprecated
+	 * @param input
+	 */
+	@SuppressWarnings("unused")
+	private String createDesc(String input) {
+		String desc = input.trim();
+
+		if (!desc.startsWith("\"")) {
+			desc = "\"" + desc;
+		}
+
+		if (!input.endsWith("\"")) {
+			desc = desc + "\"";
+		}
+
+		return desc;
+	}
+
+	public static void main(String[] args) {
+		DateAndTimeRetriever datr = DateAndTimeRetriever.getInstance();
+		/*
+		System.out
+				.println(datr.getAlphaNumericSpaceDesc("I am looking for Lynnette. She is going home on Monday."));
+		System.out
+				.println(datr.getAlphaNumericSpaceDesc("I am looking for Lynnette. She is going home on 1/4/15 12:00."));
+		System.out.println(datr.parseNumber("one one one aaa one one one"));
+		System.out.println(datr.parseNumber("one one one aaa"));
+		System.out.println(datr.parseNumber("aaa"));
+		System.out
+				.println(datr.parseHolidayDates("last Christmas I gave you my heart Christmas"));
+		System.out
+				.println(datr.parseHolidayDates("last New Year I gave you my heart Christmas"));
+		System.out
+				.println(datr.parseHolidayDates("last April Fool Day I gave you my heart Christmas"));
+		System.out.println(datr.parseDay("Monday I want to eat Monday"));
+		System.out
+				.println(datr.parseDay("next nxt NXT prev Monday I want to catch Pokemon!"));
+		System.out
+				.println(datr.parseDay("next ASH nxt Monday I want to catch Pokemon nxt Fri !"));
+		System.out
+				.println(datr.parseDate("1 / 11 / 2014 , I watch movie in 1 December"));
+		System.out.println(datr.parseTime("1 am"));
+		System.out.println(datr.parseDate("11/11/2015"));
+		System.out.println(datr.parseTime("11:00"));
+		System.out.println(datr.formatDateAndTimeInString("aaa"));
+		*/
+		/*
+		try {
+			System.out.println(datr.formatDateAndTimeInString("aaa at 11/3 by 3/4 11pm"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		
+		try {
+			String noQuoteDesc = datr.removeParseFreeZone("\" aaaa \" bbbb ");
+			System.out.println(noQuoteDesc);
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*
+		try {
+			System.out
+			.println(datr.formatDateAndTimeInString("do cs2010 assignment by nxt nxt Wk"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		
+		try {
+			System.out
+			.println(datr.formatDateAndTimeInString("11:00"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//VERY IMP TEST CASE
+		try {
+			System.out.println(datr.searchTimeAndDate("12:00 06/04/2014").toString());
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(datr.parseTimeWord("1 hour"));
+		
+		System.out.println(datr.parseTodayAndNow("find Lynnette by Today"));
+		
+		try {
+			System.out.println(datr.formatDateAndTimeInString("find Lynnette by Today"));
+		} catch (InvalidQuotesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//VERY IMP TEST CASE
+				try {
+					System.out.println(datr.searchTimeAndDate("20:14 05/04/2014 03/02/2014").toString());
+				} catch (InvalidQuotesException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		
+		//System.out.println("AAA".split(" ").length);
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateAndTimeRetriever.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateSkeleton.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+public interface DateSkeleton {
+	public String getTodayDate();
+	public String getTodayDay();
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DateSkeleton.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DayObject.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+/**
+ * DayObject: an object to save "holiday" name and date
+ */
+
+public class DayObject {
+	
+	private String _name;
+	private int _dateDay;
+	private int _dateMonth;
+	private int _dateYear;
+	
+	protected DayObject(String name){
+	}
+
+	public String getName() {
+		return _name;
+	}
+
+	public void setName(String _name) {
+		this._name = _name;
+	}
+
+	public int getDateDay() {
+		return _dateDay;
+	}
+
+	public void setDateDay(int _dateDay) {
+		this._dateDay = _dateDay;
+	}
+
+	public int getDateMonth() {
+		return _dateMonth;
+	}
+
+	public void setDateMonth(int _dateMonth) {
+		this._dateMonth = _dateMonth;
+	}
+
+	public int getDateYear() {
+		return _dateYear;
+	}
+
+	public void setDateYear(int _dateYear) {
+		this._dateYear = _dateYear;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DayObject.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DayParser.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * DayParser: a singleton parser that parses day such as Monday, Tuesday,
+ * and also BigFestival such as Christmas and New Year
+ * 
+ */
+
+public class DayParser {
+
+	private static final String SPACE = " ";
+
+	//private static final String DAY_INVALID = "Not a valid day";
+	
+	private static Map<String, Integer> _mapWeek = new HashMap<String, Integer>();
+	
+	
+	private static final String[] DAY_TODAY = {
+		"today", 
+		"tdy",
+		"now"
+	};
+	
+	private static final String[] DAY_IN_WEEK = {
+		"sunday", 
+		"monday",
+		"tuesday",
+		"wednesday",
+		"thursday",
+		"friday",
+		"saturday",
+		
+		"sun",
+		"mon",
+		"tue",
+		"wed",
+		"thu",
+		"fri",
+		"sat",
+		
+		"sund",
+		"mond",
+		"tues",
+		"wedn",
+		"thur",
+		"frid",
+		"satd",
+		
+		"sunda",
+		"monda",
+		"tuesd",
+		"wedne",
+		"thurs",
+		"frida",
+		"satur"
+	};
+	
+	private static DayParser _parseDay = new DayParser();
+	
+	private DayParser(){
+		initializeMapWeek();
+	}
+	
+	protected boolean isDay(String input){
+		return _mapWeek.containsKey(input.toLowerCase());
+	}
+	
+	private void initializeMapWeek() {		
+		for (int i = 0; i < DAY_IN_WEEK.length; i++){
+			_mapWeek.put(DAY_IN_WEEK[i], i % 7);
+		}
+	}
+
+	protected static DayParser getInstance(){
+		return _parseDay;
+	}
+	
+	
+	/**
+	 * parseDayToDate: to get the date of the day
+	 * @param input String
+	 * @return String
+	 * @throws InvalidDayException 
+	 * @throws DatePassedException 
+	 */
+	protected String parseDayToDate(String input) throws DatePassedException, InvalidDayException{
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		
+		for (String todayVariation : DAY_TODAY){
+			if (todayVariation.equals(input)){
+				return datm.getTodayDate();
+			}
+		}
+		
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		String specialDay = null;
+
+		String[] analyzes = input.split(SPACE);
+		int len = analyzes.length;
+
+		int userDay = -1;
+		try {
+			userDay = parseDayToInt(analyzes[len - 1]);
+		} catch (InvalidDayException e) {
+			//do nothing
+			//because it maybe is word like tmr
+		}
+
+		specialDay = input.substring(0, input.lastIndexOf(analyzes[len - 1])).trim();
+		boolean isDay = userDay >= 0 && userDay < 7;
+		if (isDay){
+			specialDay = swp.parseSpecialDay(specialDay, userDay);
+		} else {
+			specialDay = swp.parseSpecialDay(specialDay, analyzes[len - 1]);
+		}
+		
+		specialDay = discardTime(specialDay);
+
+		return specialDay;
+	}
+
+	/**
+	 * @param specialDay
+	 * @return
+	 */
+	private String discardTime(String specialDay) {
+		if (specialDay != null){
+			specialDay = specialDay.split(SPACE)[0];
+		}
+		return specialDay;
+	}
+	
+	/**
+	 * should pass in String like Sunday, Monday
+	 * Mon, Monday and parses them to int
+	 * @param input
+	 * @return int
+	 * @throws InvalidDayException 
+	 */
+	protected int parseDayToInt(String input) throws InvalidDayException{
+		//initializeMapWeek();
+		
+		if (input == null){
+			throw new InvalidDayException();
+		}
+		
+		Integer value = _mapWeek.get(input.toLowerCase());
+		
+		if (value == null){
+			throw new InvalidDayException();
+		}
+		
+		return value.intValue();
+	}
+	
+	public static void main(String[] args){
+		DayParser a = DayParser.getInstance();
+		
+		/*
+		String input = "next next prev Sun";
+		String sub = "";
+		for (int i=0; i<input.length(); i++){
+			for (int j=1; j<=input.length()-i; j++){
+				sub = input.substring(i, i+j);
+				try {
+					System.out.println(a.parseDayToDate(sub));
+				} catch (InvalidDayException | DatePassedException e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+				}
+			}
+		}
+		*/
+		
+		try {
+			System.out.println(a.parseDayToDate("MAN"));
+		} catch (InvalidDayException | DatePassedException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\DayParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidDayException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+
+public class InvalidDayException extends Exception{
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 2392793659585047867L;	
+	
+	private static final String MESSAGE = "Error: Invalid Day";
+		
+	public InvalidDayException() {
+		super(MESSAGE);
+	}
+
+	public InvalidDayException(String message) {
+		super(MESSAGE + ": " + message);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidDayException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidQuotesException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+public class InvalidQuotesException extends Exception{
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 1973772979261355980L;
+	
+	private static final String MESSAGE = "Error: Cannot have odd numbers of quotes";
+		
+	public InvalidQuotesException() {
+		super(MESSAGE);
+	}
+
+	public InvalidQuotesException(String message) {
+		super(MESSAGE + ": " + message);
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\InvalidQuotesException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\NullTimeUnitException.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.util.logging.Logger;
+
+/**
+ * 
+ * NullTimeUnitException: an exception thrown when users did not
+ * key in time unit
+ */
+
+public class NullTimeUnitException extends Exception{
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -4075294108323634736L;
+	
+	private static final String MESSAGE = "Error: Please enter a time unit";
+	
+	protected static Logger _logger = Logger.getLogger("TaskPad");
+	
+	public NullTimeUnitException(){
+		super(MESSAGE);
+		_logger.info(MESSAGE);
+	}
+	
+	public NullTimeUnitException(String Message){
+		super (MESSAGE);
+		_logger.info(MESSAGE);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\NullTimeUnitException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\NumberParser.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class NumberParser {
+
+	private Map<String, Integer>  _numberMap = new HashMap<String, Integer>();
+	
+	private final Integer singleDigitChecker = 10;
+	private final String STRING_EMPTY = "";
+	private final String[] _tensNames = {
+		"zero",
+		"ten",
+		"twenty",
+		"thirty",
+		"forty",
+		"fifty",
+		"sixty",
+		"seventy",
+		"eighty",
+		"ninety"
+	};
+
+
+	private final String[] _numNames = {
+		"zero",
+		"one",
+		"two",
+		"three",
+		"four",
+		"five",
+		"six",
+		"seven",
+		"eight",
+		"nine",
+		"ten",
+		"eleven",
+		"twelve",
+		"thirteen",
+		"fourteen",
+		"fifteen",
+		"sixteen",
+		"seventeen",
+		"eighteen",
+		"nineteen"
+	};
+
+	private static NumberParser _numberParser = new NumberParser();
+	
+	private NumberParser(){	
+		initializeNumberMap();
+	}
+	
+	protected static NumberParser getInstance(){
+		return _numberParser;
+	}
+
+	private void initializeNumberMap() {
+		initializeWithNumNames();
+		initializeWithTensNames();
+	}
+
+	private void initializeWithTensNames() {
+		for (int i = 1; i < _tensNames.length; i++){
+			String key = _tensNames[i];
+			Integer value = i * 10;
+			_numberMap.put(key, value);
+		}
+	}
+
+	private void initializeWithNumNames() {
+		for (int i = 0; i < _numNames.length; i++){
+			String key = _numNames[i];
+			Integer value = i;
+			_numberMap.put(key, value);
+		}
+	}
+
+	//this method returns null when error occurs
+	protected String parseTheNumbers(String input, boolean isStrict){
+		//cannot reach here if input is null
+		assert (input != null);
+		
+		//System.err.println(input + " " + isDigitString(input));
+		
+		if (isDigitString(input)){
+			if (!isStrict){
+				//System.err.println("DD " + input);
+				return input;
+			} else {
+				return STRING_EMPTY + Integer.parseInt(input);
+			}
+			//return STRING_EMPTY + Integer.parseInt(input);
+			//return STRING_EMPTY + Double.parseDouble(input);
+		}
+		
+		String[] numWords = input.split(" ");
+		Integer total = null;
+		int space = 0;
+		boolean isFirstPass = true;
+		
+		for (int i = numWords.length - 1 ; i >= 0; i--){
+			String key = getKey(numWords, i); 
+						
+			boolean hasSuchNumber = _numberMap.containsKey(key);
+			boolean isEmptyString = STRING_EMPTY.equals(key);
+			
+			if(isEmptyString){
+				space++;
+				continue;
+			}
+			
+			if (!hasSuchNumber){
+				return null;
+			}
+			
+			Integer value = _numberMap.get(key);
+			
+			if (isFirstPass){
+				total = value;
+				isFirstPass = false;
+			} else {
+				total = combineNumbers(numWords, total, i, value, space);
+			}
+		}
+		
+		//is either empty string or string with spaces
+		if (total == null){
+			return null;
+		}
+		
+		return STRING_EMPTY + total;
+	}
+
+	protected boolean isDigitString(String input) {
+		try{
+			Integer.parseInt(input);
+			//Double.parseDouble(input);
+			return true;
+		} catch (NumberFormatException e){
+			return false;
+		}
+	}
+
+	private String getKey(String[] numWords, int pos) {
+		String key = numWords[pos];
+		key = key.toLowerCase();
+		return key;
+	}
+	
+	private Integer combineNumbers(String[] numWords, Integer total, int i,
+			Integer value, int space) {
+		boolean isNotSingleDigit = singleDigitChecker.compareTo(value) < 0;
+		if (isNotSingleDigit){
+			total += value;
+		} else {
+			Integer digitLocation = (int)Math.pow(10, (int) numWords.length - i - 1 - space);
+			total += value * digitLocation;
+		}
+		return total;
+	}
+
+	/*testing
+	public static void main(String[] args){
+		NumberParser parseNumWord = new NumberParser();
+		System.out.println(parseNumWord.parseTheNumbers("one")); 
+		System.out.println(parseNumWord.parseTheNumbers("ONe"));
+		System.out.println(parseNumWord.parseTheNumbers("Twenty one"));
+		System.out.println(parseNumWord.parseTheNumbers("One ONe"));
+		System.out.println(parseNumWord.parseTheNumbers("One ONe ONE"));
+		System.out.println(parseNumWord.parseTheNumbers("One    ONE"));
+		
+		/*
+		 * expected output:
+		 * 1
+		 * 1
+		 * 21
+		 * 11
+		 * 111
+		 * 11
+		 *//*
+	}
+	//*/
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\NumberParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\SpecialWordParser.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+/**
+ * SpecialWordParser: parses special words like next and previous
+ *  
+ */
+
+
+
+public class SpecialWordParser {
+	
+	private static final String SPACE = " ";
+
+	private static final int DAY_WEEK = 7;
+
+	private static final String EMPTY = "";
+
+	//private static Map<Integer, String[]> MAP_SPECIAL_WORD = new HashMap<Integer, String[]>();
+	private static Map<String, Integer> MAP_SPECIAL_WORD = new HashMap<String, Integer>();
+	private static Map<String, Integer> MAP_DAY = new HashMap<String, Integer>();
+		
+	private static final String[] MAP_TMR = {
+		"TMR", "TOMORROW", "TOMORRO", "TOM"
+	};
+	
+	private static final String[] MAP_YTD = {
+		"YTD", "YESTERDAY", "YEST"
+	};
+	
+	private static final String[] MAP_WK = {
+		"WK", "WEEK", "WEK"
+	};
+	
+	private static final String[] MAP_NXT = {
+		"NEXT", "NXT", "FOLLOWING", "COMING"
+	};
+	
+	private static final String[] MAP_PREV = {
+		"PREVIOUS", "PREV", "PAST", "LAST", "YESTERDAY"
+	};
+	
+	private static final String[] MAP_THIS = {
+		"THIS"
+	};
+	
+	private static SpecialWordParser _specialWordParser = new SpecialWordParser();
+	
+	private SpecialWordParser(){
+		initialiseSpecialWordMap();
+	}
+	
+	protected static SpecialWordParser getInstance(){
+		return _specialWordParser;
+	}
+	
+	protected String parseSpecialDay(String specialDay, String lastWord) throws DatePassedException, InvalidDayException{
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		String todayDay = datm.getTodayDay();
+		int userDay = -1;
+		lastWord = lastWord.toUpperCase();
+		
+		userDay = getTodayDay(todayDay);
+		for (String myWk : MAP_WK){
+			if (myWk.equals(lastWord)){
+				if (specialDay == null || specialDay.trim().isEmpty()){
+					throw new InvalidDayException();
+				}
+				
+				return parseSpecialDay(specialDay, userDay);
+			}
+		}
+		
+		int day = 0;
+		int chance = 2;
+		for (String myYtd : MAP_YTD){
+			if (myYtd.equals(lastWord)){
+				day--;
+			}
+		}
+		
+		if (day == 0){
+			chance--;
+		}
+		
+		for (String myTmr : MAP_TMR){
+			if (myTmr.equals(lastWord)){
+				day++;
+			}
+		}
+		
+		if (day == 0){
+			chance--;
+		}
+		
+		if (chance == 0){
+			throw new InvalidDayException();
+		}
+		
+		specialDay = specialDay.toUpperCase();
+		String[] tokens = specialDay.split(SPACE);
+		
+		for (int i = tokens.length - 1; i >=0 ; i--){
+			Integer value = MAP_DAY.get(tokens[i]);
+			
+			if (value == null){
+				break;
+			}
+			
+			day += value.intValue();
+			
+		}
+		if (day < 0){
+			throw new InvalidDayException();
+		}
+		
+		TimeWordParser twp = TimeWordParser.getInstance();
+		String ans = null;
+		try {
+			ans = twp.timeWord(day + "d");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			//it won't happen
+			assert (false);
+		}
+		
+		if (ans != null){
+			return ans;
+		} else {
+			throw new InvalidDayException();
+		}
+		
+	}
+	
+	protected String parseSpecialDay(String specialDay, int userDay) throws DatePassedException{
+		DateAndTimeManager datm = DateAndTimeManager.getInstance();
+		TimeWordParser twp = TimeWordParser.getInstance();
+		
+		String todayDay = datm.getTodayDay();
+		int todayDayStat = getTodayDay(todayDay);
+		int nxt = 1;
+		
+		//System.out.println(todayDay + " " + todayDayStat);
+		
+		if (specialDay.equals(EMPTY)){
+			if (userDay < todayDayStat){
+				nxt++;
+			}
+			return getNextDay(userDay, twp, todayDayStat, nxt, "d");
+		}
+
+		specialDay = specialDay.toUpperCase();
+		
+		nxt = calculateNext(specialDay, nxt);
+		
+		if (nxt <= 0){
+			throw new DatePassedException();
+		}
+		
+		return getNextDay(userDay, twp, todayDayStat, nxt, "d");
+	}
+
+	protected boolean isTmrYtd(String input){
+		for (String tmr : MAP_TMR){
+			if (tmr.equals(input.toUpperCase())){
+				return true;
+			}
+		}
+		
+		for (String ytd : MAP_YTD){
+			if (ytd.equals(input.toUpperCase())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	protected boolean isWk(String input){
+		for (String myWk : MAP_WK){
+			if (myWk.equals(input.toUpperCase())){
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
+	 * @param specialDay
+	 * @param nxt
+	 * @return
+	 */
+	private int calculateNext(String input, int nxt) {
+		Scanner sc = new Scanner(input);
+		
+		while (sc.hasNext()){
+			String specialToken = sc.next();
+
+			Integer ans = MAP_SPECIAL_WORD.get(specialToken.toUpperCase());
+			
+			if (ans == null){
+				break;
+			}
+			
+			nxt += ans.intValue();
+		}
+		sc.close();
+		return nxt;
+	}
+
+	/**
+	 * @param userNum
+	 * @param twp
+	 * @param systemNum
+	 * @param nxt
+	 */
+	private String getNextDay(int userNum, TimeWordParser twp, int systemNum, int nxt, String unit) {
+		userNum -= systemNum;
+		
+		//if (userNum <= 0){
+		//	userNum += DAY_WEEK;
+		//}
+		
+		nxt--;
+		userNum += DAY_WEEK * nxt;
+		
+		try {
+			return twp.timeWord(userNum + unit);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assert (false);
+		}
+		return null;
+	}
+
+	private int getTodayDay(String todayDay) {
+		DayParser dp = DayParser.getInstance();
+		int todayDayStat = 0;
+		try {
+			todayDayStat = dp.parseDayToInt(todayDay);
+		} catch (InvalidDayException e) {
+			assert (false);
+		}
+		return todayDayStat;
+	}
+	
+	/**
+	 * parseSpecialWord parses special sentence like
+	 * next next hour.
+	 * 
+	 * It can solve types like 
+	 * next next hour
+	 * (special words... + TimeUnit)
+	 * 
+	 * or
+	 * 
+	 * next next 1 hour 
+	 * (sepcial words... + integer + TimeUnit)
+	 * 
+	 * It is the only method that parses words like next and prev.
+	 * 
+	 * @param specialWord String
+	 * @return int
+	 */
+	protected String parseSpecialWord(String specialWord, int seconds){
+		int nxt = 0;
+		nxt = calculateNext(specialWord, nxt);
+		
+		seconds *= nxt;
+		
+		return seconds + EMPTY;
+	}
+	
+	/**
+	 * getTimeWordWithoutNext split special words
+	 * with TimeWord
+	 * @param input
+	 * @return
+	 */
+	protected String getTimeWordWithoutSpecialWords(String input){
+		String[] inputs = input.split(SPACE);
+		
+		for (int i = inputs.length - 1; i >= 0 ; i--){
+			if (MAP_SPECIAL_WORD.containsKey(inputs[i].toUpperCase())){
+				return inputs[i];
+			}
+		}
+		
+		return null;
+	}
+	
+	private void initialiseSpecialWordMap() {
+		initializeNextMap();
+		initializePrevMap();
+		initializeThisMap();
+		initializeYtdMap();
+		initializeTmrMap();
+	}
+
+	
+	private void initializeTmrMap() {
+		for (String myTmr : MAP_TMR){
+			MAP_DAY.put(myTmr, +1);
+		}
+	}
+
+	private void initializeYtdMap() {
+		for (String myYtd : MAP_YTD){
+			MAP_DAY.put(myYtd, -1);
+		}
+	}
+	
+
+	private void initializeThisMap() {
+		for (String myThis : MAP_THIS){
+			MAP_SPECIAL_WORD.put(myThis, 0);
+		}
+		
+	}
+
+	private void initializePrevMap() {
+		//MAP_SPECIAL_WORD.put(+1, MAP_NXT);
+		
+		for (String next : MAP_NXT){
+			MAP_SPECIAL_WORD.put(next, +1);
+		}
+		
+	}
+
+	private void initializeNextMap() {
+		//MAP_SPECIAL_WORD.put(-1, MAP_PREV);		
+		
+		for (String prev : MAP_PREV){
+			MAP_SPECIAL_WORD.put(prev, -1);
+		}
+	}
+	
+	protected boolean isSpecialWord(String input){
+		return MAP_SPECIAL_WORD.containsKey(input.toUpperCase());
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\SpecialWordParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeSkeleton.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+public interface TimeSkeleton {
+	public String getTodayTime();
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeSkeleton.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeWordParser.java
+	 */
+
+
+package com.taskpad.dateandtime;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+/**
+ *
+ * make TimeWordParser to be a singleton to increase efficiency.
+ */
+
+public class TimeWordParser{
+	
+	private static Map<String, String[]> _timewordsMap = new HashMap<String, String[]>();
+	private static Map<String, Integer> _timeunitMap = new HashMap<String, Integer>();
+	private static DateAndTimeManager _numberparser = DateAndTimeManager.getInstance();
+	
+	private static final String TIME_SEC = "SECOND";
+	private static final String TIME_MIN = "MIN";
+	private static final String TIME_HOURS = "HOUR";
+	private static final String TIME_DAY = "DAY";
+	private static final String TIME_WEEKS = "WEEK";
+	private static final String TIME_MONTH = "MONTH";
+	private static final String TIME_YEAR = "YEAR";
+	private static final String ERROR_NULL_UNIT = "Does not contain time unit!";
+	private static final String ERROR_NULL_VALUE = "Please key in time value!";
+	private static final String SPACE = " ";
+	private static final String BLANK = "";
+	
+	private final int CONSTANT_SECOND = 1;
+	private final int CONSTANT_MINUTE = CONSTANT_SECOND * 60;
+	private final int CONSTANT_HOURS = CONSTANT_MINUTE * 60;
+	private final int CONSTANT_DAY = CONSTANT_HOURS * 24;
+	private final int CONSTANT_WEEK = CONSTANT_DAY * 7;
+	
+	private static String _timeword = TimeWordParser.BLANK;
+	private static String _numberword = TimeWordParser.BLANK;
+	private String _userTimeword = TimeWordParser.BLANK;
+	//private static int _index = -2;
+	
+	private static TimeWordParser _timewordParser = new TimeWordParser();
+	
+	private TimeWordParser(){
+		initialiseTimewords();
+		initializeTimeUnitMap();
+	}
+
+	private void initializeTimeUnitMap() {		
+		_timeunitMap.put(TIME_SEC, CONSTANT_SECOND);
+		_timeunitMap.put(TIME_MIN, CONSTANT_MINUTE);
+		_timeunitMap.put(TIME_HOURS, CONSTANT_HOURS);
+		_timeunitMap.put(TIME_DAY, CONSTANT_DAY);
+		_timeunitMap.put(TIME_WEEKS, CONSTANT_WEEK);
+	}
+	
+	protected static TimeWordParser getInstance(){
+		return _timewordParser;
+	}
+	
+	/*
+	public static void main(String[] args){
+		String input = "20 hours";
+		TimeWordParser twp = TimeWordParser.getInstance();
+		try {
+			System.out.println(twp.timeWord(input));
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	*/
+	
+	protected String timeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		String time = parseTimeWord(input);
+		Date futureDate = addTime(time, TIME_SEC);
+		return formatTime(futureDate);
+	}
+	
+	/*
+	protected String timeWord(String input){	
+		String time = TimeWordParser.BLANK;
+		if (hasTimeWord(input)){
+			input = removeTimeWord(input);
+			_numberword = _numberparser.parseNumber(input);
+			Date newTime = addTime();
+			time = formatTime(newTime);
+		}
+		
+		return time;
+	}
+	 */
+	
+	protected String parseTimeWordWithSpecialWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		if (input == null || input.equals(SPACE)){
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		
+		String timeWord = null;
+		String specialWord = null;
+		
+		SpecialWordParser swp = SpecialWordParser.getInstance();
+		
+		String splitWord = swp.getTimeWordWithoutSpecialWords(input);
+		if (splitWord == null){
+			splitWord = parseTimeWord(input);
+			timeWord = splitWord + SPACE + TIME_SEC;
+			return timeWord(timeWord);
+		}
+		
+		int splitPlace = input.lastIndexOf(splitWord) + splitWord.length() + 1;
+		int num = 0;
+		
+		specialWord = input.substring(0, splitPlace).trim();
+		timeWord = input.substring(splitPlace, input.length()).trim();
+		
+		try {
+			timeWord = parseTimeWord(timeWord);
+			num = Integer.parseInt(timeWord);
+			timeWord = swp.parseSpecialWord(specialWord, num);
+			
+		} catch (NullTimeValueException e) {
+
+			num = calculateTimeWord(input);
+			timeWord = swp.parseSpecialWord(specialWord, num);
+		}
+		timeWord = timeWord + SPACE + TIME_SEC;
+		return timeWord(timeWord);
+	}
+	
+	protected String parseTimeWord(String input) throws NullTimeUnitException, NullTimeValueException{	
+		if (input == null || input.equals(SPACE)){
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		
+		int realTime = 0;
+		
+		realTime = calculateEachTimeValues(realTime, input);
+		
+		
+		return BLANK + realTime;
+	}
+
+	private int calculateEachTimeValues(int realTime,
+			String input) throws NullTimeValueException, NullTimeUnitException {
+		Scanner sc = new Scanner(input);
+		StringBuffer tempTime = new StringBuffer(BLANK);
+		while (sc.hasNext()){
+			String oneSubstring = sc.next();
+			tempTime.append(oneSubstring);
+			
+			int secondConvertion = calculateTimeWord(oneSubstring);
+			boolean hasTimeUnit = secondConvertion > 0;
+			if (hasTimeUnit){
+				StringBuffer oneSubStringAns = parseOneTimeWord(tempTime.toString());
+				realTime += Integer.parseInt(oneSubStringAns.toString());
+				tempTime = new StringBuffer(BLANK);
+			} else {
+				tempTime.append(SPACE);
+			}
+		}
+		sc.close();
+		
+		boolean isTempTimeEmpty = tempTime.toString().equals(BLANK);
+		if (!isTempTimeEmpty){
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		return realTime;
+	}
+
+	private StringBuffer parseOneTimeWord(String input)
+			throws NullTimeValueException, NullTimeUnitException {
+		StringBuffer time = new StringBuffer();
+		int exactTimeSecond = 0;
+		int secondConvertion = calculateTimeWord(input);
+		boolean hasTimeUnit = secondConvertion > 0;
+		if (hasTimeUnit){
+			input = removeTimeWord(input);
+			input = input.trim();
+			
+			if (input == BLANK) {
+				throw new NullTimeValueException(ERROR_NULL_VALUE);
+			}
+			
+			_numberword = _numberparser.parseNumber(input);
+			
+			//System.err.println("DE: " + _numberword + " " + input);
+			if (_numberword == null){
+				throw new NullTimeValueException(ERROR_NULL_VALUE);
+			}
+			
+			exactTimeSecond = convertSecond(secondConvertion);
+			time.append(exactTimeSecond);
+		} else {
+			throw new NullTimeUnitException(ERROR_NULL_UNIT);
+		}
+		return time;
+	}
+
+	private int convertSecond(int secondConvertion) {
+		return Integer.parseInt(_numberword) * secondConvertion;
+	}
+	
+	private int calculateTimeWord(String input){
+		String variations[];
+		int multiply = 0;
+
+		for (Map.Entry<String, String[]> entry : _timewordsMap.entrySet()){
+			variations = entry.getValue();
+			for (int i=0; i<variations.length; i++){
+				if (isValueFound(variations[i], input)){
+					_timeword = entry.getKey();
+					
+					Integer value = _timeunitMap.get(_timeword);
+					
+					if (value != null){
+						multiply = value.intValue();
+					}
+
+					return multiply;
+				}
+			}
+		}
+		
+		return multiply;
+	}
+	
+	/*
+	private boolean hasTimeWord(String input){
+		String variations[];
+
+		for (Map.Entry<String, String[]> entry : _timewordsMap.entrySet()){
+			variations = entry.getValue();
+			for (int i=0; i<variations.length; i++){
+				if (isValueFound(variations[i], input)){
+					_timeword = entry.getKey();
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}*/
+
+	private void initialiseTimewords() {
+		initialiseSecString();
+		initialiseMinString();
+		initialiseHoursString();
+		initialiseDayString();
+		initialiseWeekString();
+		initialiseMonthString();
+		initialiseYearString();
+	}
+	
+	protected boolean isTimeUnits(String input){
+		return _timewordsMap.containsKey(input.toUpperCase());
+	}
+
+	private void initialiseSecString() {
+		String secString[] = {"SEC", "SECONDS", "SECOND", "SECS", "S"};
+		_timewordsMap.put(TIME_SEC, secString);
+	}
+	
+	private void initialiseMinString() {
+		String minString[] = {"MIN", "MINUTES", "MINUTE", "MINS", "M"};
+		_timewordsMap.put(TIME_MIN, minString);
+	}
+
+	private void initialiseHoursString() {
+		String hourString[] = {"HOUR", "HOURS", "HR", "HRS", "H"};
+		_timewordsMap.put(TIME_HOURS, hourString);
+		
+	}
+
+	private void initialiseDayString() {
+		String dayString[] = {"DAY", "D", "DAYS"};
+		_timewordsMap.put(TIME_DAY, dayString);
+		
+	}
+
+	private void initialiseWeekString() {
+		String weekString[] = {"WEEK", "WEEKS", "WK", "WKS"};
+		_timewordsMap.put(TIME_WEEKS, weekString);
+		
+	}
+	
+	private void initialiseMonthString(){
+		String monthString[] = {"MONTH", "MONTHS", "MTH", "MTHS"};
+		_timewordsMap.put(TIME_MONTH, monthString);
+	}
+
+	private void initialiseYearString() {
+		String yearString[] = {"YEAR", "YEARS", "YR", "YRS"};
+		_timewordsMap.put(TIME_YEAR, yearString);
+	}
+	
+	private boolean isInteger(String unknown){
+		try {
+			Integer.parseInt(unknown);
+		} catch (NumberFormatException e){
+			return false;
+		}
+		return true;
+	}
+	
+	private  boolean isValueFound(String value, String input) {
+		if (input == BLANK || input == null){
+			return false;
+		}
+		
+		String timeValue;
+		int idx = 0;
+		input = input.trim();
+		input = input.toUpperCase();
+		String[] numArr = input.split(SPACE);
+		
+		/**
+		 * Let's search for unit that is separated by SPACE first.
+		 * The last word should be the time unit,
+		 * but maybe it is "", so need to check.
+		 */
+		for (int i = numArr.length - 1; i >= 0; i--){
+			
+			if (numArr[i].equals(TimeWordParser.BLANK)){
+				continue;
+			} else {
+				if (numArr[i].equals(value)){
+					_userTimeword = value;
+					return true;
+				} else {
+					idx = i;
+					break;
+				}
+			}
+		}
+		
+		/**
+		 * If it is not separated by SPACE, then it probably be something like this:
+		 * num + unit, ex: 1s, 10m
+		 */
+		timeValue = numArr[idx].substring(0, numArr[idx].length() - 1);
+		if (isInteger(timeValue)){
+			boolean hasUnit = numArr[idx].endsWith(value);
+			if (hasUnit){
+				_userTimeword = value;
+				return true;
+			} 
+		}
+		
+		return false;
+	}
+	
+	private  String removeTimeWord(String input){
+		input = input.toUpperCase();
+		int idx = input.lastIndexOf(_userTimeword);
+		 
+		//we should ensure we have already checked what is the _timeword before proceeding
+		assert (idx >= 0);
+		
+		return input.substring(0, idx);
+		/**
+		 * below can only delete time unit 
+		 * that is with SPACE which is no longer suitable
+		 */
+		/*
+		int index = input.indexOf(' ', _index);
+		String replace;
+		if (index == -1){
+			replace = input.substring(0, _index);
+		} else {
+			String temp = input.substring(_index, input.indexOf(' ', _index));
+			replace = input.replace(temp, "");
+		}
+		*/ 
+				
+//		return input.replaceAll("(?i)"+_timewordOriginal, "").trim();
+	}
+	
+	private String formatTime(Date time){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		return sdf.format(time);
+	}
+	
+	private Date addTime(String value, String unit){
+		Date date = getCurrentTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		
+		int increment = Integer.parseInt(value);
+		
+		switch (unit){
+		case TIME_SEC:
+			cal.add(Calendar.SECOND, increment);
+			break;
+		case TIME_MIN:
+			cal.add(Calendar.MINUTE, increment);
+			break;
+		case TIME_HOURS:
+			cal.add(Calendar.HOUR, increment);
+			break;
+		case TIME_DAY:
+			cal.add(Calendar.DAY_OF_YEAR, increment);
+			break;
+		case TIME_WEEKS:
+			cal.add(Calendar.WEEK_OF_MONTH, increment);
+			break;
+		case TIME_MONTH:
+			cal.add(Calendar.MONTH, increment);
+			break;
+		case TIME_YEAR:
+			cal.add(Calendar.YEAR, increment);
+			break;
+		default:
+			break;
+	}
+	
+	return cal.getTime();
+	}
+	
+	/*
+	private Date addTime(){
+		Date date = getCurrentTime();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		
+		int increment = Integer.parseInt(_numberword);
+		
+		switch (_timeword){
+			case TIME_SEC:
+				cal.add(Calendar.SECOND, increment);
+				break;
+			case TIME_MIN:
+				cal.add(Calendar.MINUTE, increment);
+				break;
+			case TIME_HOURS:
+				cal.add(Calendar.HOUR, increment);
+				break;
+			case TIME_WEEKS:
+				cal.add(Calendar.WEEK_OF_MONTH, increment);
+				break;
+			case TIME_MONTH:
+				cal.add(Calendar.MONTH, increment);
+				break;
+			case TIME_YEAR:
+				cal.add(Calendar.YEAR, increment);
+				break;
+			default:
+				break;
+		}
+		
+		return cal.getTime();
+	}
+	*/
+	
+	private Date getCurrentTime(){
+		Date date;
+		DateAndTimeManager dtm = DateAndTimeManager.getInstance();
+		String todayTime = dtm.getTodayDateAndTime();
+//		String todayTime = dtm.getTodayTime();	
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		try {
+			date = sdf.parse(todayTime);
+		} catch (ParseException e) {
+			return null;	//To do: Handle exception
+		}
+		
+		return date;
+	}
+	
+	public static void main (String[] args){
+		try {
+			System.out.println(TimeWordParser.getInstance().parseTimeWordWithSpecialWord("next next 2 hour"));
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\dateandtime\TimeWordParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Alarm.java
+	 */
+
+
+package com.taskpad.input;
+
+import com.taskpad.alarm.AlarmManager;
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
+
+
+/**
+ *
+ * To implement an alarm
+ * 
+ * Syntax: alarm <desc> <time count> <time unit>
+ * 
+ * 
+ */
+
+
+public class Alarm{	
+
+
+	private static final String SPACE = " ";
+
+	
+	private static final String MESSAGE_NUMBER_ERROR = "Error: Invalid time format %s";
+		
+	public Alarm(String input, String fullInput) {
+		initializeAlarm(input, fullInput);
+	}
+
+	private void initializeAlarm(String input, String fullInput) {
+		String numberString = null;
+		int time = -1;
+		
+		numberString = findTimeUnit(input);
+		//numberString = successParseTime(input, numberString);
+		if (numberString == null){
+			return;
+		}
+		
+		time = successParseInt(numberString, time);
+		
+		if (time == -1){
+			return;
+		}
+		
+		String desc = findDesc(fullInput);
+		
+		InputManager.outputToGui("Creating alarm... " + fullInput);
+		
+		AlarmManager.initializeAlarm(desc, time);		
+	}
+
+	private String findTimeUnit(String input) {
+		String numberString = "";
+		String[] splitInput = input.split(SPACE);
+		
+		try {
+			numberString = successParseTime(splitInput[splitInput.length-1], numberString);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			String newNumberString = "";
+			//Currently alarm only supports 1m and 1s and not 1y etc.
+			try{
+				newNumberString = splitInput[splitInput.length-2] + " " + splitInput[splitInput.length-1];
+			} catch (Exception e2){
+				//InputManager.outputToGui("Error: Not a valid Alarm format");
+				return numberString;
+			}
+			try {
+				numberString = successParseTime(newNumberString, numberString);
+			} catch (NullTimeUnitException | NullTimeValueException e1) {
+				InputManager.outputToGui(e.getMessage());
+			}
+		}
+		
+		return numberString;
+	}
+
+	private String successParseTime(String input, String numberString) throws NullTimeUnitException, NullTimeValueException {
+		DateAndTimeManager parser = DateAndTimeManager.getInstance();
+		numberString = parser.convertToSecond(input);
+
+		return numberString;
+	}
+
+	//error happens when time = -1 
+	public int successParseInt(String numberString, int time) {
+		try{
+			time = Integer.parseInt(numberString);
+		} catch (NumberFormatException e){
+			InputManager.outputToGui(String.format(MESSAGE_NUMBER_ERROR, numberString));
+			time = -1;
+		}
+		return time;
+	}
+
+	private String findDesc (String fullInput){
+		String inputString[] = fullInput.split(SPACE);
+		int length = inputString.length;
+		
+		String description = "";
+		if (length == 4){
+			for (int i = 1; i < length - 2; i++){
+				description = description + inputString[i] + SPACE;
+			}
+		} else if (length == 3){
+			for (int i = 1; i < length - 1; i++){
+				description = description + inputString[i] + SPACE;
+			}
+		} 
+
+		description = description.trim(); 
+		return description;
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\input\Alarm.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\launcher\TaskPadLauncher.java
+	 */
+
+
+package com.taskpad.launcher;
+
+
+
+import com.taskpad.execute.ExecutorManager;
+import com.taskpad.ui.GuiManager;
+
+public class TaskPadLauncher implements Runnable {
+	private final String MESSAGE_WELCOME = "Welcome to Taskpad! Type a command or type \"help\"";
+
+	//TaskPadLauncher is meant to use in launcher package only
+	protected TaskPadLauncher(){
+	}
+	
+	
+	@Override
+	public void run() {
+		//initialStorage(); DEPRECATED
+		setUpGui();
+		ExecutorManager.showReminder();
+	}
+
+	/* DEPRECATED
+	private void initialStorage() {
+		DataManager.initializeXml();
+	}
+	 */
+
+
+	private void setUpGui() {
+		GuiManager.initialGuiManager();
+		GuiManager.callOutput(MESSAGE_WELCOME);
+		GuiManager.startRemindingUser();
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\launcher\TaskPadLauncher.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\launcher\TaskPadMain.java
+	 */
+
+
+package com.taskpad.launcher;
+
+
+import javax.swing.SwingUtilities;
+ 
+/**
+ * 
+ * Author: Chan Jun Wei, Lynnette Ng Hui Xian, Wang Taining
+ * Product: TaskPad
+ * Team: W13-3j
+ *
+ */
+public class TaskPadMain{
+	
+	private TaskPadMain(){
+	}
+	
+	public static void main(String[] args){
+		setUpLogging();
+		runProgram();
+	}
+	  
+	private static void runProgram() {		
+		Runnable runTaskPad = new TaskPadLauncher();
+		SwingUtilities.invokeLater(runTaskPad);
+	} 
+
+	private static void setUpLogging() {
+		LogManager.getInstance().setUpGlobalLogger();
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\launcher\TaskPadMain.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestDateAndTimeRetriever.java
+	 */
+
+
+package com.taskpad.tests;
+
+import static org.junit.Assert.*;
+
+import java.text.ParseException;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+
+public class TestDateAndTimeRetriever {
+
+	private DateAndTimeManager _datm = DateAndTimeManager.getInstance();
+
+
+	@Test
+	public void testCompareDateAndTimeExecutorValidBigger1() {
+		testCompareDateAndTimeExecutor(1, "10/12/2014", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorValidBigger2() {
+		testCompareDateAndTimeExecutor(1, "10/12/2014 11:00", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorValidBigger3() {
+		testCompareDateAndTimeExecutor(1, "19/10/2014 00:01", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorValidBigger4() {
+		testCompareDateAndTimeExecutor(1, "00:01 19/10/2014", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorValidBigger5() {
+		testCompareDateAndTimeExecutor(1, "00:01 18/10/2014", "00:01 18/8/2014", "18/10/2014 00:00");
+	}
+	
+	/**
+	 * this is compared with 18/10/2014 23:59
+	 */
+	@Test
+	public void testCompareDateAndTimeExecutorValidSmaller2() {
+		testCompareDateAndTimeExecutor(-1, "00:01 18/10/2014", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorValidSmaller1() {
+		testCompareDateAndTimeExecutor(-1, "00:01 18/8/2014",  "00:01 18/10/2014", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorValidSame1() {
+		testCompareDateAndTimeExecutor(0, "00:01 18/10/2014",  "00:01 18/10/2014", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorInvalid1() {
+		testCompareDateAndTimeExecutor(-2, null, null, "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorInvalid2() {
+		testCompareDateAndTimeExecutor(-2, null, "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorInvalid3() {
+		testCompareDateAndTimeExecutor(-2, "00:01 18/10/2014", null, "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorInvalid4() {
+		testCompareDateAndTimeExecutor(-2, "00:01 18/10/2014", "AA", "18/10/2014 00:00");
+	}
+	
+	@Test
+	public void testCompareDateAndTimeExecutorInvalid5() {
+		testCompareDateAndTimeExecutor(-2, "BB", "00:01 18/10/2014", "18/10/2014 00:00");
+	}
+	
+	private void testCompareDateAndTimeExecutor(int expected, String input1, String dateString){
+		setupDebugEnvironment(dateString);
+
+		assertEquals(expected, _datm.compareDateAndTime(input1));
+
+	}
+	
+	private void testCompareDateAndTimeExecutor(int expected, String input1, String input2, String dateString){
+		setupDebugEnvironment(dateString);
+
+		assertEquals(expected, _datm.compareDateAndTime(input1, input2));
+
+	}
+	
+	private void setupDebugEnvironment(String dateString){
+		try {
+			_datm.setDebug(dateString);
+		} catch (ParseException e) {
+			//wrong date causes failed
+			fail();
+		}
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestDateAndTimeRetriever.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestDayParser.java
+	 */
+
+
+package com.taskpad.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.InvalidDayException;
+
+public class TestDayParser {
+	private static final String DAY_INVALID = "Error: Invalid Day";
+
+	/*We test all cases at least once to ensure full path coverage*/
+	@Test
+	public void test1() {
+		testValidDay("Monday", 1);
+	}
+	
+	@Test
+	public void test2() {
+		testValidDay("Mon", 1);
+	}
+	
+	@Test
+	public void test3() {
+		testValidDay("TueSday", 2);
+	}
+	
+	@Test
+	public void test4() {
+		testValidDay("TUES", 2);
+	}
+	
+	@Test
+	public void test5() {
+		testValidDay("WedNesday", 3);
+	}
+	
+	@Test
+	public void test6() {
+		testValidDay("WED", 3);
+	}
+	
+	@Test
+	public void test7() {
+		testValidDay("Thurs", 4);
+	}
+	
+	@Test
+	public void test8() {
+		testValidDay("Thursday", 4);
+	}
+	
+	@Test
+	public void test9() {
+		testValidDay("fri", 5);
+	}
+	
+	@Test
+	public void test10() {
+		testValidDay("FriDay", 5);
+	}
+	
+	@Test
+	public void test11() {
+		testValidDay("Saturday", 6);
+	}
+	
+	@Test
+	public void test12() {
+		testValidDay("SAT", 6);
+	}
+	
+	@Test
+	public void test13() {
+		testValidDay("Sunday", 0);
+	}
+	
+	@Test
+	public void test14() {
+		testValidDay("Sun", 0);
+	}
+	
+	/*boundary case: when it is null*/
+	@Test
+	public void test15() {
+		testInvalidDay(null);
+	}
+	
+	private void testValidDay(String input, int expected){
+		try {
+			assertEquals(DateAndTimeManager.getInstance().parseDayToInt(input), expected);
+		} catch (InvalidDayException e) {
+			fail();
+		}
+	}
+	
+	private void testInvalidDay(String input){
+		try {
+			DateAndTimeManager.getInstance().parseDayToInt(input);
+			fail();
+		} catch (InvalidDayException e) {
+			assertEquals(e.getMessage(), DAY_INVALID);
+		}
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestDayParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestGuiManager.java
+	 */
+
+
+package com.taskpad.tests;
+
+
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.taskpad.ui.GuiManager;
+
+public class TestGuiManager {
+	public static void main(String[] args){
+		GuiManager.initialGuiManager();
+		
+		GuiManager.callOutput("a");
+
+		new Reminder(5);
+		
+	}
+}
+
+
+class Reminder {
+    Timer timer;
+
+    public Reminder(int seconds) {
+        timer = new Timer();
+        timer.schedule(new RemindTask(), 0, seconds*1000);
+        
+	}
+
+    static class RemindTask extends TimerTask {
+    	private int t = 0;
+        public void run() {
+        	GuiManager.callOutput("b");
+        	t++;
+        	if(t == 3){
+            	GuiManager.callExit();
+            }
+        }
+    }
+}
+
+/**
+ * test if the input shown in displayBox. (true)
+ * test if everything is closed. (true)
+ */
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestGuiManager.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestNumberParser.java
+	 */
+
+
+package com.taskpad.tests;
+
+
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+
+public class TestNumberParser {
+
+	//private NumberParser _parseNumWord = new NumberParser();
+	private String _description = "";
+
+	@Test
+	public void test1() {
+		_description = "base case";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("one"),"1");
+	}
+	
+	@Test
+	public void test2() {
+		_description = "case insensitive";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("ONe"),"1");
+	}
+	
+	@Test
+	public void test3() {
+		_description = "case insensitive and can accept words like twenty";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("Twenty one"),"21");
+	}
+	
+	@Test
+	public void test4() {
+		_description = "can accept some broken English";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("One ONe"),"11");
+	}
+
+	@Test
+	public void test5() {
+		_description = "can accept some broken English";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("One ONe ONE"),"111");
+	}
+	
+	@Test
+	public void test6() {
+		_description = "can accept many spaces";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("One    ONE"),"11");
+	}
+	
+	@Test
+	public void test7() {
+		_description = "can handle error: spaces only";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("  "),null);
+	}
+	
+	@Test
+	public void test8() {
+		_description = "can handle error: empty string";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber(""),null);
+	}
+	
+	@Test
+	public void test9() {
+		_description = "can handle error: no such number";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("gfg"),null);
+	}
+	
+	@Test
+	public void test10() {
+		_description = "only support English, can't support \"one\" in chinese";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("一"),null);
+	}
+	
+	@Test
+	public void test11() {
+		_description = "only support English, can't support \"one\" in malay";
+		assertEquals(_description, DateAndTimeManager.getInstance().parseNumber("satu"),null);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestNumberParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSpecialWordParser.java
+	 */
+
+
+package com.taskpad.tests;
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSpecialWordParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSpecialWordParser.java
+	 */
+
+
+/**
+ * For testing special word and time word parser
+ */
+
+import static org.junit.Assert.*;
+
+import java.text.ParseException;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.DatePassedException;
+import com.taskpad.dateandtime.InvalidDayException;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
+
+public class TestSpecialWordParser {
+
+	//private static final String MESSAGE_INVALID_TIME = "Error: Invalid time entered";	
+	private static final String MESSAGE_INVALID_DAY = "Error: Invalid Day";
+
+	private DateAndTimeManager _specialWordParser = DateAndTimeManager.getInstance();
+	
+	//day parser part
+	@Test
+	public void validTestDay1() {
+		testWordCommand("24/03/2014", "MOND", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay2() {
+		testWordCommand("07/04/2014", "NXT NXT MONDay", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay3() {
+		testWordCommand("07/04/2014", "NXT NXT NXT PREV MONda", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay4() {
+		testWordCommand("30/03/2014", "NXT WK", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay5() {
+		testWordCommand("23/03/2014", "THIS WK", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay6() {
+		testWordCommand("24/03/2014", "THIS MON", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay7() {
+		testWordCommand("24/03/2014", "TMR", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay8() {
+		testWordCommand("26/03/2014", "TMR TMR TMR", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay9() {
+		testWordCommand("25/03/2014", "tmr tmr TOMORRO TOM TOMORROW YTD YEST YESTERDAY", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestDay10(){
+		testWordCommand("08/04/2014", "next Next Prev Next Tues", "23/03/2014 00:01");
+	}
+	
+	/**
+	 * Time Word Parser
+	 */
+	
+	//For hours
+	@Test
+	public void validTestTimeWord1(){
+		testTimeWordCommand("23/03/2014 01:01", "1h", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestTimeWord2(){
+		testTimeWordCommand("23/03/2014 01:01", "next hour", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestTimeWord3(){
+		testTimeWordCommand("23/03/2014 00:01", "next previous hour", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestTimeWord4(){
+		testTimeWordCommand("23/03/2014 01:01", "next 1 hour", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestTimeWord5(){
+		testTimeWordCommand("23/03/2014 02:01", "next next 1 hour", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestTimeWord6(){
+		testTimeWordCommand("23/03/2014 04:01", "next next 2 hours", "23/03/2014 00:01");
+	}
+	
+	//For minutes
+	@Test
+	public void validTestTimeWord7(){
+		testTimeWordCommand("23/03/2014 00:01", "next previous min", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void validTestTimeWord8(){
+		testTimeWordCommand("23/03/2014 01:01", "next next 30 min", "23/03/2014 00:01");
+	}
+	
+	@Test
+	public void invalidTest1() {
+		testInvalidWordCommand(MESSAGE_INVALID_DAY, "MAN", "23/3/2014 00:01");
+	}
+	
+	@Test
+	public void invalidTest2() {
+		testInvalidWordCommand(MESSAGE_INVALID_DAY, "WEEK", "23/03/2014 00:01");
+	}
+	
+	//We do not support Yesterday
+	@Test
+	public void invalidTest3(){
+		testInvalidWordCommand(MESSAGE_INVALID_DAY, "Yesterday", "23/03/2014 00:01");
+	}
+	
+	private void testWordCommand (String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		
+		try {
+			assertEquals(expected, _specialWordParser.parseDayToDate(input));
+		} catch (InvalidDayException | DatePassedException e) {
+			fail();
+		}
+	}
+	
+	private void testInvalidWordCommand(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		
+		try {
+			_specialWordParser.parseDayToDate(input);
+			fail();
+		} catch (InvalidDayException | DatePassedException e) {
+			assertEquals(e.getMessage(), expected);
+		}
+	}
+	
+	private void testTimeWordCommand(String expected, String input, String dateString){
+		setupDebugEnvironment(dateString);
+		try {
+			assertEquals(expected,_specialWordParser.parseTimeWord(input));
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			fail();
+		}
+	}
+	
+	private void setupDebugEnvironment(String dateString){
+		try {
+			_specialWordParser.setDebug(dateString);
+		} catch (ParseException e) {
+			//wrong date causes failed
+			fail();
+		}
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSpecialWordParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestTimeWordParser.java
+	 */
+
+
+package com.taskpad.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import com.taskpad.dateandtime.DateAndTimeManager;
+import com.taskpad.dateandtime.NullTimeUnitException;
+import com.taskpad.dateandtime.NullTimeValueException;
+
+/**
+ * 
+ *
+ * @category
+ * TestTimeWordParser: a Junit test case written to test TimeWordParser
+ */
+public class TestTimeWordParser {
+
+	DateAndTimeManager parser = DateAndTimeManager.getInstance();
+	
+	@Test
+	public void test1() {
+		try {
+			assertEquals(parser.convertToSecond("1s"), "1");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void test2() {
+		try {
+			parser.convertToSecond("");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time value"));
+		}
+	}
+	
+	@Test
+	public void test3() {
+		try {
+			parser.convertToSecond("s");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time value"));
+		}
+	}
+	
+	@Test
+	public void test4() {
+		try {
+			assertEquals(parser.convertToSecond("1 s"), "1");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	@Test
+	public void test5() {
+		try {
+			parser.convertToSecond(null);
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+	
+	@Test
+	public void test6() {
+		try {
+			parser.convertToSecond("a");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+	
+	@Test
+	public void test7() {
+		try {
+			parser.convertToSecond("1");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+	
+	@Test
+	public void test8() {
+		try {
+			parser.convertToSecond("1                m");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+
+	@Test
+	public void test9() {
+		try {
+			assertEquals(parser.convertToSecond("1 s 1 m"), "61");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void test10() {
+		try {
+			parser.convertToSecond("1                m 2");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+	
+	@Test
+	public void test11() {
+		try {
+			parser.convertToSecond("1  month");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+	
+	@Test
+	public void test12() {
+		try {
+			parser.convertToSecond("one one ones");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time unit"));
+		}
+	}
+	
+	@Test
+	public void test13() {
+		try {
+			assertEquals(parser.convertToSecond("one one one s"), "111");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void test14() {
+		try {
+			parser.convertToSecond("1 1 1 s");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			assertTrue(e.getMessage().equals("Error: Please enter a time value"));
+		}
+	}
+	
+	@Test
+	public void test15() {
+		try {
+			assertEquals(parser.convertToSecond("one one s 1 m"), "71");
+		} catch (NullTimeUnitException | NullTimeValueException e) {
+			fail();
+		}
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestTimeWordParser.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\BarScroller.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import javax.swing.JScrollBar;
+
+public class BarScroller implements Runnable {
+		
+		private boolean _forward;
+		private JScrollBar _anyScrollBar;
+	
+		protected BarScroller(){
+		}
+		
+		protected BarScroller(boolean forward, JScrollBar anyScrollBar){
+			initializeBarScroller(forward, anyScrollBar);
+		}
+
+		private void initializeBarScroller(boolean forward, JScrollBar anyScrollBar) {
+			_forward = forward;
+			_anyScrollBar = anyScrollBar;
+		}
+	
+		public void run(){
+			if (_anyScrollBar.isEnabled()){
+				int current = scroll();
+				_anyScrollBar.setValue(current);
+			}
+		}
+
+		private int scroll() {
+			int increment = _anyScrollBar.getBlockIncrement();
+			int current = _anyScrollBar.getValue();
+			if (_forward){//down, right
+				current -= increment;
+			} else if (!_forward){//up, left
+				current += increment;
+			}
+			return current;
+		}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\BarScroller.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\ComponentMover.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import java.awt.Component;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JFrame;
+
+public class ComponentMover extends MouseAdapter{
+	private Point _mouseDownPoint = null;
+	private Point _currPoint = null;
+	private Point _movePoint = null;
+	private JFrame _movingFrame = null;
+	
+	/**
+	 * To make sure it cannot be used by other package
+	 */
+	protected ComponentMover(JFrame ListenFrame){
+		setMovingFrame(ListenFrame);
+	}
+
+	/**
+	 *  Remove listeners from the specified component
+	 *
+	 *  @param component  the component the listeners are removed from
+	 */
+	protected void deregisterComponent(Component... components){
+		for (Component component : components){
+			component.removeMouseListener(this);
+			component.removeMouseMotionListener(this);
+		}
+	}
+
+	/**
+	 *  Add the required listeners to the specified component
+	 *
+	 *  @param component  the component the listeners are added to
+	 */
+	protected void registerComponent(Component... components){
+		for (Component component : components){
+			component.addMouseListener(this);
+			component.addMouseMotionListener(this);
+		}
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
+		setMouseDownPoint(e.getPoint());
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		setMouseDownPoint(null);
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		initializedPoints(e);
+		move();
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void initializedPoints(MouseEvent e) {
+		setCurrPoint(e.getLocationOnScreen());
+		setMovePoint(new Point(_currPoint.x - _mouseDownPoint.x, _currPoint.y - _mouseDownPoint.y));
+	}
+
+	private void move() {
+		_movingFrame.setLocation(_movePoint);
+	}
+
+	private void setMouseDownPoint(Point mouseDownPoint) {
+		_mouseDownPoint = mouseDownPoint;
+	}
+
+	private void setCurrPoint(Point _currPoint) {
+		this._currPoint = _currPoint;
+	}
+	
+	private void setMovePoint(Point _movePoint) {
+		this._movePoint = _movePoint;
+	}
+
+	private void setMovingFrame(JFrame _movingFrame) {
+		this._movingFrame = _movingFrame;
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\ComponentMover.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\ComponentResizer.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+
+/**
+ *  reference: http://tips4java.wordpress.com/2009/09/13/resizing-components/
+ *  
+ *  The ComponentResizer allows you to resize a component by dragging a border
+ *  of the component.
+ *  
+ *  MouseAdapter is better because it is more OO-oriented.
+ */
+public class ComponentResizer extends MouseAdapter{
+	private final static Dimension MINIMUM_SIZE = new Dimension(10, 10);
+	private final static Dimension MAXIMUM_SIZE =
+		new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+	private static Map<Integer, Integer> _cursors = new HashMap<Integer, Integer>(); {
+		_cursors.put(1, Cursor.N_RESIZE_CURSOR);
+		_cursors.put(2, Cursor.W_RESIZE_CURSOR);
+		_cursors.put(4, Cursor.S_RESIZE_CURSOR);
+		_cursors.put(8, Cursor.E_RESIZE_CURSOR);
+		_cursors.put(3, Cursor.NW_RESIZE_CURSOR);
+		_cursors.put(9, Cursor.NE_RESIZE_CURSOR);
+		_cursors.put(6, Cursor.SW_RESIZE_CURSOR);
+		_cursors.put(12, Cursor.SE_RESIZE_CURSOR);
+	}
+
+	private Insets _dragInsets;
+	private Dimension _snapSize;
+
+	private int _direction;
+	protected static final int NORTH = 1;
+	protected static final int WEST = 2;
+	protected static final int SOUTH = 4;
+	protected static final int EAST = 8;
+
+	private Cursor sourceCursor;
+	private boolean _isResizing;
+	private Rectangle _bounds;
+	private Point _pressed;
+	private boolean _autoscrolls;
+
+	private Dimension minimumSize = MINIMUM_SIZE;
+	private Dimension maximumSize = MAXIMUM_SIZE;
+
+	/**
+	 *  Convenience contructor. All borders are resizable in increments of
+	 *  a single pixel. Components must be registered separately.
+	 */
+	protected ComponentResizer() {
+		this(new Insets(5, 5, 5, 5), new Dimension(1, 1));
+	}
+
+	/**
+	 *  Convenience contructor. All borders are resizable in increments of
+	 *  a single pixel. Components can be registered when the class is created
+	 *  or they can be registered separately afterwards.
+	 *
+	 *  @param components components to be automatically registered
+	 */
+	protected ComponentResizer(Component... components){
+		this(new Insets(5, 5, 5, 5), new Dimension(1, 1), components);
+	}
+
+	/**
+	 *  Create a ComponentResizer.
+	 *
+	 *  @param _dragInsets Insets specifying which borders are eligible to be
+	 *                    resized.
+	 *  @param _snapSize Specify the dimension to which the border will snap to
+	 *                  when being dragged. Snapping occurs at the halfway mark.
+	 *  @param components components to be automatically registered
+	 */
+	private ComponentResizer(Insets _dragInsets, Dimension _snapSize, Component... components){
+		setDragInsets( _dragInsets );
+		setSnapSize( _snapSize );
+		registerComponent( components );
+	}
+
+	/**
+	 *  Set the drag _dragInsets. The insets specify an area where mouseDragged
+	 *  events are recognized from the edge of the border inwards. A value of
+	 *  0 for any size will imply that the border is not resizable. Otherwise
+	 *  the appropriate drag cursor will appear when the mouse is inside the
+	 *  resizable border area.
+	 *
+	 *  @param  _dragInsets Insets to control which borders are resizeable.
+	 */
+	protected void setDragInsets(Insets _dragInsets){
+		validateMinimumAndInsets(minimumSize, _dragInsets);
+
+		this._dragInsets = _dragInsets;
+	}
+	
+	/**
+	 * Set the _dragInsets by using the insetSize
+	 * create an inset that has same top, left, right, bottom
+	 * @param insetSize: number that determines the inset that controls which borders are resizeable.
+	 */
+	protected void setDragInsets(int insetSize){
+		Insets _dragInsets = new Insets(insetSize, insetSize, insetSize, insetSize);
+		validateMinimumAndInsets(minimumSize, _dragInsets);
+
+		this._dragInsets = _dragInsets;
+	}
+
+	/**
+	 *  Remove listeners from the specified component
+	 *
+	 *  @param component  the component the listeners are removed from
+	 */
+	protected void deregisterComponent(Component... components){
+		for (Component component : components){
+			component.removeMouseListener(this);
+			component.removeMouseMotionListener(this);
+		}
+	}
+
+	/**
+	 *  Add the required listeners to the specified component
+	 *
+	 *  @param component  the component the listeners are added to
+	 */
+	protected void registerComponent(Component... components){
+		for (Component component : components){
+			component.addMouseListener(this);
+			component.addMouseMotionListener(this);
+		}
+	}
+
+	/**
+	 *  Control how many pixels a border must be dragged before the size of
+	 *  the component is changed. The border will snap to the size once
+	 *  dragging has passed the halfway mark.
+	 *
+	 *  @param _snapSize Dimension object allows you to separately spcify a
+	 *                  horizontal and vertical snap size.
+	 */
+	private void setSnapSize(Dimension _snapSize){
+		this._snapSize = _snapSize;
+	}
+
+	/**
+	 *  When the components minimum size is less than the drag insets then
+	 *	we can't determine which border should be resized so we need to
+	 *  prevent this from happening.
+	 */
+	private void validateMinimumAndInsets(Dimension minimum, Insets drag){
+		int minimumWidth = drag.left + drag.right;
+		int minimumHeight = drag.top + drag.bottom;
+
+		if (minimum.width  < minimumWidth
+		||  minimum.height < minimumHeight){
+			String message = "Minimum size cannot be less than drag insets";
+			throw new IllegalArgumentException( message );
+		}
+	}
+
+	/**
+	 */
+	@Override
+	public void mouseMoved(MouseEvent e){
+		Component source = e.getComponent();
+		Point location = e.getPoint();
+		_direction = 0;
+
+		if (location.x < _dragInsets.left){
+			_direction += WEST;
+		}
+
+		if (location.x > source.getWidth() - _dragInsets.right - 1){
+			_direction += EAST;
+		}
+
+		if (location.y < _dragInsets.top){
+			_direction += NORTH;
+		}
+
+		if (location.y > source.getHeight() - _dragInsets.bottom - 1){
+			_direction += SOUTH;
+		}
+
+		//  Mouse is no longer over a resizable border
+
+		if (_direction == 0){
+			source.setCursor( sourceCursor );
+		}
+		else { // use the appropriate resizable cursor
+			int cursorType = _cursors.get( _direction );
+			Cursor cursor = Cursor.getPredefinedCursor( cursorType );
+			source.setCursor( cursor );
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e){
+		if (!_isResizing){
+			Component source = e.getComponent();
+			sourceCursor = source.getCursor();
+		}
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e){
+		if (!_isResizing){
+			Component source = e.getComponent();
+			source.setCursor( sourceCursor );
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e){
+		//	The mouseMoved event continually updates this variable
+
+		if (_direction == 0){
+			return;
+		}
+
+		Component source;
+		
+		//  Setup for _isResizing. All future dragging calculations are done based
+		//  on the original _bounds of the component and mouse pressed location.
+		source = setupForResizing(e);
+
+		//  Making sure autoscrolls is false will allow for smoother resizing
+		//  of components
+		disableAutoScrolls(source);
+	}
+
+	private Component setupForResizing(MouseEvent e){
+		Component source;
+		_isResizing = true;
+
+		source = e.getComponent();
+		_pressed = e.getPoint();
+		SwingUtilities.convertPointToScreen(_pressed, source);
+		_bounds = source.getBounds();
+		return source;
+	}
+
+	private void disableAutoScrolls(Component source) {
+		if (source instanceof JComponent){
+			JComponent jc = (JComponent)source;
+			_autoscrolls = jc.getAutoscrolls();
+			jc.setAutoscrolls( false );
+		}
+	}
+
+	/**
+	 *  Restore the original state of the Component
+	 */
+	@Override
+	public void mouseReleased(MouseEvent e){
+		_isResizing = false;
+
+		Component source = e.getComponent();
+		source.setCursor( sourceCursor );
+
+		restoreAutoScroll(source);
+	}
+
+	private void restoreAutoScroll(Component source) {
+		if (source instanceof JComponent){
+			((JComponent)source).setAutoscrolls(_autoscrolls);
+		}
+	}
+
+	/**
+	 *  Resize the component ensuring location and size is within the _bounds
+	 *  of the parent container and that the size is within the minimum and
+	 *  maximum constraints.
+	 *
+	 *  All calculations are done using the _bounds of the component when the
+	 *  _isResizing started.
+	 */
+	@Override
+	public void mouseDragged(MouseEvent e){
+		if (!_isResizing){
+			return;
+		}
+
+		Component source = e.getComponent();
+		Point dragged = e.getPoint();
+		SwingUtilities.convertPointToScreen(dragged, source);
+
+		changeBounds(source, _direction, _bounds, _pressed, dragged);
+	}
+
+	protected void changeBounds(Component source, int _direction, Rectangle _bounds, Point _pressed, Point current){
+		//  Start with original locaton and size
+
+		int x = _bounds.x;
+		int y = _bounds.y;
+		int width = _bounds.width;
+		int height = _bounds.height;
+
+		//  Resizing the West or North border affects the size and location
+
+		if (WEST == (_direction & WEST)){
+			int drag = getDragDistance(_pressed.x, current.x, _snapSize.width);
+			int maximum = Math.min(width + x, maximumSize.width);
+			drag = getDragBounded(drag, _snapSize.width, width, minimumSize.width, maximum);
+
+			x -= drag;
+			width += drag;
+		}
+
+		if (NORTH == (_direction & NORTH)){
+			int drag = getDragDistance(_pressed.y, current.y, _snapSize.height);
+			int maximum = Math.min(height + y, maximumSize.height);
+			drag = getDragBounded(drag, _snapSize.height, height, minimumSize.height, maximum);
+
+			y -= drag;
+			height += drag;
+		}
+
+		//  Resizing the East or South border only affects the size
+
+		if (EAST == (_direction & EAST)){
+			int drag = getDragDistance(current.x, _pressed.x, _snapSize.width);
+			Dimension boundingSize = getBoundingSize( source );
+			int maximum = Math.min(boundingSize.width - x, maximumSize.width);
+			drag = getDragBounded(drag, _snapSize.width, width, minimumSize.width, maximum);
+			width += drag;
+		}
+
+		if (SOUTH == (_direction & SOUTH)){
+			int drag = getDragDistance(current.y, _pressed.y, _snapSize.height);
+			Dimension boundingSize = getBoundingSize( source );
+			int maximum = Math.min(boundingSize.height - y, maximumSize.height);
+			drag = getDragBounded(drag, _snapSize.height, height, minimumSize.height, maximum);
+			height += drag;
+		}
+
+		source.setBounds(x, y, width, height);
+		source.validate();
+	}
+
+	/*
+	 *  Determine how far the mouse has moved from where dragging started
+	 */
+	private int getDragDistance(int larger, int smaller, int _snapSize){
+		int halfway = _snapSize / 2;
+		int drag = larger - smaller;
+		drag += (drag < 0) ? -halfway : halfway;
+		drag = (drag / _snapSize) * _snapSize;
+
+		return drag;
+	}
+
+	/*
+	 *  Adjust the drag value to be within the minimum and maximum range.
+	 */
+	private int getDragBounded(int drag, int _snapSize, int dimension, int minimum, int maximum){
+		while (dimension + drag < minimum){
+			drag += _snapSize;
+		}
+		while (dimension + drag > maximum){
+			drag -= _snapSize;
+		}
+
+		return drag;
+	}
+
+	/*
+	 *  Keep the size of the component within the bounds of its parent.
+	 */
+	private Dimension getBoundingSize(Component source){
+		if (source instanceof Window){
+			GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			Rectangle bounds = env.getMaximumWindowBounds();
+			return new Dimension(bounds.width, bounds.height);
+		}
+		else {
+			return source.getParent().getSize();
+		}
+	}
+}
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\ComponentResizer.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\FlexiFontOutputFrame.java
+	 */
+
+
+/**
+ * This class is going to take over
+ * the original output frame because it is more flexible 
+ * in font color and type.
+ */
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+
+
+public class FlexiFontOutputFrame extends OutputFrame {
+
+	private static final long serialVersionUID = 1L;
+
+	private final int DEFAULT_ALIGNMENT = StyleConstants.ALIGN_JUSTIFIED;
+	private final String DEFAULT_FONT_TYPE = "Lucida Console";
+	private final int DEFAULT_FONT_SIZE = 12;
+	private final Color DEFAULT_COLOR_NORMAL = Color.BLACK;
+	private final Color DEFAULT_COLOR_REMINDER = Color.RED;
+
+	private final int MARGIN_TOP = 5;
+	private final int MARGIN_LEFT = 5;
+	private final int MARGIN_BOTTOM = 5;
+	private final int MARGIN_RIGHT = 5;
+	
+	private final String ERROR_BAD_LOCATION_EXCEPTION = "BadLocationException occurs";
+	
+	private JTextPane _outputBox = new JTextPane();	
+	private ComponentMover _moveOutputBox = new ComponentMover(this);
+
+	protected FlexiFontOutputFrame()
+	{
+		super(true);
+		initializeFlexiOutputFrame();
+	}
+
+	private void initializeFlexiOutputFrame() {
+		setUpFrame();       
+		initializeOutputBox();
+		setUpScrollBar();
+		getContentPane().add(_scrollBox);
+	}
+
+	@Override
+	protected void initializeOutputBox() {
+		// Don't let the user change the output.
+		_outputBox.setEditable(false);
+
+		_outputBox.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
+
+		// Fix the maximum length of the line
+		setUpBorderAndMargin();
+		
+		//manually create an EditorKit that supports wrap
+		//to make JTextPane supports wrap.
+		//and set it to be JTextPane's editorKit
+		_outputBox.setEditorKit(new WrapEditorKit());		
+		
+		//to make it movable
+		_moveOutputBox.registerComponent(_outputBox);
+		
+		//_outputBox.addMouseListener(_pressDetect);       DEPRECATED
+		//_outputBox.addMouseMotionListener(_moveMouse);   DEPRECATED
+		
+		/* Testing
+		appendToPane(_outputBox, "My Name is Too Good.\n", Color.RED);
+		appendToPane(_outputBox, "I wish I could be ONE of THE BEST on ", Color.BLUE);
+		appendToPane(_outputBox, "Stack", Color.DARK_GRAY);
+		appendToPane(_outputBox, "Over", Color.MAGENTA);
+		appendToPane(_outputBox, "flow", Color.ORANGE);
+		*/
+	}
+
+	private void setUpBorderAndMargin() {
+		Border border = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
+		Border margin =  BorderFactory.createEmptyBorder(MARGIN_TOP, MARGIN_LEFT, MARGIN_BOTTOM, MARGIN_RIGHT);
+		CompoundBorder marginBorder = BorderFactory.createCompoundBorder(border, margin);
+		_outputBox.setBorder(marginBorder);
+	}
+
+	@Override
+	protected void setUpScrollBar() {
+		//JScrollPane provides scroll bar, so I add outputbox inside it.
+		_scrollBox = new JScrollPane(_outputBox);
+		disableHorizontalScrollBar();
+	}
+	
+	@Override
+	protected void clearOutputBox() {
+		_outputBox.setText("");
+	}
+
+	@Override
+	protected void addLine(String line) {
+		append(line, DEFAULT_COLOR_NORMAL);
+	}
+	
+	@Override
+	protected void addReminder(String line) {
+		boolean isBold = true;
+		append(line, DEFAULT_COLOR_REMINDER, isBold);
+	}
+	
+	@Override
+	protected void addSelfDefinedLine(String line, Color c, boolean isBold) {
+		append(line, c, isBold);
+	}
+	
+	/*
+	 * Method to replace appendToPane()
+	 * this method is easier to write
+	 * and can handle setEditable(false)
+	 * without changing its status anymore!
+	 */
+	private void append(String msg, Color c){
+		boolean isBold = false;
+		append(msg, c, isBold);
+	}
+	
+	private void append(String msg, Color c, boolean isBold){
+		StyleContext sc = StyleContext.getDefaultStyleContext();
+		AttributeSet aset = setUpAttributeSet(c, sc, isBold);
+		StyledDocument doc = _outputBox.getStyledDocument();
+		int len = doc.getLength();
+		printMessage(msg, aset, doc, len);
+	}
+
+	private void printMessage(String msg, AttributeSet aset,
+			StyledDocument doc, int len) {
+		try {
+			doc.insertString(len, msg, aset);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+			System.err.println(ERROR_BAD_LOCATION_EXCEPTION);
+		}
+	}
+	
+	
+	
+	/*
+	 * appendToPane() finally works
+	 * but it is obviously not the best way
+	 * so I implement another method
+	 */
+	/*
+	private void appendToPane(String msg, Color c){  //DEPRECATED
+		//let us to modify the output
+		_outputBox.setEditable(true);
+		
+		appendToPane(_outputBox, msg, c);
+	
+		//prevent user from modifying the output
+		_outputBox.setEditable(false);
+	}
+	
+	private void appendToPane(JTextPane tp, String msg, Color c){ //DEPRECATED
+		StyleContext sc = StyleContext.getDefaultStyleContext();
+		
+		AttributeSet aset = setUpAttributeSet(c, sc);
+
+		showMessage(tp, msg, aset);
+	}
+
+	private void showMessage(JTextPane tp, String msg, AttributeSet aset) { //DEPRECATED
+		int len = tp.getDocument().getLength();
+		tp.setCaretPosition(len);
+		tp.setCharacterAttributes(aset, false);
+		tp.replaceSelection(msg);
+	}*/
+
+	private AttributeSet setUpAttributeSet(Color c, StyleContext sc, boolean isBold) {
+		AttributeSet aset = SimpleAttributeSet.EMPTY;
+		aset = setFontColor(c, sc, aset);
+		aset = setFontType(sc, aset);
+		aset = setAlignment(sc, aset);
+		aset = setFontSize(sc, aset);
+		aset = setBold(sc, isBold, aset);
+		return aset;
+	}
+
+	private AttributeSet setBold(StyleContext sc, boolean isBold,
+			AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.Bold, isBold);
+	}
+
+	private AttributeSet setFontSize(StyleContext sc, AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.FontSize, DEFAULT_FONT_SIZE);
+	}
+
+	private AttributeSet setAlignment(StyleContext sc, AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.Alignment, DEFAULT_ALIGNMENT);
+	}
+
+	private AttributeSet setFontType(StyleContext sc, AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.FontFamily, DEFAULT_FONT_TYPE);
+	}
+
+	private AttributeSet setFontColor(Color c, StyleContext sc, AttributeSet aset) {
+		return sc.addAttribute(aset, StyleConstants.Foreground, c);
+	}
+
+	@Override
+	protected void endProgram() {
+		super.endProgram();
+		
+		//clear every listener before closing
+		_moveOutputBox.deregisterComponent(_outputBox);
+	}
+	
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\FlexiFontOutputFrame.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiCellRenderer.java
+	 */
+
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
+
+
+/**
+ * The standard class for rendering (displaying) individual cells in a JTable.
+ * This class inherits from JTextArea, a standard component class. However
+ * JTextArea is a multi-line area that displays plain text.
+ * 
+ * This class implements TableCellRenderer , i.e. interface. This interface
+ * defines the method required by any object that would like to be a renderer
+ * for cells in a JTable.
+ * 
+ * extracted from:
+ * http://manivelcode.blogspot.sg/2008/08/how-to-wrap-text-inside
+ * -cells-of-jtable.html
+ * 
+ * @see JTable
+ * @see JTextArea
+ */
+
+public class GuiCellRenderer extends JTextArea implements TableCellRenderer {
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -1333277163624784049L;
+	
+	private static final int STAT = 6;
+	private static final int INFO = 5;
+	private static final int END = 4;
+	private static final int START = 3;
+	private static final int DEADLINE = 2;
+	private static final int DESC = 1;
+	private static final int ID = 0;
+	
+	private static final int FONT_SIZE = 11;
+	private static final int FONT_STYLE = Font.PLAIN;
+	private static final String FONT_TYPE = "Georgia";
+	private static final Font FONT_DEFAULT = new Font(FONT_TYPE, FONT_STYLE, GuiCellRenderer.FONT_SIZE);
+
+	private final DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+
+	// Column heights are placed in this Map
+	private final Map<JTable, Map<Object, Map<Object, Integer>>> tablecellSizes = new HashMap<JTable, Map<Object, Map<Object, Integer>>>();
+
+	/**
+	 * Creates a text area renderer.
+	 */
+	public GuiCellRenderer() {
+		setLineWrap(true);
+		setWrapStyleWord(true);
+
+		/* Finding out the types of fonts Java supports
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+
+		  String fontNames[] = ge.getAvailableFontFamilyNames();
+
+		  // Iterate the font family names
+
+		  for (int i=0; i<fontNames.length; i++) {
+
+		     System.out.println(fontNames[i]);
+
+		  }
+		  */
+	}
+
+	/**
+	 * Returns the component used for drawing the cell. This method is used to
+	 * configure the renderer appropriately before drawing.
+	 * 
+	 * @param table
+	 *            - JTable object
+	 * @param value
+	 *            - the value of the cell to be rendered.
+	 * @param isSelected
+	 *            - isSelected true if the cell is to be rendered with the
+	 *            selection highlighted; otherwise false.
+	 * @param hasFocus
+	 *            - if true, render cell appropriately.
+	 * @param row
+	 *            - The row index of the cell being drawn.
+	 * @param column
+	 *            - The column index of the cell being drawn.
+	 * @return - Returns the component used for drawing the cell.
+	 */
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		// set the Font, Color, etc.
+		renderer.getTableCellRendererComponent(table, value, isSelected,
+				hasFocus, row, column);
+		// setForeground(renderer.getForeground());
+		setBackground(renderer.getBackground());
+		setBorder(renderer.getBorder());
+		//setFont(renderer.getFont());
+		setText(renderer.getText());
+		setFont(FONT_DEFAULT);
+		
+		setFontColor(column);
+
+		TableColumnModel columnModel = table.getColumnModel();
+
+		setSize(columnModel.getColumn(column).getWidth(), 0);
+
+		int heightWanted = (int) getPreferredSize().getHeight();
+
+		addSize(table, row, column, heightWanted);
+
+		heightWanted = findTotalMaximumRowSize(table, row);
+
+		if (heightWanted != table.getRowHeight(row)) {
+			table.setRowHeight(row, heightWanted);
+		}
+		return this;
+	}
+
+	/**
+	 * @param row
+	 * @param column
+	 */
+	private void setFontColor(int column) {
+		switch (column) {
+		case ID:
+			//setForeground(Color.cyan);
+			setForeground(new Color(41, 36, 33));
+			break;
+
+		case DESC:
+			//setForeground(Color.blue);
+			setForeground(new Color(49, 46, 158));
+			break;
+
+		case DEADLINE:
+			setForeground(Color.red);
+			break;
+
+		case START:
+			//setForeground(Color.burntsienna);
+			setForeground(new Color(205, 51, 51));
+			break;
+
+		case END:
+			//setForeground(Color.teal);
+			setForeground(new Color(56, 142, 142));
+			break;
+
+		case INFO:
+			//setForeground(Color.purple);
+			setForeground(new Color(78, 51, 134));
+			break;
+
+		case STAT:
+			//setForeground(Color.maroon 4);
+			setForeground(new Color(139, 28, 98));
+			break;
+
+		default:
+			assert (false);
+			break;
+		}
+	}
+
+	/**
+	 * @param table
+	 *            - JTable object
+	 * @param row
+	 *            - The row index of the cell being drawn.
+	 * @param column
+	 *            - The column index of the cell being drawn.
+	 * @param height
+	 *            - Row cell height as int value This method will add size to
+	 *            cell based on row and column number
+	 */
+	private void addSize(JTable table, int row, int column, int height) {
+		Map<Object, Map<Object, Integer>> rowsMap = tablecellSizes.get(table);
+
+		if (rowsMap == null) {
+			tablecellSizes.put(table,
+					rowsMap = new HashMap<Object, Map<Object, Integer>>());
+		}
+
+		Map<Object, Integer> rowheightsMap = rowsMap.get(row);
+		if (rowheightsMap == null) {
+			rowsMap.put(row, rowheightsMap = new HashMap<Object, Integer>());
+		}
+
+		rowheightsMap.put(column, height);
+	}
+
+	/**
+	 * Look through all columns and get the renderer. If it is also a
+	 * TextAreaRenderer, we look at the maximum height in its hash table for
+	 * this row.
+	 * 
+	 * @param table
+	 *            -JTable object
+	 * @param row
+	 *            - The row index of the cell being drawn.
+	 * @return row maximum height as integer value
+	 */
+	private int findTotalMaximumRowSize(JTable table, int row) {
+		int maximum_height = 0;
+		Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
+
+		while (columns.hasMoreElements()) {
+			TableColumn tc = columns.nextElement();
+			TableCellRenderer cellRenderer = tc.getCellRenderer();
+			if (cellRenderer instanceof GuiCellRenderer) {
+				GuiCellRenderer tar = (GuiCellRenderer) cellRenderer;
+				maximum_height = Math.max(maximum_height,
+						tar.findMaximumRowSize(table, row));
+			}
+		}
+		return maximum_height;
+	}
+
+	/**
+	 * This will find the maximum row size
+	 * 
+	 * @param table
+	 *            - JTable object
+	 * @param row
+	 *            - The row index of the cell being drawn.
+	 * @return row maximum height as integer value
+	 */
+	private int findMaximumRowSize(JTable table, int row) {
+		Map<Object, Map<Object, Integer>> rows = tablecellSizes.get(table);
+		if (rows == null) {
+			return 0;
+		}
+		Map<Object, Integer> rowheights = rows.get(row);
+		if (rowheights == null) {
+			return 0;
+		}
+
+		int maximum_height = 0;
+		for (Map.Entry<Object, Integer> entry : rowheights.entrySet()) {
+			int cellHeight = entry.getValue();
+			maximum_height = Math.max(maximum_height, cellHeight);
+		}
+		return maximum_height;
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiCellRenderer.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiFrame.java
+	 */
+
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
+
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
+
+/**
+ * For implementing HotKeys for the GuiFrame
+ */
+
+
+
+
+public abstract class GuiFrame extends JFrame implements NativeKeyListener, WindowListener, KeyListener{
+	
+	private final static Logger LOGGER = Logger.getLogger("TaskPad");
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 1179398807003068461L;
+	  
+	protected final double COMPUTER_WIDTH = 
+			Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+	protected final double COMPUTER_HEIGHT = 
+			Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+	protected final Color ROOTPANE_BORDER_COLOR = 
+			//new Color(120, 48, 160);//light purple?
+			//new Color(41,36,33);	//Black
+			//Color.gray;
+			new Color(41,36,33);
+	private final int ROOTPANE_BORDER_THICKNESS = 2;
+	private LineBorder BORDER_ROOTPANE = new LineBorder(ROOTPANE_BORDER_COLOR, ROOTPANE_BORDER_THICKNESS);
+	private ComponentResizer _resizer = new ComponentResizer();
+	
+	protected GuiFrame(){
+		setupLogger();
+		initalizeGuiFrame();
+	}
+
+	/**
+	 * 
+	 */
+	private void setupLogger() {
+		LOGGER.setLevel(Level.INFO);
+				
+		LOGGER.info("Setting up GuiFrame");
+	}
+
+	private void initalizeGuiFrame() {
+		//to disable the titlebar
+		setUndecorated(true);
+		
+		getRootPane().setBorder(BORDER_ROOTPANE);
+		
+		setUpResizer();
+				                  
+		addWindowListener(this);
+		
+		showWindow(true);	
+		
+		//setAlwaysOnTop(true);
+			   		
+		//to clear the memory
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}      
+
+	private void setUpResizer() {
+		_resizer.registerComponent(this);
+		_resizer.setDragInsets(ROOTPANE_BORDER_THICKNESS * 2);    
+	}
+
+	protected void showUp(GuiFrame visibleFrame){
+		setSize(visibleFrame.getSize());
+		setLocation(visibleFrame.getLocation());
+		setVisible(true);
+	}
+	     
+	protected void close(){ 
+		dispose();
+	}
+	
+	protected void showWindow(boolean isVisible){
+		setVisible(isVisible);
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		//Initialize native hook.
+        try {
+        		LOGGER.info("Initializing native hook");
+        		
+            	GlobalScreen.registerNativeHook();
+        }
+        catch (NativeHookException ex) {
+        		LOGGER.severe("There was a problem registering the native hook.\n");
+        		LOGGER.severe(ex.getMessage());
+                ex.printStackTrace();
+
+                System.exit(1);
+        }     
+
+        GlobalScreen.getInstance().addNativeKeyListener(this);
+        //requestFocusInWindow(); should not request focus here
+	}
+	
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		//end Program to disable every listeners! Exit Program to really exit it.
+		endProgram();
+	    exitProgram();
+	}
+	
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		
+		boolean isEscapeKey = arg0.getKeyCode() == NativeKeyEvent.VK_ESCAPE;
+		boolean isShiftSpaceKey = arg0.getKeyCode() == NativeKeyEvent.VK_SPACE 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Shift");
+		boolean isAltEndKey = arg0.getKeyCode() == NativeKeyEvent.VK_END 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
+		boolean isAltAKey = arg0.getKeyCode() == NativeKeyEvent.VK_A 
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
+		boolean isAltCKey = arg0.getKeyCode() == NativeKeyEvent.VK_C
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).
+				equals("Alt");
+		
+		/**
+		 * we will disable some keys when TaskPad is in
+		 * hiding mode
+		 */
+		isEscapeKey = isEscapeKey && isVisible();
+		isAltEndKey = isAltEndKey && isVisible();
+		isAltCKey = isAltCKey && isVisible();
+		
+		if (isAltEndKey) {
+			minimizeOrRestore();
+		} else if (isShiftSpaceKey){
+			hideOrShow();
+		} else if (isEscapeKey){
+			endProgram();
+			exitProgram();
+		} else if (isAltAKey){
+			switchOffAlarm();
+		} else if (isAltCKey){
+			cancelAlarms();
+		} 
+		
+	}
+	
+	/**
+	 * override by inputFrame
+	 */
+	protected void requestFocusOnInputBox() {
+	}
+	
+
+	private void cancelAlarms() {
+		try {
+    		LOGGER.info("Canceling Alarm...");
+			
+			GuiManager.cancelAlarms();
+		} catch (Exception e) {
+			//do nothing
+		}
+	}
+
+	private void switchOffAlarm() {
+		try {
+    		LOGGER.info("Switching off Alarm...");
+			
+			GuiManager.turnOffAlarm();
+		} catch (Exception e) {
+			//System.err.println(e.getMessage());
+			//do nothing
+		}
+	}
+
+	private void hideOrShow() {
+		Runnable changeVisibility = getVisibilityChanges();
+		SwingUtilities.invokeLater(changeVisibility);
+	}
+
+	private void minimizeOrRestore() {
+		Runnable changeState = getStateChanges();
+		SwingUtilities.invokeLater(changeState);
+	}
+
+	protected void endProgram() {
+		LOGGER.info("Program HALT");
+		
+		//Clean up every listener
+        GlobalScreen.unregisterNativeHook();
+        _resizer.deregisterComponent(this);
+	}
+	
+	private void exitProgram() {
+		System.runFinalization();
+	    System.exit(0);
+	}
+	
+	private Runnable getVisibilityChanges() {
+		Runnable changeVisibility = new Runnable(){
+			@Override
+			public void run(){
+				boolean isShown = isVisible() == true;
+				boolean isHided = isVisible() == false;
+				if (isShown){
+				  	hide();
+				} else if (isHided){
+					show();
+				}
+			}
+ 
+			private void show() {    
+				showWindow(true);
+				setState(Frame.NORMAL);
+				
+				requestFocusOnInputBox();
+			}
+
+			private void hide() {
+				showWindow(false);
+			}
+		};  
+		return changeVisibility;
+	}
+
+	private Runnable getStateChanges() {
+		Runnable changeState = new Runnable(){
+			@Override
+			public void run(){
+				boolean isMinimized = getExtendedState() == Frame.ICONIFIED;
+				boolean isRestored = getExtendedState() == Frame.NORMAL;
+				if (isMinimized){
+					restore();
+				} else if (isRestored){
+					minimize();
+				}
+			}
+
+			private void minimize() {
+				setState(Frame.ICONIFIED);
+			}
+
+			private void restore() {
+				setState(Frame.NORMAL);
+			}
+		};
+		return changeState;
+	}
+	
+	//abstract protected int getInitialWidth();
+	//abstract protected int getInitialHeight();
+	
+	
+	//won't implement
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		
+	}
+
+	@Override
+	public void nativeKeyReleased(NativeKeyEvent arg0) {
+		
+	}
+
+	@Override
+	public void nativeKeyTyped(NativeKeyEvent arg0) {
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {		
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiFrame.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiManager.java
+	 */
+
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+
+import com.taskpad.alarm.AlarmManager;
+import com.taskpad.input.InputManager;
+
+public class GuiManager {
+	private static final String NEWLINE = "\n\n";		
+	private static final String MESSAGE_START_REMINDER = "Today's Tasks ";
+	private static InputFrame _inputFrame;
+	private static OutputFrame _outputFrame;
+	private static OutputTableFrame _tableFrame;
+	private static boolean debug = false;
+
+	//not designed to be instantiated
+	private GuiManager(){
+	}
+
+	//by default 
+	public static void initialGuiManager() {
+		_outputFrame = new FlexiFontOutputFrame();
+		_inputFrame = new InputFrame(); 
+		_tableFrame = new OutputTableFrame();
+	}
+
+	/* deprecated
+	public static void initialGuiManager(InputFrame inputFrame,
+		OutputFrame outputFrame) {
+		setInputFrame(inputFrame);
+		setOutputFrame(outputFrame);
+	}
+	 */
+	
+	public static void callTable(Object[][] data){
+		swapFrame(_outputFrame, _tableFrame);
+		_tableFrame.refresh(data);
+	}
+
+	/**
+	 * @param data
+	 */
+	private static void swapFrame(GuiFrame firstFrame, GuiFrame secondFrame) {
+		if (firstFrame.isVisible()){
+			firstFrame.showWindow(false);
+			secondFrame.showUp(firstFrame);
+		}
+		
+		_inputFrame.requestFocusOnInputBox();
+	}
+	
+	public static void showWindow(boolean isVisible){
+		_inputFrame.showWindow(isVisible);
+		_outputFrame.showWindow(isVisible);
+	}
+
+	public static void callExit(){
+		closeAllWindows();
+
+	}
+
+	private static void closeAllWindows() {
+		_inputFrame.close();
+		_outputFrame.close();
+	}
+
+	public static void callOutput(String out){
+		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
+			_outputFrame.addLine(out + NEWLINE);	
+		} else{
+			System.out.println(out + NEWLINE);
+		}
+	}
+	
+	public static void callOutputNoLine(String out){
+		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
+			_outputFrame.addLine(out);
+		} else{
+			System.out.println(out);
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 * @param out
+	 */
+	protected static void callInputBox(String out){
+		_inputFrame.setLine(out);
+	}
+
+	
+	public static void showSelfDefinedMessage(String out, Color c, boolean isBold){
+		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
+			_outputFrame.addSelfDefinedLine(out + NEWLINE, c, isBold);	
+		} else{
+			System.out.println(out + NEWLINE);
+		}
+	}
+	
+	public static void showSelfDefinedMessageNoNewline(String out, Color c, boolean isBold){
+		if (!debug){
+			swapFrame( _tableFrame, _outputFrame);
+			_outputFrame.addSelfDefinedLine(out, c, isBold);
+		} else{
+			System.out.println(out);
+		}
+	}
+
+	public static void startRemindingUser(){
+		remindUser(MESSAGE_START_REMINDER);
+	}
+	
+	public static void remindUser(String out){
+		_outputFrame.addReminder(out + NEWLINE);	
+		//_outputFrame.addReminder(NEWLINE + out + NEWLINE + NEWLINE);	--can i change this... TN
+		// ExecutorManager.showReminder();	--should not put here? TN
+	}
+
+	protected static void passInput(String in){
+		InputManager.receiveFromGui(in);
+	}
+	
+	protected static void turnOffAlarm(){
+		try {
+			AlarmManager.turnOffAlarm();
+		} catch (Exception e) {
+			//System.err.println(e.getMessage());
+			//do nothing
+		}
+	}
+	
+	protected static void cancelAlarms() {
+		try {
+			AlarmManager.cancelAlarms();
+		} catch (Exception e) {
+			//do nothing
+		}
+	}
+	
+	protected static OutputFrame getOutputFrame() {
+		return _outputFrame;
+	}
+
+	/* deprecated
+	private static void setInputFrame(InputFrame _inputFrame) {
+		GuiManager._inputFrame = _inputFrame;
+	}
+
+	private static void setOutputFrame(OutputFrame _outputFrame) {
+		GuiManager._outputFrame = _outputFrame;
+	}
+	 */
+
+	public static void clearOutput(){
+		_outputFrame.clearOutputBox();
+	}
+	
+	public static void setDebug(boolean debugFlag){
+		debug = debugFlag;
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiManager.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiTableModel.java
+	 */
+
+
+package com.taskpad.ui;
+
+import javax.swing.table.DefaultTableModel;
+
+public class GuiTableModel extends DefaultTableModel {
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 7747422784248466091L;
+
+	private static final String[] _columnNames = { "ID", "Description",
+			"By", "Start", "End", "Info", "Stat" };
+
+	private static Object[][] _data = {
+		{"1", "Hi Lynnette!", "06/04/2014", "01:00 05/04/2014", "12:00 05/04/2014", "JUST FOR FUN", "DONE"}
+	};
+	
+	protected GuiTableModel(){
+		super(_data, _columnNames);
+	}
+
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		// all cells false
+		return false;
+	}
+	
+	/*
+	public void refresh(Object[][] objects){
+	    //make the changes to the table, then call fireTableChanged
+		_data = objects;
+	    fireTableChanged(null);
+	}
+	*/
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\GuiTableModel.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\InputFrame.java
+	 */
+
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.util.LinkedList;
+
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
+
+public class InputFrame extends GuiFrame{
+	
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 6500266679828724479L;
+
+	private static final Color INPUTBOX_BACKGROUND_COLOR = 
+			//new Color(219, 219, 219); //this is grey color
+			new Color(255,248,220);		//Cornsilk
+	
+	//inputTextBox
+	private static JTextField _input = new JTextField(15);
+	
+	private static final int INPUTFRAME_WIDTH = 480;
+	private static final int INPUTFRAME_HEIGHT = 30;
+	private static final int HISTORY_LIMIT = 3000;
+	
+	private TextFieldListener _seeText = new TextFieldListener(this);
+	private ComponentMover _moveInputBox = new ComponentMover(this);
+	
+	//protected static ArrayList<String> _inputHistory = new ArrayList<String>();
+	private LinkedList<String> _historyInput = new LinkedList<String>();
+	private int _historyCount = 0;
+	
+	private static final String EMPTY = "";
+	
+	protected InputFrame(){
+		super();
+		initializeInputFrame();
+	}
+
+	private void initializeInputFrame() {		
+		setUpFrame();
+		
+		initializeInputBox();
+		this.getContentPane().add(_input);
+	}
+
+	private void setUpFrame() {
+		setSize(INPUTFRAME_WIDTH, INPUTFRAME_HEIGHT);
+		setLocation((int)(COMPUTER_WIDTH / 2 - INPUTFRAME_WIDTH / 2),
+					(int)(COMPUTER_HEIGHT / 2 + OutputFrame.getInitialHeight() / 2 - INPUTFRAME_HEIGHT / 2));
+		setVisible(true);
+	}
+
+	private void initializeInputBox() {
+		//ready to receive key
+		_input.addKeyListener(this);
+		
+		//ready to receive input
+		_input.addActionListener(_seeText);
+		
+		//ready to move
+		_moveInputBox.registerComponent(_input);
+		//_input.addMouseListener(_mousePress);      DEPRECATED
+		//_input.addMouseMotionListener(_mouseMove); DEPRECATED
+		
+		_input.setBackground(INPUTBOX_BACKGROUND_COLOR);
+		
+		_input.setFocusable(true);
+		_input.setRequestFocusEnabled(true);
+		
+		requestFocusOnInputBox();
+	}
+	
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		requestFocusOnInputBox();
+	}       
+
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		super.nativeKeyPressed(arg0);
+		
+		boolean isCtrlI = arg0.getKeyCode() == NativeKeyEvent.VK_I
+	            && NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+		
+		
+		if (isCtrlI){
+			requestFocusOnInputBox();
+		}
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent arg0) {
+		boolean isUpKey = arg0.getKeyCode() == KeyEvent.VK_UP;
+		boolean isDownKey = arg0.getKeyCode() == KeyEvent.VK_DOWN;
+		
+		if (isUpKey){
+			showPastCommands();
+		} else if (isDownKey){
+			showNextCommands();
+		}
+	}
+	
+	protected void addHistory(String inputString){
+		int size = _historyInput.size();
+		if (size >= HISTORY_LIMIT){
+			_historyInput.removeLast();
+		}
+		_historyInput.addFirst(inputString);
+		
+		initializeHistory();
+	}
+	
+	private void initializeHistory(){
+		_historyCount = 0;
+	}
+	
+	private void showPastCommands(){ 
+		int size = _historyInput.size();
+		if (isBoundary()){
+			return;
+		}
+		
+		String outputString = _historyInput.get(_historyCount);
+		_input.setText(outputString);
+		
+		boolean isNotMaximum = _historyCount < size - 1;
+		if(isNotMaximum){
+			_historyCount++;
+		}
+	}
+
+	/**
+	 * @param size
+	 * @return
+	 */
+	private boolean isBoundary() {
+		int size = _historyInput.size();
+		return _historyCount >= size && _historyCount < 0 || size == 0;
+	}
+	
+	private void showNextCommands(){
+		if (isBoundary()){
+			return;
+		}
+		
+
+		String outputString = EMPTY;
+		
+		boolean isNotMinimum = _historyCount > 0;
+		if (isNotMinimum){
+			_historyCount--;
+			outputString = _historyInput.get(_historyCount);
+		} 
+		_input.setText(outputString);	
+	}
+	
+	@Override
+	protected void requestFocusOnInputBox() {
+		Runnable inputBoxFocus = new Runnable(){
+			@Override
+			public void run(){
+				_input.grabFocus();  
+				_input.requestFocusInWindow();
+			}
+		};
+		SwingUtilities.invokeLater(inputBoxFocus);
+	}
+	
+	protected String getText(){
+		return _input.getText();
+	}
+	
+	protected void reset(){
+		_input.setText(InputFrame.EMPTY);
+	}
+	
+	protected JTextField getInputBox(){
+		return _input;
+	}
+	
+	//@Override
+	protected static int getInitialWidth(){
+		return INPUTFRAME_WIDTH;
+	}
+	
+	//@Override
+	protected static int getInitialHeight(){
+		return INPUTFRAME_HEIGHT;
+	}
+	
+	@Override
+	protected void endProgram(){
+		super.endProgram();
+		
+		//clear every listener before closing
+		_input.removeActionListener(_seeText);
+		
+		_moveInputBox.deregisterComponent(_input);
+		//_input.removeMouseListener(_mousePress);      DEPRECATED
+		//_input.removeMouseMotionListener(_mouseMove); DEPRECATED
+	}
+
+	protected void passInput(String inputString) {
+		GuiManager.passInput(inputString);
+	}
+	
+	/**
+	 * @deprecated
+	 * @param line
+	 */
+	protected void setLine(String line) {
+		_input.setText(line);
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\InputFrame.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\MouseMover.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JFrame;
+
+/**
+ * 
+ * ===================DEPRECATED========================== 
+ *  *
+ * @category
+ * MouseDragActioner is the actual class to do the moving
+ * with the help of MousePressedDetector.
+ * 
+ * @deprecated
+ * DEPRECATED: replaced by ComponentMover.java
+ *
+ */
+
+public class MouseMover implements MouseMotionListener{
+	private static Point _mouseDownPoint = MousePressedDetector.getMouseDownPoint();
+	private static Point _currPoint = null;
+	private static Point _movePoint = null;
+	private JFrame _movingFrame = null;
+	
+	/**
+	 * @deprecated
+	 *  DEPRECATED: private constructor shows that it cannot be used anymore.
+	 * @param ListenFrame
+	 */
+	private MouseMover(JFrame ListenFrame){
+		setMovingFrame(ListenFrame);
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		initializedPoints(e);
+		move();
+	}
+
+	private void initializedPoints(MouseEvent e) {
+		setCurrPoint(e.getLocationOnScreen());
+		setMouseDownPoint(MousePressedDetector.getMouseDownPoint());
+		setMovePoint(new Point(_currPoint.x - _mouseDownPoint.x, _currPoint.y - _mouseDownPoint.y));
+	}
+
+	private void move() {
+		_movingFrame.setLocation(_movePoint);
+	}
+
+	private void setMouseDownPoint(Point mouseDownPoint) {
+		_mouseDownPoint = mouseDownPoint;
+	}
+
+	private static void setCurrPoint(Point _currPoint) {
+		MouseMover._currPoint = _currPoint;
+	}
+	
+	private static void setMovePoint(Point _movePoint) {
+		MouseMover._movePoint = _movePoint;
+	}
+
+	private void setMovingFrame(JFrame _movingFrame) {
+		this._movingFrame = _movingFrame;
+	}
+
+	//unimplemented
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\MouseMover.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\MousePressedDetector.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+/**
+ * 
+ * ===================DEPRECATED==========================
+ * 
+ * @category
+ * MousePressedDetector is created to detect whether 
+ * the mouse has clicked on the boxes or not.
+ * 
+ * It is a helper class to move JFrame......
+ * 
+ * @deprecated
+ * DEPRECATED: replaced by ComponentMover.java
+ *
+ */
+
+public class MousePressedDetector implements MouseListener {
+	private static Point _mouseDownPoint = null;
+	
+	/** 
+	 * @deprecated
+	 * DEPRECATED: private constructor shows that it cannot be used anymore.
+	 * To make sure it cannot be used by other package
+	 */
+	private MousePressedDetector(){
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		setMouseDownPoint(e.getPoint());
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		setMouseDownPoint(null);
+	}
+	
+	protected static Point getMouseDownPoint() {
+		return _mouseDownPoint;
+	}
+	
+
+	private void setMouseDownPoint(Point _mouseDownPoint) {
+		MousePressedDetector._mouseDownPoint = _mouseDownPoint;
+	}
+
+	
+	//unimplemented methods at below:
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\MousePressedDetector.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\OutputFrame.java
+	 */
+
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
+
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
+
+
+
+/**
+ * 
+ * ===============DEPRECATED================
+ * 
+ * This class is deprecated as this class can only 
+ * show text font with only one color.
+ * 
+ * But we need different font color for reminder...
+ * JTextArea doesn't support this functionality 
+ * so we have to implement a new class......
+ * 
+ * @category
+ * Change to become a parent class
+ * 
+ * @see
+ * FlexiFontOutputFrame
+ * 
+ */
+
+public abstract class OutputFrame extends GuiFrame{
+
+	/**
+	 * default
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	//protected final Color OUTPUTBOX_BORDER_COLOR = 
+	//		new Color(112, 48, 160);//light purple?
+	protected final Color OUTPUTBOX_BORDER_COLOR = Color.white;
+	protected final Color OUTPUTBOX_BACKGROUND_COLOR = 
+			//new Color(242, 242, 242);//light grey I think
+			new Color(240,248,255);		//Baby blue
+	
+	private final static int OUTPUTFRAME_WIDTH = 480;
+	private final static int OUTPUTFRAME_HEIGHT = 350;
+	
+	private final Color DEFAULT_FONT_COLOR = Color.black;
+	
+	//outputTextBox
+	private JTextArea _output = new JTextArea(5, 15);
+	
+	//children should have scroll bar too
+	protected JScrollPane _scrollBox  = new JScrollPane();
+	
+	protected OutputFrame(){
+		super();
+		initializeOutputFrame();
+	}
+	
+	protected OutputFrame(boolean inherit){
+		super();
+	}
+
+	protected void setUpFrame() {
+		setSize(OUTPUTFRAME_WIDTH, OUTPUTFRAME_HEIGHT);
+		setLocation((int)(COMPUTER_WIDTH / 2 - OUTPUTFRAME_WIDTH / 2),
+					(int)(COMPUTER_HEIGHT / 2 - OUTPUTFRAME_HEIGHT / 2 - InputFrame.getInitialHeight() / 2));
+	}
+
+	private void initializeOutputFrame() {				
+		setUpFrame();
+		
+		initializeOutputBox();
+		
+		setUpScrollBar();
+
+		this.getContentPane().add(_scrollBox);
+	}
+
+	protected void setUpScrollBar() {
+		//JScrollPane provides scroll bar, so I add outputbox inside it.
+		_scrollBox = new JScrollPane(_output);
+		disableHorizontalScrollBar();
+	}
+
+	protected void disableHorizontalScrollBar() {
+		_scrollBox.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	}
+
+
+	protected void initializeOutputBox() {
+		// Don't let the user change the output.
+		_output.setEditable(false);
+		
+		// Fix the maximum length of the line
+		_output.setLineWrap(true);
+		
+		_output.setBackground(OUTPUTBOX_BACKGROUND_COLOR);
+		
+		Border line = BorderFactory.createLineBorder(OUTPUTBOX_BORDER_COLOR);
+		_output.setBorder(line);
+		
+		initializeFont();
+	}
+
+	private void initializeFont() {
+		Font font = new Font("Verdana", Font.BOLD, 12);
+		_output.setFont(font);
+		_output.setForeground(DEFAULT_FONT_COLOR);
+	}
+	
+	protected void clearOutputBox() {
+		_output.setText("");
+	}
+	
+	protected void addLine(String line) {
+		_output.append(line);
+	}
+	
+	protected void addReminder(String line) {
+		_output.append(line);
+	}
+	
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		super.nativeKeyPressed(arg0);
+		
+		boolean isCtrlW= arg0.getKeyCode() == NativeKeyEvent.VK_W
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+		boolean isCtrlS = arg0.getKeyCode() == NativeKeyEvent.VK_S				
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers()).equals(
+	                    "Ctrl");
+
+		
+		if (isCtrlW){
+			scrollUp();
+			
+		} else if (isCtrlS){
+			scrollDown();
+		}
+	}
+
+	private void scrollDown() {
+		Runnable downScroller = new BarScroller(false, _scrollBox.getVerticalScrollBar());
+		SwingUtilities.invokeLater(downScroller);
+	}
+
+	private void scrollUp() {
+		Runnable upScroller = new BarScroller(true, _scrollBox.getVerticalScrollBar());
+		SwingUtilities.invokeLater(upScroller);
+	}
+	
+	protected static int showWidth(){
+		return OUTPUTFRAME_WIDTH;
+	}
+	
+	abstract protected void addSelfDefinedLine(String line, Color c, boolean isBold);
+	
+	@Override
+	protected void endProgram(){
+		super.endProgram();
+	}
+
+	//@Override
+	protected static int getInitialWidth(){
+		return OUTPUTFRAME_WIDTH;
+	}
+	
+	//@Override
+	protected static int getInitialHeight(){
+		return OUTPUTFRAME_HEIGHT;
+	}
+}
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\OutputFrame.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\OutputTableFrame.java
+	 */
+
+
+package com.taskpad.ui;
+
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableColumn;
+
+import org.jnativehook.NativeInputEvent;
+import org.jnativehook.keyboard.NativeKeyEvent;
+
+public class OutputTableFrame extends GuiFrame {
+	private static final Color COLOR_TABLE_BACKGROUND = Color.white;
+
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -325278351936827523L;
+
+	private JTable _table;
+	private GuiTableModel _taskpadTableModel;
+	private JScrollPane _scrollBox;
+
+	private final static int TABLEFRAME_WIDTH = 480;
+	private final static int TABLEFRAME_HEIGHT = 350;
+
+	private final String FONT_HEADER_TYPE = "Lucida Console";
+	private final int FONT_HEADER_SIZE = 12;
+	private final int FONT_HEADER_STYLE = Font.BOLD;
+	private final Font FONT_HEADER_DEFAULT = new Font(FONT_HEADER_TYPE,
+			FONT_HEADER_STYLE, FONT_HEADER_SIZE);
+
+	protected OutputTableFrame() {
+		super();
+		intializeOutputTableFrame();
+	}
+
+	private void intializeOutputTableFrame() {
+		setUpFrame();
+		setVisible(false);
+
+		_taskpadTableModel = new GuiTableModel();
+		_table = new JTable(_taskpadTableModel);
+		_scrollBox = new JScrollPane(_table);
+
+		_table.setFillsViewportHeight(true);
+		add(_scrollBox);
+
+		customizeHeaderStyle();
+		
+		_table.setBackground(COLOR_TABLE_BACKGROUND);
+
+		setUpColumnWidth();
+	}
+
+	/**
+	 * 
+	 */
+	private void customizeHeaderStyle() {
+		_table.getTableHeader().setFont(FONT_HEADER_DEFAULT);
+		_table.getTableHeader().setBackground(Color.black);
+		_table.getTableHeader().setForeground(OutputTableFrame.COLOR_TABLE_BACKGROUND);
+	}
+
+	protected void setUpFrame() {
+		setSize(TABLEFRAME_WIDTH, TABLEFRAME_HEIGHT);
+		setLocation((int) (COMPUTER_WIDTH / 2 - TABLEFRAME_WIDTH / 2),
+				(int) (COMPUTER_HEIGHT / 2 - TABLEFRAME_HEIGHT / 2 - InputFrame
+						.getInitialHeight() / 2));
+	}
+
+	protected void refresh(Object[][] objects) {
+		reset();
+		// _taskpadTableModel.refresh(objects);
+
+		/*
+		 * DEBUG for (int i = 0; i < objects.length; i++){ for (int j = 0; j <
+		 * objects[i].length; j++){ System.err.println(objects[i][j]); } }
+		 */
+
+		for (int i = 0; i < objects.length; i++) {
+			_taskpadTableModel.addRow(objects[i]);
+		}
+
+		setUpColumnWidth();
+		_table.repaint();
+	}
+
+	private void setUpColumnWidth() {
+		TableColumn column = null;
+		int colNo = _table.getColumnCount();
+		for (int i = 0; i < colNo; i++) {
+			column = _table.getColumnModel().getColumn(i);
+			int divider = 3;
+			int preferredWidthID = 1;
+			int noOfColLeft = 2;
+			boolean isDesc = i == 1;
+			boolean isID = i == 0;
+			if (isID) {
+				column.setCellRenderer(new GuiCellRenderer());
+				column.setPreferredWidth(preferredWidthID);
+			} else if (isDesc) {
+				column.setCellRenderer(new GuiCellRenderer());
+				column.setPreferredWidth((getWidth() - preferredWidthID) / divider);
+			} else {
+				column.setCellRenderer(new GuiCellRenderer());
+				column.setPreferredWidth((getWidth() - preferredWidthID) / (divider * (colNo - noOfColLeft)));
+			}
+		}
+	}
+
+	private void reset() {
+		_taskpadTableModel.setRowCount(0);
+	}
+
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		super.nativeKeyPressed(arg0);
+
+		boolean isCtrlW = arg0.getKeyCode() == NativeKeyEvent.VK_W
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers())
+						.equals("Ctrl");
+		boolean isCtrlS = arg0.getKeyCode() == NativeKeyEvent.VK_S
+				&& NativeInputEvent.getModifiersText(arg0.getModifiers())
+						.equals("Ctrl");
+
+		if (isCtrlW) {
+			scrollUp();
+
+		} else if (isCtrlS) {
+			scrollDown();
+		}
+	}
+
+	private void scrollDown() {
+		Runnable downScroller = new BarScroller(false,
+				_scrollBox.getVerticalScrollBar());
+		SwingUtilities.invokeLater(downScroller);
+	}
+
+	private void scrollUp() {
+		Runnable upScroller = new BarScroller(true,
+				_scrollBox.getVerticalScrollBar());
+		SwingUtilities.invokeLater(upScroller);
+	}
+
+	// /*
+	public static void main(String[] args) {
+		OutputTableFrame anyTable = new OutputTableFrame();
+		anyTable.showWindow(true);
+	}
+	// */
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\OutputTableFrame.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\TextFieldListener.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TextFieldListener implements ActionListener
+{  
+	private InputFrame _textFrame;
+	protected TextFieldListener(InputFrame textFrame){
+		setTextFrame(textFrame);
+	}
+
+	/**
+	 * @param textFrame
+	 */
+	private void setTextFrame(InputFrame textFrame) {
+		_textFrame = textFrame;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent evt)
+	{  
+		String inputString = _textFrame.getText();
+		_textFrame.passInput(inputString);
+		_textFrame.addHistory(inputString);
+		_textFrame.reset();
+	}
+}
+
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\TextFieldListener.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\WrapColumnFactory.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+/**
+ * 
+ * This class is created to fix
+ * the line wrap problem in JTextPane Java 1.7
+ * Hope it works!
+ * 
+ * WrapColumnFactory creates view on JTexTPane Doucument
+ * 
+ */
+
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BoxView;
+import javax.swing.text.ComponentView;
+import javax.swing.text.Element;
+import javax.swing.text.IconView;
+import javax.swing.text.LabelView;
+import javax.swing.text.ParagraphView;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+
+public class WrapColumnFactory implements ViewFactory {
+	/**
+	 * To make sure it cannot be used by other package.
+	 */
+	protected WrapColumnFactory(){
+	}
+	
+    public View create(Element elem) {
+        String kind = elem.getName();
+        if (kind != null) {
+            if (kind.equals(AbstractDocument.ContentElementName)) {
+                return new WrapLabelView(elem); //key is here, wrap the content
+            } else if (kind.equals(AbstractDocument.ParagraphElementName)) {
+                return new ParagraphView(elem);
+            } else if (kind.equals(AbstractDocument.SectionElementName)) {
+                return new BoxView(elem, View.Y_AXIS);
+            } else if (kind.equals(StyleConstants.ComponentElementName)) {
+                return new ComponentView(elem);
+            } else if (kind.equals(StyleConstants.IconElementName)) {
+                return new IconView(elem);
+            }
+        }
+
+        // default to text display
+        return new LabelView(elem);
+    }
+}
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\WrapColumnFactory.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\WrapEditorKit.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+import javax.swing.text.StyledEditorKit;
+import javax.swing.text.ViewFactory;
+
+/**
+ * 
+ * 
+ * This class is created to fix
+ * the line wrap problem in JTextPane Java 1.7
+ * Hope it works!
+ * 
+ * WrapEditorKit:
+ * This is the set of things needed by a text component 
+ * to be a reasonably functioning editor for some type of text document. 
+ * This implementation provides a default implementation which treats 
+ * text as styled text and provides a minimal set of actions for editing styled text, 
+ * and we add the viewFactory that we manually create to here,
+ * in order to connect it to JTextPane
+ * 
+ * 
+ */
+public class WrapEditorKit extends StyledEditorKit {
+    /**
+	 * generated
+	 */
+	private static final long serialVersionUID = -2439803723035686677L;
+
+	private ViewFactory _defaultFactory = new WrapColumnFactory();
+	
+	/**
+	 * To make sure it cannot be used by other package
+	 */
+	protected WrapEditorKit(){
+	}
+	
+	@Override
+    public ViewFactory getViewFactory() {
+        return _defaultFactory;
+    }
+
+}
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\WrapEditorKit.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\WrapLabelView.java
+	 */
+
+
+package com.taskpad.ui;
+
+
+
+/**
+ * 
+ * 
+ * This class is created to fix
+ * the line wrap problem in JTextPane Java 1.7
+ * Hope it works!
+ * 
+ * WrapLabelView: wrap the view to the text.
+ * 
+ * The logic is following when a row is bigger 
+ * than available width the row must be broken. 
+ * The first part (row) should be less than available width. 
+ * 
+ * The rest again is measured and can be broken once more 
+ * if it's bigger than available width.
+ * 
+ */
+
+import javax.swing.text.Element;
+import javax.swing.text.LabelView;
+import javax.swing.text.View;
+
+public class WrapLabelView extends LabelView {
+	/**
+	 * to make sure it cannot be used by other package
+	 * @param elem
+	 */
+    protected WrapLabelView(Element elem) {
+        super(elem);
+    }
+
+    
+    /**
+	 * Size of content is defined by minimumSpan
+	 * (can't be less than minimal possible). 
+	 * So when it's in a scroll scroll measures width and asks for minimal span.
+	 * Then width of JScrollPane's content = width of viewport 
+	 * (or if min width is bigger =min width).
+	 */
+    
+    @Override
+    public float getMinimumSpan(int axis) {
+        switch (axis) {
+            case View.X_AXIS:
+                return 0;
+            case View.Y_AXIS:
+                return super.getMinimumSpan(axis);
+            default:
+                throw new IllegalArgumentException("Invalid axis: " + axis);
+        }
+    }
+
+}
+	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\ui\WrapLabelView.java
+
+
+
+
+
