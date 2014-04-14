@@ -3,386 +3,7 @@
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\CommandRecord.java
-	 */
-
-
-package com.taskpad.data;
-
-import java.util.LinkedList;
-
-public class CommandRecord {
-	// private static String previousCommand;
-	private static LinkedList<String> commandsForUndo = new LinkedList<String>();
-	private static LinkedList<String> commandsForRedo = new LinkedList<String>();
-	
-	public static void pushForUndo(String command) {
-		// previousCommand = command;
-		commandsForUndo.push(command);
-	}
-	
-	public static String popForUndo() throws NoPreviousCommandException {
-		if (commandsForUndo.size() < 1) {
-			throw new NoPreviousCommandException();
-		}
-		return commandsForUndo.pop();
-	}
-	
-	public static void pushForRedo(String command) {
-		// previousCommand = command;
-		commandsForRedo.push(command);
-	}
-	
-	public static String popForRedo() throws NoPreviousCommandException {
-		if (commandsForRedo.size() < 1) {
-			throw new NoPreviousCommandException();
-		}
-		return commandsForRedo.pop();
-	}
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\CommandRecord.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\DataFileStack.java
-	 */
-
-
-package com.taskpad.data;
-
-import java.util.LinkedList;
-
-public class DataFileStack {
-	public static final String FILE = ".data.xml";
-	// public static final String FILE_PREV = ".data_prev.xml";
-	public static LinkedList<String> undoStack = new LinkedList<String>();
-	public static LinkedList<String> redoStack = new LinkedList<String>();
-	
-	// private static boolean previousIsValid = false;
-	
-	/*
-	public static boolean isValidPrevious() {
-		return previousIsValid;
-	}
-	
-	public static void setPreviousIsValid(boolean isValid) {
-		previousIsValid = isValid;
-	}
-	*/
-	
-	public static String requestDataFile() {
-		return ".data" + undoStack.size() + ".xml";
-	}
-	
-	public static void pushForUndo(String file) {
-		// previousCommand = command;
-		undoStack.push(file);
-	}
-	
-	public static String popForUndo() throws NoPreviousFileException {
-		if (undoStack.size() < 1) {
-			throw new NoPreviousFileException();
-		}
-		return undoStack.pop();
-	}
-	
-	public static void pushForRedo(String file) {
-		redoStack.push(file);
-	}
-	
-	public static String popForRedo() throws NoPreviousFileException {
-		if (redoStack.size() < 1) {
-			throw new NoPreviousFileException();
-		}
-		return redoStack.pop();
-	}
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\DataFileStack.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\DataManager.java
-	 */
-
-
-package com.taskpad.data;
-
-
-import java.io.File;
-import java.io.FileNotFoundException;
-//import java.io.IOException;
-import java.util.LinkedList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-//import org.xml.sax.SAXException;
-
-
-import com.taskpad.storage.Task;
-import com.taskpad.storage.TaskList;
-
-public class DataManager {
-
-	public DataManager(){
-	}
-	
-	public static int retrieveNumberOfTasks(){
-		int numberOfTasks = retrieve(DataFileStack.FILE).size();
-		return numberOfTasks;
-	}
-	
-	public static void initializeXml(){
-		// do nothing
-		/*
-		LinkedList<Task> tasks = new LinkedList<Task>();
-		DataManager.storeBack(tasks, DataFile.FILE);
-		DataManager.storeBack(tasks, DataFile.FILE_PREV);
-		*/
-	}
-		
-	public static TaskList retrieve(String file) {
-		TaskList listOfTasks = new TaskList();
-		
-		try {
-			File fXmlFile = new File(file);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-			
-			doc.getDocumentElement().normalize();
-			
-			NodeList nList = doc.getElementsByTagName("Task");
-			
-			// System.out.println("nList.length = " + nList.getLength());
-			for (int i = 0; i < nList.getLength(); i++) {
-				Node taskNode = nList.item(i);
-		 
-				if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element task = (Element) taskNode;
-					
-					String description;
-					String deadline;
-					String startDate;
-					String startTime;
-					String endDate;
-					String endTime;
-					String venue;
-					String details;
-					int done;
-					
-					if (task.getElementsByTagName("description").item(0) != null) {
-						description = task.getElementsByTagName("description").item(0).getTextContent();
-					} else {
-						return listOfTasks; // description cannot be null
-					}
-					
-					if(task.getElementsByTagName("deadline").item(0) != null) {
-						deadline = task.getElementsByTagName("deadline").item(0).getTextContent();
-					} else {
-						deadline = null;
-					}
-					
-					if (task.getElementsByTagName("start_date").item(0) != null) {
-						startDate = task.getElementsByTagName("start_date").item(0).getTextContent();
-					} else {
-						startDate = null;
-					}
-					
-					if (task.getElementsByTagName("start_time").item(0) != null) {
-						startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
-					} else {
-						startTime = null;
-					}
-					
-					if (task.getElementsByTagName("end_date").item(0) != null) {
-						endDate = task.getElementsByTagName("end_date").item(0).getTextContent();
-					} else {
-						endDate = null;
-					}
-					
-					if (task.getElementsByTagName("end_time").item(0) != null) {
-						endTime = task.getElementsByTagName("end_time").item(0).getTextContent();
-					} else {
-						endTime = null;
-					}
-					
-					if (task.getElementsByTagName("venue").item(0) != null) {
-						venue = task.getElementsByTagName("venue").item(0).getTextContent();
-					} else {
-						venue = null;
-					}
-					
-					if(task.getElementsByTagName("details").item(0) != null) {
-						details = task.getElementsByTagName("details").item(0).getTextContent();
-					} else {
-						details = null;
-					}
-					
-					assert(task.getElementsByTagName("done") != null);
-					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
-					
-					listOfTasks.add(new Task(description, deadline, startDate,
-							startTime, endDate, endTime, venue, details, done));
-				}
-			}
-			
-			return listOfTasks;
-	    } catch (FileNotFoundException e) {
-			TaskList tasks = new TaskList();
-			DataManager.storeBack(tasks, file);
-			return tasks;
-	    } catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return listOfTasks;
-		
-	}
-	
-	public static void storeBack(TaskList taskList, String file) {
-		try {
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			docFactory.setNamespaceAware(true);
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-	 
-			// root elements
-			Document doc = docBuilder.newDocument();
-			Element rootElement = doc.createElement("TaskPad");
-			doc.appendChild(rootElement);
-	 
-			for(int i = 0; i < taskList.size(); i++) {
-				Task taskInList = taskList.get(i);
-				int id = i + 1;
-				Element task = doc.createElement("Task");
-				rootElement.appendChild(task);
-				task.setAttribute("id", Integer.toString(id));
-				
-				if(taskInList.getDescription() != null) {
-					Element description = doc.createElement("description");
-					description.appendChild(doc.createTextNode(taskInList.getDescription()));
-					task.appendChild(description);
-				}
-				
-				if(taskInList.getDeadline() != null) {
-					Element deadlineDay = doc.createElement("deadline");
-					deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadline()));
-					task.appendChild(deadlineDay);
-				}
-				
-				if (taskInList.getStartDate() != null) {
-					Element startDate = doc.createElement("start_date");
-					startDate.appendChild(doc.createTextNode(taskInList.getStartDate()));
-					task.appendChild(startDate);
-				}
-				
-				if (taskInList.getStartTime() != null) {
-					Element startTime = doc.createElement("start_time");
-					startTime.appendChild(doc.createTextNode(taskInList.getStartTime()));
-					task.appendChild(startTime);
-				}
-				
-				if (taskInList.getEndDate() != null) {
-					Element endDate = doc.createElement("end_date");
-					endDate.appendChild(doc.createTextNode(taskInList.getEndDate()));
-					task.appendChild(endDate);
-				}
-				
-				if (taskInList.getEndTime() != null) {
-					Element endTime = doc.createElement("end_time");
-					endTime.appendChild(doc.createTextNode(taskInList.getEndTime()));
-					task.appendChild(endTime);
-				}
-				
-				if (taskInList.getDetails() != null) {
-					Element details = doc.createElement("details");
-					details.appendChild(doc.createTextNode(taskInList.getDetails()));
-					task.appendChild(details);
-				}
-				
-				Element done = doc.createElement("done");
-				done.appendChild(doc.createTextNode(Integer.toString(taskInList.getDone())));
-				task.appendChild(done);
-				
-			}
-				
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(file));
-			
-			transformer.transform(source, result);
-	 
-		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
-		} catch (TransformerException tfe) {
-		  	tfe.printStackTrace();
-		}
-	
-	}
-	
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\DataManager.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\NoPreviousCommandException.java
-	 */
-
-
-package com.taskpad.data;
-
-public class NoPreviousCommandException extends Exception {
-
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\NoPreviousCommandException.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\NoPreviousFileException.java
-	 */
-
-
-package com.taskpad.data;
-
-public class NoPreviousFileException extends Exception {
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\data\NoPreviousFileException.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactory.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactory.java
 	 */
 
 
@@ -398,16 +19,26 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * CommandFactory
+ * 
+ * This class is to execute commands of different command type,
+ * and output feedback to GUI.
+ * 
+ */
 public class CommandFactory {
-	private static final String FEEDBACK_NO_TASK_FOUND = "No task is found.";
-	private static final String FEEDBACK_NO_TASK_WITH_DEADLINE = "No task with deadline in the database.";
-	private static final String FEEDBACK_NO_TASK = "No task found.";
-	private static final String FEEDBACK_NO_FINISHED_TASK = "No finished task found.";
-	private static final String LOGGING_ADDING_TASK = "adding task: %s";
+	private static final String FEEDBACK_NO_TASK_FOUND = "No task found.";
 	private static final String FEEDBACK_NO_UNDONE_TASK = "No undone task found.";
+	private static final String FEEDBACK_NO_FINISHED_TASK = "No finished task found.";
 	private static final String FEEDBACK_CLEAR = "All tasks have been deleted. You can use undo to get them back.";
 	private static final String FEEDBACK_CANNOT_UNDO = "You don't have things to undo.";
+	
+	private static final String LOGGING_ADDING_TASK = "adding task: %s";
+	private static final String LOGGING_UNDO_FAILED = "Undo failed";
+	private static final String LOGGING_REDO_FAILED = "Redo failed";
+	
 	private static final String STRING_NEWLINE = "\n";
+	
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	protected static void add(String description, String deadline, String startDate,
@@ -434,6 +65,7 @@ public class CommandFactory {
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_NO_UNDONE_TASK);
 		} else {
+			// Notes: can output in color text or in table view
 			// OutputToGui.output(STRING_NEWLINE);
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
@@ -450,6 +82,7 @@ public class CommandFactory {
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_NO_FINISHED_TASK);
 		} else {
+			// Notes: can output in color text or in table view
 			// OutputToGui.output(STRING_NEWLINE);
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
@@ -463,15 +96,16 @@ public class CommandFactory {
 		
 		if (tasks.size() == 0) {
 			OutputToGui.output(STRING_NEWLINE);
-			OutputToGui.output(FEEDBACK_NO_TASK);
+			OutputToGui.output(FEEDBACK_NO_TASK_FOUND);
 		} else {
+			// Notes: can output in color text or in table view
 			// OutputToGui.output(STRING_NEWLINE);
 			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(tasks, listOfTasks);
 		}
 	}
 
-	/*
+	/*	not used by v0.5
 	protected static void listByDeadline() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
@@ -495,11 +129,16 @@ public class CommandFactory {
 			
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output("Undo of '" + command + "' completed.");
+			
 		} catch (NoPreviousFileException e) {
+			logger.info(LOGGING_UNDO_FAILED);
+			
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_CANNOT_UNDO);
+			
 		} catch (NoPreviousCommandException e) {
 			// should never come to this
+			// will catch NoPreviesFileException first
 		}
 	}
 	
@@ -510,53 +149,63 @@ public class CommandFactory {
 			
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output("Redo of '" + command + "' completed.");
+			
 		} catch (NoPreviousFileException e) {
+			logger.info(LOGGING_REDO_FAILED);
+			
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output("You don't have things to redo.");
+			
 		} catch (NoPreviousCommandException e) {
 			// should never come to this
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * search
+	 * 
+	 * Search can support search by keywords and search by time
+	 * 
+	 * @param keywordsString
+	 * @param timeString
+	 */
 	protected static void search(String keywordsString, String timeString) {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		
+
 		String[] keywords = keywordsString.split(" ");
-		String[] times = timeString.split("&");
-		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(listOfTasks, keywords, times);
-		
-		// pass feedback to GUI
+		String[] times = timeString.split("&"); // purposely defined spliter
+
+		LinkedList<Integer> results = CommandFactoryBackend.getSearchResult(
+				listOfTasks, keywords, times);
+
+		// pass feedback to GUI in color text
 		// OutputToGui.output(STRING_NEWLINE);
-		// OutputToGui.output("Number of tasks found: " + results.size() + "\n\n");
+		// OutputToGui.output("Number of tasks found: " + results.size() +
+		// "\n\n");
 		// OutputToGui.outputColorTextForTasks(results, listOfTasks);
-		
+
 		if (results.size() == 0) {
 			OutputToGui.output(STRING_NEWLINE);
 			OutputToGui.output(FEEDBACK_NO_TASK_FOUND);
 		} else {
-			// OutputToGui.output(STRING_NEWLINE);
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
 			OutputToGui.outputTable(results, listOfTasks);
-		}	
-		
+		}
+
 	}
 
-	protected static void edit(String taskIdString, String description, String deadline) {
+	protected static void edit(String taskIdString, String description,
+			String deadline, String startTime, String startDate,
+			String endTime, String endDate, String info) {
+
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
-		
-		Task task = CommandFactoryBackend.editTask(taskIdString, description, deadline,
+
+		Task task = CommandFactoryBackend.editTask(taskIdString, description,
+				deadline, startTime, startDate, endTime, endDate, info,
 				listOfTasks);
-		
+
 		// pass feedback to gui
-		OutputToGui.output("TASK " + taskIdString + " EDITED: " + STRING_NEWLINE);
-		/*
-		if(description != null && !description.equals("")) {
-			OutputToGui.output("'" + taskHistory + "' changed to '" 
-				+ OutputToGui.generateTitleForOneTask(taskIdString, description) + "'");
-		}
-		*/
+		OutputToGui.output(STRING_NEWLINE + "TASK " + taskIdString
+				+ " EDITED: " + STRING_NEWLINE);
 		int taskid = Integer.parseInt(taskIdString);
 		OutputToGui.outputColorTextForOneTask(taskid, task);
 	}
@@ -564,66 +213,104 @@ public class CommandFactory {
 	protected static void markAsDone(String taskIdString) {
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
 
-		Task task = CommandFactoryBackend.markTaskAsDone(taskIdString, listOfTasks);
+		Task task = CommandFactoryBackend.markTaskAsDone(taskIdString,
+				listOfTasks);
 
 		OutputToGui.output(STRING_NEWLINE);
-		OutputToGui.outputColorTextForOneTask(
-				Integer.parseInt(taskIdString), task);
+		OutputToGui.outputColorTextForOneTask(Integer.parseInt(taskIdString),
+				task);
 	}
 
+	/**
+	 * clear
+	 * 
+	 * This is to delete all tasks.
+	 * 
+	 */
 	protected static void clear() {
-		CommandFactoryBackend.archiveForUndo();	
+		CommandFactoryBackend.archiveForUndo();
 		CommandFactoryBackend.clearTasks();
-		
+
 		// pass feedback to gui
 		OutputToGui.output(STRING_NEWLINE);
 		OutputToGui.output(FEEDBACK_CLEAR);
 	}
 
+	/**
+	 * addInfo
+	 * 
+	 * This is to add some additional information into 'details' column of a
+	 * task
+	 * 
+	 * @param taskIdString
+	 * @param info
+	 */
 	protected static void addInfo(String taskIdString, String info) {
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
-		
+
 		int index = getIndexById(taskIdString);
-		Task task = CommandFactoryBackend.addInfoToTask(info, listOfTasks, index);
+		assert(index < listOfTasks.size());
 		
+		Task task = CommandFactoryBackend.addInfoToTask(info, listOfTasks,
+				index);
+
 		OutputToGui.output(STRING_NEWLINE);
 		OutputToGui.outputColorTextForOneTask(index + 1, task);
 	}
-
-	protected static int getIndexById(String taskIdString) {
-		return Integer.parseInt(taskIdString) - 1;
-	}
 	
-	protected static void delete(String taskIdString) {		
+	protected static void delete(String taskIdString) {
 		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
-		
-		int indexOfTask = Integer.parseInt(taskIdString) - 1;	
-		assert(indexOfTask < listOfTasks.size());
-		
-		Task taskDeleted = CommandFactoryBackend.deleteTask(listOfTasks, indexOfTask);
-		
+
+		int indexOfTask = getIndexById(taskIdString);
+		assert (indexOfTask < listOfTasks.size());
+
+		Task taskDeleted = CommandFactoryBackend.deleteTask(listOfTasks,
+				indexOfTask);
+
 		OutputToGui.output(STRING_NEWLINE);
 
 		OutputToGui.output(OutputToGui.generateFeedbackForDelete(taskDeleted));
 	}
 
+	/**
+	 * addReminder
+	 * 
+	 * This method is to attach a reminder to some task. Tasks attached with
+	 * reminder will be shown for showrem command.
+	 * 
+	 * @param taskIdString
+	 * @param date
+	 */
+	protected static void addReminder(String taskIdString, String date) {
+		TaskList listOfTasks = CommandFactoryBackend.archiveForUndo();
+
+		int indexOfTask = getIndexById(taskIdString);
+		assert (indexOfTask < listOfTasks.size());
+
+		CommandFactoryBackend.setReminder(indexOfTask, date, listOfTasks);
+	}
+	
+	protected static int getIndexById(String taskIdString) {
+		return Integer.parseInt(taskIdString) - 1;
+	}
 
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactory.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactory.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactoryBackend.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactoryBackend.java
 	 */
 
 
 package com.taskpad.execute;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 import com.taskpad.storage.CommandRecord;
 import com.taskpad.storage.DataFileStack;
@@ -633,47 +320,29 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * CommandFactoryBackend
+ * 
+ * This class is to access the database to support command execution.
+ * 
+ */
 public class CommandFactoryBackend {
-	/**
-	 * ACCENDING_ORDER: a comparator used to sort Task by their dates.
-	 * 
-	 */
-	/*
-	protected static final Comparator<Task> ACCENDING_ORDER = new Comparator<Task>() {
-		/**
-		 * compare: compare two tasks' Date
-		 * 
-		 * @param e1
-		 *            : task1
-		 * @param e2
-		 *            : task2
-		 * @return int
-		 */
-	/*	@Override
-		public int compare(Task e1, Task e2) {
-			SimpleDateFormat dateConverter = new SimpleDateFormat(
-					"dd/MM/yyyy HH:mm");
-			Date d1, d2;
-			try {
-				d1 = dateConverter.parse(e1.getDeadline() + e1.getEndTime());
-				d2 = dateConverter.parse(e2.getDeadline() + e2.getEndTime());
-			} catch (ParseException e) {
-				System.err.println(e.getMessage());
-				return 0;
-			}
-			return d1.compareTo(d2);
-		}
-	};
-	*/
+	private static final String LOGGING_STORE_BACK_TO_DB = "Storing task '%s' back to data file...";
+	
+	private static Logger logger = Logger.getLogger("TaskPad");
 	
 	protected static Task addTask(String description, String deadline,
 			String startDate, String startTime, String endDate, String endTime,
 			String venue, TaskList listOfTasks) {
+		assert(description != null);
+		
 		Task taskToAdd = new Task(description, deadline, startDate,
 				startTime, endDate, endTime, venue);
 		listOfTasks.add(taskToAdd);
 
+		logger.info(String.format(LOGGING_STORE_BACK_TO_DB, description));
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+		
 		return taskToAdd;
 	}
 	
@@ -709,15 +378,25 @@ public class CommandFactoryBackend {
 		return tasks;
 	}
 
+	/**
+	 * updateDataForUndo
+	 * 
+	 * This is to update data files for undo operation
+	 * 
+	 * @return the name of previous stored data file
+	 * @throws NoPreviousFileException
+	 */
 	protected static String updateDataForUndo() throws NoPreviousFileException {
 		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
+		// recover previously stored data file in undo stack
 		String previousFile = DataFileStack.popForUndo();
 		TaskList previousListOfTasks = DataManager.retrieve(previousFile);
 		
 		DataManager.storeBack(previousListOfTasks, DataFileStack.FILE);
-		DataManager.storeBack(currentListOfTasks, previousFile);
 		
+		// later can redo back
+		DataManager.storeBack(currentListOfTasks, previousFile);
 		DataFileStack.pushForRedo(previousFile);
 		
 		return previousFile;
@@ -725,6 +404,7 @@ public class CommandFactoryBackend {
 	
 	protected static String updateCommandRecordForUndo(String previousFile)
 			throws NoPreviousCommandException {
+		
 		String command = CommandRecord.popForUndo();
 		CommandRecord.pushForRedo(command);
 		
@@ -734,12 +414,14 @@ public class CommandFactoryBackend {
 	protected static String updateDataForRedo() throws NoPreviousFileException {
 		TaskList currentListOfTasks = DataManager.retrieve(DataFileStack.FILE);
 		
+		// recover previously stored data file in redo stack
 		String previousFile = DataFileStack.popForRedo();
 		TaskList previousListOfTasks = DataManager.retrieve(previousFile);
 		
 		DataManager.storeBack(previousListOfTasks, DataFileStack.FILE);
-		DataManager.storeBack(currentListOfTasks, previousFile);
 		
+		// later can undo again
+		DataManager.storeBack(currentListOfTasks, previousFile);
 		DataFileStack.pushForUndo(previousFile);
 		
 		return previousFile;
@@ -778,6 +460,16 @@ public class CommandFactoryBackend {
 		return results;
 	}
 
+	/**
+	 * containsKeywords
+	 * 
+	 * This is to check whether task contains ALL the keywords.
+	 * 
+	 * @param keywords
+	 * @param description
+	 * @param details
+	 * @return a boolean value
+	 */
 	private static boolean containsKeywords(String[] keywords,
 			String description, String details) {
 		boolean isCandidate = true;
@@ -789,6 +481,15 @@ public class CommandFactoryBackend {
 		return isCandidate;
 	}
 
+	/**
+	 * containsTimes
+	 * 
+	 * This is to check whether task contains ANY ONE OF the searched time
+	 * 
+	 * @param timesOrDates
+	 * @param task
+	 * @return
+	 */
 	private static boolean containsTimes(String[] timesOrDates, Task task) {
 		String deadline = task.getDeadline();
 		String startDate = task.getStartDate();
@@ -797,58 +498,106 @@ public class CommandFactoryBackend {
 		String endTime = task.getEndTime();
 		
 		for(String timeOrDate: timesOrDates) {
-			if(timeOrDate.trim().equals("")) {
+			if(isValidTimeOrDates(timeOrDate)) {
 				continue;
 			}
-			// check deadline
-			if(deadline != null && deadline.contains(timeOrDate)) {
+
+			if(deadlineContainsTimeOrDate(deadline, timeOrDate)) {
 				return true;
 			}
 			
-			// check start/end time
-			String time = "";
-			String date = "";
-			if(timeOrDate.contains(" ")) {
-				// time + date
-				String[] timeAndDate = timeOrDate.split(" ");
-				time = timeAndDate[0];
-				date = timeAndDate[1];
-				
-				if(startDate != null && startDate.equals(date) 
-						&& startTime != null && startTime.equals(time)) {
-					return true;
-				}
-				if(endDate != null && endDate.equals(date) 
-						&& endTime != null && endTime.equals(time)) {
-					return true;
-				}
-				
-			} else {
-				// only date
-				date = timeOrDate;
-				if(startDate != null && startDate.equals(date)) {
-					return true;
-				}
-				if(endDate != null && endDate.equals(date)) {
-					return true;
-				}
-			}
-			
+			if(StartOrEndContainsTimeOrDate(startDate, startTime, endDate,
+					endTime, timeOrDate)) {
+				return true;
+			}		
 		}
 		
 		return false;
 	}
+
+	private static boolean isValidTimeOrDates(String timeOrDate) {
+		return timeOrDate.trim().equals("");
+	}
 	
-	protected static Task editTask(String taskIdString,
-			String description, String deadline, TaskList listOfTasks) {
-		Task task = getTaskById(listOfTasks, taskIdString);
-		// String taskHistory = OutputToGui.generateTitleForOneTask(taskIdString, task.getDescription());
+	private static boolean deadlineContainsTimeOrDate(String deadline,
+			String timeOrDate) {
+		return deadline != null && deadline.contains(timeOrDate);
+	}
+	
+	private static boolean StartOrEndContainsTimeOrDate(String startDate,
+			String startTime, String endDate, String endTime, String timeOrDate) {
 		
-		if(description != null && !description.equals("")) {
+		String time = "";
+		String date = "";
+		if(timeOrDate.contains(" ")) {
+			// time + date
+			String[] timeAndDate = timeOrDate.split(" ");
+			time = timeAndDate[0];
+			date = timeAndDate[1];
+			
+			if(startDate != null && startDate.equals(date) 
+					&& startTime != null && startTime.equals(time)) {
+				return true;
+			}
+			if(endDate != null && endDate.equals(date) 
+					&& endTime != null && endTime.equals(time)) {
+				return true;
+			}
+			
+		} else {
+			// only date
+			date = timeOrDate;
+			if(startDate != null && startDate.equals(date)) {
+				return true;
+			}
+			if(endDate != null && endDate.equals(date)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	protected static Task editTask(String taskIdString, String description,
+			String deadline, String startTime, String startDate,
+			String endTime, String endDate, String info, TaskList listOfTasks) {
+		
+		Task task = getTaskById(listOfTasks, taskIdString);
+		
+		if (description != null && !description.equals("")) {
+			logger.info(String.format("Edit task description: %s ...",
+					description));
 			task.setDescription(description);
 		}
-		if(deadline != null && !deadline.equals("")) {
+		if (deadline != null) {
+			logger.info(String.format("Edit task deadline: %s ...", 
+					deadline));
 			task.setDeadline(deadline);
+		}
+		if (startTime != null) {
+			logger.info(String.format("Edit task start time: %s ...", 
+					startTime));
+			task.setStartTime(startTime);
+		}
+		if (startDate != null) {
+			logger.info(String.format("Edit task start date: %s ...", 
+					startDate));
+			task.setStartDate(startDate);
+		}
+		if (endTime != null) {
+			logger.info(String.format("Edit task end time: %s ...", 
+					endTime));
+			task.setEndTime(endTime);
+		}
+		if (endDate != null) {
+			logger.info(String.format("Edit task end date: %s ...", 
+					endDate));
+			task.setEndDate(endDate);
+		}
+		if (info != null) {
+			logger.info(String.format("Edit task info: %s ...", 
+					info));
+			task.setDetails(info);			
 		}
 		
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
@@ -876,15 +625,22 @@ public class CommandFactoryBackend {
 		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
 	}
 	
+	/**
+	 * archiveForUndo
+	 * 
+	 * This is to archive the current database before making changes.
+	 * 
+	 * @return
+	 */
 	protected static TaskList archiveForUndo() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		
+
 		// request a file for archive purpose
 		String fileRecord = DataFileStack.requestDataFile();
 		DataManager.storeBack(listOfTasks, fileRecord);
-		
+
 		DataFileStack.pushForUndo(fileRecord);
-		
+
 		return listOfTasks;
 	}
 	
@@ -895,6 +651,7 @@ public class CommandFactoryBackend {
 		if(task.getDetails() == null) {
 			task.setDetails(info);
 		} else {
+			// append to details
 			String details = task.getDetails();
 			details += ("\n" + info);
 			task.setDetails(details);
@@ -912,7 +669,14 @@ public class CommandFactoryBackend {
 		return taskDeleted;
 	}
 
-	/*
+	public static void setReminder(int indexOfTask, String date, TaskList listOfTasks) {
+		Task task = listOfTasks.get(indexOfTask);
+		task.setReminderDate(date);
+		
+		DataManager.storeBack(listOfTasks, DataFileStack.FILE);
+	}
+
+	/* not used by v0.5
 	public static LinkedList<Integer> sortByDeadline(TaskList listOfTasks) {
 		LinkedList<Task> tasks = listOfTasks.getList();
 		
@@ -935,78 +699,61 @@ public class CommandFactoryBackend {
 	*/
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactoryBackend.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactoryBackend.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactoryStub.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorManager.java
 	 */
 
 
 package com.taskpad.execute;
 
-public class CommandFactoryStub extends CommandFactory{
-	protected static void outputToGui(String feedback) {
-		System.out.println(feedback);
-	}
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\CommandFactoryStub.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorManager.java
-	 */
-
-
-package com.taskpad.execute;
-
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import com.taskpad.storage.CommandRecord;
+import com.taskpad.storage.DataFileStack;
+import com.taskpad.storage.DataManager;
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
 import com.taskpad.ui.GuiManager;
 import com.taskpad.input.Input;
 
+/**
+ * ExecutorManager
+ * 
+ * This is the facade class of Executor component.
+ * It accepts an Input object from InputProcessing component,
+ * and call CommandFactory to execute the command.
+ *
+ */
 public class ExecutorManager {
-	private static final String MESSAGE_SHOWING_REMINDER = "Showing tasks due today & overdue tasks...";
-	
+	private static final int WAITING_TIME_IN_MILISECONDS = 1 * 1000;
+
+	private static final String MESSAGE_SHOWING_REMINDER = "Showing your tasks and reminders...\n";
+
 	private static Logger logger = Logger.getLogger("TaskPad");
 	
-	public static void showReminder() {
-		OutputToGui.output(MESSAGE_SHOWING_REMINDER);
-		
-		Timer timer = new Timer();
-		
-		timer.schedule(new TimerTask() {
-			  @Override
-			  public void run() {
-					Reminder.showReminderForToday();
-					Reminder.showReminderForOverdue();
-			  }
-		}, 2*1000);
-		
-	}
 	public static void receiveFromInput(Input input, String command) {
+		logger.info("Executor: " + command);
+
 		String commandType = input.getCommand();
-		logger.info("Executor: "+ command);
 		Map<String, String> parameters = input.getParameters();
-		
+
 		switch (commandType) {
 		case "ADD":
-			CommandFactory.add(parameters.get("DESC"), parameters.get("DEADLINE DATE"),
+			CommandFactory.add(parameters.get("DESC"),
+					parameters.get("DEADLINE DATE"),
 					parameters.get("START DATE"), parameters.get("START TIME"),
 					parameters.get("END DATE"), parameters.get("END TIME"),
 					parameters.get("VENUE"));
-			
 			CommandRecord.pushForUndo(command);
 			break;
 		case "DELETE":
@@ -1014,7 +761,8 @@ public class ExecutorManager {
 			CommandRecord.pushForUndo(command);
 			break;
 		case "ADDINFO":
-			CommandFactory.addInfo(parameters.get("TASKID"), parameters.get("INFO"));
+			CommandFactory.addInfo(parameters.get("TASKID"),
+					parameters.get("INFO"));
 			CommandRecord.pushForUndo(command);
 			break;
 		case "CLEAR":
@@ -1026,13 +774,17 @@ public class ExecutorManager {
 			CommandRecord.pushForUndo(command);
 			break;
 		case "EDIT":
-			CommandFactory.edit(parameters.get("TASKID"), parameters.get("DESC"),
-					parameters.get("DEADLINE"));
+			CommandFactory.edit(parameters.get("TASKID"),
+					parameters.get("DESC"), parameters.get("DEADLINE"),
+					parameters.get("START TIME"), parameters.get("START DATE"),
+					parameters.get("END TIME"), parameters.get("END DATE"),
+					parameters.get("INFO"));
 			CommandRecord.pushForUndo(command);
 			break;
 		case "SEARCH":
 			logger.info("Search keyword: " + parameters.get("KEYWORD"));
-			CommandFactory.search(parameters.get("KEYWORD"), parameters.get("TIME"));
+			CommandFactory.search(parameters.get("KEYWORD"),
+					parameters.get("TIME"));
 			break;
 		case "UNDO":
 			CommandFactory.undo();
@@ -1043,40 +795,117 @@ public class ExecutorManager {
 		case "LIST":
 			list(parameters.get("KEY"));
 			break;
+		case "ADDREM":
+			CommandFactory.addReminder(parameters.get("TASKID"),
+					parameters.get("DATE"));
+			CommandRecord.pushForUndo(command);
+			break;
 		}
 	}
 
+	
 	private static void list(String option) {
 		GuiManager.clearOutput();
 		switch(option) {
 		case "ALL":
 			logger.info("Listing all tasks...");
+			
 			GuiManager.callOutput("Listing all tasks...");
 			CommandFactory.listAll();
 			break;
 		case "DONE":
 			logger.info("Listing finished tasks...");
+			
 			GuiManager.callOutput("Listing finished tasks...");
 			CommandFactory.listDone();
 			break;
 		case "UNDONE":
 			logger.info("Listing undone tasks...");
+			
 			GuiManager.callOutput("Listing undone tasks...");
 			CommandFactory.listUndone();
 			break;
 		}	
 	}
+	
+	/**
+	 * showReminder
+	 * 
+	 * This is to schedule a TimerTask to show tasks due today, overdue tasks,
+	 * and tasks attached with reminder (using addrem command)
+	 * 
+	 */
+	public static void showReminder() {
+		OutputToGui.output(MESSAGE_SHOWING_REMINDER);
 
-}
+		// wait for some time (1s) before showing tasks
+		Timer timer = new Timer();
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorManager.java
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				Reminder.showTasksForReminder();
+			}
+		}, WAITING_TIME_IN_MILISECONDS);
+
+	}
+	
+	/**
+	 * getStartDateAndTimeForTask
+	 * 
+	 * This is to get the start date and time for a certain task.
+	 * InputProcessing needs these information to decide whether an editing
+	 * request is valid (e.g. start time must be earlier than end time etc)
+	 * 
+	 * @param taskId
+	 * @return String of start date plus start time
+	 * @throws InvalidTaskIdException
+	 */
+	public static String getStartDateAndTimeForTask(int taskId)
+			throws InvalidTaskIdException {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+
+		if (taskId > listOfTasks.size()) {
+			throw new InvalidTaskIdException();
+		}
+
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task.getStartDate() + " " + task.getStartTime();
+	}
+
+	public static String getEndDateAndTimeForTask(int taskId) throws InvalidTaskIdException {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		if (taskId > listOfTasks.size()) {
+			throw new InvalidTaskIdException();
+		}
+		
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task.getEndDate() + " " + task.getEndTime();
+	}
+
+	public static String getDeadlineForTask(int taskId) throws InvalidTaskIdException {
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		
+		if (taskId > listOfTasks.size()) {
+			throw new InvalidTaskIdException();
+		}
+		
+		int index = taskId - 1;
+		Task task = listOfTasks.get(index);
+		return task.getDeadline();
+	}
+	
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorManager.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorTestDriver.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorTestDriver.java
 	 */
 
 
@@ -1088,12 +917,14 @@ import java.util.LinkedList;
 import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.TaskList;
 
+/**
+ * ExecutorTestDriver
+ * 
+ * Methods in CommandFactoryBackend are not public
+ * This class offers public access for testing purpose
+ * 
+ */
 public class ExecutorTestDriver {
-	/* 
-	 * Methods in CommandFactoryBackend are not public
-	 * Offer public access for testing purpose
-	 */
-	
 	public static void addTask(HashMap<String, String> parameters, TaskList list) {
 		CommandFactoryBackend.addTask(parameters.get("DESC"), parameters.get("DEADLINE"),
 				parameters.get("START DATE"), parameters.get("START TIME"),
@@ -1129,17 +960,55 @@ public class ExecutorTestDriver {
 	public static void updateDataForUndo() throws NoPreviousFileException {
 		CommandFactoryBackend.updateDataForUndo();
 	}
+
+	public static void addInfo(String info, TaskList list, int index) {
+		CommandFactoryBackend.addInfoToTask(info, list, index);
+	}
+
+	public static LinkedList<Integer> search(TaskList list, String[] keywords, String[] times) {
+		return CommandFactoryBackend.getSearchResult(list, keywords, times);
+	}
 	
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorTestDriver.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\ExecutorTestDriver.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\OutputToGui.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\InvalidTaskIdException.java
+	 */
+
+
+package com.taskpad.execute;
+
+/**
+ * InvalidTaskIdException
+ * 
+ * This exception will be thrown if the task id from user input is invalid
+ * 
+ */
+public class InvalidTaskIdException extends Exception {
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 4039361586685055328L;
+
+	public InvalidTaskIdException() {
+		System.out.println("Invalid task id.");
+	}
+}
+
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\InvalidTaskIdException.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\OutputToGui.java
 	 */
 
 
@@ -1152,123 +1021,172 @@ import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 import com.taskpad.ui.GuiManager;
 
+/**
+ * OutputToGui
+ * 
+ * This class is to generate and output feedback (in text or in table view) to
+ * GUI component
+ * 
+ */
 public class OutputToGui {
+	private static final String FEEDBACK_TITLE_FOR_TASK = "%s. %s";
+	private static final String FEEDBACK_DELETE = "'%s' deleted";
+	private static final int 	TABLE_NUMBER_OF_COLUMNS = 7;
+	private static final String TABLE_SKIP = "-";
+	private static final String TABLE_UNDONE = "Not done";
+	private static final String TABLE_DONE = "Done";
+
+	private static final String STRING_NEWLINE = "\n";
+	
+	private static final String FEEDBACK_ADD = "Task Successfully Added!\n";
+
+
+	/**
+	 * output
+	 * 
+	 * This is to output text
+	 * 
+	 * @param feedback
+	 */
 	protected static void output(String feedback) {
-		GuiManager.callOutputNoLine(feedback + "\n");
+		GuiManager.callOutputNoLine(feedback + STRING_NEWLINE);
 	}
 	
-	protected static void outputTable(LinkedList<Integer> candidates, TaskList listOfTasks) {
+	/**
+	 * outputTable
+	 * 
+	 * This is to output in table view
+	 * 
+	 * @param candidates
+	 * @param listOfTasks
+	 */
+	protected static void outputTable(LinkedList<Integer> candidates,
+			TaskList listOfTasks) {
 		String[][] tableArray = generate2dArrayForTasks(candidates, listOfTasks);
 		GuiManager.callTable(tableArray);
 	}
-	
-	protected static String[][] generate2dArrayForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
+
+	/**
+	 * generate2dArrayForTasks
+	 * 
+	 * This is to generate 2d-array for tasks in table view
+	 * 
+	 * @param candidates
+	 * @param listOfTasks
+	 * @return 2-d array
+	 */
+	protected static String[][] generate2dArrayForTasks(
+			LinkedList<Integer> candidates, TaskList listOfTasks) {
 		int numberOfTasks = candidates.size();
-		String[][] result = new String[numberOfTasks][7];
-		/*
-		for(int i = 0; i < numberOfTasks; i++) {
-			for(int j = 0; j < 6; j++) {
-				result[i][j] = "";
-			}
-		}
-		*/
+		String[][] result = new String[numberOfTasks][TABLE_NUMBER_OF_COLUMNS];
+
 		int index = 0;
-		for(int next: candidates) {
+		for (int next : candidates) {
 			int taskId = next + 1;
 			Task task = listOfTasks.get(next);
 			result = fillIn2dArrayForOneTask(result, taskId, index, task);
 			index++;
-		}		
-		
+		}
+
 		return result;
 	}
-	
-	private static String[][] fillIn2dArrayForOneTask(String[][] result, int taskId, int index, Task task) {		
+
+	private static String[][] fillIn2dArrayForOneTask(String[][] result,
+			int taskId, int index, Task task) {
 		result[index][0] = "" + taskId;
 		result[index][1] = task.getDescription();
-		
-		if(task.getDeadline() == null || task.getDeadline().equals("")) {
-			result[index][2] = "-";
+
+		// deadline
+		if (task.getDeadline() == null || task.getDeadline().equals("")) {
+			result[index][2] = TABLE_SKIP;
 		} else {
 			result[index][2] = task.getDeadline();
 		}
-		
-		if(task.getStartTime() == null || task.getStartTime().equals("")) {
-			if(task.getStartDate() == null || task.getStartDate().equals("")) {
-				result[index][3] = "-";
+
+		// start
+		if (task.getStartTime() == null || task.getStartTime().equals("")) {
+			if (task.getStartDate() == null || task.getStartDate().equals("")) {
+				result[index][3] = TABLE_SKIP;
 			} else {
 				result[index][3] = task.getStartDate();
 			}
 		} else {
-			if(task.getStartDate() == null || task.getStartDate().equals("")) {
+			if (task.getStartDate() == null || task.getStartDate().equals("")) {
 				result[index][3] = task.getStartTime();
 			} else {
-				result[index][3] = task.getStartTime() + " " + task.getStartDate();
-			}			
+				result[index][3] = task.getStartTime() + " "
+						+ task.getStartDate();
+			}
 		}
 
-		if(task.getEndTime() == null || task.getEndTime().equals("")) {
-			if(task.getEndDate() == null || task.getEndDate().equals("")) {
-				result[index][4] = "-";
+		// end
+		if (task.getEndTime() == null || task.getEndTime().equals("")) {
+			if (task.getEndDate() == null || task.getEndDate().equals("")) {
+				result[index][4] = TABLE_SKIP;
 			} else {
 				result[index][4] = task.getEndDate();
 			}
 		} else {
-			if(task.getEndDate() == null || task.getEndDate().equals("")) {
+			if (task.getEndDate() == null || task.getEndDate().equals("")) {
 				result[index][4] = task.getEndTime();
 			} else {
 				result[index][4] = task.getEndTime() + " " + task.getEndDate();
-			}			
+			}
 		}
-		
-		if(task.getDetails() == null || task.getDetails().trim().equals("")) {
-			result[index][5] = "-";
+
+		// details
+		if (task.getDetails() == null || task.getDetails().trim().equals("")) {
+			result[index][5] = TABLE_SKIP;
 		} else {
 			result[index][5] = task.getDetails();
 		}
-		
-		if(task.getDone() == 1) {
-			result[index][6] = "Done";
+
+		// status (done or not)
+		if (task.getDone() == 1) {
+			result[index][6] = TABLE_DONE;
 		} else {
-			result[index][6] = "Not done yet";
+			result[index][6] = TABLE_UNDONE;
 		}
-		
+
 		return result;
 	}
 
-	protected static void outputColorTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
-		for(int next: candidates) {
+	/**
+	 * outputColorTextForTasks
+	 * 
+	 * This is to output task information with color markup
+	 * 
+	 * @param candidates
+	 * @param listOfTasks
+	 */
+	protected static void outputColorTextForTasks(
+			LinkedList<Integer> candidates, TaskList listOfTasks) {
+		for (int next : candidates) {
 			int taskId = next + 1;
 			outputColorTextForOneTask(taskId, listOfTasks.get(next));
-			output("\n\n");
-		}	
+			output("STRING_NEWLINE + STRING_NEWLINE");
+		}
 	}
+
 	protected static void outputColorTextForOneTask(int taskId, Task task) {
 		String text = "";
-		
+
+		// task id
 		text = "Task ID:\t\t" + taskId;
-		GuiManager.showSelfDefinedMessage(text, new Color(16,78,139), false); 
-		/*
-		text =  taskId + "\n";
-		GuiManager.showSelfDefinedMessage(text, Color.blue, false);
-		*/
-		
-		/*
-		text = "Description:\t";
-		GuiManager.showSelfDefinedMessage(text, Color.green, true);
-		*/
-		text = "Description:\t" + task.getDescription();		
+		GuiManager.showSelfDefinedMessage(text, new Color(16, 78, 139), false);
+
+		// description
+		text = "Description:\t" + task.getDescription();
 		GuiManager.showSelfDefinedMessage(text, Color.MAGENTA, false);
-		
+
+		// deadline
 		if (task.getDeadline() != null && !task.getDeadline().equals("")) {
-			/*
-			text = "Deadline:\t";
-			GuiManager.showSelfDefinedMessage(text, Color.pink, true);
-			*/
 			text = "Deadline:\t\t" + task.getDeadline();
-			GuiManager.showSelfDefinedMessage(text, Color.orange, false);
+			GuiManager.showSelfDefinedMessage(text, new Color(255, 165, 0),
+					false);
 		}
-		
+
+		// start
 		String start = "";
 		if (task.getStartTime() != null && !task.getStartTime().equals("")) {
 			start += task.getStartTime();
@@ -1277,14 +1195,11 @@ public class OutputToGui {
 			start += (" " + task.getStartDate());
 		}
 		if (!start.equals("")) {
-			/*
-			text += "Start:\t";
-			GuiManager.showSelfDefinedMessage(text, Color.yellow, true);
-			*/
 			text = "Start:\t\t" + start;
 			GuiManager.showSelfDefinedMessage(text, Color.blue, false);
 		}
-		
+
+		// end
 		String end = "";
 		if (task.getEndTime() != null && !task.getEndTime().equals("")) {
 			end += task.getEndTime();
@@ -1293,51 +1208,33 @@ public class OutputToGui {
 			end += (" " + task.getEndDate());
 		}
 		if (!end.equals("")) {
-			/*
-			text += "End:\t";
-			GuiManager.showSelfDefinedMessage(text, Color.orange, true);
-			*/
 			text = "End:\t\t" + end;
 			GuiManager.showSelfDefinedMessage(text, Color.blue, false);
 		}
-		
-		/*
-		if (task.getVenue() != null && !task.getVenue().equals("")) {
-			text += "Venue: " + task.getVenue() + "\n";
-		}
-		*/
-		
+
 		if (task.getDetails() != null && !task.getDetails().equals("")) {
-			/*
-			text = "Details:\t";
-			GuiManager.showSelfDefinedMessage(text, Color.red, true);
-			*/
 			text = "Details:\t\t" + task.getDetails();
-			GuiManager.showSelfDefinedMessage(text, new Color(76, 0, 153), false);
+			GuiManager.showSelfDefinedMessage(text, new Color(76, 0, 153),
+					false);
 		}
-		
-		/*
-		text = "Done or not:\t";
-		GuiManager.showSelfDefinedMessage(text, Color.gray, true);
-		*/
+
+		// status (done or not)
 		if (task.getDone() == 0) {
 			text = "Status:\t\tNot done.";
 		} else {
 			text = "Status:\t\tDone.";
 		}
 		GuiManager.showSelfDefinedMessage(text, Color.blue, true);
-		
+
 	}
 
 	protected static void generateFeedbackForAdd(int taskId, Task taskAdded) {
-		//return OutputToGui.generateTextForOneTask(taskId, taskAdded);
-		//OutputToGui.output("Task Successfully Added!\n");
-		GuiManager.showSelfDefinedMessage("Task Successfully Added!\n", new Color(25,20,147), false);
+		GuiManager.showSelfDefinedMessage(FEEDBACK_ADD, new Color(25,20,147), false);
 		OutputToGui.outputColorTextForOneTask(taskId, taskAdded);
 	}
 	
 	protected static String generateFeedbackForDelete(Task taskDeleted) {
-		return "'" + taskDeleted.getDescription() + "' " + "deleted."; 
+		return String.format(FEEDBACK_DELETE, taskDeleted.getDescription());
 	}
 	
 	protected static String generateTextForTasks(LinkedList<Integer> candidates, TaskList listOfTasks) {
@@ -1345,26 +1242,40 @@ public class OutputToGui {
 		for(int next: candidates) {
 			int taskId = next + 1;
 			text += generateTextForOneTask(taskId, listOfTasks.get(next));
-			text += "\n\n";
+			text += STRING_NEWLINE + STRING_NEWLINE;
 		}
 		return text;
 	}
 	
 	protected static String generateTitleForOneTask(String taskIdString,
 			String description) {
-		return taskIdString + ". " + description;
+		return String.format(FEEDBACK_TITLE_FOR_TASK, taskIdString, description);
 	}
 	
+	/**
+	 * generateTextForOneTask
+	 * 
+	 * This is to generate plain text (without color) including task information
+	 * 
+	 * @param taskId
+	 * @param task
+	 * @return generated text
+	 */
 	protected static String generateTextForOneTask(int taskId, Task task) {
 		String text = "";
 		
-		text += "Task ID: " + taskId + "\n";
-		text += "Description: " + task.getDescription() + "\n";
+		// task id
+		text += "Task ID: " + taskId + STRING_NEWLINE;
 		
+		// description
+		text += "Description: " + task.getDescription() + STRING_NEWLINE;
+		
+		// deadline
 		if (task.getDeadline() != null && !task.getDeadline().equals("")) {
-			text += "Deadline: " + task.getDeadline() + "\n";
+			text += "Deadline: " + task.getDeadline() + STRING_NEWLINE;
 		}
 		
+		// start
 		String start = "";
 		if (task.getStartTime() != null && !task.getStartTime().equals("")) {
 			start += task.getStartTime();
@@ -1373,9 +1284,10 @@ public class OutputToGui {
 			start += (" " + task.getStartDate());
 		}
 		if (!start.equals("")) {
-			text += "Start: " + start + "\n";
+			text += "Start: " + start + STRING_NEWLINE;
 		}
 		
+		// end
 		String end = "";
 		if (task.getEndTime() != null && !task.getEndTime().equals("")) {
 			end += task.getEndTime();
@@ -1384,17 +1296,20 @@ public class OutputToGui {
 			end += (" " + task.getEndDate());
 		}
 		if (!end.equals("")) {
-			text += "End: " + end + "\n";
+			text += "End: " + end + STRING_NEWLINE;
 		}
 		
+		// venue
 		if (task.getVenue() != null && !task.getVenue().equals("")) {
-			text += "Venue: " + task.getVenue() + "\n";
+			text += "Venue: " + task.getVenue() + STRING_NEWLINE;
 		}
 		
+		// details
 		if (task.getDetails() != null && !task.getDetails().equals("")) {
-			text += "Details: " + task.getDetails() + "\n";
+			text += "Details: " + task.getDetails() + STRING_NEWLINE;
 		}
 		
+		// status
 		if (task.getDone() == 0) {
 			text += "Not done.";
 		} else {
@@ -1405,14 +1320,14 @@ public class OutputToGui {
 	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\OutputToGui.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\OutputToGui.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\Reminder.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\Reminder.java
 	 */
 
 
@@ -1428,34 +1343,142 @@ import com.taskpad.storage.DataManager;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * Reminder
+ * 
+ * This class is to show tasks for 'show reminder', including tasks due today,
+ * overdue tasks, and tasks attached with reminder (using addrem command)
+ * 
+ */
 public class Reminder {
-	private static final String FEEDBACK_NO_TASK_DUE_TODAY = "No task due today.";
-	private static final String FEEDBACK_NO_OVERDUE = "No overdue task.";
-	
-	protected static void showReminderForToday() {
+
+	private static final String FEEDBACK_NOTHING_TO_SHOW = "Nothing to show.";
+
+	/**
+	 * showReminder
+	 * 
+	 * This is to show tasks due today, overdue tasks, and tasks attached with
+	 * reminder (using addrem command)
+	 * 
+	 */
+	protected static void showTasksForReminder() {
 		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		LinkedList<Integer> tasks = getTasksDueToday();
-		if(tasks.size() == 0) {
-			OutputToGui.output(FEEDBACK_NO_TASK_DUE_TODAY);
+		
+		LinkedList<Integer> tasksToShow = new LinkedList<Integer>();
+		
+		boolean haveTasksToShow = false;
+		
+		haveTasksToShow = Reminder.findReminderForToday(tasksToShow)
+				|| haveTasksToShow;
+		haveTasksToShow = Reminder.findReminderForOverdue(tasksToShow)
+				|| haveTasksToShow;
+		haveTasksToShow = Reminder.findReminderTasks(tasksToShow)
+				|| haveTasksToShow;
+		
+		if (!haveTasksToShow) {
+			OutputToGui.output(FEEDBACK_NOTHING_TO_SHOW);
 		} else {
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
-			OutputToGui.outputTable(tasks, listOfTasks);
+			OutputToGui.outputTable(tasksToShow, listOfTasks);
 		}
 	}
 	
-	protected static void showReminderForOverdue() {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		LinkedList<Integer> tasks = getOverdueTasks();
-		
-		if(tasks.size() == 0) {
-			OutputToGui.output(FEEDBACK_NO_OVERDUE);
+	protected static boolean findReminderForToday(LinkedList<Integer> tasksToShow) {
+		LinkedList<Integer> tasks = getTasksDueToday();
+		if (tasks.size() == 0) {
+			return false;
 		} else {
-			// OutputToGui.outputColorTextForTasks(tasks, listOfTasks);
-			OutputToGui.outputTable(tasks, listOfTasks);
+			addTasks(tasksToShow, tasks);
+			return true;
 		}
 	}
 
+	protected static boolean findReminderForOverdue(LinkedList<Integer> tasksToShow) {
+		LinkedList<Integer> tasks = getOverdueTasks();
+
+		if (tasks.size() == 0) {
+			return false;
+		} else {
+			addTasks(tasksToShow, tasks);
+			return true;
+		}
+	}
+	
+	/**
+	 * findReminderTasks
+	 * 
+	 * This is to show tasks attached with reminder
+	 * 
+	 * @return Returns false if no task is found, and true otherwise
+	 */
+	protected static boolean findReminderTasks(LinkedList<Integer> tasksToShow) {
+		LinkedList<Integer> tasks = getReminderTasks();
+
+		if (tasks.size() == 0) {
+			return false;
+		} else {
+			addTasks(tasksToShow, tasks);
+			return true;
+		}
+	}
+
+	/**
+	 * Add elements in tasks into tasksToShow, without adding duplicates
+	 * 
+	 * @param tasksToShow
+	 * @param tasks
+	 */
+	private static void addTasks(LinkedList<Integer> tasksToShow,
+			LinkedList<Integer> tasks) {
+		for (int task : tasks) {
+			if (!tasksToShow.contains(task)) {
+				tasksToShow.add(task);
+			}
+		}
+	}
+	
 	protected static LinkedList<Integer> getTasksDueToday() {
+		LinkedList<Integer> results = new LinkedList<Integer>();
+
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String dateString = sdf.format(date);
+
+		TaskList allTasks = DataManager.retrieve(DataFileStack.FILE);
+
+		for (int i = 0; i < allTasks.size(); i++) {
+			Task task = allTasks.get(i);
+			String deadline = task.getDeadline();
+			
+			if (deadline != null && deadline.contains(dateString)) {
+				if (task.getDone() == 0) {
+					results.add(i);
+				}
+			}
+		}
+
+		return results;
+	}
+	
+	protected static LinkedList<Integer> getOverdueTasks() {
+		TaskList list = DataManager.retrieve(DataFileStack.FILE);
+				
+		LinkedList<Integer> result = new LinkedList<Integer>();
+		
+		for(int i = 0; i < list.size(); i++) {
+			Task task = list.get(i);
+			
+			int compareToToday = InputManager.compareDateAndTime(task.getDeadline());
+			if(compareToToday == -1 || compareToToday == 0) {
+				if(task.getDone() == 0) {
+					result.add(i);
+				}
+			}
+		}
+		
+		return result;
+	}
+
+	protected static LinkedList<Integer> getReminderTasks() {
 		LinkedList<Integer> results = new LinkedList<Integer>();
 		
 		Date date = new Date();
@@ -1463,112 +1486,51 @@ public class Reminder {
 		String dateString = sdf.format(date);
 		
 		TaskList allTasks = DataManager.retrieve(DataFileStack.FILE);
+		
 		for (int i = 0; i < allTasks.size(); i++) {
 			Task task = allTasks.get(i);
-			String deadline = task.getDeadline();
-			if(deadline != null && deadline.contains(dateString)) {
-				results.add(i);
+			String reminderDate = task.getReminderDate();
+			
+			if(reminderDate != null && reminderDate.contains(dateString)) {
+				if(task.getDone() == 0) {
+					results.add(i);
+				}
 			}
 		}
 		
 		return results;
 	}
 	
-	protected static LinkedList<Integer> getOverdueTasks() {
-		/*
-		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		String today = sdf.format(date);	
-		Task taskDueToday = new Task("dummy", today, "", "", "", "", null);
-		*/
-		
-		TaskList list = DataManager.retrieve(DataFileStack.FILE);
-				
-		LinkedList<Integer> result = new LinkedList<Integer>();
-		
-		for(int i = 0; i < list.size(); i++) {
-			Task task = list.get(i);
-			int compareToToday = InputManager.compareDateAndTime(task.getDeadline());
-			if(compareToToday == -1 || compareToToday == 0) {
-				result.add(i);
-			}
-		}
-		
-		return result;
-	}
-	
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\Reminder.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\Reminder.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\TaskDeadlineComparator.java
-	 */
-
-
-package com.taskpad.execute;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-
-import com.taskpad.storage.Task;
-
-public class TaskDeadlineComparator implements Comparator<Task>{
-	/**
-	 * compare: compare two tasks' Date
-	 * 
-	 * @param e1
-	 *            : task1
-	 * @param e2
-	 *            : task2
-	 * @return int
-	 */
-	@Override
-	public int compare(Task e1, Task e2) {
-		SimpleDateFormat dateConverter = new SimpleDateFormat(
-				"dd/MM/yyyy HH:mm");
-		Date d1, d2;
-		try {
-			d1 = dateConverter.parse(e1.getDeadline() + e1.getEndTime());
-			d2 = dateConverter.parse(e2.getDeadline() + e2.getEndTime());
-		} catch (ParseException e) {
-			System.err.println(e.getMessage());
-			return 0;
-		}
-		return d1.compareTo(d2);
-	}
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\execute\TaskDeadlineComparator.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\CommandRecord.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\CommandRecord.java
 	 */
 
 
 package com.taskpad.storage;
 
-
-
 import java.util.LinkedList;
 
+/**
+ * CommandRecord
+ * 
+ * This class is to keep a record of executed user commands at runtime, for (multiple)
+ * undo and redo purpose. It is done by maintaining two stacks for undo and redo
+ * respectively.
+ * 
+ */
 public class CommandRecord {
-	// private static String previousCommand;
 	private static LinkedList<String> commandsForUndo = new LinkedList<String>();
 	private static LinkedList<String> commandsForRedo = new LinkedList<String>();
 	
 	public static void pushForUndo(String command) {
-		// previousCommand = command;
 		commandsForUndo.push(command);
 	}
 	
@@ -1580,7 +1542,6 @@ public class CommandRecord {
 	}
 	
 	public static void pushForRedo(String command) {
-		// previousCommand = command;
 		commandsForRedo.push(command);
 	}
 	
@@ -1589,50 +1550,42 @@ public class CommandRecord {
 			throw new NoPreviousCommandException();
 		}
 		return commandsForRedo.pop();
-	}	// dummy
+	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\CommandRecord.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\CommandRecord.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataFileStack.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataFileStack.java
 	 */
 
 
 package com.taskpad.storage;
 
-
-
 import java.util.LinkedList;
 
+/**
+ * CommandRecord
+ * 
+ * This class is to keep a record of older-version data files, for (multiple)
+ * undo and redo purpose. It is done by maintaining two stacks for undo and redo
+ * respectively.
+ * 
+ */
 public class DataFileStack {
 	public static final String FILE = ".data.xml";
-	// public static final String FILE_PREV = ".data_prev.xml";
 	public static LinkedList<String> undoStack = new LinkedList<String>();
 	public static LinkedList<String> redoStack = new LinkedList<String>();
-	
-	// private static boolean previousIsValid = false;
-	
-	/*
-	public static boolean isValidPrevious() {
-		return previousIsValid;
-	}
-	
-	public static void setPreviousIsValid(boolean isValid) {
-		previousIsValid = isValid;
-	}
-	*/
 	
 	public static String requestDataFile() {
 		return ".data" + (undoStack.size() + redoStack.size()) + ".xml";
 	}
 	
 	public static void pushForUndo(String file) {
-		// previousCommand = command;
 		undoStack.push(file);
 	}
 	
@@ -1655,19 +1608,18 @@ public class DataFileStack {
 	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataFileStack.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataFileStack.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataManager.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataManager.java
 	 */
 
 
 package com.taskpad.storage;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1686,47 +1638,34 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
+/**
+ * DataManager
+ * 
+ * This class is the facade of storage component.
+ * It retrieves task list from and stores task list back to database.
+ *
+ */
 public class DataManager {
-
-	public DataManager(){
-		
-	}
-	
-	public static int retrieveNumberOfTasks(){
-		int numberOfTasks = retrieve(DataFileStack.FILE).size();
-		return numberOfTasks;
-	}
-	
-	public static void initializeXml(){
-		// do nothing
-		/*
-		LinkedList<Task> tasks = new LinkedList<Task>();
-		DataManager.storeBack(tasks, DataFile.FILE);
-		DataManager.storeBack(tasks, DataFile.FILE_PREV);
-		*/
-	}
-		
 	public static TaskList retrieve(String file) {
 		TaskList listOfTasks = new TaskList();
-		
+
 		try {
 			File fXmlFile = new File(file);
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+					.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXmlFile);
-			
+
 			doc.getDocumentElement().normalize();
-			
+
 			NodeList nList = doc.getElementsByTagName("Task");
-			
-			// System.out.println("nList.length = " + nList.getLength());
+
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node taskNode = nList.item(i);
-		 
+
 				if (taskNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element task = (Element) taskNode;
-					
+
 					String description;
 					String deadline;
 					String startDate;
@@ -1735,169 +1674,216 @@ public class DataManager {
 					String endTime;
 					String venue;
 					String details;
+					String reminderDate;
 					int done;
-					
+
 					if (task.getElementsByTagName("description").item(0) != null) {
-						description = task.getElementsByTagName("description").item(0).getTextContent();
+						description = task.getElementsByTagName("description")
+								.item(0).getTextContent();
 					} else {
 						return listOfTasks; // description cannot be null
 					}
-					
-					if(task.getElementsByTagName("deadline").item(0) != null) {
-						deadline = task.getElementsByTagName("deadline").item(0).getTextContent();
+
+					if (task.getElementsByTagName("deadline").item(0) != null) {
+						deadline = task.getElementsByTagName("deadline")
+								.item(0).getTextContent();
 					} else {
 						deadline = null;
 					}
-					
+
 					if (task.getElementsByTagName("start_date").item(0) != null) {
-						startDate = task.getElementsByTagName("start_date").item(0).getTextContent();
+						startDate = task.getElementsByTagName("start_date")
+								.item(0).getTextContent();
 					} else {
 						startDate = null;
 					}
-					
+
 					if (task.getElementsByTagName("start_time").item(0) != null) {
-						startTime = task.getElementsByTagName("start_time").item(0).getTextContent();
+						startTime = task.getElementsByTagName("start_time")
+								.item(0).getTextContent();
 					} else {
 						startTime = null;
 					}
-					
+
 					if (task.getElementsByTagName("end_date").item(0) != null) {
-						endDate = task.getElementsByTagName("end_date").item(0).getTextContent();
+						endDate = task.getElementsByTagName("end_date").item(0)
+								.getTextContent();
 					} else {
 						endDate = null;
 					}
-					
+
 					if (task.getElementsByTagName("end_time").item(0) != null) {
-						endTime = task.getElementsByTagName("end_time").item(0).getTextContent();
+						endTime = task.getElementsByTagName("end_time").item(0)
+								.getTextContent();
 					} else {
 						endTime = null;
 					}
-					
+
 					if (task.getElementsByTagName("venue").item(0) != null) {
-						venue = task.getElementsByTagName("venue").item(0).getTextContent();
+						venue = task.getElementsByTagName("venue").item(0)
+								.getTextContent();
 					} else {
 						venue = null;
 					}
-					
-					if(task.getElementsByTagName("details").item(0) != null) {
-						details = task.getElementsByTagName("details").item(0).getTextContent();
+
+					if (task.getElementsByTagName("details").item(0) != null) {
+						details = task.getElementsByTagName("details").item(0)
+								.getTextContent();
 					} else {
 						details = null;
 					}
-					
-					assert(task.getElementsByTagName("done") != null);
-					done = Integer.parseInt(task.getElementsByTagName("done").item(0).getTextContent());
-					
+
+					assert (task.getElementsByTagName("done") != null);
+					done = Integer.parseInt(task.getElementsByTagName("done")
+							.item(0).getTextContent());
+
+					if (task.getElementsByTagName("reminder_date").item(0) != null) {
+						reminderDate = task
+								.getElementsByTagName("reminder_date").item(0)
+								.getTextContent();
+					} else {
+						reminderDate = "";
+					}
+
 					listOfTasks.add(new Task(description, deadline, startDate,
-							startTime, endDate, endTime, venue, details, done));
+							startTime, endDate, endTime, venue, details, done,
+							reminderDate));
 				}
 			}
-			
+
 			return listOfTasks;
-	    } catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			TaskList tasks = new TaskList();
 			DataManager.storeBack(tasks, file);
 			return tasks;
-	    } catch (Exception e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listOfTasks;
-		
+
 	}
 	
 	public static void storeBack(TaskList taskList, String file) {
 		try {
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory
+					.newInstance();
 			docFactory.setNamespaceAware(true);
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-	 
+
 			// root elements
 			Document doc = docBuilder.newDocument();
 			Element rootElement = doc.createElement("TaskPad");
 			doc.appendChild(rootElement);
-	 
-			for(int i = 0; i < taskList.size(); i++) {
+
+			for (int i = 0; i < taskList.size(); i++) {
 				Task taskInList = taskList.get(i);
 				int id = i + 1;
 				Element task = doc.createElement("Task");
 				rootElement.appendChild(task);
 				task.setAttribute("id", Integer.toString(id));
-				
-				if(taskInList.getDescription() != null) {
+
+				if (taskInList.getDescription() != null) {
 					Element description = doc.createElement("description");
-					description.appendChild(doc.createTextNode(taskInList.getDescription()));
+					description.appendChild(doc.createTextNode(taskInList
+							.getDescription()));
 					task.appendChild(description);
 				}
-				
-				if(taskInList.getDeadline() != null) {
+
+				if (taskInList.getDeadline() != null) {
 					Element deadlineDay = doc.createElement("deadline");
-					deadlineDay.appendChild(doc.createTextNode(taskInList.getDeadline()));
+					deadlineDay.appendChild(doc.createTextNode(taskInList
+							.getDeadline()));
 					task.appendChild(deadlineDay);
 				}
-				
+
 				if (taskInList.getStartDate() != null) {
 					Element startDate = doc.createElement("start_date");
-					startDate.appendChild(doc.createTextNode(taskInList.getStartDate()));
+					startDate.appendChild(doc.createTextNode(taskInList
+							.getStartDate()));
 					task.appendChild(startDate);
 				}
-				
+
 				if (taskInList.getStartTime() != null) {
 					Element startTime = doc.createElement("start_time");
-					startTime.appendChild(doc.createTextNode(taskInList.getStartTime()));
+					startTime.appendChild(doc.createTextNode(taskInList
+							.getStartTime()));
 					task.appendChild(startTime);
 				}
-				
+
 				if (taskInList.getEndDate() != null) {
 					Element endDate = doc.createElement("end_date");
-					endDate.appendChild(doc.createTextNode(taskInList.getEndDate()));
+					endDate.appendChild(doc.createTextNode(taskInList
+							.getEndDate()));
 					task.appendChild(endDate);
 				}
-				
+
 				if (taskInList.getEndTime() != null) {
 					Element endTime = doc.createElement("end_time");
-					endTime.appendChild(doc.createTextNode(taskInList.getEndTime()));
+					endTime.appendChild(doc.createTextNode(taskInList
+							.getEndTime()));
 					task.appendChild(endTime);
 				}
-				
+
 				if (taskInList.getDetails() != null) {
 					Element details = doc.createElement("details");
-					details.appendChild(doc.createTextNode(taskInList.getDetails()));
+					details.appendChild(doc.createTextNode(taskInList
+							.getDetails()));
 					task.appendChild(details);
 				}
-				
+
 				Element done = doc.createElement("done");
-				done.appendChild(doc.createTextNode(Integer.toString(taskInList.getDone())));
+				done.appendChild(doc.createTextNode(Integer.toString(taskInList
+						.getDone())));
 				task.appendChild(done);
-				
+
+				Element reminderDate = doc.createElement("reminder_date");
+				reminderDate.appendChild(doc.createTextNode(taskInList
+						.getReminderDate()));
+				task.appendChild(reminderDate);
+
 			}
-				
+
 			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			TransformerFactory transformerFactory = TransformerFactory
+					.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(file));
-			
+
 			transformer.transform(source, result);
-	 
+
 		} catch (ParserConfigurationException pce) {
 			pce.printStackTrace();
 		} catch (TransformerException tfe) {
-		  	tfe.printStackTrace();
+			tfe.printStackTrace();
 		}
 	
 	}
 	
+	/**
+	 * retrieveNumberOfTasks
+	 * 
+	 * InputProcessing component needs to know the number of tasks in database,
+	 * to valid the task id in user input
+	 * 
+	 * @return number of tasks in database
+	 * 
+	 */
+	public static int retrieveNumberOfTasks(){
+		int numberOfTasks = retrieve(DataFileStack.FILE).size();
+		return numberOfTasks;
+	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataManager.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\DataManager.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousCommandException.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousCommandException.java
 	 */
 
 
@@ -1905,17 +1891,24 @@ public class DataManager {
 package com.taskpad.storage;
 
 public class NoPreviousCommandException extends Exception {
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = -6299437150349634406L;
 
+	public NoPreviousCommandException() {
+		System.out.println("No previous command.");
+	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousCommandException.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousCommandException.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousFileException.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousFileException.java
 	 */
 
 
@@ -1923,28 +1916,35 @@ package com.taskpad.storage;
 
 
 public class NoPreviousFileException extends Exception {
+	/**
+	 * generated
+	 */
+	private static final long serialVersionUID = 5481977052834704074L;
 
+	public NoPreviousFileException() {
+		System.out.println("No previous data file.");
+	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousFileException.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\NoPreviousFileException.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\Task.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\Task.java
 	 */
 
 
 package com.taskpad.storage;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-
-
+/**
+ * Task
+ * 
+ * This is the Task class to store task information at runtime
+ * 
+ */
 public class Task{
 	private String description;
 	private String deadline;
@@ -1952,12 +1952,13 @@ public class Task{
 	private String startTime;
 	private String endDate;
 	private String endTime;
-	private String venue; 
+	private String venue;
 	private String details;
-	private int done;	// 0 for undone, 1 for done
-	
-	public Task(String description, String deadline, String startDate, String startTime,
-			String endDate, String endTime, String venue) {
+	private String reminderDate;
+	private int done; // 0 for undone, 1 for done
+
+	public Task(String description, String deadline, String startDate,
+			String startTime, String endDate, String endTime, String venue) {
 		this.description = description;
 		this.deadline = deadline;
 		this.startDate = startDate;
@@ -1966,11 +1967,12 @@ public class Task{
 		this.endTime = endTime;
 		this.venue = venue;
 		this.done = 0;
+		this.reminderDate = "";
 	}
 
-	public Task(String description, String deadline, String startDate, String startTime,
-			String endDate, String endTime, String venue,
-			String details, int done) {
+	public Task(String description, String deadline, String startDate,
+			String startTime, String endDate, String endTime, String venue,
+			String details, int done, String reminderDate) {
 		this.description = description;
 		this.deadline = deadline;
 		this.startDate = startDate;
@@ -1980,6 +1982,7 @@ public class Task{
 		this.details = details;
 		this.venue = venue;
 		this.done = done;
+		this.reminderDate = reminderDate;
 	}
 	
 	public String getDescription() {
@@ -2017,6 +2020,10 @@ public class Task{
 	public int getDone() {
 		return done;
 	}
+	
+	public String getReminderDate() {
+		return reminderDate;
+	}
 
 	public void setDetails(String details) {
 		this.details = details;
@@ -2034,25 +2041,49 @@ public class Task{
 		this.deadline = deadline;
 	}
 	
+	public void setReminderDate(String date) {
+		this.reminderDate = date;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\Task.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\Task.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\TaskList.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\TaskList.java
 	 */
 
 
 package com.taskpad.storage;
 
-
-
 import java.util.LinkedList;
 
+/**
+ * TaskList
+ * 
+ * This is the TaskList class to maintain a list of tasks at runtime.
+ * 
+ */
 public class TaskList {
 	private LinkedList<Task> list;
 	
@@ -2081,20 +2112,18 @@ public class TaskList {
 	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\TaskList.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\storage\TaskList.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutor.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutor.java
 	 */
 
 
 package com.taskpad.tests;
-
-
 
 import static org.junit.Assert.*;
 
@@ -2107,10 +2136,15 @@ import com.taskpad.execute.ExecutorTestDriver;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * This class is for unit testing of Executor component.
+ * It is testing by command types.
+ *
+ */
 public class TestExecutor {	
 	
 	@Test
-	public void testList() {
+	public void testAddAndList() {
 		/*
 		 * only test 0, 1, 2 here
 		 */
@@ -2129,11 +2163,331 @@ public class TestExecutor {
 		result = ExecutorTestDriver.getAllTasksFromBackend(list);
 		assertEquals(result.size(), 2);
 
+		// test list undone
 		Task task = list.get(0);
 		task.setDone();
 		result = ExecutorTestDriver.getUndoneTasksFromBackend(list);
 		assertEquals(result.size(), 1);
 		
+		// test list done
+		result = ExecutorTestDriver.getFinishedTasksFromBackend(list);
+		assertEquals(result.size(), 1);
+	}
+	
+	@Test
+	public void testAddLargeNumberOfTasks() {
+		TaskList list = new TaskList();
+		for (int i = 0; i < 100; i++) {
+			HashMap<String, String> parameters = new HashMap<String, String>();
+			parameters.put("DESC", "do homework 1");
+			ExecutorTestDriver.addTask(parameters, list);			
+		}
+		LinkedList<Integer> result = ExecutorTestDriver.getAllTasksFromBackend(list);
+		assertEquals(result.size(), 100);
+	}
+	
+	@Test
+	public void testListAll() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 2");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 3");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		LinkedList<Integer> result = ExecutorTestDriver.getAllTasksFromBackend(list);
+		assertEquals(result.size(), 3);		
+	}
+	
+	@Test
+	public void testListUndone() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");	
+		ExecutorTestDriver.addTask(parameters, list);	
+		
+		Task task = list.get(0);
+		task.setDone();
+		LinkedList<Integer> result = ExecutorTestDriver.getUndoneTasksFromBackend(list);
+		assertEquals(result.size(), 0);
+	}
+	
+	@Test
+	public void testListDone() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");	
+		ExecutorTestDriver.addTask(parameters, list);	
+		
+		Task task = list.get(0);
+		task.setDone();
+		LinkedList<Integer> result = ExecutorTestDriver.getFinishedTasksFromBackend(list);
+		
+		assertEquals(result.size(), 1);		
+	}
+	
+	@Test
+	public void testDelete() {
+		TaskList list = new TaskList();
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		ExecutorTestDriver.deleteTask(list, 0);
+		
+		assertEquals(list.size(), 1);
+	}
+	
+	@Test
+	public void testAddinfo() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2103 tutorial 4");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		ExecutorTestDriver.addInfo("next Wed", list, 0);
+		
+		Task task = list.get(0);
+		
+		assertEquals(task.getDetails(), "next Wed");
+	}
+	
+	@Test
+	public void testSearchByKeyword() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2103 tutorial 4");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2103 tutorial 5");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2101 oral presentation 2");
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		String[] keywords = {"cs2103", "tutorial"};
+		String[] times = {};
+		LinkedList<Integer> result = ExecutorTestDriver.search(list, keywords, times);
+		
+		assertTrue(result.contains(0));
+		assertTrue(result.contains(1));
+	}
+	
+	@Test
+	public void testSearchByTime() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2103 tutorial 4");
+		parameters.put("DEADLINE", "02/08/2014");
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2103 tutorial 5");		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "cs2101 oral presentation 2");
+		parameters.put("START DATE", "02/08/2014");
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		String[] keywords = {"03/08/2014", "03/08/2014"};
+		String[] times = {"02/08/2014", "03/08/2014"};
+		LinkedList<Integer> result = ExecutorTestDriver.search(list, keywords, times);
+		
+		assertTrue(result.contains(0));
+		assertTrue(result.contains(2));		
+	}
+	
+}
+
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutor.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorStorage.java
+	 */
+
+
+package com.taskpad.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+
+import org.junit.Test;
+
+import com.taskpad.execute.ExecutorTestDriver;
+import com.taskpad.storage.DataFileStack;
+import com.taskpad.storage.DataManager;
+import com.taskpad.storage.Task;
+import com.taskpad.storage.TaskList;
+
+/**
+ * TestExecutorStorage
+ * 
+ * This class is for integration testing involving Executor and Data Storage
+ * components
+ * 
+ */
+public class TestExecutorStorage {
+
+	@Test
+	public void testAddFloatingTask() {
+		TaskList list = new TaskList();
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
+		
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		assertEquals(listOfTasks.size(), 1);
+		
+		Task task = listOfTasks.get(0);
+		assertEquals(task.getDescription(), "do homework 1");
+		
+		/* 
+		 * There is usually no need to test that all other attributes are null/empty
+		 * They are unlikely to be dealt with differently 
+		 * Only testing deadline and venue here
+		 */
+		assertTrue(task.getDeadline() == null || task.getDeadline().equals(""));
+		assertTrue(task.getVenue() == null || task.getVenue().equals(""));
+	}
+
+	@Test
+	public void testAddTaskWithDeadline() {
+		TaskList list = new TaskList();
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		parameters.put("DEADLINE", "02/03/2014");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
+		
+		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
+		assertEquals(listOfTasks.size(), 1);
+		
+		Task task = listOfTasks.get(0);
+		assertEquals(task.getDescription(), "do homework 1");
+		assertEquals(task.getDeadline(), "02/03/2014");
+		
+		/* 
+		 * There is usually no need to test that all other attributes are null/empty
+		 * They are unlikely to be dealt with differently 
+		 * Only testing deadline and venue here
+		 */
+		assertTrue(task.getStartTime() == null || task.getStartTime().equals(""));
+		assertTrue(task.getVenue() == null || task.getVenue().equals(""));		
+	}
+	
+	@Test
+	public void testAddTimedTasks() {
+		TaskList list = new TaskList();
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "CCA meeting");
+		parameters.put("START TIME", "16:00");
+		parameters.put("START DATE", "02/07/2018");
+		parameters.put("END TIME", "18:00");
+		parameters.put("END DATE", "02/07/2018");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
+		
+		Task task = list.get(0);
+		assertEquals(task.getStartTime(), "16:00");
+		assertEquals(task.getStartDate(), "02/07/2018");
+		assertEquals(task.getEndTime(), "18:00");
+		assertEquals(task.getEndDate(), "02/07/2018");
+	}
+	
+	@Test
+	public void testAddLargeNumberOfTasks() {
+		TaskList list = new TaskList();
+		
+		// floating tasks
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		
+		for(int i = 0; i < 100; i++) {
+			ExecutorTestDriver.addTask(parameters, list);
+		}
+		
+		// tasks with deadline
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		parameters.put("DEADLINE", "02/03/2014");
+		
+		for(int i = 0; i < 100; i++) {
+			ExecutorTestDriver.addTask(parameters, list);
+		}
+		
+		// tasks with start and end time (timed tasks)
+		parameters = new HashMap<String, String>();
+		parameters.put("DESC", "CCA meeting");
+		parameters.put("START TIME", "16:00");
+		parameters.put("START DATE", "02/07/2018");
+		parameters.put("END TIME", "18:00");
+		parameters.put("END DATE", "02/07/2018");
+		
+		for(int i = 0; i < 100; i++) {
+			ExecutorTestDriver.addTask(parameters, list);
+		}
+		
+		assertEquals(DataManager.retrieveNumberOfTasks(), 300);
+	}
+	
+	@Test
+	public void testList() {
+		/*
+		 * only test 0, 1, 2 here
+		 */
+		TaskList list = new TaskList();
+		
+		// test list all
+		LinkedList<Integer> result = ExecutorTestDriver.getAllTasksFromBackend(list);
+		assertEquals(result.size(), 0);
+		
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		result = ExecutorTestDriver.getAllTasksFromBackend(list);
+		assertEquals(result.size(), 1);
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		result = ExecutorTestDriver.getAllTasksFromBackend(list);
+		assertEquals(result.size(), 2);
+
+		// test list undone
+		Task task = list.get(0);
+		task.setDone();
+		result = ExecutorTestDriver.getUndoneTasksFromBackend(list);
+		assertEquals(result.size(), 1);
+		
+		// test list done
 		result = ExecutorTestDriver.getFinishedTasksFromBackend(list);
 		assertEquals(result.size(), 1);
 	}
@@ -2151,16 +2505,33 @@ public class TestExecutor {
 		assertEquals(list.size(), 1);
 	}
 	
+	@Test
+	public void testClear() {
+		TaskList list = new TaskList();
+		HashMap<String, String> parameters = new HashMap<String, String>();
+		parameters.put("DESC", "do homework 1");
+		
+		ExecutorTestDriver.addTask(parameters, list);
+		ExecutorTestDriver.addTask(parameters, list);
+		
+		DataManager.storeBack(list, DataFileStack.FILE);
+		
+		ExecutorTestDriver.clearTasks();
+		list = DataManager.retrieve(DataFileStack.FILE);
+		assertEquals(list.size(), 0);
+	}
+	
+
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutor.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorStorage.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorDataForDebugging.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorStorageForDebugging.java
 	 */
 
 
@@ -2169,6 +2540,10 @@ package com.taskpad.tests;
 import java.util.HashMap;
 import java.util.LinkedList;
 //import java.util.Map;
+
+
+
+
 
 
 
@@ -2184,13 +2559,13 @@ import com.taskpad.storage.Task;
  * TestExecutorData
  * 
  * This class is for debugging purpose only
+ * (It was mainly used at the initial stage of
+ * the software development)
  *
  */
 
-
-
-
-public class TestExecutorDataForDebugging {
+public class TestExecutorStorageForDebugging {
+	@SuppressWarnings("unused")
 	private static void commandTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, DataFileStack.FILE);
@@ -2235,15 +2610,18 @@ public class TestExecutorDataForDebugging {
 		ExecutorManager.receiveFromInput(inputObj1,input1);
 	}
 	
+	@SuppressWarnings("unused")
 	private static void dataRetrievalTest() {
 		DataManager.retrieve("test_data.xml");
 	}
 	
+	@SuppressWarnings("unused")
 	private static void dataStoreBackTest() {
 		LinkedList<Task> tasks = new LinkedList<Task>();
 		//DataManager.storeBack(tasks, "test_data.xml");
 	}
 	
+	@SuppressWarnings("unused")
 	private static void parameterizedStringTest() {
 		String LOGGING_ADDING_TASK = "adding task: %s";
 		String description = "sth";
@@ -2263,139 +2641,22 @@ public class TestExecutorDataForDebugging {
 	}
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorDataForDebugging.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorStorageForDebugging.java
 
 
 
 
 
 	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorStorage.java
+	 * origin: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestStorage.java
 	 */
 
 
 package com.taskpad.tests;
 
-
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-
-import org.junit.Test;
-
-import com.taskpad.data.DataFileStack;
-import com.taskpad.data.DataManager;
-import com.taskpad.execute.ExecutorTestDriver;
-import com.taskpad.storage.NoPreviousFileException;
-import com.taskpad.storage.Task;
-import com.taskpad.storage.TaskList;
-
-public class TestExecutorStorage {
-	
-	@Test
-	public void testAddFloatingTask() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
-		
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(listOfTasks.size(), 1);
-		
-		Task task = listOfTasks.get(0);
-		assertEquals(task.getDescription(), "do homework 1");
-		
-		/* 
-		 * There is usually no need to test that all other attributes are null/empty
-		 * They are unlikely to be dealt with differently 
-		 * Only testing deadline and venue here
-		 */
-		assertTrue(task.getDeadline() == null || task.getDeadline().equals(""));
-		assertTrue(task.getVenue() == null || task.getVenue().equals(""));
-	}
-
-	@Test
-	public void testAddTaskWithDeadline() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		parameters.put("DEADLINE", "02/03/2014");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
-		
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(listOfTasks.size(), 1);
-		
-		Task task = listOfTasks.get(0);
-		assertEquals(task.getDescription(), "do homework 1");
-		assertEquals(task.getDeadline(), "02/03/2014");
-		
-		/* 
-		 * There is usually no need to test that all other attributes are null/empty
-		 * They are unlikely to be dealt with differently 
-		 * Only testing deadline and venue here
-		 */
-		assertTrue(task.getStartTime() == null || task.getStartTime().equals(""));
-		assertTrue(task.getVenue() == null || task.getVenue().equals(""));		
-	}
-	
-	@Test
-	public void testClear() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.addTask(parameters, list);
-		
-		DataManager.storeBack(list, DataFileStack.FILE);
-		
-		ExecutorTestDriver.clearTasks();
-		list = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(list.size(), 0);
-	}
-	
-	@Test
-	public void testUndo() throws NoPreviousFileException {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.archiveForUndo();
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.archiveForUndo();
-		
-		ExecutorTestDriver.updateDataForUndo();
-		
-		list = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(list.size(), 1);
-	}
-	
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestExecutorStorage.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestStorage.java
-	 */
-
-
-package com.taskpad.tests;
-
-
-
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.xml.sax.SAXParseException;
 
 import com.taskpad.storage.CommandRecord;
 import com.taskpad.storage.DataFileStack;
@@ -2405,14 +2666,25 @@ import com.taskpad.storage.NoPreviousFileException;
 import com.taskpad.storage.Task;
 import com.taskpad.storage.TaskList;
 
+/**
+ * This class is for unit testing of Storage component
+ *
+ */
 public class TestStorage {
 
+	/**
+	 * This is to test whether the record of previously
+	 * entered commands is successfully stored
+	 * for the sake of undo and redo
+	 * 
+	 * @throws NoPreviousCommandException
+	 */
 	@Test(expected = NoPreviousCommandException.class)
 	public void testCommandRecord() throws NoPreviousCommandException {
 		CommandRecord.pushForUndo("add do homework 1");
 		CommandRecord.pushForUndo("delete 1");
 		try {
-			assert(CommandRecord.popForUndo().equals("delete 1"));
+			assertTrue(CommandRecord.popForUndo().equals("delete 1"));
 		} catch (NoPreviousCommandException e) {
 			fail("Fail to pop from CommandRecord undoStack");
 		}
@@ -2428,6 +2700,10 @@ public class TestStorage {
 		CommandRecord.popForRedo();
 	}
 	
+	/**
+	 * This is to test whether the data file stack
+	 * is successfully stored for the sake of undo and redo
+	 */
 	@Test
 	public void TestDataFileStack() {
 		DataFileStack.pushForUndo(".data0.xml");
@@ -2437,247 +2713,96 @@ public class TestStorage {
 			fail("Fail to pop from DataFileStack undoStack");
 		}
 		DataFileStack.pushForRedo(".data0.xml");
-		assert(DataFileStack.requestDataFile().equals(".data1.xml"));
+		assertTrue(DataFileStack.requestDataFile().equals(".data1.xml"));
 		DataFileStack.pushForUndo(".data1.xml");
-		assert(DataFileStack.requestDataFile().equals(".data2.xml"));
+		assertTrue(DataFileStack.requestDataFile().equals(".data2.xml"));
 	}
 
-	@Test(expected = SAXParseException.class)
-	public void TestDataManager() {
+	/**
+	 * This is to test whether DataManager can successfully
+	 * store tasks into or retrieve tasks from database 
+	 */
+	@Test
+	public void TestDataManagerStoreAndRetrieve() {
 		/* 
 		 * Only testing 0, 1, 2 tasks here,
 		 * since 2 or more are unlikely to be dealt with differently
 		 */
 		TaskList list = new TaskList();
 		DataManager.storeBack(list, DataFileStack.FILE);
-		assert(DataManager.retrieveNumberOfTasks() == 0);
+		assertTrue(DataManager.retrieveNumberOfTasks() == 0);
 		
 		list.add(new Task("some task", null, null, null, null, null, null));
 		DataManager.storeBack(list, DataFileStack.FILE);
-		assert(DataManager.retrieveNumberOfTasks() == 1);
+		assertTrue(DataManager.retrieveNumberOfTasks() == 1);
 		
 		list.add(new Task("some task", null, null, null, null, null, null));
 		DataManager.storeBack(list, DataFileStack.FILE);
-		assert(DataManager.retrieveNumberOfTasks() == 2);
+		assertTrue(DataManager.retrieveNumberOfTasks() == 2);
 		
 		TaskList currentList = DataManager.retrieve(DataFileStack.FILE);
 		Task task = currentList.get(0);
-		assert(task.getDescription().equals("some task"));
+		assertTrue(task.getDescription().equals("some task"));
 		/* 
 		 * There is usually no need to test that all other attributes are null/empty
 		 * They are unlikely to be dealt with differently 
 		 * Only testing deadline and venue here
 		 */
-		assert(task.getDeadline() == null);
-		assert(task.getVenue() == null);
+		assertTrue(task.getDeadline() == null);
+		assertTrue(task.getVenue() == null);
 		
 		/* partition: existing file */
 		TaskList testList = DataManager.retrieve(DataFileStack.FILE);
-		assert(testList.size() > 0);
+		assertTrue(testList.size() > 0);
 		
 		/* partition: non-existing file */
 		testList = DataManager.retrieve("test.xml");
-		assert(testList.size() == 0);
+		assertTrue(testList.size() == 0);
 		
 		/* partition: empty string as file name */
-		testList = DataManager.retrieve("");	// should throw SAXParseException
-		
-	}
-	
-}
+		// testList = DataManager.retrieve("");
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestStorage.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSystem.java
-	 */
-
-
-package com.taskpad.tests;
-
-
-
-import com.taskpad.input.InputManager;
-import com.taskpad.storage.DataFileStack;
-import com.taskpad.storage.DataManager;
-import com.taskpad.storage.TaskList;
-
-public class TestSystem {
-	public static void main(String args[]) {
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		int oldSize = listOfTasks.size();
-		InputManager.receiveFromGui("add watch movie -d 31/05/2015");
-		listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		System.out.println(listOfTasks.size());
-	}
-}
-
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSystem.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSystemTest.java
-	 */
-
-
-package com.taskpad.tests;
-
-
-
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import org.junit.Test;
-
-import com.taskpad.execute.ExecutorTestDriver;
-import com.taskpad.input.InputManager;
-import com.taskpad.storage.DataFileStack;
-import com.taskpad.storage.DataManager;
-import com.taskpad.storage.NoPreviousFileException;
-import com.taskpad.storage.Task;
-import com.taskpad.storage.TaskList;
-
-public class TestSystemTest {
-
-	@Test
-	public void testAddFloatingTask() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
-		
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(listOfTasks.size(), 1);
-		
-		Task task = listOfTasks.get(0);
-		assertEquals(task.getDescription(), "do homework 1");
-		
-		/* 
-		 * There is usually no need to test that all other attributes are null/empty
-		 * They are unlikely to be dealt with differently 
-		 * Only testing deadline and venue here
-		 */
-		assertTrue(task.getDeadline() == null || task.getDeadline().equals(""));
-		assertTrue(task.getVenue() == null || task.getVenue().equals(""));
-	}
-
-	@Test
-	public void testAddTaskWithDeadline() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		parameters.put("DEADLINE", "02/03/2014");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		assertEquals(DataManager.retrieveNumberOfTasks(), 1);
-		
-		TaskList listOfTasks = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(listOfTasks.size(), 1);
-		
-		Task task = listOfTasks.get(0);
-		assertEquals(task.getDescription(), "do homework 1");
-		assertEquals(task.getDeadline(), "02/03/2014");
-		
-		/* 
-		 * There is usually no need to test that all other attributes are null/empty
-		 * They are unlikely to be dealt with differently 
-		 * Only testing deadline and venue here
-		 */
-		assertTrue(task.getStartTime() == null || task.getStartTime().equals(""));
-		assertTrue(task.getVenue() == null || task.getVenue().equals(""));		
 	}
 	
 	@Test
-	public void testList() {
-		/*
-		 * only test 0, 1, 2 here
-		 */
+	public void testStoreAndRetriveFloatingTasks() {
 		TaskList list = new TaskList();
-		LinkedList<Integer> result = ExecutorTestDriver.getAllTasksFromBackend(list);
-		assertEquals(result.size(), 0);
-		
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		result = ExecutorTestDriver.getAllTasksFromBackend(list);
-		assertEquals(result.size(), 1);
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		result = ExecutorTestDriver.getAllTasksFromBackend(list);
-		assertEquals(result.size(), 2);
-
-		Task task = list.get(0);
-		task.setDone();
-		result = ExecutorTestDriver.getUndoneTasksFromBackend(list);
-		assertEquals(result.size(), 1);
-		
-		result = ExecutorTestDriver.getFinishedTasksFromBackend(list);
-		assertEquals(result.size(), 1);
-	}
-	
-	@Test
-	public void testDelete() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.addTask(parameters, list);
-		
-		ExecutorTestDriver.deleteTask(list, 0);
-		assertEquals(list.size(), 1);
-	}
-	
-	@Test
-	public void testClear() {
-		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
-		
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.addTask(parameters, list);
+		list.add(new Task("task 1", null, null, null, null, null, null));
+		list.add(new Task("task 2", null, null, null, null, null, null));
 		
 		DataManager.storeBack(list, DataFileStack.FILE);
+		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);
 		
-		ExecutorTestDriver.clearTasks();
-		list = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(list.size(), 0);
+		assertEquals(listRetrieved.size(), 2);
 	}
 	
-	/*
 	@Test
-	public void testUndo() throws NoPreviousFileException {
+	public void testStoreAndRetriveTasksWithDeadline() {
 		TaskList list = new TaskList();
-		HashMap<String, String> parameters = new HashMap<String, String>();
-		parameters.put("DESC", "do homework 1");
+		list.add(new Task("task 1", "02/07/2014", null, null, null, null, null));
+		list.add(new Task("task 2", "02/08/2014", null, null, null, null, null));
 		
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.archiveForUndo();
-		ExecutorTestDriver.addTask(parameters, list);
-		ExecutorTestDriver.archiveForUndo();
+		DataManager.storeBack(list, DataFileStack.FILE);
+		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);
 		
-		ExecutorTestDriver.updateDataForUndo();
+		assertEquals(listRetrieved.size(), 2);
+	}	
+	
+	@Test
+	public void testStoreAndRetriveTasksWithFixedTime() {	//to be finished
+		TaskList list = new TaskList();
+		list.add(new Task("task 1", null, "02/07/2014", "16:00", "03/07/2014", "18:00", null));
+		list.add(new Task("task 2", null, "02/08/2014", "18:00", "04/07/2014", "20:00", null));
 		
-		list = DataManager.retrieve(DataFileStack.FILE);
-		assertEquals(list.size(), 1);
-	}
-	*/
-
+		DataManager.storeBack(list, DataFileStack.FILE);
+		TaskList listRetrieved = DataManager.retrieve(DataFileStack.FILE);
+		
+		assertEquals(listRetrieved.size(), 2);
+	}	
+	
 }
 
-	// End of segment: C:\Users\Charbby\SkyDrive\Documents\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestSystemTest.java
+	// End of segment: C:\Users\Charbby\OneDrive\NUS 2013 - 2014\CS2103 CS2103T SOFTWARE ENGINEERING\TaskPad-clone2\src\com\taskpad\tests\TestStorage.java
 
 
 

@@ -208,7 +208,7 @@ public class ExecutorManager {
 		ArrayList<String> fullInputList = new ArrayList<String>();
 		
 		/**
-		 * I just need to figure how to create input objects...
+		 * Create your inputObjects here 
 		 */
 		
 		addObjectsToDatabase(inputObjects, fullInputList);
