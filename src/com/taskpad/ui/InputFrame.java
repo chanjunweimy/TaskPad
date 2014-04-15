@@ -104,6 +104,9 @@ public class InputFrame extends GuiFrame{
 				equals("Alt");
 		
 		isAltCKey = isAltCKey && isVisible();
+		isAltAKey = isAltAKey && isVisible();
+		isCtrlI = isCtrlI && isVisible();
+
 		
 		if (isCtrlI){
 			requestFocusOnInputBox();

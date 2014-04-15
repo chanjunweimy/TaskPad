@@ -170,6 +170,9 @@ public class OutputTableFrame extends GuiFrame {
 				&& NativeInputEvent.getModifiersText(arg0.getModifiers())
 						.equals("Ctrl");
 
+		isCtrlW = isCtrlW && isVisible();
+		isCtrlS = isCtrlS && isVisible();
+		
 		if (isCtrlW) {
 			scrollUp();
 
