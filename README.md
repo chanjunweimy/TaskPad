@@ -1,10 +1,21 @@
 # Just Type your To-Dos
 
-Our Beta 0.5 is out! To test it out, feel free to download it from the link below: http://sourceforge.net/projects/taskpad.u/files/TaskPad_v0.5.jar/download
+TaskPad is a typing based desktop to-do manager. It is developed as part of CS2103T Software Engineering Project.
 
-This is the user guide: http://sourceforge.net/projects/taskpad.u/files/TaskPad%20User%20Guide.pdf/download
+Download
+=======
+Our TaskPad V0.5 Beta is out!
+Simply download [TaskPad](TaskPad_v0.5.jar) and run it to try it!
 
-If you want to see videos, here are the links: TaskPad's promotional video: 
+Works for both Windows and Mac.
+
+Usage 
+======
+For detailed list of commands see [Command Syntax](./Wikis/CommandSyntax.md). For a list of Hot Keys that can be used with our program, see [Hot Keys](./Wikis/HotKeys.md)
+
+Video Links
+======
+Click on the following links to watch Promotional videos on the project!
 
 [TaskPad Demo Video by Lynnette](http://www.youtube.com/watch?v=Y7H9xLMvUAY)
 
@@ -12,6 +23,10 @@ If you want to see videos, here are the links: TaskPad's promotional video:
 
 [TaskPad Demo Video  by Jun Wei](http://www.youtube.com/watch?v=-274ZY7OaP8)
 
-Please give us comments :)
+[TaskPad functionalities & Automated GUI Testing](https://youtu.be/iLVhcp0llNs)
 
-If you got any enquiries, feel free to check out the wiki page 
+![Picture](taskpad.png)
+
+Please give us comments :)
+=======
+
