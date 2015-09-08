@@ -11,6 +11,8 @@ Works for both Windows and Mac.
 
 Usage 
 ======
+Developer Guide can be found [here](https://drive.google.com/file/d/0B4vYBUqLFQ4_RXFwR1NaZlVOX1U/view?usp=sharing)
+
 For detailed list of commands see [Command Syntax](./Wikis/CommandSyntax.md). For a list of Hot Keys that can be used with our program, see [Hot Keys](./Wikis/HotKeys.md)
 
 Video Links
